@@ -1,4 +1,4 @@
-package group2.sdp;
+package group2.sdp.robot;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
