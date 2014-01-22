@@ -8,12 +8,14 @@ import lejos.robotics.navigation.DifferentialPilot;
 
 public class Pilot extends DifferentialPilot implements LightListener {
 
-	public MyLightSensor lightSensor;
+	public MyLightSensor leftSensor;
 	public static int LightTreshhold = 0;
 	public static int WHITE_THRESHOLD = 37;
+	public MyLightSensor rightSensor;
 
-	public void rotate(int direction, double weight) {
-	}
+
+		
+
 
 	public void move(double direction) {
 	}
@@ -25,8 +27,10 @@ public class Pilot extends DifferentialPilot implements LightListener {
 
 	public Pilot() {
 		super(Pilot.WHEEL_SIZE_NXT2, 4.4f, Motor.C, Motor.A, false);
-		this.lightSensor = new MyLightSensor(SensorPort.S1, 100);
-		this.lightSensor.addListener(this);
+		this.leftSensor = new MyLightSensor(SensorPort.S1, 100);
+		this.leftSensor.addListener(this);
+		this.rightSensor = new MyLightSensor(SensorPort.S2, 100);
+		this.rightSensor.addListener(this);
 	}
 
 	public void lightMeasured(int lightVal, MyLightSensor sensor) {
