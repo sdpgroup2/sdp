@@ -13,10 +13,6 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public static int WHITE_THRESHOLD = 37;
 	public MyLightSensor rightSensor;
 
-
-		
-
-
 	public void move(double direction) {
 	}
 
