@@ -6,31 +6,31 @@ import lejos.nxt.Button;
 public class App {
 	
 	public static void main(String[] args) {
-//		Pilot pilot = new Pilot();
+		Pilot pilot = new Pilot();
 		System.out.print("done");
-		new Kicker();
-//		while(true){
-//		while(pilot.leftSensor.readValue() > 37 && pilot. rightSensor.readValue() < 37) {
-//			pilot.setRotateSpeed(75);
-//			pilot.rotateRight();
-//		}
-//		while(pilot.rightSensor.readValue() > 37 && pilot.leftSensor.readValue() < 37) {
-//			pilot.setRotateSpeed(75);
-//			pilot.rotateLeft();			
-//		}
-//		while(pilot.rightSensor.readValue() > 37 && pilot.leftSensor.readValue() > 37) {
-//			pilot.arcBackward(45);
-//			pilot.setRotateSpeed(75);
-//			pilot.rotateRight();
-//		}
-//		
-//		while(pilot.leftSensor.readValue() < 37 && pilot.rightSensor.readValue() < 37) {
-//			pilot.forward(); 
-//		}
-//			
-//		}
+
+		while(true){
+		while(pilot.leftSensor.readValue() > 37 && pilot. rightSensor.readValue() < 37) {
+			pilot.setRotateSpeed(75);
+			pilot.rotateRight();
+		}
+		while(pilot.rightSensor.readValue() > 37 && pilot.leftSensor.readValue() < 37) {
+			pilot.setRotateSpeed(75);
+			pilot.rotateLeft();			
+		}
+		while(pilot.rightSensor.readValue() > 37 && pilot.leftSensor.readValue() > 37) {
+			pilot.arcBackward(45);
+			pilot.setRotateSpeed(75);
+			pilot.rotateRight();
+		}
+		
+		while(pilot.leftSensor.readValue() < 37 && pilot.rightSensor.readValue() < 37) {
+			pilot.forward(); 
+		}
 			
-		Button.waitForAnyPress();
+		}
+			
+		
 		
 	}
 }
