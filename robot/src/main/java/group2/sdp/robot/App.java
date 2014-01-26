@@ -1,76 +1,66 @@
 package group2.sdp.robot;
 
-import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
-
+import lejos.util.TextMenu;
 
 public class App {
-	
-	private static boolean rotateRight;
-	private static boolean rotateLeft;
-	private static boolean exit;
-	private static double priorDistance;
+
+	public static final int ROTATE_RIGHT = 1;
+	public static final int ROTATE_LEFT = -1;
+	public static final int ATTACKER_FIELD = 4700;
+	public static final int DEFENDER_FIELD = 3900;
+	public static final int COLOR_THRESHOLD = 37;
 
 	public static void main(String[] args) {
-		Pilot pilot = new Pilot();
-		System.out.print("done");
-		rotateRight = false;
-		rotateLeft = false;
-		exit = false;
-		
-		while(!exit){
-			if((pilot.leftSensor.readValue() > 37 && pilot.rightSensor.readValue() < 37)
-					) {
-//				pilot.setRotateSpeed(40);
-//				pilot.rotateRight();
-				rotateRight = true;
-				priorDistance = (Motor.A.getTachoCount() + Motor.C.getTachoCount())/2;
-				exit = true;
+		Pilot pilot;
+		int priorDistance;
+		int direction;
+		int distance;
+
+		// Menu which allows selecting the position
+		String[] menuItems = { "Attack", "Defence" };
+		TextMenu textMenu = new TextMenu(menuItems, 1, "Select Position:");
+		distance = textMenu.select() == 0 ? ATTACKER_FIELD : DEFENDER_FIELD;
+		LCD.clear();
+
+		// Move forward until you hit white line
+		pilot = new Pilot();
+		pilot.moveForward(100);
+
+		while (true) {
+			if (pilot.leftSensor.readValue() > COLOR_THRESHOLD) {
+				direction = ROTATE_RIGHT;
+				break;
+			} else if (pilot.rightSensor.readValue() > COLOR_THRESHOLD) {
+				direction = ROTATE_LEFT;
+				break;
 			}
-			if(pilot.rightSensor.readValue() > 37 && pilot.leftSensor.readValue() < 37) {
-//				pilot.setRotateSpeed(40);
-//				pilot.rotateLeft();		Value() > 37 || pilot.leftSensor.readValue() > 37)) {	
-				rotateLeft = true;
-				priorDistance = (Motor.A.getTachoCount() + Motor.C.getTachoCount())/2;
-				exit = true;
-//				System.out.println("left");
-			}
-//			if(pilot.rightSensor.readValue() > 37 && pilot.leftSensor.readValue() > 37) {
-////				pilot.arcBackward(45);
-////				pilot.setRotateSpeed(55);
-////				pilot.rotateRight();
-//				rotateRight = true;
-//				exit = true;
-//			}
-			
-			if(pilot.leftSensor.readValue() < 37 && pilot.rightSensor.readValue() < 37) {
-				pilot.setTravelSpeed(50);
-				pilot.forward(); 
-			}
-			
+
 		}
-		boolean stop = false;
-		while (exit && !stop) {
-			if(rotateRight && (pilot.rightSensor.readValue() > 37 || pilot.leftSensor.readValue() > 37)) {
-				// pilot.arcBackward(30);
-				pilot.setRotateSpeed(60);
-				pilot.rotateRight();
-			}
-			if(rotateLeft && (pilot.rightSensor.readValue() > 37 || pilot.leftSensor.readValue() > 37)) {
-				// pilot.arcBackward(-30);
-				pilot.setRotateSpeed(60);
-				pilot.rotateLeft();			
-			}
-			
-			if(pilot.leftSensor.readValue() < 37 && pilot.rightSensor.readValue() < 37) {
-				pilot.setTravelSpeed(100);
-				pilot.forward(); 
-			}
-			if (((Motor.A.getTachoCount() + Motor.C.getTachoCount())/2)-priorDistance >4900) {
+
+		// Start going around
+		int rightLightVal;
+		int leftLightVal;
+		priorDistance = (Motor.A.getTachoCount() + Motor.C.getTachoCount()) / 2;
+		while (true) {
+			rightLightVal = pilot.rightSensor.readValue();
+			leftLightVal = pilot.leftSensor.readValue();
+			if (rightLightVal > COLOR_THRESHOLD || leftLightVal > COLOR_THRESHOLD) {
+				// One sensor sees white, rotate accordingly
+				if (direction == ROTATE_RIGHT) {
+					pilot.rotateRight();
+				} else {
+					pilot.rotateLeft();
+				}
+			} else if (leftLightVal < COLOR_THRESHOLD && rightLightVal < COLOR_THRESHOLD) {
+				// Slightly steer towards the line
+				pilot.steer(direction * 3);
+			} else if (((Motor.A.getTachoCount() + Motor.C.getTachoCount()) / 2) - priorDistance < -distance) {
+				// Reached the starting point
 				pilot.stop();
+				break;
 			}
-//			LCD.drawInt((int) Math.round((((Motor.A.getTachoCount() + Motor.C.getTachoCount())/2)-priorDistance)),0,0);
-		}	
+		}
 	}
 }

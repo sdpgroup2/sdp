@@ -22,9 +22,9 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	}
 
 	public Pilot() {
-		super(56, 98, Motor.C, Motor.A, false);
-		this.leftSensor = new MyLightSensor(SensorPort.S1, 100);
-		this.rightSensor = new MyLightSensor(SensorPort.S2, 100);
+		super(56, 98, Motor.A, Motor.C, true);
+		this.leftSensor = new MyLightSensor(SensorPort.S4, 100);
+		this.rightSensor = new MyLightSensor(SensorPort.S1, 100);
 	}
 
 	public void lightMeasured(int lightVal, MyLightSensor sensor) {
