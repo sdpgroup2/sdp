@@ -1,6 +1,5 @@
 */target
 *.nxj
 *.nxd
-*.classpath
 *.class
 /target
