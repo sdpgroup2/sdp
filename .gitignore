@@ -3,3 +3,4 @@
 *.nxd
 *.classpath
 *.class
+/target
