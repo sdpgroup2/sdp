@@ -4,18 +4,39 @@ import lejos.nxt.Button;
 
 public class NyanCat {
 
-	private static String NYAN = "";
-	
+	private static String[][] NYAN = new String[][] {
+		new String[] {
+		"  o  +    o +  o",
+		"-_-_,------,   o",
+		"_-_-|   /\\_/\\   ",
+		"-_-~|__( ^ .^) +",
+		"_-_-\"\"+ \"\" +  o ",
+		"+  o    + o  +  "
+		},
+		new String[] {
+		"o  +    o +  o  ",
+		"_-_-_,-------, o",
+		"-_-_-|    /\\_/\\+",
+		"_-_-~|___( ^ .^)+",
+		"_-+- \" \" \" \"o   ",
+		"o    + o  +  o o"
+		}
+	};
+	// 8 x 16
 	public static void main(String[] args)
 	{
-		for (int j = 0; j < 20; j++)
+		while (true) {
+		for (String[] n : NYAN)
 		{
-			for (int i = 0; i < 10; i++)
+			for (String l : n)
 			{
-				System.out.print(i);
+				System.out.println(l);
 			}
+			for (int i = 0; i < 100000; i++);
+			for (int i = 0; i < 8; i++)
+			{System.out.println("");}
 		}
-		Button.waitForAnyPress();
+		}
 	}
 	
 }
