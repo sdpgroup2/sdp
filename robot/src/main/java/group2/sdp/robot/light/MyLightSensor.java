@@ -14,7 +14,21 @@ public class MyLightSensor extends LightSensor {
 	private LightListener listener = null;
 	private boolean enabled = true;
 	private int delay = 0;
-
+	private String name = null;
+	
+	public MyLightSensor(String name, ADSensorPort port, int delay) {
+		this(port, true, delay);
+		this.name = name;
+	}
+	
+	public MyLightSensor(ADSensorPort port, boolean floodlight, int delay) {
+		super(port, floodlight);
+		this.delay = delay;
+		Thread x = new MonitorThread();
+		x.setDaemon(true);
+		x.start();
+	}
+	
 	public void addListener(LightListener listener) {
 		this.listener = listener;
 	}
@@ -74,22 +88,22 @@ public class MyLightSensor extends LightSensor {
 			this.listener.lightMeasured(lightVal, this);
 		}
 	}
+	
+	public String getName() {
+		if (name != null) {
+			return name;
+		} else {
+			return "";
+		}
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public int scan() {
 		int lightVal = this.getLightValue();
 		return lightVal;
-	}
-
-	public MyLightSensor(ADSensorPort port, int delay) {
-		this(port, true, delay);
-	}
-
-	public MyLightSensor(ADSensorPort port, boolean floodlight, int delay) {
-		super(port, floodlight);
-		this.delay = delay;
-		Thread x = new MonitorThread();
-		x.setDaemon(true);
-		x.start();
 	}
 
 }
