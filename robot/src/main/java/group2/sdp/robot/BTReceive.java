@@ -10,9 +10,11 @@ import lejos.nxt.comm.Bluetooth;
 
 public class BTReceive {
 	
-   public static void receive() throws IOException, InterruptedException {
+
+	
+   public static void main(String[] args) throws IOException, InterruptedException {
    
-      
+     
 	  String connected = "Connected";
       String waiting = "Waiting...";
       String closing = "Closing...";  
