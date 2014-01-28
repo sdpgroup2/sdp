@@ -1,19 +1,27 @@
 package group2.sdp.pc.geom;
 
-import java.util.List;
+import java.util.Collection;
 
 public class GeomUtil {
 
-	public static Rect getBoundingBox(List<VecI> pixels) {
+	public static Rect getBoundingBox(Collection<VecI> pixels) {
 		if (pixels.size() == 0) {
 			return null;
 		}
-		VecI first = pixels.get(0);
-		int minX = first.x;
-		int maxX = first.x;		
-		int minY = first.y;
-		int maxY = first.y;
+		boolean initialized = false;
+		int minX = 0;
+		int maxX = 0;	
+		int minY = 0;
+		int maxY = 0;
 		for (VecI pixel: pixels) {
+			if (!initialized) {
+				minX = pixel.x;
+				maxX = pixel.x;
+				minY = pixel.y;
+				maxY = pixel.y;
+				initialized = true;
+				continue;
+			}
 			if (pixel.x < minX) {
 				minX = pixel.x;
 			} else if (pixel.x > maxX) {
@@ -26,6 +34,5 @@ public class GeomUtil {
 			}
 		}
 		return new Rect(minX, maxX, minY, maxY);
-	}
-	
+	}	
 }

@@ -1,17 +1,21 @@
 package group2.sdp.pc.geom;
 
 public class Rect {
-
+	
 	public final int minX;
 	public final int maxX;
 	public final int minY;
 	public final int maxY;
+	public final int width;
+	public final int height;
 	
 	public Rect(int minX, int maxX, int minY, int maxY) {
 		this.minX = minX;
 		this.maxX = maxX;
 		this.minY = minY;
 		this.maxY = maxY;
+		width = maxX-minX;
+		height = maxY-minY;
 	}
 	
 	public VecI getCentre() {

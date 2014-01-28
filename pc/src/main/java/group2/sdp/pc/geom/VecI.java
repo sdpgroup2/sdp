@@ -7,7 +7,15 @@ package group2.sdp.pc.geom;
  * 
  */
 public class VecI {
+	
+	public static final VecI[] OFFSETS = new VecI[] {
+		new VecI( 1,  0),
+		new VecI( 0,  1),
+		new VecI(-1,  0),
+		new VecI( 0, -1),
+	};
 
+	
 	public final int x;
 	public final int y;
 	
@@ -28,6 +36,10 @@ public class VecI {
 		return new VecI(this.x*c, this.y*c);
 	}
 	
+	public VecF toFloats() {
+		return new VecF(x, y);
+	}
+	
 	@Override
 	public String toString() {
 		return "("+x+", "+y+")";
@@ -40,5 +52,10 @@ public class VecI {
 			return (this.x == v.x && this.y == v.y);
 		}
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return (y << 16) + x;
 	}
 }
