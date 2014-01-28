@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="bluetooth" default="main" basedir=".">
+
+	<property name="lib.dir" location="lib" />
+	<property name="src.dir" location="src/main/java" />
+	<property name="build.dir" location="target/classes" />
+
+    <path id="build.classpath">
+        <pathelement location="${lib.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${build.dir}"/>
+        <pathelement location="${build.tests.dir}"/>
+    </path>
+	
+	<target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+	
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+    <target name="compile" depends="clean, makedir">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" 
+            classpathref="build.classpath" includeantruntime="true"></javac>
+    </target>
+	
+	<target name="main" depends="clean, makedir, compile">
+	</target>
+</project>
