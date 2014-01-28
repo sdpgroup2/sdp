@@ -10,7 +10,7 @@ public class App {
 	public static final int ROTATE_LEFT = -1;
 	public static final int ATTACKER_FIELD = 4300;
 	public static final int DEFENDER_FIELD = 3750;
-	public static final int COLOR_THRESHOLD = 37 + 5;
+	public static final int COLOR_THRESHOLD = 42;
 	public static final float SPEED = 100.0f;
 
 	public static void main(String[] args) {
@@ -72,7 +72,6 @@ public class App {
 				break;
 			}
 			
-			System.out.println(travelledDistance);
 		}
 	}
 }

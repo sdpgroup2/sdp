@@ -54,13 +54,13 @@ public class BTSend {
          System.exit(1);
       }
       
-      DataOutputStream dos = (DataOutputStream) conn.getOutputStream();
-      DataInputStream dis = (DataInputStream) conn.getInputStream();
+      OutputStream dos = conn.getOutputStream();
+      InputStream dis = conn.getInputStream();
             
       for(int i=0;i<100;i++) {
          try {
             System.out.println("Sending " + (i*30000));
-            dos.writeInt((i*30000));
+            dos.write((i*30000));
             dos.flush();         
             
          } catch (IOException ioe) {
@@ -70,7 +70,7 @@ public class BTSend {
          }
          
          try {
-            System.out.println("Received " + dis.readInt());
+            System.out.println("Received " + dis.read());
          } catch (IOException ioe) {
             System.out.println("IO Exception reading bytes:");
             System.out.println(ioe.getMessage());
