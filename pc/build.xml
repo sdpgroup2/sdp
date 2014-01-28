@@ -4,11 +4,14 @@
 	<property name="lib.dir" location="lib" />
 	<property name="src.dir" location="src/main/java" />
 	<property name="build.dir" location="target/classes" />
+	<property name="nxt.shit" location="/group/teaching/sdp/sdp2/lejos_nxj" />
+	<property name="bluetooth.wont.work.without.that.because.it.is.such.a.nice.think" value="~" />
 
     <path id="build.classpath">
         <pathelement location="${lib.dir}"/>
         <fileset dir="${lib.dir}">
             <include name="**/*.jar"/>
+        	<include name="**/*.so"/>
         </fileset>
         <pathelement location="${build.dir}"/>
         <pathelement location="${build.tests.dir}"/>
@@ -22,11 +25,22 @@
 		<mkdir dir="${build.dir}" />
 	</target>
 	
-    <target name="compile" depends="clean, makedir">
+	<target name="envclasspath">
+		<exec executable="/bin/bash">
+			<arg value="export LD_LIBRARY_PATH=${bluetooth.wont.work.without.that.because.it.is.such.a.nice.think}"/>
+		</exec>
+	</target>
+	
+    <target name="compile" depends="clean, makedir, envclasspath">
         <javac srcdir="${src.dir}" destdir="${build.dir}" 
             classpathref="build.classpath" includeantruntime="true"></javac>
     </target>
 	
-	<target name="main" depends="clean, makedir, compile">
+	<target name="run-bt" depends="compile">
+		<java classpathref="build.classpath" classpath="group2.sdp.pc.BTSend" >
+		</java>
+	</target>
+	
+	<target name="main" depends="clean, makedir, compile, run-bt">
 	</target>
 </project>
