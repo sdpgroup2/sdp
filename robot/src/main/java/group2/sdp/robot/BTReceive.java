@@ -21,7 +21,7 @@ public class BTReceive {
          LCD.drawString(waiting,0,0);
          LCD.refresh();
 
-           BTConnection btc = Bluetooth.waitForConnection();
+         BTConnection btc = Bluetooth.waitForConnection();
            
          LCD.clear();
          LCD.drawString(connected,0,0);
