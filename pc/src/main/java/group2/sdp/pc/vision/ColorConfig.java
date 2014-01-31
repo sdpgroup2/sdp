@@ -16,7 +16,7 @@ public class ColorConfig {
 	public static final Color ROBOT_BLUE_MIN = new Color(40, 60, 70);
 	public static final Color ROBOT_BLUE_MAX = new Color(70, 90, 120);
 	
-	public static final Color LINES_MIN = new Color(100, 100, 100);
+	public static final Color LINES_MIN = new Color(50, 50, 60);
 	public static final Color LINES_MAX = new Color(255, 255, 255);
 	
 	
