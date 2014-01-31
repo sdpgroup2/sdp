@@ -1,6 +1,5 @@
 package group2.sdp.robot;
 
-import lejos.nxt.Button;
 
 public class NyanCat {
 

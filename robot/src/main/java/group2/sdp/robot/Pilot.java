@@ -20,15 +20,23 @@ public class Pilot extends DifferentialPilot implements LightListener {
 		this.setTravelSpeed(speed);
 		this.forward();
 	}
+	
+	public static void kick(int angle, int speed) {
+		Motor.B.setSpeed(speed);
+		Motor.B.rotate(angle);
+		Motor.B.rotate(-angle);
+	}
 
 	public Pilot() {
 		super(56, 98, Motor.A, Motor.C, true);
 		this.leftSensor = new MyLightSensor("L", SensorPort.S4, 100);
+		this.leftSensor.addListener(this);
 		this.rightSensor = new MyLightSensor("R", SensorPort.S1, 100);
+		this.rightSensor.addListener(this);
 	}
 
 	public void lightMeasured(int lightVal, MyLightSensor sensor) {
-		System.out.println(sensor.getName() + ": " + lightVal);
+		
 	}
 
 }
