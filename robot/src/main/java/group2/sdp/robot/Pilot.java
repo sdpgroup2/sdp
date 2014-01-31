@@ -21,7 +21,7 @@ public class Pilot extends DifferentialPilot implements LightListener {
 		this.forward();
 	}
 	
-	public static void kick(int angle, int speed) {
+	public void kick(int angle, int speed) {
 		Motor.B.setSpeed(speed);
 		Motor.B.rotate(angle);
 		Motor.B.rotate(-angle);
