@@ -41,6 +41,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	private RobotCluster yellowRobotCluster;
 	private RobotCluster blueRobotCluster;
 	
+	private Timer timer = new Timer(10);
+	
 	
 	public VisionSystem() {
 		initCamera();
@@ -70,6 +72,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	}
 
 	public void nextFrame(VideoFrame frame) {
+		timer.tick(100); // Prints the framerate every 100 frames
 		BufferedImage image = frame.getBufferedImage();
 		processImage(image);
 		// Draw image to frame.
@@ -104,10 +107,10 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 			}
 		}
 		VecI ballPosition = findTheBall(image);
-		Debug.log("Ball at "+ballPosition);
 		List<Rect> blueRobots = findRobots(image, blueRobotCluster);
 		List<Rect> yellowRobots = findRobots(image, yellowRobotCluster);
-		Debug.logf("Found %d yellow robots and %d blue robots.", yellowRobots.size(), blueRobots.size());
+		//Debug.log("Ball at "+ballPosition);
+		//Debug.logf("Found %d yellow robots and %d blue robots.", yellowRobots.size(), blueRobots.size());
 	}
 	
 	public VecI findTheBall(BufferedImage image) {
