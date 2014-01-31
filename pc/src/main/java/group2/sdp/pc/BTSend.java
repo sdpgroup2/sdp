@@ -44,7 +44,7 @@ public class BTSend {
 		conn = new NXTConnector();
 
 		// Connect to any NXT over Bluetooth
-		boolean connected = conn.connectTo("btspp://SDP2A");
+		boolean connected = conn.connectTo("btspp://SDP 2D");
 	   
 		if (!connected) {
 			System.err.println("Failed to connect to any NXT");

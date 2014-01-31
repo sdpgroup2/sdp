@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.bluetooth.RemoteDevice;
+
 import lejos.nxt.LCD;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
@@ -15,8 +17,8 @@ public class BTReceive {
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		while (true) {
 
-			BTConnection btc = Bluetooth.waitForConnection();
-			
+			RemoteDevice remote = Bluetooth.getKnownDevice("SDP 2D");
+			BTConnection btc = Bluetooth.connect(remote);
 			DataInputStream dis = (DataInputStream) btc.openInputStream();
 			DataOutputStream dos = (DataOutputStream) btc.openOutputStream();
 			String receivedMessage = dis.readUTF();
