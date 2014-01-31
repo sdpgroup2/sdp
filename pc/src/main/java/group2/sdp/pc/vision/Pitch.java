@@ -12,7 +12,14 @@ public class Pitch{
 	private PitchSection LeftDefense;
 	private PitchSection RightDefense;
 	
-	public Pitch(){
+	public Pitch(PitchSection LeftAttack, PitchSection RightAttack, 
+			     PitchSection LeftDefense, PitchSection RightDefense){
+		
+		this.LeftAttack = LeftAttack;
+		this.RightAttack = RightAttack;
+		this.LeftDefense = LeftDefense;
+		this.RightDefense = RightDefense;
+		
 		
 	}
 	

@@ -33,6 +33,8 @@ public abstract class AbstractPixelCluster implements PixelCluster {
 		return pixels;
 	}
 	
+	
+	
 	/**
 	 * Get the bounding rectangle of all joined regions of pixels in this cluster.
 	 * The parameters filter out rectangles which are too big or too small.
@@ -62,6 +64,24 @@ public abstract class AbstractPixelCluster implements PixelCluster {
 	
 	public List<Rect> getRects() {
 		return getRects(0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, 0, 1);
+	}
+	
+	/**
+	 * 
+	 * returns the cluster with the largest number of pixels
+	 */
+	public Set<VecI> getLargestRegion() {
+		PixelGraph graph = new PixelGraph(pixels);
+		int max = 0;
+		Set<VecI> largestRegion = new HashSet<VecI>();
+		for (Set<VecI> region: graph.getDisjointRegions()) {
+			if (region.size() > max) {
+				max = region.size();
+				largestRegion = region;
+			} 
+		}
+		
+		return largestRegion;
 	}
 	
 }

@@ -7,15 +7,19 @@ import java.util.List;
 
 public class PitchLines extends AbstractPixelCluster {
 
-	private static int MIN_RED  = 80;
-	private static int MIN_BLUE = 40;
-	private static int MIN_GREEN= 40;
+	private Color minColor;
+	private Color maxColor;
+	
+	public PitchLines(Color minColor, Color maxColor) {
+		this.minColor = minColor;
+		this.maxColor = maxColor;
+	}
 	
 	@Override
 	public boolean colorTest(int x, int y, Color color) {
-		return (color.getRed() >= MIN_RED &&
-				color.getGreen() >= MIN_GREEN &&
-				color.getBlue() <= MIN_BLUE);
+		return (minColor.getRed() <= color.getRed() && maxColor.getRed() >= color.getRed() &&
+				minColor.getGreen() <= color.getGreen() && maxColor.getGreen() >= color.getGreen() &&
+				minColor.getBlue() <= color.getBlue() && maxColor.getBlue() >= color.getBlue());
 	}
 	
 	
