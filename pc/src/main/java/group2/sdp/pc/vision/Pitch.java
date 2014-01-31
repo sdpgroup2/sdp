@@ -2,8 +2,6 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.geom.Rect;
 
-import java.util.List;
-
 public class Pitch{
 	
 	private PitchLines lines;
