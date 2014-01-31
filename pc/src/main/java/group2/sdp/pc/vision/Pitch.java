@@ -5,18 +5,18 @@ import group2.sdp.pc.geom.Rect;
 public class Pitch{
 	
 	private PitchLines lines;
-	private PitchSection LeftAttack;
-	private PitchSection RightAttack;
-	private PitchSection LeftDefense;
-	private PitchSection RightDefense;
+	private PitchSection leftAttack;
+	private PitchSection rightAttack;
+	private PitchSection leftDefense;
+	private PitchSection rightDefense;
 	
 	public Pitch(PitchSection LeftAttack, PitchSection RightAttack, 
 			     PitchSection LeftDefense, PitchSection RightDefense){
 		
-		this.LeftAttack = LeftAttack;
-		this.RightAttack = RightAttack;
-		this.LeftDefense = LeftDefense;
-		this.RightDefense = RightDefense;
+		this.leftAttack = LeftAttack;
+		this.rightAttack = RightAttack;
+		this.leftDefense = LeftDefense;
+		this.rightDefense = RightDefense;
 		
 		
 	}

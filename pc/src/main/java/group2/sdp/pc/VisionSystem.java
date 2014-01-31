@@ -4,9 +4,10 @@ import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.BallCluster;
 import group2.sdp.pc.vision.ColorConfig;
-import group2.sdp.pc.vision.RobotCluster;
 import group2.sdp.pc.vision.PitchLines;
+import group2.sdp.pc.vision.RobotCluster;
 import group2.sdp.pc.vision.SkyCam;
+import group2.sdp.pc.vision.filter.ImageStatus;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -38,12 +39,16 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	private SkyCam skyCam;
 	private Dimension frameSize;
 	
+	// Clusters
 	private BallCluster ballCluster;
 	private RobotCluster yellowRobotCluster;
 	private RobotCluster blueRobotCluster;
 	private PitchLines linesCluster;
 	
 	private Timer timer = new Timer(10);
+	
+	// Stores colors for the current frame
+	private int[] colorArray;
 	
 	
 	public VisionSystem() {
@@ -57,6 +62,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	public void initCamera() {
 		skyCam = new SkyCam();
 		frameSize = skyCam.getSize();
+		colorArray = new int[frameSize.width * frameSize.height];
 	}
 	
 	public void initWindow() {
@@ -75,14 +81,18 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	}
 
 	public void nextFrame(VideoFrame frame) {
-		timer.tick(100); // Prints the framerate every 100 frames
+		timer.tick(25); // Prints the framerate every 25 frames
 		BufferedImage image = frame.getBufferedImage();
+		// Read image into array
+		image.getRGB(0, 0, frameSize.width, frameSize.height, colorArray, 0, frameSize.width);
+		//ImageStatus status = new ImageStatus(colorArray);
+		//Debug.log(status.toString());
 		processImage(image);
 		// Draw image to frame.
 		Graphics graphics = windowFrame.getGraphics();
 		graphics.drawImage(image, 0, 0, frameSize.width, frameSize.height, null);
 		frame.recycle();
-	}
+	}	
 
 	/**
 	 * Processes an image to find positions of all the game objects.
@@ -95,28 +105,27 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		blueRobotCluster.clear();
 		linesCluster.clear();
 		// Loop through pixels.
+		int width = frameSize.width;
 		for (int x=0; x<frameSize.width; x++) {
 			for (int y=0; y<frameSize.height; y++) {
-				Color color = new Color(image.getRGB(x, y));
+				Color color = new Color(colorArray[y*width + x]);
 				// Test the pixel for each of the clusters
 				boolean isBallPixel = ballCluster.testPixel(x, y, color);
 				boolean isYellowPixel = yellowRobotCluster.testPixel(x, y, color);
 				boolean isBluePixel = blueRobotCluster.testPixel(x, y, color);
-				boolean isLinePixel = linesCluster.testPixel(x, y, color);
+				//boolean isLinePixel = linesCluster.testPixel(x, y, color);
 				if (Debug.VISION_FILL_PIXELS) {
 					// Color the pixels so we can see what got matched
 					Debug.drawPixel(isBallPixel, image, x, y, Color.red);
 					Debug.drawPixel(isYellowPixel, image, x, y, Color.yellow);
 					Debug.drawPixel(isBluePixel, image, x, y, Color.blue);
-					Debug.drawPixel(isLinePixel, image, x, y, Color.white);
+					//Debug.drawPixel(isLinePixel, image, x, y, Color.white);
 				}
 			}
 		}
-		VecI ballPosition = findTheBall(image);
-		List<Rect> blueRobots = findRobots(image, blueRobotCluster);
-		List<Rect> yellowRobots = findRobots(image, yellowRobotCluster);
-		//Debug.log("Ball at "+ballPosition);
-		//Debug.logf("Found %d yellow robots and %d blue robots.", yellowRobots.size(), blueRobots.size());
+		findTheBall(image);
+		findRobots(image, blueRobotCluster);
+		findRobots(image, yellowRobotCluster);
 	}
 	
 	public VecI findTheBall(BufferedImage image) {

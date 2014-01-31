@@ -13,7 +13,7 @@ import java.util.List;
 public class BallCluster extends AbstractPixelCluster {
 	
 	private static int MIN_RED = 80;
-	private static int MAX_GREEN_BLUE = 40;
+	private static int MAX_GREEN_BLUE = 70;
 	
 	
 	@Override
