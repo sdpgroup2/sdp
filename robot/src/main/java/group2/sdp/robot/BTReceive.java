@@ -26,7 +26,7 @@ public class BTReceive {
 			OutputStream dos = (OutputStream) btc.openOutputStream();
 			int receivedMessage = dis.read();
 			
-			if (receivedMessage.equals("forward")) {
+			if (receivedMessage == 0) {
 				//do appropriate action
 			} 
 			
