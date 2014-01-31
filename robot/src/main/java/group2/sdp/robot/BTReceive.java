@@ -11,34 +11,25 @@ import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 
 public class BTReceive {
-
-	public static void main(String[] args) throws IOException, InterruptedException {
-
-		String connected = "Connected";
-		String waiting = "Waiting...";
-		String closing = "Closing...";
+	/**class checking stream repeatedly for a new message, and respond to it **/
+	public static void main(String[] args) throws IOException, InterruptedException {	
 		while (true) {
-			LCD.drawString(waiting, 0, 0);
-			LCD.refresh();
 
 			BTConnection btc = Bluetooth.waitForConnection();
-
+			
 			DataInputStream dis = (DataInputStream) btc.openInputStream();
 			DataOutputStream dos = (DataOutputStream) btc.openOutputStream();
-
-			for (int i = 0; i < 100; i++) {
-				int n = dis.read();
-				LCD.drawInt(n, 7, 0, 1);
-				LCD.refresh();
-				dos.write(-n);
-				dos.flush();
-			}
-
+			String receivedMessage = dis.readUTF();
+			
+			if (receivedMessage.equals("forward")) {
+				//do appropriate action
+			} 
+			
 			dis.close();
 			dos.close();
 			Thread.sleep(100); // wait for data to drain
 			LCD.clear();
-			LCD.drawString(closing, 0, 0);
+//			LCD.drawString(closing, 0, 0);
 			LCD.refresh();
 			btc.close();
 			LCD.clear();
