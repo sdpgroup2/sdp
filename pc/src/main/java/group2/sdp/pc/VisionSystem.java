@@ -25,7 +25,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 /**
  * The main class for the vision system. At the moment, it is runnable on its
  * own but in future, it may be created via a separate main class.
- * @author s1133753
+ * @author Paul Harris
  *
  */
 public class VisionSystem extends WindowAdapter implements CaptureCallback {
