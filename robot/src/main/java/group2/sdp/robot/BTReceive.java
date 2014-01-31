@@ -13,15 +13,18 @@ import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 
 public class BTReceive {
-	/**class checking stream repeatedly for a new message, and respond to it **/
+	/**class checking stream repeatedly for a new message, and respond to it
+	 * @author Gordon Edwards and Michael Mair
+	 * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 **/
+	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		while (true) {
 
 			RemoteDevice remote = Bluetooth.getKnownDevice("SDP 2D");
 			BTConnection btc = Bluetooth.connect(remote);
-			DataInputStream dis = (DataInputStream) btc.openInputStream();
-			DataOutputStream dos = (DataOutputStream) btc.openOutputStream();
-			String receivedMessage = dis.readUTF();
+			InputStream dis = (InputStream) btc.openInputStream();
+			OutputStream dos = (OutputStream) btc.openOutputStream();
+			int receivedMessage = dis.read();
 			
 			if (receivedMessage.equals("forward")) {
 				//do appropriate action
