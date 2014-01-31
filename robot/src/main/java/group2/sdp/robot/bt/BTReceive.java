@@ -1,7 +1,5 @@
-package group2.sdp.robot;
+package group2.sdp.robot.bt;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

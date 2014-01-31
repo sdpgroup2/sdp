@@ -1,10 +1,11 @@
-package group2.sdp.robot;
+package group2.sdp.robot.milestones;
 
+import group2.sdp.robot.Pilot;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.util.TextMenu;
 
-public class App {
+public class Milestone1 {
 
 	public static final int ROTATE_RIGHT = 1;
 	public static final int ROTATE_LEFT = -1;
