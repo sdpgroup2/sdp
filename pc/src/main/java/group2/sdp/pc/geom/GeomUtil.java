@@ -4,6 +4,12 @@ import java.util.Collection;
 
 public class GeomUtil {
 
+	/**
+	 * 
+	 * @param pixels
+	 * @return      		The rectangle coordinates which form
+	 * 						the boundary for the cluster of pixels      
+	 */
 	public static Rect getBoundingBox(Collection<VecI> pixels) {
 		if (pixels.size() == 0) {
 			return null;

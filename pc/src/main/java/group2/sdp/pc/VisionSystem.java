@@ -5,6 +5,7 @@ import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.BallCluster;
 import group2.sdp.pc.vision.ColorConfig;
 import group2.sdp.pc.vision.RobotCluster;
+import group2.sdp.pc.vision.PitchLines;
 import group2.sdp.pc.vision.SkyCam;
 
 import java.awt.Color;
@@ -24,7 +25,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 /**
  * The main class for the vision system. At the moment, it is runnable on its
  * own but in future, it may be created via a separate main class.
- * @author s1133753
+ * @author Paul Harris
  *
  */
 public class VisionSystem extends WindowAdapter implements CaptureCallback {
@@ -40,6 +41,9 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	private BallCluster ballCluster;
 	private RobotCluster yellowRobotCluster;
 	private RobotCluster blueRobotCluster;
+	private PitchLines linesCluster;
+	
+	private Timer timer = new Timer(10);
 	
 	
 	public VisionSystem() {
@@ -67,9 +71,11 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		ballCluster = new BallCluster();
 		yellowRobotCluster = new RobotCluster(ColorConfig.ROBOT_YELLOW_MIN, ColorConfig.ROBOT_YELLOW_MAX);
 		blueRobotCluster = new RobotCluster(ColorConfig.ROBOT_BLUE_MIN, ColorConfig.ROBOT_BLUE_MAX);
+		linesCluster = new PitchLines(ColorConfig.LINES_MIN, ColorConfig.LINES_MAX);
 	}
 
 	public void nextFrame(VideoFrame frame) {
+		timer.tick(100); // Prints the framerate every 100 frames
 		BufferedImage image = frame.getBufferedImage();
 		processImage(image);
 		// Draw image to frame.
@@ -87,6 +93,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		ballCluster.clear();
 		yellowRobotCluster.clear();
 		blueRobotCluster.clear();
+		linesCluster.clear();
 		// Loop through pixels.
 		for (int x=0; x<frameSize.width; x++) {
 			for (int y=0; y<frameSize.height; y++) {
@@ -95,19 +102,21 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 				boolean isBallPixel = ballCluster.testPixel(x, y, color);
 				boolean isYellowPixel = yellowRobotCluster.testPixel(x, y, color);
 				boolean isBluePixel = blueRobotCluster.testPixel(x, y, color);
+				boolean isLinePixel = linesCluster.testPixel(x, y, color);
 				if (Debug.VISION_FILL_PIXELS) {
 					// Color the pixels so we can see what got matched
 					Debug.drawPixel(isBallPixel, image, x, y, Color.red);
 					Debug.drawPixel(isYellowPixel, image, x, y, Color.yellow);
 					Debug.drawPixel(isBluePixel, image, x, y, Color.blue);
+					Debug.drawPixel(isLinePixel, image, x, y, Color.white);
 				}
 			}
 		}
 		VecI ballPosition = findTheBall(image);
-		Debug.log("Ball at "+ballPosition);
 		List<Rect> blueRobots = findRobots(image, blueRobotCluster);
 		List<Rect> yellowRobots = findRobots(image, yellowRobotCluster);
-		Debug.logf("Found %d yellow robots and %d blue robots.", yellowRobots.size(), blueRobots.size());
+		//Debug.log("Ball at "+ballPosition);
+		//Debug.logf("Found %d yellow robots and %d blue robots.", yellowRobots.size(), blueRobots.size());
 	}
 	
 	public VecI findTheBall(BufferedImage image) {

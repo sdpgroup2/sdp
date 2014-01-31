@@ -29,7 +29,8 @@ public class RobotCluster extends AbstractPixelCluster {
 	}
 	
 	public List<Rect> getRobotRects() {
-		return getRects(16, 32, 16, 32, 0.4f, 1.0f);
+		return getRects(10, 25, 10, 25, 0.4f, 1.0f);
+
 	}
 
 }
