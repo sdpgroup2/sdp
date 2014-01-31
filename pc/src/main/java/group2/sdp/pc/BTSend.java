@@ -22,69 +22,53 @@ import lejos.pc.comm.*;
  * SignalTest. Run the NXT program first until it is
  * waiting for a connection, and then run the PC program. 
  * 
- * @author Lawrie Griffiths
- *
+ * @author Gordon Edwards 
+ * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
  */
 public class BTSend {   
-   public static void main(String[] args) {
-	 
-      NXTConnector conn = new NXTConnector();
-//   
-//      conn.addLogListener(new NXTCommLogListener(){
-//
-//         public void logEvent(String message) {
-//            System.out.println("BTSend Log.listener: "+message);
-//            
-//         }
-//
-//         public void logEvent(Throwable throwable) {
-//            System.out.println("BTSend Log.listener - stack trace: ");
-//             throwable.printStackTrace();
-//            
-//         }
-//         
-//      } 
-//      );
-      // Connect to any NXT over Bluetooth
-      boolean connected = conn.connectTo("btspp://");
+	private static DataOutputStream dos;
+	private static DataInputStream dis;
+	private static NXTConnector conn;
+	
+	public static void sendForwardMessage() throws IOException {
+		initialise();
+		dos.writeChars("forward");
+		closeStreams();
+	} 
+	
+	public static void turnForwardMessage(Double degrees) throws IOException {
+		initialise();
+		dos.writeChars("turn " + degrees);
+		closeStreams();
+	} 
+	
+	private static void initialise() {
+		conn = new NXTConnector();
+
+		// Connect to any NXT over Bluetooth
+		boolean connected = conn.connectTo("btspp://");
+	   
+		if (!connected) {
+			System.err.println("Failed to connect to any NXT");
+			System.exit(1);
+		}
+
+		dos = (DataOutputStream) conn.getOutputStream();
+		dis = (DataInputStream) conn.getInputStream();            
+   }
+	
+	private static void closeStreams() {
+		try {
+	    	dis.close();
+	    	dos.close();
+	    	conn.close();
+	   	} catch (IOException ioe) {
+	    	System.out.println("IOException closing connection:");
+	    	System.out.println(ioe.getMessage());
+	    }
+	}
    
-      
-      if (!connected) {
-         System.err.println("Failed to connect to any NXT");
-         System.exit(1);
-      }
-      
-      OutputStream dos = conn.getOutputStream();
-      InputStream dis = conn.getInputStream();
-            
-      for(int i=0;i<100;i++) {
-         try {
-            System.out.println("Sending " + (i*30000));
-            dos.write((i*30000));
-            dos.flush();         
-            
-         } catch (IOException ioe) {
-            System.out.println("IO Exception writing bytes:");
-            System.out.println(ioe.getMessage());
-            break;
-         }
-         
-         try {
-            System.out.println("Received " + dis.read());
-         } catch (IOException ioe) {
-            System.out.println("IO Exception reading bytes:");
-            System.out.println(ioe.getMessage());
-            break;
-         }
-      }
-      
-      try {
-         dis.close();
-         dos.close();
-         conn.close();
-      } catch (IOException ioe) {
-         System.out.println("IOException closing connection:");
-         System.out.println(ioe.getMessage());
-      }
+   public BTSend() {
+	   
    }
 }
