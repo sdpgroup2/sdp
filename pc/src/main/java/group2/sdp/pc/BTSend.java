@@ -10,7 +10,8 @@ import lejos.pc.comm.*;
  
  * Calling methods in this class will send messages to device through a stream received in the BTReceive class, and prompts
  * actions in the robot package
- * @author Gordon Edwards and Michael Mair
+ * @author Gordon Edwards
+ * @author Michael Mair
  * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
  */
 public class BTSend {   
