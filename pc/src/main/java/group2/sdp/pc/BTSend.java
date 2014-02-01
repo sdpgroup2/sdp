@@ -25,26 +25,43 @@ public class BTSend {
 				robotMacAddress);
 	}
 	
-	public void forward(String robotName) throws IOException {
-
+	public void forward(int speed) throws IOException {
+		
 	} 
 	
-	public void turn(String robotName, Double degrees) throws IOException {
-		openBluetoothConn(robotName);
-		closeBluetoothConn();
-	} 
-	
-	public void setSpeed(String robotName, Double speed) throws IOException {
+	public void setSpeed(int speed) throws IOException {
 
 	}
 	
-	public void arc(String robotName, Double speed) throws IOException {
+	public void arc(int speed) throws IOException {
 
 	}
-	public void rotate(String robotName, Double speed) throws IOException {
-
+	public int rotate(int direction, int angle, int speed) throws IOException {
+		int[] command = { Commands.ROTATE, direction, angle, speed };
+		int confirmation = 0;
+		try {
+			confirmation = sendToRobot(command);
+		} catch (IOException e1) {
+			System.out.println("Could not send command");
+			e1.printStackTrace();
+		}
+		System.out.println("Rotate...");
+		return confirmation;
 	}
-	public int kick(String robotName, Double speed) throws IOException {
+	public int stop() {
+		int[] command = { Commands.STOP, 0, 0, 0 };
+		int confirmation = 0;
+		try {
+			confirmation = sendToRobot(command);
+		} catch (IOException e1) {
+			System.out.println("Could not send command");
+			e1.printStackTrace();
+		}
+		System.out.println("Stop...");
+		return confirmation;
+	}
+	
+	public int kick(int speed) throws IOException {
 
 		
 		int[] command = { Commands.KICK, 0, 0, 0 };
