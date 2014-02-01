@@ -2,6 +2,8 @@ package group2.sdp.pc;
 
 import java.io.*;
 
+import com.ibm.oti.connection.btgoep.Connection;
+
 import lejos.pc.comm.*;
 
 /**
@@ -12,61 +14,100 @@ import lejos.pc.comm.*;
  * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
  */
 public class BTSend {   
-	private static DataOutputStream dos;
-	private static DataInputStream dis;
+	private static OutputStream outStream;
+	private static InputStream inStream;
 	private static NXTConnector conn;
+	private static boolean connected = false;
+	private static int buffer = 0;
 	
-	public static void sendForwardMessage() throws IOException {
-		initialise();
-		dos.writeChars("forward");
+	public static void sendForwardMessage(String robotName) throws IOException {
+		openBluetoothConn(robotName);
+
 		closeStreams();
 	} 
 	
-	public static void turnMessage(Double degrees) throws IOException {
-		initialise();
-		dos.writeChars("turn " + degrees);
+	public static void sendturnMessage(String robotName, Double degrees) throws IOException {
+		openBluetoothConn(robotName);
+		outStream.write("turn " + degrees);
 		closeStreams();
 	} 
 	
-	public static void setSpeedMessage(Double speed) throws IOException {
-		initialise();
-		dos.writeChars("speed " + speed);
+	public static void sendSpeedMessage(String robotName, Double speed) throws IOException {
+		openBluetoothConn(robotName);
+		outStream.writeChars("speed " + speed);
 		closeStreams();
 	}
 	
-	public static void setAccMessage(Double speed) throws IOException {
-		initialise();
-		dos.writeChars("speed " + speed);
+	public static void sendAccMessage(String robotName, Double speed) throws IOException {
+		openBluetoothConn(robotName);
+		outStream.writeChars("speed " + speed);
 		closeStreams();
 	}
 	
-	private static void initialise() {
+	private static void openBluetoothConn(String robotName) {
 		conn = new NXTConnector();
 
 		// Connect to any NXT over Bluetooth
-		boolean connected = conn.connectTo("btspp://SDP 2D");
-	   
+		
+		connected = conn.connectTo("btspp://SDP 2D");
+		
 		if (!connected) {
 			System.err.println("Failed to connect to any NXT");
 			System.exit(1);
 		}
 
-		dos = (DataOutputStream) conn.getOutputStream();
-		dis = (DataInputStream) conn.getInputStream();            
+		outStream = (OutputStream) conn.getOutputStream();
+		inStream = (InputStream) conn.getInputStream();            
    }
 	
 	private static void closeStreams() {
 		try {
-	    	dis.close();
-	    	dos.close();
+	    	inStream.close();
+	    	outStream.close();
 	    	conn.close();
+	    	connected = false;
 	   	} catch (IOException ioe) {
 	    	System.out.println("IOException closing connection:");
 	    	System.out.println(ioe.getMessage());
 	    }
 	}
-   
-   public BTSend() {
-	   
-   }
+	
+	public int sendToRobot(int[] comm) throws IOException {
+		if (!connected)
+			return -3;
+		if (buffer < 2) {
+			byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2],
+					(byte) comm[3] };
+
+			outStream.write(command);
+			outStream.flush();
+			buffer += 1;
+		} else {
+			// The buffer is full we can't send a package;
+			return -1;
+		}
+
+		int[] confirmation;
+		try {
+			confirmation = receiveFromRobot();
+			if (confirmation[1] == comm[0]) {
+				buffer -= 1;
+				return confirmation[1];
+			}
+		} catch (IOException e1) {
+			System.out.println("Could not receive confirmation");
+			buffer -= 1;
+			return -2;
+		}
+		System.out.println("Buffer is full, command not sent!");
+		return -2;
+	}
+	
+	public int[] receiveFromRobot() throws IOException {
+		byte[] res = new byte[4];
+		inStream.read(res);
+		int[] ret = { (int) (res[0]), (int) (res[1]), (int) (res[2]),
+				(int) (res[3]) };
+		return ret;
+	}
 }
