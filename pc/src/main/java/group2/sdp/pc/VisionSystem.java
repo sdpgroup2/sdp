@@ -30,10 +30,6 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  *
  */
 public class VisionSystem extends WindowAdapter implements CaptureCallback {
-
-	public static void main(String[] args) {
-		new VisionSystem();
-	}
 	
 	private JFrame windowFrame;
 	private SkyCam skyCam;
@@ -51,6 +47,11 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	private int[] colorArray;
 	
 	
+	public static void main(String[] args) {
+		new VisionSystem();
+	}
+	
+	
 	public VisionSystem() {
 		initCamera();
 		initWindow();
@@ -59,12 +60,18 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		skyCam.startVision(this);
 	}
 	
+	/**
+	 * Initialises the camera and creates a colorArray which is going to contain
+	 * RGB values of the pitch
+	 */
 	public void initCamera() {
 		skyCam = new SkyCam();
 		frameSize = skyCam.getSize();
 		colorArray = new int[frameSize.width * frameSize.height];
 	}
-	
+	/**
+	 * Initialise a window frame.
+	 */
 	public void initWindow() {
 		windowFrame = new JFrame("Vision");
 		windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,6 +80,9 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		windowFrame.setSize(skyCam.getSize());
 	}
 	
+	/**
+	 * Initialise clusters that identify the balls, robots and lines.
+	 */
 	public void initClusters() {
 		ballCluster = new BallCluster();
 		yellowRobotCluster = new RobotCluster(ColorConfig.ROBOT_YELLOW_MIN, ColorConfig.ROBOT_YELLOW_MAX);
@@ -80,6 +90,10 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		linesCluster = new PitchLines(ColorConfig.LINES_MIN, ColorConfig.LINES_MAX);
 	}
 
+	/** 
+	 * Callback that gets the next frame of the video.
+	 * @param frame - The frame that was captured.
+	 */
 	public void nextFrame(VideoFrame frame) {
 		timer.tick(25); // Prints the framerate every 25 frames
 		BufferedImage image = frame.getBufferedImage();
@@ -96,7 +110,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 
 	/**
 	 * Processes an image to find positions of all the game objects.
-	 * @param image The current frame of video.
+	 * @param image - The current frame of video.
 	 */
 	private void processImage(BufferedImage image) {
 		// Clear all clusters.
@@ -105,14 +119,13 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		blueRobotCluster.clear();
 		linesCluster.clear();
 		// Loop through pixels.
-		int width = frameSize.width;
-		for (int x=0; x<frameSize.width; x++) {
-			for (int y=0; y<frameSize.height; y++) {
-				Color color = new Color(colorArray[y*width + x]);
+		for (int x=0; x < frameSize.width; x++) {
+			for (int y=0; y < frameSize.height; y++) {
+				Color color = new Color(colorArray[y * frameSize.width + x]);
 				// Test the pixel for each of the clusters
 				boolean isBallPixel = ballCluster.testPixel(x, y, color);
 				boolean isYellowPixel = yellowRobotCluster.testPixel(x, y, color);
-				boolean isBluePixel = blueRobotCluster.testPixel(x, y, color);
+				boolean isBluePixel = blueRobotCluster.testPixel(x, y, color);    
 				//boolean isLinePixel = linesCluster.testPixel(x, y, color);
 				if (Debug.VISION_FILL_PIXELS) {
 					// Color the pixels so we can see what got matched
@@ -128,6 +141,11 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		findRobots(image, yellowRobotCluster);
 	}
 	
+	/**
+	 * Finds the ball in the image
+	 * @param image - The image we are looking for a ball in.
+	 * @return The vector of the centre of the bounding box of the ball.
+	 */
 	public VecI findTheBall(BufferedImage image) {
 		Rect ballRect = ballCluster.getBallRect();
 		if (ballRect != null) {
@@ -140,6 +158,12 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		}
 	}
 	
+	/**
+	 * Draws bounding boxes around the robots
+	 * @param image - The image we are looking for robots in
+	 * @param cluster - The cluster that contains robot pixels
+	 * @return The bounding boxes of the robots.
+	 */
 	public List<Rect> findRobots(BufferedImage image, RobotCluster cluster) {
 		List<Rect> rects = cluster.getRobotRects();
 		for (Rect rect: rects) {
@@ -150,6 +174,10 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		return rects;
 	}
 	
+	/**
+	 * Called if there is an exception raised by the listener.
+	 * @param e - The exception raised.
+	 */
 	public void exceptionReceived(V4L4JException e) {
 		skyCam.stopVision();
 		e.printStackTrace();
