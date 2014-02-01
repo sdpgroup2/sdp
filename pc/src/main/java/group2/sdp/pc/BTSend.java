@@ -12,58 +12,78 @@ import lejos.pc.comm.*;
  * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
  */
 public class BTSend {   
-	private static OutputStream outStream;
-	private static InputStream inStream;
-	private static NXTConnector conn;
-	private static boolean connected = false;
-	private static int buffer = 0;
+	private OutputStream outStream;
+	private InputStream inStream;
+	private NXTComm comm;
+	private boolean connected = false;
+	private int buffer = 0;
+	private NXTInfo nxtInfo;
 	
-	public static void forward(String robotName) throws IOException {
-		openBluetoothConn(robotName);
-		closeStreams();
-	} 
 	
-	public static void turn(String robotName, Double degrees) throws IOException {
-		openBluetoothConn(robotName);
-		closeStreams();
-	} 
-	
-	public static void setSpeed(String robotName, Double speed) throws IOException {
-		openBluetoothConn(robotName);
-		closeStreams();
+	public BTSend(String robotName, String robotMacAddress){
+		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
+				robotMacAddress);
 	}
 	
-	public static void arc(String robotName, Double speed) throws IOException {
-		openBluetoothConn(robotName);
-		outStream.writeChars("speed " + speed);
-		closeStreams();
-	}
-	public static void rotate(String robotName, Double speed) throws IOException {
-		openBluetoothConn(robotName);
-		closeStreams();
-	}
-	
-	private static void openBluetoothConn(String robotName) {
-		conn = new NXTConnector();
+	public void forward(String robotName) throws IOException {
 
-		// Connect to any NXT over Bluetooth
+	} 
+	
+	public void turn(String robotName, Double degrees) throws IOException {
+		openBluetoothConn(robotName);
+		closeBluetoothConn();
+	} 
+	
+	public void setSpeed(String robotName, Double speed) throws IOException {
+
+	}
+	
+	public void arc(String robotName, Double speed) throws IOException {
+
+	}
+	public void rotate(String robotName, Double speed) throws IOException {
+
+	}
+	public int kick(String robotName, Double speed) throws IOException {
+
 		
-		connected = conn.connectTo("btspp://SDP 2D");
+		int[] command = { Commands.KICK, 0, 0, 0 };
+		int confirmation = 0;
+		try {
+			confirmation = sendToRobot(command);
+		} catch (IOException e1) {
+			System.out.println("Could not send command");
+			e1.printStackTrace();
+		}
+		System.out.println("Kick");
+		return confirmation;
 		
-		if (!connected) {
-			System.err.println("Failed to connect to any NXT");
-			System.exit(1);
+	}
+	public void openBluetoothConn(String robotName) throws IOException {
+		
+		comm = null;
+		try {
+			comm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
+		} catch (NXTCommException e) {
+			System.err.println("Could not create connection: " + e.toString());
 		}
 
-		outStream = (OutputStream) conn.getOutputStream();
-		inStream = (InputStream) conn.getInputStream();            
+		System.out.println("Attempting to connect to robot...");
+
+		try {
+			comm.open(nxtInfo);
+			outStream = (OutputStream) comm.getOutputStream();
+			inStream = (InputStream) comm.getInputStream();   
+		} catch (NXTCommException e) {
+			throw new IOException("Failed to connect " + e.toString());
+		} 
    }
 	
-	private static void closeStreams() {
+	public void closeBluetoothConn() {
 		try {
 	    	inStream.close();
 	    	outStream.close();
-	    	conn.close();
+	    	comm.close();
 	    	connected = false;
 	   	} catch (IOException ioe) {
 	    	System.out.println("IOException closing connection:");
