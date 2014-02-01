@@ -21,25 +21,30 @@ public class BTSend {
 	private static boolean connected = false;
 	private static int buffer = 0;
 	
-	public static void sendForwardMessage(String robotName) throws IOException {
+	public static void forward(String robotName) throws IOException {
 		openBluetoothConn(robotName);
 
 		closeStreams();
 	} 
 	
-	public static void sendturnMessage(String robotName, Double degrees) throws IOException {
+	public static void turn(String robotName, Double degrees) throws IOException {
 		openBluetoothConn(robotName);
 		outStream.write("turn " + degrees);
 		closeStreams();
 	} 
 	
-	public static void sendSpeedMessage(String robotName, Double speed) throws IOException {
+	public static void setSpeed(String robotName, Double speed) throws IOException {
 		openBluetoothConn(robotName);
 		outStream.writeChars("speed " + speed);
 		closeStreams();
 	}
 	
-	public static void sendAccMessage(String robotName, Double speed) throws IOException {
+	public static void arc(String robotName, Double speed) throws IOException {
+		openBluetoothConn(robotName);
+		outStream.writeChars("speed " + speed);
+		closeStreams();
+	}
+	public static void rotate(String robotName, Double speed) throws IOException {
 		openBluetoothConn(robotName);
 		outStream.writeChars("speed " + speed);
 		closeStreams();
