@@ -4,10 +4,7 @@ import java.io.IOException;
 
 public class Communication {
 	public static void main(String[] args) {
-		try {
-			BTSend.sendForwardMessage();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		BTSend btSendRobot1 = new BTSend("nxt name","mac address");
+
 	}
 }
