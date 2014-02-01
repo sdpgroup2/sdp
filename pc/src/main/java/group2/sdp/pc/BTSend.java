@@ -2,12 +2,9 @@ package group2.sdp.pc;
 
 import java.io.*;
 
-import com.ibm.oti.connection.btgoep.Connection;
-
 import lejos.pc.comm.*;
 
 /**
- 
  * Calling methods in this class will send messages to device through a stream received in the BTReceive class, and prompts
  * actions in the robot package
  * @author Gordon Edwards
@@ -23,25 +20,21 @@ public class BTSend {
 	
 	public static void sendForwardMessage(String robotName) throws IOException {
 		openBluetoothConn(robotName);
-
 		closeStreams();
 	} 
 	
 	public static void sendturnMessage(String robotName, Double degrees) throws IOException {
 		openBluetoothConn(robotName);
-		outStream.write("turn " + degrees);
 		closeStreams();
 	} 
 	
 	public static void sendSpeedMessage(String robotName, Double speed) throws IOException {
 		openBluetoothConn(robotName);
-		outStream.writeChars("speed " + speed);
 		closeStreams();
 	}
 	
 	public static void sendAccMessage(String robotName, Double speed) throws IOException {
 		openBluetoothConn(robotName);
-		outStream.writeChars("speed " + speed);
 		closeStreams();
 	}
 	
@@ -107,8 +100,8 @@ public class BTSend {
 	public int[] receiveFromRobot() throws IOException {
 		byte[] res = new byte[4];
 		inStream.read(res);
-		int[] ret = { (int) (res[0]), (int) (res[1]), (int) (res[2]),
-				(int) (res[3]) };
+		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
+				(int) res[3] };
 		return ret;
 	}
 }
