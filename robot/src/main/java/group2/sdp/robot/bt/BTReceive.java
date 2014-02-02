@@ -22,6 +22,8 @@ public class BTReceive {
 	private static OutputStream outStream;
 	private static boolean forceQuit;
 	public static void main(String[] args) throws IOException, InterruptedException {	
+		
+		
 		while (!forceQuit) {
 			try {
 				
@@ -45,7 +47,7 @@ public class BTReceive {
 					// Get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					inStream.read(byteBuffer);
-
+					
 					opcode = byteBuffer[0];
 					option1 = byteBuffer[1];
 					option2 = byteBuffer[2];
@@ -73,7 +75,7 @@ public class BTReceive {
 							LCD.clear();
 							LCD.drawString("Kicking!", 0, 2);
 							LCD.refresh();
-							Actions.kick(option1);
+							Actions.kick(option1,option2);
 							replyToPC(opcode, outStream);
 							break;
 						
