@@ -82,7 +82,7 @@ public class BTSend {
 	}
 	
 	public void disconnect() {
-		int[] command = { Commands.QUIT, 0, 0, 0 };
+		int[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
 			// Give the command time to send - prevents brick crash
@@ -168,6 +168,7 @@ public class BTSend {
 		try {
 			confirmation = receiveFromRobot();
 			if (confirmation[1] == comm[0]) {
+				System.out.println("Successfully sent message");
 				buffer -= 1;
 				return confirmation[1];
 			}

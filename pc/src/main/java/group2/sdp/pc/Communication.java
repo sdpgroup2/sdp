@@ -4,7 +4,8 @@ import java.io.IOException;
 
 public class Communication {
 	public static void main(String[] args) {
-		BTSend btSendRobot1 = new BTSend("nxt name","mac address");
-
+		//note of name and MAC
+		BTSend btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
+		BTSend btSendR2 = new BTSend("SDP 2A", "00165307D55F");
 	}
 }
