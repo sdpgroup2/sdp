@@ -12,9 +12,11 @@ There are a couple of other things you need to do that aren't immediately
 obvious.
 
 1.  Just before you run 'ant test-gui', you have to use the following console
-    command: `export LD_LIBRARY_PATH=/afs/inf.ed.ac.uk/user/sXX/sXXXXXXX/Downloads/v4l4j-0.8.10`
+    command: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/afs/inf.ed.ac.uk/user/sXX/sXXXXXXX/Downloads/v4l4j-0.8.10`.
     Make sure to replace the 'X's with the appropriate numbers for your home
-    directory.
+    directory. Alternatively, you can add the command into your ~/.bashrc or
+    ~/.bash_profile files and it will get applied every time you start a new
+    terminal session. Thus you don't need to re-run the command every time.
 
 2.  Once test-gui has opened a window, change the value of the **Inputs** option
     from 'Composite0' to 'S-Video'.
@@ -56,14 +58,14 @@ BallCluster, RobotCluster, PitchLines and PitchSection are all examples of
 this. Most of the functionality is within AbstractPixelCluster, so look there
 to really understand it.
 
-The most important function is:  
+The most important function is:
 `public boolean testPixel(int x, int y, Color color)`
 
 This will call the colorTest function (which differs between different kinds
 of cluster) to determine whether the pixel should be included in the cluster.
 If so, it adds that pixel and returns true.
 
-To get the rectangles of objects in the cluster use:  
+To get the rectangles of objects in the cluster use:
 `public List<Rect> getRects(int minWidth, int maxWidth,
                             int minHeight, int maxHeight,
                             float minFill, float maxFill)`
