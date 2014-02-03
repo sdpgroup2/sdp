@@ -19,5 +19,4 @@ public class ColorConfig {
 	public static final Color LINES_MIN = new Color(50, 50, 60);
 	public static final Color LINES_MAX = new Color(255, 255, 255);
 	
-	
 }

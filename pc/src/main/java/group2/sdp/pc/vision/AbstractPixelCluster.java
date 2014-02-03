@@ -17,8 +17,19 @@ public abstract class AbstractPixelCluster implements PixelCluster {
 
 	protected abstract boolean colorTest(int x, int y, Color color);
 	
+	/**
+	 * Does the cluster contain any pixels?
+	 * @return The emptiness of the cluster
+	 */
+	public boolean isClear() {
+		return this.pixels.isEmpty();
+	}
+	
+	/**
+	 * Clears out the cluster
+	 */
 	public void clear() {
-		pixels.clear();
+		this.pixels.clear();
 	}
 	
 	public boolean testPixel(int x, int y, Color color) {

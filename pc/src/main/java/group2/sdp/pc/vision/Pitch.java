@@ -2,7 +2,7 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.geom.Rect;
 
-public class Pitch{
+public class Pitch {
 	
 	private PitchLines lines;
 	private PitchSection leftAttack;
@@ -10,15 +10,12 @@ public class Pitch{
 	private PitchSection leftDefense;
 	private PitchSection rightDefense;
 	
-	public Pitch(PitchSection LeftAttack, PitchSection RightAttack, 
-			     PitchSection LeftDefense, PitchSection RightDefense){
-		
-		this.leftAttack = LeftAttack;
-		this.rightAttack = RightAttack;
-		this.leftDefense = LeftDefense;
-		this.rightDefense = RightDefense;
-		
-		
+	public Pitch(PitchSection leftAttack, PitchSection rightAttack, 
+			     PitchSection leftDefense, PitchSection rightDefense) {
+		this.leftAttack = leftAttack;
+		this.rightAttack = rightAttack;
+		this.leftDefense = leftDefense;
+		this.rightDefense = rightDefense;
 	}
 	
 	public Rect getPitchRect() {

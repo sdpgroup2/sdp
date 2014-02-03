@@ -5,7 +5,7 @@ import group2.sdp.pc.geom.Rect;
 import java.awt.Color;
 import java.util.List;
 
-public class PitchSection extends AbstractPixelCluster{
+public class PitchSection extends AbstractPixelCluster {
 
 	private static int MIN_GREEN= 80;
 	private static int MAX_RED_BLUE = 40;
