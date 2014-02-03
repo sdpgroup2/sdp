@@ -2,6 +2,7 @@ package group2.sdp.pc.bt;
 
 import java.io.*;
 
+import lejos.nxt.LCD;
 import lejos.pc.comm.*;
 
 /**
@@ -22,9 +23,10 @@ public class BTSend {
 	private boolean robotReady;
 	
 	
-	public BTSend(String robotName, String robotMacAddress){
+	public BTSend(String robotName, String robotMacAddress) throws IOException{
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
+		openBluetoothConn(robotName);
 	}
 	
 	public int move(int direction, int angle, int speed) throws IOException {
@@ -32,11 +34,12 @@ public class BTSend {
 		int confirmation = 0;
 		try {
 			confirmation = sendToRobot(command);
+			System.out.println("confirm:" +confirmation);
 		} catch (IOException e1) {
 			System.out.println("Could not send command");
 			e1.printStackTrace();
 		}
-		System.out.println("Rotate...");
+		System.out.println("move..");
 		return confirmation;
 	} 
 	
@@ -54,8 +57,8 @@ public class BTSend {
 		return confirmation;
 	}
 	
-	public int kick(int speed) throws IOException {
-		int[] command = { Commands.KICK, 0, 0, 0 };
+	public int kick(int angle, int speed) throws IOException {
+		int[] command = { Commands.KICK, angle, speed, 0 };
 		int confirmation = 0;
 		try {
 			confirmation = sendToRobot(command);
@@ -82,7 +85,7 @@ public class BTSend {
 	}
 	
 	public void disconnect() {
-		int[] command = { Commands.QUIT, 0, 0, 0 };
+		int[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
 			// Give the command time to send - prevents brick crash
@@ -168,6 +171,8 @@ public class BTSend {
 		try {
 			confirmation = receiveFromRobot();
 			if (confirmation[1] == comm[0]) {
+				LCD.drawString("got message", 0, 2);
+				System.out.println("Successfully sent message");
 				buffer -= 1;
 				return confirmation[1];
 			}
