@@ -39,7 +39,7 @@ public class ControlGUI extends JFrame {
 	// General control buttons
 	private final JButton startButton = new JButton("Start");
 	private final JButton resetButton = new JButton("Reset");
-	private final JButton quitButton = new JButton("Quit");
+	private final JButton disconnectButton = new JButton("Quit");
 	private final JButton forceQuitButton = new JButton("Force quit");
 	private final JButton stopButton = new JButton("Stop");
 	private final JButton stratStartButton = new JButton("Strat Start");
@@ -104,10 +104,7 @@ public class ControlGUI extends JFrame {
 	}
 
 	private void cleanQuit() {
-		robot.clearBuff();
-		if (robot.isConnected())
-			robot.disconnect();
-		System.exit(0);
+		
 	}
 
 	public ControlGUI() {
@@ -134,7 +131,7 @@ public class ControlGUI extends JFrame {
 		startStopQuitPanel.add(startButton);
 		startStopQuitPanel.add(stopButton);
 		startStopQuitPanel.add(resetButton);
-		startStopQuitPanel.add(quitButton);
+		startStopQuitPanel.add(disconnectButton);
 		startStopQuitPanel.add(forceQuitButton);
 		startStopQuitPanel.add(stratStartButton);
 		startStopQuitPanel.add(penaltyAtkButton);
@@ -214,111 +211,64 @@ public class ControlGUI extends JFrame {
 			}
 		});
 
-
+		moveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final int direction = Integer.parseInt(op1field.getText());
+				final int angle = Integer.parseInt(op2field.getText());
+				final int speed = Integer.parseInt(op3field.getText());
+//				Thread moveBot1 = new Thread(new Runnable() {
+//					public void run() { 
+//						try {
+//							btSendR1.move(direction, angle, speed);
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						
+//					}		
+//				});
+				Thread moveBot2 = new Thread(new Runnable() {
+					public void run() { 
+						try {
+							btSendR2.move(direction, angle, speed);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}		
+				});
+//				moveBot1.start();
+				moveBot2.start();
+				btSendR2.clearBuff();
+			}
+			
+		});
+		
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mover.kick();
-			}
-		});
-
-		
-		forwardButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-				mover.move(0, op1);
-			}
-		});
-
-		backwardButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-
-				mover.move(0, -op1);
-			}
-		});
-
-		leftButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-
-				mover.move(-op1, 0);
-			}
-		});
-
-		rightButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-
-				mover.move(op1, 0);
-			}
-		});
-
-		dribbleButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (dribbleThread == null || !dribbleThread.isAlive()) {
-					dribbleThread = new DribbleBallThread();
-					dribbleThread.start();
-				} else {
-					System.out.println("Dribble is already active!");
-				}
+				
 			}
 		});
 
 		rotateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int angle = Integer.parseInt(op1field.getText());
-
-				mover.rotate(Math.toRadians(angle));
-			}
-		});
-
-		moveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-				int op2 = Integer.parseInt(op2field.getText());
-
-				mover.move(op1, op2);
-			}
-		});
-
-		moveToButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-				int op2 = Integer.parseInt(op2field.getText());
-
-				mover.moveToAndStop(op1, op2);
-			}
-		});
-
-		rotateAndMoveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-				int op2 = Integer.parseInt(op2field.getText());
-				int op3 = Integer.parseInt(op3field.getText());
-
-				robot.rotateMove(op1, op2, op3);
-			}
-		});
-
-		resetButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Disconnecting...");
-				// Kill the mover and wait for it to stop completely
-				robot.disconnect();
-				System.out.println("Disconnected succesfully");
-				System.out.println("Reconnecting...");
+				int direction = Integer.parseInt(op1field.getText());
+				int angle = Integer.parseInt(op2field.getText());
+				int speed = Integer.parseInt(op3field.getText());
 				try {
-					Thread.sleep(400);
-					robot.connect();
-					System.out.println("Reconnected successfully!");
-				} catch (Exception e1) {
-					System.out.println("Failed to reconnect! Shutting down GUI...");
-					cleanQuit();
+					btSendR2.rotate(direction, angle, speed);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				btSendR2.clearBuff();
 			}
+		
 		});
-
-		quitButton.addActionListener(new ActionListener() {
+		
+		
+		
+		disconnectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Quitting the GUI");
 				cleanQuit();
@@ -328,11 +278,69 @@ public class ControlGUI extends JFrame {
 		forceQuitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Quitting the GUI");
-				robot.clearBuff();
-				robot.forcequit();
 				System.exit(0);
 			}
 		});
+		
+		forwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+
+		backwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+
+		leftButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+
+		rightButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		dribbleButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
+		
+		moveToButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		rotateAndMoveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		resetButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Disconnecting...");
+				// Kill the mover and wait for it to stop completely
+				System.out.println("Disconnected succesfully");
+				System.out.println("Reconnecting...");
+				try {
+					Thread.sleep(400);
+					System.out.println("Reconnected successfully!");
+				} catch (Exception e1) {
+					System.out.println("Failed to reconnect! Shutting down GUI...");
+					cleanQuit();
+				}
+			}
+		});
+
+
 
 		// Centre the window on startup
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

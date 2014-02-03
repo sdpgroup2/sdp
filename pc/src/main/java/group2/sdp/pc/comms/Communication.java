@@ -18,15 +18,15 @@ public class Communication {
 			// TODO Auto-generated catch block
 			System.out.println("problem connecting" + e1.getMessage());
 		}
-		
-		try {
-			Thread.sleep(1000);
-			btSendR2.kick(90, 10000);
-		} catch (IOException e) {
-			LCD.drawString("problem moving", 10, 10);
-		} catch (InterruptedException e) {
-
-			e.printStackTrace();
-		}
+//		
+//		try {
+//			Thread.sleep(1000);
+//			btSendR2.kick(90, 10000);
+//		} catch (IOException e) {
+//			LCD.drawString("problem moving", 10, 10);
+//		} catch (InterruptedException e) {
+//
+//			e.printStackTrace();
+//		}
 	}
 }
