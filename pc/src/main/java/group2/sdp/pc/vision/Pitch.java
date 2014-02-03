@@ -10,6 +10,11 @@ public class Pitch {
 	private PitchSection leftDefense;
 	private PitchSection rightDefense;
 	
+	private static Rect yellowDefender;
+	private static Rect yellowAttacker;
+	private static Rect blueDefender;
+	private static Rect blueAttacker;
+	
 	public Pitch(PitchSection leftAttack, PitchSection rightAttack, 
 			     PitchSection leftDefense, PitchSection rightDefense) {
 		this.leftAttack = leftAttack;
