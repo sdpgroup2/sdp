@@ -1,8 +1,7 @@
-package group2.sdp.pc.vision;
+package group2.sdp.pc.vision.clusters;
 
 import group2.sdp.pc.geom.VecI;
 
-import java.awt.Color;
 import java.util.Collection;
 
 
@@ -11,9 +10,9 @@ import java.util.Collection;
  * 
  * @author Paul Harris
  */
-public interface PixelCluster {
+public interface PixelCluster<T> {
 
-	public boolean testPixel(int x, int y, Color color);
+	public boolean testPixel(int x, int y, T color);
 	public void clear();
 	public Collection<VecI> getPixels();
 	

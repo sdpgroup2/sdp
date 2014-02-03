@@ -14,8 +14,8 @@ public class Rect {
 		this.maxX = maxX;
 		this.minY = minY;
 		this.maxY = maxY;
-		width = maxX-minX;
-		height = maxY-minY;
+		width = maxX-minX+1;
+		height = maxY-minY+1;
 	}
 	
 	public VecI getCentre() {
