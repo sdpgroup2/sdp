@@ -1,6 +1,8 @@
 package group2.sdp.pc.vision;
 
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.vision.clusters.PitchLines;
+import group2.sdp.pc.vision.clusters.PitchSection;
 
 public class Pitch {
 	
