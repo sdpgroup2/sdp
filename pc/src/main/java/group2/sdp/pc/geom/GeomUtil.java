@@ -39,6 +39,7 @@ public class GeomUtil {
 				maxY = pixel.y;
 			}
 		}
-		return new Rect(minX, maxX, minY, maxY);
+		Rect rect = new Rect(minX, maxX, minY, maxY);
+		return rect;
 	}	
 }

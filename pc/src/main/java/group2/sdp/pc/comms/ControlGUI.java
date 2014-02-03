@@ -23,9 +23,9 @@ import javax.swing.UIManager;
 @SuppressWarnings("serial")
 /**
  * class to control robot by using a GUI to test time to send messages to it
- @author Gordon Edwards
- @author Michael Mair
- Code based on SDP group 4 2013
+ * @author Gordon Edwards
+ * @author Michael Mair
+ * Code based on SDP group 4 2013
  */
 public class ControlGUI extends JFrame {
 	// GUI elements
@@ -303,31 +303,13 @@ public class ControlGUI extends JFrame {
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Disconnecting...");
-				Strategy.alldie = true;
 				// Kill the mover and wait for it to stop completely
-				if (mover.isAlive()) {
-					try {
-						mover.kill();
-						mover.join(3000);
-						// If the mover still hasn't stopped within 3
-						// seconds,
-						// assume it's stuck and kill the program
-						if (mover.isAlive()) {
-							System.out.println("Could not kill mover! Shutting down GUI...");
-							cleanQuit();
-						}
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-				}
 				robot.disconnect();
 				System.out.println("Disconnected succesfully");
 				System.out.println("Reconnecting...");
 				try {
 					Thread.sleep(400);
 					robot.connect();
-					mover = new RobotMover(worldState, robot);
-					mover.start();
 					System.out.println("Reconnected successfully!");
 				} catch (Exception e1) {
 					System.out.println("Failed to reconnect! Shutting down GUI...");
@@ -337,18 +319,7 @@ public class ControlGUI extends JFrame {
 		});
 
 		quitButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				Strategy.alldie = true;
-				// Kill the mover and wait for it to stop completely
-				try {
-					mover.kill();
-					// If the mover still hasn't stopped within 3 seconds,
-					// assume it's stuck and kill the program the hard way
-					mover.join(3000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
 				System.out.println("Quitting the GUI");
 				cleanQuit();
 			}
@@ -356,17 +327,6 @@ public class ControlGUI extends JFrame {
 
 		forceQuitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Strategy.alldie = true;
-				// Kill the mover and wait for it to stop completely
-				try {
-					mover.kill();
-					// If the mover still hasn't stopped within 3 seconds,
-					// assume it's stuck and kill the program the hard way
-					mover.join(3000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-
 				System.out.println("Quitting the GUI");
 				robot.clearBuff();
 				robot.forcequit();
@@ -374,19 +334,7 @@ public class ControlGUI extends JFrame {
 			}
 		});
 
-		moveNoCollTarget.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mover.moveToAStar(Integer.parseInt(op4field.getText()), Integer.parseInt(op5field.getText()), false, true);
-			}
-		});
-
-		moveNoCollOppTarget.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mover.moveToAStar(Integer.parseInt(op4field.getText()), Integer.parseInt(op5field.getText()), true, true);
-			}
-		});
-
-		// Center the window on startup
+		// Centre the window on startup
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = this.getPreferredSize();
 		this.setLocation((dim.width - frameSize.width) / 2, (dim.height - frameSize.height) / 2);
@@ -398,29 +346,8 @@ public class ControlGUI extends JFrame {
 
 	public class ListenCloseWdw extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
-			Strategy.alldie = true;
-			// Kill the mover and wait for it to stop completely
-			try {
-				mover.kill();
-				// If the mover still hasn't stopped within 3 seconds,
-				// assume it's stuck and kill the program the hard way
-				mover.join(3000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
 			System.out.println("Quitting the GUI");
 			cleanQuit();
-		}
-	}
-
-	class DribbleBallThread extends Thread {
-		public void run() {
-			try {
-				DribbleBall5.die = false;
-				dribbleBall.dribbleBall(worldState, mover);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }
