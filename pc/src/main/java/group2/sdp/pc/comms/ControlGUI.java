@@ -74,18 +74,10 @@ public class ControlGUI extends JFrame {
 	private final JTextField op3field = new JTextField();
 	public static JTextField op4field = new JTextField();
 	public static JTextField op5field = new JTextField();
-
-	private DribbleBall5 dribbleBall = new DribbleBall5();
-	private DribbleBallThread dribbleThread;
-
-	private WorldState worldState;
-
-	private Thread strategyThread;
-	private StrategyInterface strategy;
-
-	private final RobotController robot;
-	private RobotMover mover;
-
+	
+	private static BTSend btSendR1;
+	private static BTSend btSendR2;
+	
 	public static void main(String[] args) throws IOException {
 		// Make the GUI pretty
 		try {
@@ -94,69 +86,21 @@ public class ControlGUI extends JFrame {
 			e.printStackTrace();
 		}
 
-		// Default to main pitch
-		PitchConstants pitchConstants = new PitchConstants(0);
-		GoalInfo goalInfo = new GoalInfo(pitchConstants);
-		WorldState worldState = new WorldState(goalInfo);
-
-		// Default values for the main vision window
-		String videoDevice = "/dev/video0";
-		int width = 640;
-		int height = 480;
-		int channel = 0;
-		int videoStandard = V4L4JConstants.STANDARD_PAL;
-		int compressionQuality = 80;
-
-		try {
-			VideoStream vStream = new VideoStream(videoDevice, width, height, channel, videoStandard, compressionQuality);
-
-			DistortionFix distortionFix = new DistortionFix(pitchConstants);
-
-			// Create a new Vision object to serve the main vision window
-			Vision vision = new Vision(worldState, pitchConstants);
-
-			// Create the Control GUI for threshold setting/etc
-			VisionGUI gui = new VisionGUI(width, height, worldState, pitchConstants, vStream, distortionFix);
-
-			vStream.addReceiver(distortionFix);
-			distortionFix.addReceiver(gui);
-			distortionFix.addReceiver(vision);
-			vision.addVisionDebugReceiver(gui);
-			vision.addWorldStateReceiver(gui);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// Sets up the communication
-		BluetoothCommunication comms = new BluetoothCommunication(DeviceInfo.NXT_NAME, DeviceInfo.NXT_MAC_ADDRESS);
-		// Sets up robot
-		BluetoothRobot robot = new BluetoothRobot(RobotType.Us, comms);
-
 		// Sets up the GUI
-		ControlGUI2 gui = new ControlGUI2(worldState, robot);
+		ControlGUI gui = new ControlGUI();
 		gui.setVisible(true);
-
-		robot.connect();
-
-		while (!robot.isConnected()) {
-			// Reduce CPU cost
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
+		
+		btSendR1 = null;
+		btSendR2 = null;
+		try {
+			//note of name and MAC
+//			btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
+			btSendR2 = new BTSend("SDP 2A", "00165307D55F");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			System.out.println("problem connecting" + e1.getMessage());
 		}
 
-		System.out.println("Robot ready!");
-
-	}
-
-	private void startMainPlanner() {
-		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
-		strategy = new MainPlanner(worldState, mover);
-		strategyThread = new Thread(strategy);
-		strategyThread.start();
 	}
 
 	private void cleanQuit() {
@@ -166,13 +110,9 @@ public class ControlGUI extends JFrame {
 		System.exit(0);
 	}
 
-	public ControlGUI2(final WorldState worldState, final RobotController robot) {
-		this.worldState = worldState;
-		this.robot = robot;
-		this.mover = new RobotMover(worldState, robot);
-		this.mover.start();
+	public ControlGUI() {
 
-		this.setTitle("Group 4 control GUI");
+		this.setTitle("Group 2 control GUI");
 
 		op1field.setColumns(6);
 		op2field.setColumns(6);
@@ -268,107 +208,12 @@ public class ControlGUI extends JFrame {
 
 		this.addWindowListener(new ListenCloseWdw());
 
-		startButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// if (strategyThread == null || !strategyThread.isAlive()) {
-				// Strategy.reset();
-				// strategy = new OffenseSimple(worldState, mover);
-				// strategyThread = new Thread(strategy);
-				// strategyThread.start();
-				//
-				//
-				// } else {
-				// System.err.println("Strategy already active!");
-				// }
-				System.out.println("Distance to ball: " + worldState.distanceToBall());
-			}
-		});
-
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Halt and clear active movements
-				mover.interruptMove();
-				try {
-					mover.resetQueue();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				// Stop the dribble thread if it's running
-				if (dribbleThread != null && dribbleThread.isAlive()) {
-					System.out.println("Killing dribble thread");
-					DribbleBall5.die = true;
-					mover.interruptMove();
-					try {
-						dribbleThread.join();
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-				}
-				// Stop strategy if it's running
-				if (strategyThread != null && strategyThread.isAlive()) {
-					System.out.println("Killing strategy thread");
-					DribbleBall5.die = true;
-					Strategy.stop();
-					strategy.kill();
-					try {
-						strategyThread.join(3000);
-						if (strategyThread.isAlive()) {
-							System.out.println("Strategy failed to stop");
-							cleanQuit();
-						}
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-				}
-				System.out.println("Stopping the robot");
-				// Stop the robot.
-				mover.stopRobot();
+				
 			}
 		});
 
-		// Run the strategy from here.
-		stratStartButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Allow restart of strategies after previously killing all
-				// strategies
-				Strategy.reset();
-
-				startMainPlanner();
-			}
-		});
-
-		penaltyAtkButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int angle = Integer.parseInt(op1field.getText());
-				if (angle != 0) {
-					int a = robot.rotate(angle);
-				}
-				try {
-					SafeSleep.sleep(200);
-				} catch (InterruptedException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-				int b = robot.kick();
-				try {
-					SafeSleep.sleep(100);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				// dribbleThread = new DribbleBallThread();
-				// dribbleThread.start();
-			}
-		});
-
-		penaltyDefButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				strategy = new PenaltyDefense(worldState, mover);
-				strategyThread = new Thread(strategy);
-				strategyThread.start();
-			}
-		});
 
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -376,19 +221,7 @@ public class ControlGUI extends JFrame {
 			}
 		});
 
-		dribblerStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int op1 = Integer.parseInt(op1field.getText());
-				mover.dribble(op1);
-			}
-		});
-
-		dribblerStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mover.stopdribble();
-			}
-		});
-
+		
 		forwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int op1 = Integer.parseInt(op1field.getText());

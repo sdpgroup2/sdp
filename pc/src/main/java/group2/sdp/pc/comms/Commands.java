@@ -1,4 +1,4 @@
-package group2.sdp.pc.bt;
+package group2.sdp.pc.comms;
 
 /**
  * Opcodes for commands.
