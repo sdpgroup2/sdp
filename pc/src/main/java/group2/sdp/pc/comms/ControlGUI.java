@@ -94,7 +94,7 @@ public class ControlGUI extends JFrame {
 		btSendR2 = null;
 		try {
 			//note of name and MAC
-//			btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
+			btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
 			btSendR2 = new BTSend("SDP 2A", "00165307D55F");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -103,9 +103,6 @@ public class ControlGUI extends JFrame {
 
 	}
 
-	private void cleanQuit() {
-		
-	}
 
 	public ControlGUI() {
 
@@ -213,20 +210,22 @@ public class ControlGUI extends JFrame {
 
 		moveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btSendR1.clearBuff();
+				btSendR2.clearBuff();
 				final int direction = Integer.parseInt(op1field.getText());
 				final int angle = Integer.parseInt(op2field.getText());
 				final int speed = Integer.parseInt(op3field.getText());
-//				Thread moveBot1 = new Thread(new Runnable() {
-//					public void run() { 
-//						try {
-//							btSendR1.move(direction, angle, speed);
-//						} catch (IOException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						
-//					}		
-//				});
+				Thread moveBot1 = new Thread(new Runnable() {
+					public void run() { 
+						try {
+							btSendR1.move(direction, angle, speed);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}		
+				});
 				Thread moveBot2 = new Thread(new Runnable() {
 					public void run() { 
 						try {
@@ -237,41 +236,106 @@ public class ControlGUI extends JFrame {
 						}
 					}		
 				});
-//				moveBot1.start();
+				moveBot1.start();
 				moveBot2.start();
-				btSendR2.clearBuff();
+				try {
+					moveBot2.join();
+					moveBot2.join();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 		});
 		
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				btSendR1.clearBuff();
+				btSendR2.clearBuff();
+				final int angle = Integer.parseInt(op1field.getText());
+				final int speed = Integer.parseInt(op2field.getText());
+				Thread moveBot1 = new Thread(new Runnable() {
+					public void run() { 
+						try {
+							btSendR1.kick(angle, speed);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}		
+				});
+				Thread moveBot2 = new Thread(new Runnable() {
+					public void run() { 
+						try {
+							btSendR2.kick(angle, speed);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}		
+				});
+				moveBot1.start();
+				moveBot2.start();
+				try {
+					moveBot2.join();
+					moveBot2.join();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
 		rotateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int direction = Integer.parseInt(op1field.getText());
-				int angle = Integer.parseInt(op2field.getText());
-				int speed = Integer.parseInt(op3field.getText());
+				btSendR1.clearBuff();
+				btSendR2.clearBuff();
+				final int direction = Integer.parseInt(op1field.getText());
+				final int angle = Integer.parseInt(op2field.getText());
+				final int speed = Integer.parseInt(op3field.getText());
+				Thread rotateBot1 = new Thread(new Runnable() {
+
+					public void run() {
+						try {
+							btSendR1.rotate(direction, angle, speed);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+					}
+				});
+				Thread rotateBot2 = new Thread(new Runnable() {
+
+					public void run() {
+						try {
+							btSendR2.rotate(direction, angle, speed);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+					}
+				});
+				rotateBot1.start();
+				rotateBot2.start();
 				try {
-					btSendR2.rotate(direction, angle, speed);
-				} catch (IOException e1) {
+					rotateBot2.join();
+					rotateBot2.join();
+				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				btSendR2.clearBuff();
+				
 			}
-		
 		});
-		
-		
 		
 		disconnectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Quitting the GUI");
-				cleanQuit();
+//				cleanQuit();
 			}
 		});
 
@@ -335,7 +399,7 @@ public class ControlGUI extends JFrame {
 					System.out.println("Reconnected successfully!");
 				} catch (Exception e1) {
 					System.out.println("Failed to reconnect! Shutting down GUI...");
-					cleanQuit();
+//					cleanQuit();
 				}
 			}
 		});
@@ -355,7 +419,7 @@ public class ControlGUI extends JFrame {
 	public class ListenCloseWdw extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
 			System.out.println("Quitting the GUI");
-			cleanQuit();
+//			cleanQuit();
 		}
 	}
 }
