@@ -1,4 +1,4 @@
-package group2.sdp.pc.bt;
+package group2.sdp.pc.comms;
 
 import java.io.IOException;
 

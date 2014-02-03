@@ -1,4 +1,4 @@
-package group2.sdp.pc.bt;
+package group2.sdp.pc.comms;
 
 import java.io.*;
 
@@ -191,8 +191,7 @@ public class BTSend {
 		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
 				(int) res[3] };
 		return ret;
-	}
-	
+	}	
 	public boolean isConnected() {
 		return connected;
 	}

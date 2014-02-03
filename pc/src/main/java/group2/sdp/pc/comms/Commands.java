@@ -1,4 +1,4 @@
-package group2.sdp.pc.bt;
+package group2.sdp.pc.comms;
 
 /**
  * Opcodes for commands.
@@ -6,7 +6,7 @@ package group2.sdp.pc.bt;
  * First byte - opcode
  * Remaining three bytes will be options for the commands E.g.
  * @author Michael Mair
- * Based on code by Maithu Venkatesh
+ * Based on code by SDP Group 4 2013
  *
  */
 public class Commands {
