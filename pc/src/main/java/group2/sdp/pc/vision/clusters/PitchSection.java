@@ -5,7 +5,7 @@ import group2.sdp.pc.vision.HSBColor;
 
 import java.util.List;
 
-public class PitchSection extends HSBCluster{
+public class PitchSection extends HSBCluster {
 
 	
 	public PitchSection(String name) {
