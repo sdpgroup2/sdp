@@ -66,12 +66,12 @@ of cluster) to determine whether the pixel should be included in the cluster.
 If so, it adds that pixel and returns true.
 
 To get the rectangles of objects in the cluster use:
-`public List<Rect> getRects(int minWidth, int maxWidth,
-                            int minHeight, int maxHeight,
+`public List<Rect> getRects(int minLength, int maxLength,
+                            int minBreadth, int maxBreadth,
                             float minFill, float maxFill)`
 
 This will return rectangles for every region of pixels in the cluster. Using
-the min/max width/height parameters, you can filter out rectangles which are
+the min/max length/breadth parameters, you can filter out rectangles which are
 too big or small. The minFill and maxFill refer to how much of the rectangle
 is filled with pixels. The value 0.5 for example means a rectangle which is
 half-full of pixels.
@@ -106,3 +106,15 @@ The `processImage` function does the following:
 
 Hopefully this was a helpful description of the vision system so far. If you
 think something is unclear here, feel free to edit it to make it moreso.
+
+The GUI
+-------
+If you run VisionSystem as main, you'll get a window with the camera feed.
+To change the parameters of the vision, click one of the clusters from the menu
+at the top right, then adjust the sliders for the minimum and maximum HSB
+colours. After that, click the update button to see how well the new values
+work.
+
+Note that these changes aren't permanent, they'll reset when you restart the
+program. To permanently change them, you'll have to change the constructor in
+the cluster's class.
