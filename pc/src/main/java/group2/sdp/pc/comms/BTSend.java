@@ -1,7 +1,5 @@
 package group2.sdp.pc.comms;
 
-import group2.sdp.pc.Commands;
-
 import java.io.*;
 
 import lejos.nxt.LCD;
