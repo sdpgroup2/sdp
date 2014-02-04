@@ -9,14 +9,14 @@ public class PitchSection extends HSBCluster {
 
 	
 	public PitchSection(String name) {
-		super(name, new HSBColor(90,35,20), new HSBColor(140,50,40));
+		super(name, new HSBColor(90,35,20), new HSBColor(140,80,40));
 	}
 		
-	public Rect getPitchRect() {
-		List<Rect> rects = getRects(50, 200, 200, 500);
+	public List<Rect> getPitchRects() {
+		List<Rect> rects = getRects(0,480, 0, 200);
 		if (rects.isEmpty()) {
 			return null;
 		}
-		return rects.get(0);
+		return rects;
 	}
 }

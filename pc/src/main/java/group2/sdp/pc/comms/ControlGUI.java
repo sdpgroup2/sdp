@@ -20,13 +20,15 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 /**
  * class to control robot by using a GUI to test time to send messages to it
  * @author Gordon Edwards
  * @author Michael Mair
  * Code based on SDP group 4 2013
  */
+/* 
+
 public class ControlGUI extends JFrame {
 	// GUI elements
 
@@ -518,3 +520,4 @@ public class ControlGUI extends JFrame {
 		}
 	}
 }
+*/

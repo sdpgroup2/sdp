@@ -273,6 +273,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		findTheBall(image);
 		findRobots(image, blueRobotCluster);
 		findRobots(image, yellowRobotCluster);
+		findPitch(image);
 	}
 	
 	/**
@@ -300,6 +301,30 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	 */
 	public List<Rect> findRobots(BufferedImage image, RobotCluster cluster) {
 		List<Rect> rects = cluster.getRobotRects();
+		for (Rect rect: rects) {
+			if (Debug.VISION_DRAW_BOUNDS) {
+				image.getGraphics().drawRect(rect.minX, rect.minY, rect.width, rect.height);
+			}
+		}
+		return rects;
+	}
+	
+	/**
+	 * Finds the ball in the image
+	 * @param image - The image we are looking for a ball in.
+	 * @return The corners of the pitch.
+	 */
+	public Rect findPitch(BufferedImage image) {
+		
+		Rect pitchRect = pitchLinesCluster.getLinesRect();
+			if (Debug.VISION_DRAW_BOUNDS && pitchRect != null) {
+				image.getGraphics().drawRect(pitchRect.minX, pitchRect.minY, pitchRect.width, pitchRect.height);
+		}
+		return pitchRect;
+	}
+	
+	public List<Rect> findPitchSections(BufferedImage image) {
+		List<Rect> rects = pitchSectionCluster.getPitchRects();
 		for (Rect rect: rects) {
 			if (Debug.VISION_DRAW_BOUNDS) {
 				image.getGraphics().drawRect(rect.minX, rect.minY, rect.width, rect.height);
