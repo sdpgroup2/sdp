@@ -117,21 +117,61 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	 * @return The (left/right/upper/bottom)most pixel in the largest cluster.
 	 */
 	
-	public VecI getMaxXPixel() {
-		return getMaxXPixel(0);
-	}
-	
-    public VecI getMaxYPixel() {
-	    return getMaxYPixel(0);
+public VecI getMaxXPixel() {
+		
+		Set<VecI> pixels = getLargestRegion();
+		VecI max = new VecI(0,0);
+		
+		for(VecI pixel : pixels)
+		{
+			if(pixel.x > max.x)
+				max = pixel;
+		}
+		
+		return max;
 	}
 
-    public VecI getMinXPixel() {
-		return getMinXPixel(0);
-    }
+	public VecI getMaxYPixel() {
+		
+	    Set<VecI> pixels = getLargestRegion();
+		VecI max = new VecI(0,0);
+		
+		for(VecI pixel : pixels)
+		{
+			if(pixel.y > max.y)
+				max = pixel;
+		}
+		
+		return max;
+	}
 
-    public VecI getMinYPixel() {
-    	return getMinYPixel(0);
-    }
+	public VecI getMinXPixel() {
+
+	Set<VecI> pixels = getLargestRegion();
+	VecI min = new VecI(1000,0);
+
+	for(VecI pixel : pixels)
+	{
+		if(pixel.x < min.x)
+			min = pixel;
+	}
+
+	return min;
+	}
+
+	public VecI getMinYPixel() {
+
+	Set<VecI> pixels = getLargestRegion();
+	VecI min = new VecI(0,1000);
+
+	for(VecI pixel : pixels)
+	{
+		if(pixel.x < min.x)
+			min = pixel;
+	}
+
+	return min;
+	}
 
 
 }

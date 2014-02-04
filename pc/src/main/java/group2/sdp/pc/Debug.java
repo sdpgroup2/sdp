@@ -30,6 +30,11 @@ public class Debug {
 		}
 	}
 	
+	public static void drawTestPixel(BufferedImage dest, int x, int y, Color color) {
+			dest.setRGB(x, y, color.getRGB());
+
+	}
+	
 	public static void drawRect(BufferedImage dest, Rect rect, Color color) {
 		if (VISION_DRAW_BOUNDS && rect != null) {
 			Graphics g = dest.getGraphics();

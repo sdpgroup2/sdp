@@ -27,6 +27,11 @@ public class Rect {
 		return "Rect(("+minX+", "+minY+") to ("+maxX+", "+maxY+"))";
 	}
 	
+	public boolean contains(Rect other) {
+		return (other.minX >= this.minX && other.maxX <= this.maxX
+				&& other.minY >= this.minY && other.maxY <= this.maxY);
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Rect) {

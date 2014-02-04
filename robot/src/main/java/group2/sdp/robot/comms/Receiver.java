@@ -11,19 +11,25 @@ import lejos.nxt.LCD;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
+/**
+ * class checking stream repeatedly for a new message, and respond to it
+ * 
+ * @author Gordon Edwards and Michael Mair code based on SDP Group 4 2013 and
+ *         from burti (Lawrie Griffiths) at
+ *         /www.lejos.org/forum/viewtopic.php?p=10843
+ **/
 public class Receiver {
-	/**class checking stream repeatedly for a new message, and respond to it
-	 * @author Gordon Edwards and Michael Mair
-	 * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 **/
+
 	private static InputStream inStream;
 	private static OutputStream outStream;
 	private static boolean forceQuit;
+	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		Pilot pilot = new Pilot();
 		
 		while (!forceQuit) {
 			try {
-				
+
 				NXTConnection connection = Bluetooth.waitForConnection();
 				inStream = connection.openInputStream();
 				outStream = connection.openOutputStream();
@@ -34,7 +40,7 @@ public class Receiver {
 					throw new Exception("Output stream is null!");
 				outStream.write(robotReady);
 				outStream.flush();
-				
+
 				// Begin reading commands
 				int opcode = Commands.DO_NOTHING;
 				int option1, option2, option3;
@@ -44,12 +50,12 @@ public class Receiver {
 					// Get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					inStream.read(byteBuffer);
-					
+
 					opcode = byteBuffer[0];
 					option1 = byteBuffer[1];
 					option2 = byteBuffer[2];
 					option3 = byteBuffer[3];
-					
+
 					switch (opcode) {
 					
 						case Commands.ANGLEMOVE:
@@ -118,7 +124,7 @@ public class Receiver {
 			}
 		}
 	}
-	
+
 	public static void replyToPC(int opcode, OutputStream os) throws IOException {
 		byte[] reply = { 111, (byte) opcode, 0, 0 };
 		os.write(reply);
