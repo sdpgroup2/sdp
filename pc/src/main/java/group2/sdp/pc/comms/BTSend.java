@@ -27,6 +27,7 @@ public class BTSend {
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
 		openBluetoothConn(robotName);
+		LCD.drawString("connected!", 0, 4);
 	}
 	
 	public int move(int direction, int angle, int speed) throws IOException {
