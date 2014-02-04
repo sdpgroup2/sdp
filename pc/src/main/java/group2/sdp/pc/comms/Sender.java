@@ -205,5 +205,4 @@ public class Sender implements CommInterface{
 		buffer = 0;
 	}
 	
-
 }
