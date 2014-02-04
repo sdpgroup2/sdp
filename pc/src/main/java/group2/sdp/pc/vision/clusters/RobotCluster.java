@@ -3,6 +3,7 @@ package group2.sdp.pc.vision.clusters;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.HSBColor;
 
+import java.awt.Color;
 import java.util.List;
 
 
@@ -13,11 +14,12 @@ import java.util.List;
  */
 public class RobotCluster extends HSBCluster {
 	
-	public RobotCluster(String name, HSBColor minColor, HSBColor maxColor) {
-		super(name, minColor, maxColor);
+	public RobotCluster(String name, HSBColor minColor, HSBColor maxColor, Color debugColor) {
+		super(name, minColor, maxColor, debugColor);
 	}
 
-	public List<Rect> getRobotRects() {
+	@Override
+	public List<Rect> getImportantRects() {
 		return getRects(8, 20, 4, 20, 0.5f, 1.1f);
 	}
 
