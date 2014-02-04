@@ -14,7 +14,7 @@ import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
-public class BTReceive {
+public class Receiver {
 	/**class checking stream repeatedly for a new message, and respond to it
 	 * @author Gordon Edwards and Michael Mair
 	 * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 **/

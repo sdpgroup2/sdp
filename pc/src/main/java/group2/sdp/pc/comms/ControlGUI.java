@@ -27,7 +27,7 @@ import javax.swing.UIManager;
  * @author Michael Mair
  * Code based on SDP group 4 2013
  */
-/* 
+
 
 public class ControlGUI extends JFrame {
 	// GUI elements
@@ -77,8 +77,8 @@ public class ControlGUI extends JFrame {
 	public static JTextField op4field = new JTextField();
 	public static JTextField op5field = new JTextField();
 	
-	private static BTSend btSendR1;
-	private static BTSend btSendR2;
+	private static Sender btSendR1;
+	private static Sender btSendR2;
 	
 	public static void main(String[] args) throws IOException {
 		// Make the GUI pretty
@@ -96,8 +96,8 @@ public class ControlGUI extends JFrame {
 		btSendR2 = null;
 		try {
 			//note of name and MAC
-			btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
-			btSendR2 = new BTSend("SDP 2A", "00165307D55F");
+			btSendR1 = new Sender("SDP 2D","0016530BBBEA");
+			btSendR2 = new Sender("SDP 2A", "00165307D55F");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("problem connecting" + e1.getMessage());
@@ -425,4 +425,4 @@ public class ControlGUI extends JFrame {
 		}
 	}
 }
-*/
+

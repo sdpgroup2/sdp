@@ -13,7 +13,7 @@ import lejos.pc.comm.*;
  * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
 	and from SDP Group 4 2013
  */
-public class BTSend {   
+public class Sender {   
 	private OutputStream outStream;
 	private InputStream inStream;
 	private NXTComm comm;
@@ -23,7 +23,7 @@ public class BTSend {
 	private boolean robotReady;
 	
 	
-	public BTSend(String robotName, String robotMacAddress) throws IOException{
+	public Sender(String robotName, String robotMacAddress) throws IOException{
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
 		openBluetoothConn(robotName);
