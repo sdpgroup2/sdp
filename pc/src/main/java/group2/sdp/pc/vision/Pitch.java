@@ -19,7 +19,7 @@ public class Pitch {
 	private Rect rightDefender = null;
 	private Rect rightAttacker = null;
 
-	private static Rect ball;
+	private Rect ball;
 	
 	public Pitch(PitchSection leftAttack, PitchSection rightAttack, 
 			     PitchSection leftDefense, PitchSection rightDefense) {
@@ -30,7 +30,7 @@ public class Pitch {
 	}
 	
 	public void addBall(Rect ball) {
-		
+		this.ball = ball;
 	}
 	
 	/**
