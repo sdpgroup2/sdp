@@ -10,11 +10,11 @@ public class PitchSection extends HSBCluster {
 
 	
 	public PitchSection(String name) {
-		super(name, new HSBColor(90,35,20), new HSBColor(140,50,40), Color.green);
+		super(name, new HSBColor(90,35,20), new HSBColor(140,80,40), Color.green);
 	}
 		
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(50, 200, 200, 500);
+		return getRects(0, 480, 0, 200);
 	}
 }

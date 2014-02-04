@@ -86,8 +86,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 			ballCluster,
 			blueRobotCluster,
 			yellowRobotCluster,
-			//pitchSectionCluster,
-			//pitchLinesCluster
+			pitchSectionCluster,
+			pitchLinesCluster
 	};
 	
 	private Timer timer = new Timer(10);
