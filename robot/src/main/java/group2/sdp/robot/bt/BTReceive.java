@@ -1,26 +1,26 @@
 package group2.sdp.robot.bt;
 
-import group2.sdp.robot.Actions;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.bluetooth.RemoteDevice;
-
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
-import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
+/**class checking stream repeatedly for a new message, and respond to it
+ * @author Gordon Edwards and Michael Mair
+ * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
+**/
+
 public class BTReceive {
-	/**class checking stream repeatedly for a new message, and respond to it
-	 * @author Gordon Edwards and Michael Mair
-	 * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 **/
+	
 	private static InputStream inStream;
 	private static OutputStream outStream;
 	private static boolean forceQuit;
+	
+	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		
 		
