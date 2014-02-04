@@ -1,6 +1,7 @@
 package group2.sdp.pc;
 
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
@@ -299,6 +300,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 				Debug.drawRect(image, rect, cluster.debugColor);
 			}
 		}
+		//VecI corner = pitchLinesCluster.getCorners();		
+		//Debug.drawTestPixel(image, corner.x, corner.y, Color.white);
 	}
 	
 	/**
