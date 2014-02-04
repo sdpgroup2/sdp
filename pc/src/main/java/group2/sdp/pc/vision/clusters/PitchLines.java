@@ -48,6 +48,7 @@ public class PitchLines extends HSBCluster {
 		 
 		 return result;
 		 
+	}
 		 /*
 		 
 		 leftmostPixel = super.getMinXPixel();	 
