@@ -1,6 +1,8 @@
-package group2.sdp.pc.comms;
+package group2.sdp.pc;
 
 //UI imports
+import group2.sdp.pc.comms.Sender;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
