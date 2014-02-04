@@ -3,15 +3,19 @@ package group2.sdp.pc.vision.clusters;
 import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.HSBColor;
 
+import java.awt.Color;
+
 public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 
 	protected HSBColor minColor;
 	protected HSBColor maxColor;
+	public final Color debugColor;
 	
-	public HSBCluster(String name, HSBColor minColor, HSBColor maxColor) {
+	public HSBCluster(String name, HSBColor minColor, HSBColor maxColor, Color debugColor) {
 		super(name);
 		this.minColor = minColor;
 		this.maxColor = maxColor;
+		this.debugColor = debugColor;
 	}
 	
 	public boolean testPixel(int x, int y, HSBColor color) {

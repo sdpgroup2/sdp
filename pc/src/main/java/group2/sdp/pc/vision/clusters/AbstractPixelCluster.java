@@ -93,4 +93,8 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 		return largestRegion;
 	}
 	
+	public List<Rect> getImportantRects() {
+		return getRects();
+	}
+	
 }
