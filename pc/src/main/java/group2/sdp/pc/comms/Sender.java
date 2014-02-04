@@ -13,7 +13,7 @@ import lejos.pc.comm.*;
  * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
 	and from SDP Group 4 2013
  */
-public class Sender {   
+public class Sender implements CommInterface{   
 	private OutputStream outStream;
 	private InputStream inStream;
 	private NXTComm comm;

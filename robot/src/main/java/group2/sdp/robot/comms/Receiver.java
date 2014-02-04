@@ -1,16 +1,13 @@
 package group2.sdp.robot.comms;
 
-import group2.sdp.robot.Actions;
+import group2.sdp.robot.Pilot;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.bluetooth.RemoteDevice;
-
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
-import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
@@ -22,7 +19,7 @@ public class Receiver {
 	private static OutputStream outStream;
 	private static boolean forceQuit;
 	public static void main(String[] args) throws IOException, InterruptedException {	
-		
+		Pilot pilot = new Pilot();
 		
 		while (!forceQuit) {
 			try {
@@ -59,7 +56,7 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Moving at an angle!", 0, 2);
 							LCD.refresh();
-							Actions.move(option1, option2, option3);
+							pilot.move(option1, option2, option3);
 							replyToPC(opcode, outStream);
 							break;
 						
@@ -67,7 +64,7 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Rotate!", 0, 2);
 							LCD.refresh();
-							Actions.rotate(option1, option2, option3);
+							pilot.rotate(option1, option2, option3);
 							replyToPC(opcode, outStream);
 							break;
 	
@@ -75,7 +72,7 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Kicking!", 0, 2);
 							LCD.refresh();
-							Actions.kick(option1,option2);
+							pilot.kick(option1,option2);
 							replyToPC(opcode, outStream);
 							break;
 						
@@ -83,16 +80,16 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Stopping!", 0, 2);
 							LCD.refresh();
-							Actions.stop();
+							pilot.stop();
 							replyToPC(opcode, outStream);
 							break;
 	
 						case Commands.DISCONNECT: 
-							Actions.disconnect();
+							pilot.disconnect();
 							break;
 	
 						case Commands.FORCEQUIT:
-							Actions.forcequit();
+							pilot.forcequit();
 							forceQuit = true;
 							break;
 						default:

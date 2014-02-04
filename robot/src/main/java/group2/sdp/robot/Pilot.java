@@ -2,6 +2,7 @@ package group2.sdp.robot;
 
 import group2.sdp.robot.light.LightListener;
 import group2.sdp.robot.light.MyLightSensor;
+import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.robotics.navigation.DifferentialPilot;
@@ -13,9 +14,18 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public static int WHITE_THRESHOLD = 37;
 	public MyLightSensor rightSensor;
 
-	public void move(double direction) {
-	}
+	public void move(int direction, int angle, int speed) {
+		LCD.drawString("moving forward!", 10, 10);
+		forward();
+		setTravelSpeed(speed);
+	} 
 
+	public void rotate(int direction, int angle, int speed) {
+		LCD.drawString("rotating!", 10, 10);
+		setRotateSpeed(speed);
+		rotate(direction * angle);
+	}
+	
 	public void moveForward(double speed) {
 		this.setTravelSpeed(speed);
 		this.forward();
@@ -25,6 +35,18 @@ public class Pilot extends DifferentialPilot implements LightListener {
 		Motor.B.setSpeed(speed);
 		Motor.B.rotate(angle);
 		Motor.B.rotate(-angle);
+	}
+
+	public void stop() {
+
+	}
+	
+	public void disconnect() {
+		
+	}
+
+	public void forcequit() {
+		
 	}
 
 	public Pilot() {
