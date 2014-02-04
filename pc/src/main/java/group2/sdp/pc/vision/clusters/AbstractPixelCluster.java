@@ -15,6 +15,8 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	
 	protected Set<VecI> pixels = new HashSet<VecI>();
 	protected String name;
+	protected List<Set<VecI>> _regions;
+	protected boolean splitThisFrame = false;
 	
 	/**
 	 * Does the cluster contain any pixels?
@@ -30,6 +32,7 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	
 	public void clear() {
 		pixels.clear();
+		splitThisFrame = false;
 	}
 	
 	public Set<VecI> getPixels() {
@@ -41,6 +44,17 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 		return name;
 	}
 	
+	public List<Set<VecI>> getRegions() {
+		if (splitThisFrame) {
+			return _regions;
+		} else {
+			PixelGraph graph = new PixelGraph(pixels);
+			_regions = graph.getDisjointRegions();
+			splitThisFrame = true;
+			return _regions;
+		}
+	}
+	
 	/**
 	 * Get the bounding rectangle of all joined regions of pixels in this cluster.
 	 * The parameters filter out rectangles which are too big or too small.
@@ -50,9 +64,8 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	 */
 	public List<Rect> getRects(
 			int minLength, int maxLength, int minBreadth, int maxBreadth, float minFill, float maxFill) {
-		PixelGraph graph = new PixelGraph(pixels);
 		List<Rect> rects = new ArrayList<Rect>();
-		for (Set<VecI> region: graph.getDisjointRegions()) {
+		for (Set<VecI> region: getRegions()) {
 			Rect rect = GeomUtil.getBoundingBox(region);
 			int rectArea = (rect.width*rect.height);
 			float fill = (rectArea > 0) ? ((float) region.size()) / (rect.width*rect.height) : 0f;
@@ -80,10 +93,9 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	 * returns the cluster with the largest number of pixels
 	 */
 	public Set<VecI> getLargestRegion() {
-		PixelGraph graph = new PixelGraph(pixels);
 		int max = 0;
 		Set<VecI> largestRegion = new HashSet<VecI>();
-		for (Set<VecI> region: graph.getDisjointRegions()) {
+		for (Set<VecI> region: getRegions()) {
 			if (region.size() > max) {
 				max = region.size();
 				largestRegion = region;
@@ -91,6 +103,10 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 		}
 		
 		return largestRegion;
+	}
+	
+	public List<Rect> getImportantRects() {
+		return getRects();
 	}
 	
 }

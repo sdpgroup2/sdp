@@ -1,7 +1,6 @@
 package group2.sdp.pc;
 
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
@@ -11,7 +10,6 @@ import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
-import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Color;
@@ -24,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -55,6 +52,16 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	
 	private static final int WINDOW_WIDTH = 1024;
 	private static final int WINDOW_HEIGHT = 768;
+	private static final int PREPARE_FRAMES = 5;
+	
+	private enum VisionState {
+		Preparation,
+		Processing
+	}
+	
+	private VisionState state = VisionState.Preparation;
+	private int preparationFrames = 0;
+	
 	
 	//GUI
 	private JFrame windowFrame;
@@ -234,12 +241,36 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		BufferedImage image = frame.getBufferedImage();
 		// Read image into array
 		image.getRGB(0, 0, frameSize.width, frameSize.height, colorArray, 0, frameSize.width);
-		processImage(image);
+		switch (state) {
+		case Preparation: 	prepareVision(image); break;
+		case Processing: 	processImage(image); break;
+		}
 		// Draw image to frame.
 		currentImage = image;
 		imageLabel.setIcon(new ImageIcon(currentImage));
 		frame.recycle();
-	}	
+	}
+	
+	/**
+	 * Initializes the vision system to adjust to the video feed.
+	 */
+	private void prepareVision(BufferedImage image) {
+		double s = 0;
+		double b = 0;
+		for (int c=0; c<colorArray.length; c++) {
+			HSBColor color = new HSBColor(colorArray[c]);
+			s += color.s;
+			b += color.b;
+		}
+		s /= colorArray.length;
+		b /= colorArray.length;
+		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
+		
+		preparationFrames += 1;
+		if (preparationFrames >= PREPARE_FRAMES) {
+			state = VisionState.Processing;
+		}
+	}
 
 	/**
 	 * Processes an image to find positions of all the game objects.
@@ -255,57 +286,19 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 			for (int y=0; y < frameSize.height; y++) {
 				HSBColor color = new HSBColor(colorArray[y * frameSize.width + x]);
 				// Test the pixel for each of the clusters
-				boolean isBallPixel = ballCluster.testPixel(x, y, color);
-				boolean isBluePixel = blueRobotCluster.testPixel(x, y, color);
-				boolean isYellowPixel = yellowRobotCluster.testPixel(x, y, color);
-				boolean isPitchPixel = pitchSectionCluster.testPixel(x, y, color);
-				boolean isLinesPixel = pitchLinesCluster.testPixel(x, y, color);
-				if (Debug.VISION_FILL_PIXELS) {
-					// Color the pixels so we can see what got matched
-					Debug.drawPixel(isBallPixel, image, x, y, Color.red);
-					Debug.drawPixel(isBluePixel, image, x, y, Color.blue);
-					Debug.drawPixel(isYellowPixel, image, x, y, Color.yellow);
-					Debug.drawPixel(isPitchPixel, image, x, y, Color.green);
-					Debug.drawPixel(isLinesPixel, image, x, y, Color.white);
+				for (HSBCluster cluster: clusters) {
+					boolean matched = cluster.testPixel(x, y, color);
+					if (matched) {
+						Debug.drawPixel(image, x, y, cluster.debugColor);
+					}
 				}
 			}
 		}
-		findTheBall(image);
-		findRobots(image, blueRobotCluster);
-		findRobots(image, yellowRobotCluster);
-	}
-	
-	/**
-	 * Finds the ball in the image
-	 * @param image - The image we are looking for a ball in.
-	 * @return The vector of the centre of the bounding box of the ball.
-	 */
-	public VecI findTheBall(BufferedImage image) {
-		Rect ballRect = ballCluster.getBallRect();
-		if (ballRect != null) {
-			if (Debug.VISION_DRAW_BOUNDS) {
-				image.getGraphics().drawRect(ballRect.minX, ballRect.minY, ballRect.width, ballRect.height);
-			}
-			return ballRect.getCentre();
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * Draws bounding boxes around the robots
-	 * @param image - The image we are looking for robots in
-	 * @param cluster - The cluster that contains robot pixels
-	 * @return The bounding boxes of the robots.
-	 */
-	public List<Rect> findRobots(BufferedImage image, RobotCluster cluster) {
-		List<Rect> rects = cluster.getRobotRects();
-		for (Rect rect: rects) {
-			if (Debug.VISION_DRAW_BOUNDS) {
-				image.getGraphics().drawRect(rect.minX, rect.minY, rect.width, rect.height);
+		for (HSBCluster cluster: clusters) {
+			for (Rect rect: cluster.getImportantRects()) {
+				Debug.drawRect(image, rect, cluster.debugColor);
 			}
 		}
-		return rects;
 	}
 	
 	/**

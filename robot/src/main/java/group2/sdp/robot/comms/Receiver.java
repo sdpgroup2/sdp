@@ -1,4 +1,4 @@
-package group2.sdp.robot.bt;
+package group2.sdp.robot.comms;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,7 @@ import lejos.nxt.LCD;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
+<<<<<<< HEAD:robot/src/main/java/group2/sdp/robot/bt/BTReceive.java
 /**class checking stream repeatedly for a new message, and respond to it
  * @author Gordon Edwards and Michael Mair
  * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
@@ -16,6 +17,12 @@ import lejos.nxt.comm.NXTConnection;
 
 public class BTReceive {
 	
+=======
+public class Receiver {
+	/**class checking stream repeatedly for a new message, and respond to it
+	 * @author Gordon Edwards and Michael Mair
+	 * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 **/
+>>>>>>> e1c176ad4b63edcc10c7c74798e7650a718cfc4d:robot/src/main/java/group2/sdp/robot/comms/Receiver.java
 	private static InputStream inStream;
 	private static OutputStream outStream;
 	private static boolean forceQuit;

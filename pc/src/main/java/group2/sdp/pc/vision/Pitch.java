@@ -76,6 +76,6 @@ public class Pitch {
 	}
 	
 	public Rect getPitchRect() {
-		return lines.getLinesRect();
+		return lines.getImportantRects().get(0);
 	}
 }

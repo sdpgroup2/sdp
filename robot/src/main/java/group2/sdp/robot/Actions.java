@@ -32,8 +32,6 @@ public class Actions {
 			dp.rotate(-angle);
 		}
 	}
-		
-	
 	
 	public static void kick(int angle, int speed) {
 		LCD.drawString("kicking!", 10, 10);
