@@ -1,4 +1,4 @@
-package group2.sdp.robot.bt;
+package group2.sdp.robot.comms;
 
 import group2.sdp.robot.Actions;
 

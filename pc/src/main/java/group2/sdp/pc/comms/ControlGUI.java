@@ -303,9 +303,9 @@ public class ControlGUI extends JFrame {
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
-						
+						}	
 					}
+					
 				});
 				Thread rotateBot2 = new Thread(new Runnable() {
 
@@ -315,9 +315,9 @@ public class ControlGUI extends JFrame {
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
-						
+						}	
 					}
+					
 				});
 				rotateBot1.start();
 				rotateBot2.start();
