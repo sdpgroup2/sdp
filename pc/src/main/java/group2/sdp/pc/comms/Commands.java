@@ -7,7 +7,6 @@ package group2.sdp.pc.comms;
  * Remaining three bytes will be options for the commands.
  * @author Michael Mair
  * Based on code by SDP Group 4 2013
- *
  */
 public class Commands {
 	public final static int DO_NOTHING = 0;

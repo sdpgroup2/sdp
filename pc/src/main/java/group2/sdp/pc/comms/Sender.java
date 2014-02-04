@@ -10,10 +10,10 @@ import lejos.pc.comm.*;
  * actions in the robot package
  * @author Gordon Edwards
  * @author Michael Mair
- * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
-	and from SDP Group 4 2013
+ * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 
+ * and from SDP Group 4 2013
  */
-public class Sender implements CommInterface{   
+public class Sender implements CommInterface {   
 	private OutputStream outStream;
 	private InputStream inStream;
 	private NXTComm comm;
@@ -40,7 +40,7 @@ public class Sender implements CommInterface{
 			System.out.println("Could not send command");
 			e1.printStackTrace();
 		}
-		System.out.println("move..");
+		System.out.println("Move...");
 		return confirmation;
 	} 
 	
@@ -119,7 +119,7 @@ public class Sender implements CommInterface{
 		System.out.println("Force quit... Reset the brick.");
 	}
 	
-	public void openBluetoothConn(String robotName) throws IOException {
+	private void openBluetoothConn(String robotName) throws IOException {
 		
 		comm = null;
 		try {
@@ -141,7 +141,7 @@ public class Sender implements CommInterface{
 		connected = true;
    }
 	
-	public void closeBluetoothConn() {
+	private void closeBluetoothConn() {
 		try {
 	    	inStream.close();
 	    	outStream.close();
@@ -192,7 +192,8 @@ public class Sender implements CommInterface{
 		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
 				(int) res[3] };
 		return ret;
-	}	
+	}
+	
 	public boolean isConnected() {
 		return connected;
 	}
