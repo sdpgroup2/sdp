@@ -1,4 +1,4 @@
-package group2.sdp.robot.bt;
+package group2.sdp.robot.comms;
 
 import group2.sdp.robot.Actions;
 
@@ -6,27 +6,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.bluetooth.RemoteDevice;
-
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
-import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
-public class BTReceive {
-	/**class checking stream repeatedly for a new message, and respond to it
-	 * @author Gordon Edwards and Michael Mair
-	 * code based on SDP Group 4 2013 and from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 **/
+/**
+ * class checking stream repeatedly for a new message, and respond to it
+ * 
+ * @author Gordon Edwards and Michael Mair code based on SDP Group 4 2013 and
+ *         from burti (Lawrie Griffiths) at
+ *         /www.lejos.org/forum/viewtopic.php?p=10843
+ **/
+public class Receiver {
+
 	private static InputStream inStream;
 	private static OutputStream outStream;
 	private static boolean forceQuit;
-	public static void main(String[] args) throws IOException, InterruptedException {	
-		
-		
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+
 		while (!forceQuit) {
 			try {
-				
+
 				NXTConnection connection = Bluetooth.waitForConnection();
 				inStream = connection.openInputStream();
 				outStream = connection.openOutputStream();
@@ -37,7 +39,7 @@ public class BTReceive {
 					throw new Exception("Output stream is null!");
 				outStream.write(robotReady);
 				outStream.flush();
-				
+
 				// Begin reading commands
 				int opcode = Commands.DO_NOTHING;
 				int option1, option2, option3;
@@ -47,56 +49,56 @@ public class BTReceive {
 					// Get the next command from the inputstream
 					byte[] byteBuffer = new byte[4];
 					inStream.read(byteBuffer);
-					
+
 					opcode = byteBuffer[0];
 					option1 = byteBuffer[1];
 					option2 = byteBuffer[2];
 					option3 = byteBuffer[3];
-					
+
 					switch (opcode) {
-					
-						case Commands.ANGLEMOVE:
-							LCD.clear();
-							LCD.drawString("Moving at an angle!", 0, 2);
-							LCD.refresh();
-							Actions.move(option1, option2, option3);
-							replyToPC(opcode, outStream);
-							break;
-						
-						case Commands.ROTATE:
-							LCD.clear();
-							LCD.drawString("Rotate!", 0, 2);
-							LCD.refresh();
-							Actions.rotate(option1, option2, option3);
-							replyToPC(opcode, outStream);
-							break;
-	
-						case Commands.KICK:
-							LCD.clear();
-							LCD.drawString("Kicking!", 0, 2);
-							LCD.refresh();
-							Actions.kick(option1,option2);
-							replyToPC(opcode, outStream);
-							break;
-						
-						case Commands.STOP:
-							LCD.clear();
-							LCD.drawString("Stopping!", 0, 2);
-							LCD.refresh();
-							Actions.stop();
-							replyToPC(opcode, outStream);
-							break;
-	
-						case Commands.DISCONNECT: 
-							Actions.disconnect();
-							break;
-	
-						case Commands.FORCEQUIT:
-							Actions.forcequit();
-							forceQuit = true;
-							break;
-						default:
-							// Ignore it
+
+					case Commands.ANGLEMOVE:
+						LCD.clear();
+						LCD.drawString("Moving at an angle!", 0, 2);
+						LCD.refresh();
+						Actions.move(option1, option2, option3);
+						replyToPC(opcode, outStream);
+						break;
+
+					case Commands.ROTATE:
+						LCD.clear();
+						LCD.drawString("Rotate!", 0, 2);
+						LCD.refresh();
+						Actions.rotate(option1, option2, option3);
+						replyToPC(opcode, outStream);
+						break;
+
+					case Commands.KICK:
+						LCD.clear();
+						LCD.drawString("Kicking!", 0, 2);
+						LCD.refresh();
+						Actions.kick(option1, option2);
+						replyToPC(opcode, outStream);
+						break;
+
+					case Commands.STOP:
+						LCD.clear();
+						LCD.drawString("Stopping!", 0, 2);
+						LCD.refresh();
+						Actions.stop();
+						replyToPC(opcode, outStream);
+						break;
+
+					case Commands.DISCONNECT:
+						Actions.disconnect();
+						break;
+
+					case Commands.FORCEQUIT:
+						Actions.forcequit();
+						forceQuit = true;
+						break;
+					default:
+						// Ignore it
 					}
 				}
 
@@ -121,7 +123,7 @@ public class BTReceive {
 			}
 		}
 	}
-	
+
 	public static void replyToPC(int opcode, OutputStream os) throws IOException {
 		byte[] reply = { 111, (byte) opcode, 0, 0 };
 		os.write(reply);

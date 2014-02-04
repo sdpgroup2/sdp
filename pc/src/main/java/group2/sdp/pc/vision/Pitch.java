@@ -18,10 +18,12 @@ public class Pitch {
 	private Rect leftDefense;
 	private Rect rightDefense;
 	
-	private static Rect yellowDefender;
-	private static Rect yellowAttacker;
-	private static Rect blueDefender;
-	private static Rect blueAttacker;
+	private Rect leftDefender = null;
+	private Rect leftAttacker = null;
+	private Rect rightDefender = null;
+	private Rect rightAttacker = null;
+
+	private Rect ball;
 	
 	private final VecI LEFT_DEF_POINT = new VecI(120,240);
 	private final VecI LEFT_ATT_POINT = new VecI(270,240);
@@ -52,6 +54,52 @@ public class Pitch {
 		}
 		
 		return result;
+	}
+	
+	public void addBall(Rect ball) {
+		this.ball = ball;
+	}
+	
+	/**
+	 * Adds the robot to the pitch model, depending on the location of their rectangle.
+	 * @param blueRobots - List of rectangles of blue robots.
+	 * @param yellowRobots - List of rectangles of yellow robots.
+	 */
+	public void addRobots(List<Rect> blueRobots, List<Rect> yellowRobots) {
+		Rect firstBlueRobot = blueRobots.get(0);
+		Rect secondBlueRobot = blueRobots.get(1);
+		Rect firstYellowRobot = yellowRobots.get(0);
+		Rect secondYellowRobot = yellowRobots.get(1);
+		
+		if (this.leftDefense.getPitchRect().contains(firstBlueRobot)) {
+			this.leftDefender = firstBlueRobot;
+			this.leftAttacker = secondBlueRobot;
+			if (this.rightDefense.getPitchRect().contains(firstYellowRobot)) {
+				this.rightDefender = firstYellowRobot;
+				this.rightAttacker = secondYellowRobot;
+			}
+		} else if (this.leftAttack.getPitchRect().contains(firstBlueRobot)) {
+			this.leftAttacker = firstBlueRobot;
+			this.leftDefender = secondBlueRobot;
+			if (this.rightDefense.getPitchRect().contains(firstYellowRobot)) {
+				this.rightDefender = firstYellowRobot;
+				this.rightAttacker = secondYellowRobot;
+			}
+		} else if (this.rightDefense.getPitchRect().contains(firstBlueRobot)) {
+			this.rightDefender = firstBlueRobot;
+			this.rightAttacker = secondBlueRobot;
+			if (this.leftDefense.getPitchRect().contains(firstYellowRobot)) {
+				this.leftDefender = firstYellowRobot;
+				this.leftAttacker = secondYellowRobot;
+			}
+		} else {
+			this.rightAttacker = firstBlueRobot;
+			this.rightDefender = secondBlueRobot;
+			if (this.leftDefense.getPitchRect().contains(firstYellowRobot)) {
+				this.leftDefender = firstYellowRobot;
+				this.leftAttacker = secondYellowRobot;
+			}
+		}
 	}
 	
 	public Rect getPitchRect() {

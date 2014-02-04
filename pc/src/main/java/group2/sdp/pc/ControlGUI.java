@@ -1,6 +1,8 @@
-package group2.sdp.pc.comms;
+package group2.sdp.pc;
 
 //UI imports
+import group2.sdp.pc.comms.Sender;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,7 +29,7 @@ import javax.swing.UIManager;
  * @author Michael Mair
  * Code based on SDP group 4 2013
  */
-/* 
+
 
 public class ControlGUI extends JFrame {
 	// GUI elements
@@ -77,8 +79,8 @@ public class ControlGUI extends JFrame {
 	public static JTextField op4field = new JTextField();
 	public static JTextField op5field = new JTextField();
 	
-	private static BTSend btSendR1;
-	private static BTSend btSendR2;
+	private static Sender btSendR1;
+	private static Sender btSendR2;
 	
 	public static void main(String[] args) throws IOException {
 		// Make the GUI pretty
@@ -96,8 +98,8 @@ public class ControlGUI extends JFrame {
 		btSendR2 = null;
 		try {
 			//note of name and MAC
-			btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
-			btSendR2 = new BTSend("SDP 2A", "00165307D55F");
+			btSendR1 = new Sender("SDP 2D","0016530BBBEA");
+			btSendR2 = new Sender("SDP 2A", "00165307D55F");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("problem connecting" + e1.getMessage());
@@ -305,9 +307,9 @@ public class ControlGUI extends JFrame {
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
-						
+						}	
 					}
+					
 				});
 				Thread rotateBot2 = new Thread(new Runnable() {
 
@@ -317,9 +319,9 @@ public class ControlGUI extends JFrame {
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
-						
+						}	
 					}
+					
 				});
 				rotateBot1.start();
 				rotateBot2.start();
@@ -425,4 +427,4 @@ public class ControlGUI extends JFrame {
 		}
 	}
 }
-*/
+

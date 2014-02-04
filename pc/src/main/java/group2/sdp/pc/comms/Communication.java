@@ -8,12 +8,12 @@ import lejos.nxt.LCD;
 public class Communication {
 	public static void main(String[] args) {
 		
-		BTSend btSendR1 = null;
-		BTSend btSendR2 = null;
+		Sender btSendR1 = null;
+		Sender btSendR2 = null;
 		try {
 			//note of name and MAC
 //			btSendR1 = new BTSend("SDP 2D","0016530BBBEA");
-			btSendR2 = new BTSend("SDP 2A", "00165307D55F");
+			btSendR2 = new Sender("SDP 2A", "00165307D55F");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("problem connecting" + e1.getMessage());
