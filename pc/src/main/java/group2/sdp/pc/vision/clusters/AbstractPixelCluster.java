@@ -1,6 +1,6 @@
 package group2.sdp.pc.vision.clusters;
 
-import group2.sdp.pc.geom.GeomUtil;
+import group2.sdp.pc.geom.MathU;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.PixelGraph;
@@ -66,7 +66,7 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 			int minLength, int maxLength, int minBreadth, int maxBreadth, float minFill, float maxFill) {
 		List<Rect> rects = new ArrayList<Rect>();
 		for (Set<VecI> region: getRegions()) {
-			Rect rect = GeomUtil.getBoundingBox(region);
+			Rect rect = MathU.getBoundingBox(region);
 			int rectArea = (rect.width*rect.height);
 			float fill = (rectArea > 0) ? ((float) region.size()) / (rect.width*rect.height) : 0f;
 			int length = Math.max(rect.width, rect.height);

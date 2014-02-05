@@ -1,7 +1,6 @@
 package group2.sdp.pc;
 
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
@@ -60,8 +59,11 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		Processing
 	}
 	
+	// Pre-processing
 	private VisionState state = VisionState.Preparation;
 	private int preparationFrames = 0;
+	private float meanSat = 0;
+	private float meanBright = 0;
 	
 	
 	//GUI
@@ -95,6 +97,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	
 	// Stores colors for the current frame
 	private int[] colorArray;
+	private HSBColor[] hsbArray;
+	private int[] outputArray;
 	
 	
 	public static void main(String[] args) {
@@ -105,6 +109,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	public VisionSystem() {
 		initCamera();
 		initWindow();
+		initColorArrays();
 		
 		skyCam.startVision(this);
 	}
@@ -116,8 +121,17 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	public void initCamera() {
 		skyCam = new SkyCam();
 		frameSize = skyCam.getSize();
-		colorArray = new int[frameSize.width * frameSize.height];
 	}
+	
+	public void initColorArrays() {
+		colorArray = new int[frameSize.width * frameSize.height];
+		hsbArray = new HSBColor[frameSize.width * frameSize.height];
+		for (int i=0; i<hsbArray.length; i++) {
+			hsbArray[i] = new HSBColor();
+		}
+		outputArray = new int[frameSize.width * frameSize.height];
+	}
+	
 	/**
 	 * Initialise a window frame. PLEASE EXCUSE THIS AWFUL FUNCTION. I'll clean it up later.
 	 */
@@ -252,23 +266,42 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	}
 	
 	/**
+	 * Not tested yet.
+	 */
+	private void normalizeImage() {
+		for (int x=0; x<frameSize.width; x++) {
+			for (int y=0; y<frameSize.height; y++) {
+				int index = y*frameSize.width + x;
+				HSBColor color = hsbArray[index].set(colorArray[index]);
+				color.offset(0, 0.5f-meanSat, 0.5f-meanBright);
+				outputArray[index] = color.getRGB();
+			}
+		}
+		currentImage.setRGB(0, 0, frameSize.width, frameSize.height, outputArray, 0, frameSize.width);
+	}
+	
+	/**
 	 * Initializes the vision system to adjust to the video feed.
 	 */
 	private void prepareVision() {
 		double s = 0;
 		double b = 0;
 		for (int c=0; c<colorArray.length; c++) {
-			HSBColor color = new HSBColor(colorArray[c]);
+			HSBColor color = hsbArray[c].set(colorArray[c]);
 			s += color.s;
 			b += color.b;
 		}
 		s /= colorArray.length;
 		b /= colorArray.length;
 		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
+		meanSat += s;
+		meanBright += b;
 		
 		preparationFrames += 1;
 		if (preparationFrames >= PREPARE_FRAMES) {
 			state = VisionState.Processing;
+			meanSat /= preparationFrames;
+			meanBright /= preparationFrames;
 		}
 	}
 
@@ -284,7 +317,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		// Loop through pixels.
 		for (int x=0; x < frameSize.width; x++) {
 			for (int y=0; y < frameSize.height; y++) {
-				HSBColor color = new HSBColor(colorArray[y * frameSize.width + x]);
+				int index = y*frameSize.width + x;
+				HSBColor color = hsbArray[index].set(colorArray[index]);
 				// Test the pixel for each of the clusters
 				for (HSBCluster cluster: clusters) {
 					boolean matched = cluster.testPixel(x, y, color);
