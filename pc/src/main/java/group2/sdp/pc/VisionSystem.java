@@ -87,8 +87,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 			ballCluster,
 			blueRobotCluster,
 			yellowRobotCluster,
-			pitchSectionCluster,
-			pitchLinesCluster
+			//pitchSectionCluster,
+			//pitchLinesCluster
 	};
 	
 	private Timer timer = new Timer(10);
@@ -239,15 +239,14 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	 */
 	public void nextFrame(VideoFrame frame) {
 		timer.tick(25); // Prints the framerate every 25 frames
-		BufferedImage image = frame.getBufferedImage();
+		currentImage = frame.getBufferedImage();
 		// Read image into array
-		image.getRGB(0, 0, frameSize.width, frameSize.height, colorArray, 0, frameSize.width);
+		currentImage.getRGB(0, 0, frameSize.width, frameSize.height, colorArray, 0, frameSize.width);
 		switch (state) {
-		case Preparation: 	prepareVision(image); break;
-		case Processing: 	processImage(image); break;
+		case Preparation: 	prepareVision(); break;
+		case Processing: 	processImage(); break;
 		}
 		// Draw image to frame.
-		currentImage = image;
 		imageLabel.setIcon(new ImageIcon(currentImage));
 		frame.recycle();
 	}
@@ -255,7 +254,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	/**
 	 * Initializes the vision system to adjust to the video feed.
 	 */
-	private void prepareVision(BufferedImage image) {
+	private void prepareVision() {
 		double s = 0;
 		double b = 0;
 		for (int c=0; c<colorArray.length; c++) {
@@ -277,7 +276,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	 * Processes an image to find positions of all the game objects.
 	 * @param image - The current frame of video.
 	 */
-	private void processImage(BufferedImage image) {
+	private void processImage() {
 		// Clear all clusters.
 		for (HSBCluster cluster: clusters) {
 			cluster.clear();
@@ -290,18 +289,18 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 				for (HSBCluster cluster: clusters) {
 					boolean matched = cluster.testPixel(x, y, color);
 					if (matched) {
-						Debug.drawPixel(image, x, y, cluster.debugColor);
+						Debug.drawPixel(currentImage, x, y, cluster.debugColor);
 					}
 				}
 			}
 		}
 		for (HSBCluster cluster: clusters) {
 			for (Rect rect: cluster.getImportantRects()) {
-				Debug.drawRect(image, rect, cluster.debugColor);
+				Debug.drawRect(currentImage, rect, cluster.debugColor);
 			}
 		}
-		VecI corner = pitchLinesCluster.getCorner("U","L");		
-		Debug.drawTestPixel(image, corner.x, corner.y, Color.white);
+		//VecI corner = pitchLinesCluster.getCorner("U","L");		
+		//Debug.drawTestPixel(image, corner.x, corner.y, Color.white);
 	}
 	
 	/**
