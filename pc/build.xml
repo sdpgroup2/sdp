@@ -4,8 +4,6 @@
 	<property name="lib.dir" location="lib" />
 	<property name="src.dir" location="src/main/java" />
 	<property name="build.dir" location="target/classes" />
-	<property name="nxt.shit" location="/group/teaching/sdp/sdp2/lejos_nxj" />
-	<property name="bluetooth.wont.work.without.that.because.it.is.such.a.nice.think" value="$LD_LIBRARY_PATH:lib" />
 
     <path id="build.classpath">
         <pathelement location="${lib.dir}"/>
@@ -16,33 +14,33 @@
         <pathelement location="${build.dir}"/>
         <pathelement location="${build.tests.dir}"/>
     </path>
-	
+
 	<target name="clean">
         <delete dir="${build.dir}" />
     </target>
-	
+
 	<target name="makedir">
 		<mkdir dir="${build.dir}" />
 	</target>
 
-	<!--
-	<target name="envclasspath">
-		<exec executable="/bin/bash">
-			<arg value="export LD_LIBRARY_PATH=${bluetooth.wont.work.without.that.because.it.is.such.a.nice.think}"/>
-		</exec>
-	</target>
-	-->
-	
     <target name="compile" depends="clean, makedir">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" 
-            classpathref="build.classpath" includeantruntime="true"></javac>
+        <javac target="1.7" source="1.7" srcdir="${src.dir}" destdir="${build.dir}"
+            classpathref="build.classpath" includeantruntime="true">
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
     </target>
-	
+
 	<target name="run-bt" depends="compile">
-		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.Communication">
+		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.comms.Communication">
 		</java>
 	</target>
-	
-	<target name="main" depends="clean, makedir, compile, run-bt">
+
+    <target name="run-vision" depends="compile">
+        <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionSystem">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+        </java>
+    </target>
+
+	<target name="main" depends="clean, makedir, compile, run-vision">
 	</target>
 </project>
