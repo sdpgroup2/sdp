@@ -60,11 +60,14 @@ public class Pitch {
 		this.ball = ball;
 	}
 	
+	
 	/**
 	 * Adds the robot to the pitch model, depending on the location of their rectangle.
 	 * @param blueRobots - List of rectangles of blue robots.
 	 * @param yellowRobots - List of rectangles of yellow robots.
 	 */
+	
+	/*
 	public void addRobots(List<Rect> blueRobots, List<Rect> yellowRobots) {
 		Rect firstBlueRobot = blueRobots.get(0);
 		Rect secondBlueRobot = blueRobots.get(1);
@@ -101,6 +104,8 @@ public class Pitch {
 			}
 		}
 	}
+	
+	*/
 	
 	public Rect getPitchRect() {
 		return lines.getImportantRects().get(0);

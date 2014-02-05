@@ -300,8 +300,8 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 				Debug.drawRect(image, rect, cluster.debugColor);
 			}
 		}
-		//VecI corner = pitchLinesCluster.getCorners();		
-		//Debug.drawTestPixel(image, corner.x, corner.y, Color.white);
+		VecI corner = pitchLinesCluster.getCorner("U","L");		
+		Debug.drawTestPixel(image, corner.x, corner.y, Color.white);
 	}
 	
 	/**
