@@ -22,51 +22,30 @@ public class Sender implements CommInterface {
 	private NXTInfo nxtInfo;
 	private boolean robotReady;
 	
-	
 	public Sender(String robotName, String robotMacAddress) throws IOException{
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
 		openBluetoothConn(robotName);
-		LCD.drawString("connected!", 0, 4);
+//		LCD.drawString("connected!", 0, 4);
 	}
 	
 	public int move(int direction, int angle, int speed) throws IOException {
 		int[] command = { Commands.ANGLEMOVE, direction, angle, speed};
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-			System.out.println("confirm:" +confirmation);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Move...");
 		return confirmation;
 	} 
 	
-	
 	public int rotate(int direction, int angle, int speed) throws IOException {
 		int[] command = { Commands.ROTATE, direction, angle, speed };
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Rotate...");
 		return confirmation;
 	}
 	
 	public int kick(int angle, int speed) throws IOException {
 		int[] command = { Commands.KICK, angle, speed, 0 };
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Kick");
 		return confirmation;
 		
@@ -74,13 +53,7 @@ public class Sender implements CommInterface {
 	
 	public int stop() {
 		int[] command = { Commands.STOP, 0, 0, 0 };
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Stop...");
 		return confirmation;
 	}
@@ -206,4 +179,14 @@ public class Sender implements CommInterface {
 		buffer = 0;
 	}
 	
+	private int attemptConnection(int[] command) {
+		int confirmation = 0;
+		try {
+			confirmation = sendToRobot(command);
+		} catch (IOException e1) {
+			System.out.println("Could not send command");
+			e1.printStackTrace();
+		}
+		return confirmation;
+	}
 }

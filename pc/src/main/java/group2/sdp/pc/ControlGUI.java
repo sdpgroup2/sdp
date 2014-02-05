@@ -1,6 +1,7 @@
 package group2.sdp.pc;
 
 //UI imports
+import group2.sdp.pc.comms.CommInterface;
 import group2.sdp.pc.comms.Sender;
 
 import java.awt.Dimension;
@@ -79,8 +80,8 @@ public class ControlGUI extends JFrame {
 	public static JTextField op4field = new JTextField();
 	public static JTextField op5field = new JTextField();
 	
-	private static Sender btSendR1;
-	private static Sender btSendR2;
+	private static Sender connection2D;
+	private static Sender connection2A;
 	
 	public static void main(String[] args) throws IOException {
 		// Make the GUI pretty
@@ -94,20 +95,55 @@ public class ControlGUI extends JFrame {
 		ControlGUI gui = new ControlGUI();
 		gui.setVisible(true);
 		
-		btSendR1 = null;
-		btSendR2 = null;
-		try {
-			//note of name and MAC
-			btSendR1 = new Sender("SDP 2D","0016530BBBEA");
-			btSendR2 = new Sender("SDP 2A", "00165307D55F");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			System.out.println("problem connecting" + e1.getMessage());
-		}
+		connection2D = null;
+		connection2A = null;
+		
+		
+		boolean connectedR1 = false;
+		Thread connectTo2A = new Thread(new Runnable() {
 
+			public void run() {
+				for (int i = 0; i< 5; i++){
+					try {
+						//note of name and MAC
+						connection2A = new Sender("SDP 2A","00165307D55F");
+						break;
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						System.out.println("problem connecting" + e1.getMessage());
+						if (i == 5){
+							System.exit(0);
+						}
+					}
+				}
+			}
+			
+		});
+		Thread connectTo2D = new Thread(new Runnable() {
+
+			public void run() {
+				for (int i = 0; i< 5; i++){
+					try {
+						//note of name and MAC
+						connection2D = new Sender("SDP 2D","0016530BBBEA");
+						break;
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						System.out.println("problem connecting" + e1.getMessage());
+						if (i == 5){
+							System.exit(0);
+						}
+					}
+				}
+			}
+			
+		});
+		connectTo2A.start();
+		connectTo2D.start();
+		
 	}
-
-
+	
 	public ControlGUI() {
 
 		this.setTitle("Group 2 control GUI");
@@ -208,21 +244,24 @@ public class ControlGUI extends JFrame {
 
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				connection2A.clearBuff();
+				connection2D.clearBuff();
+				connection2A.stop();
+				connection2D.stop();
 			}
 		});
 
 		moveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btSendR1.clearBuff();
-				btSendR2.clearBuff();
+				connection2A.clearBuff();
+				connection2D.clearBuff();
 				final int direction = Integer.parseInt(op1field.getText());
 				final int angle = Integer.parseInt(op2field.getText());
 				final int speed = Integer.parseInt(op3field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
 					public void run() { 
 						try {
-							btSendR1.move(direction, angle, speed);
+							connection2A.move(direction, angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -233,7 +272,7 @@ public class ControlGUI extends JFrame {
 				Thread moveBot2 = new Thread(new Runnable() {
 					public void run() { 
 						try {
-							btSendR2.move(direction, angle, speed);
+							connection2D.move(direction, angle, speed);     
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -243,7 +282,7 @@ public class ControlGUI extends JFrame {
 				moveBot1.start();
 				moveBot2.start();
 				try {
-					moveBot2.join();
+					moveBot1.join();
 					moveBot2.join();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
@@ -255,14 +294,14 @@ public class ControlGUI extends JFrame {
 		
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btSendR1.clearBuff();
-				btSendR2.clearBuff();
+				connection2A.clearBuff();
+				connection2D.clearBuff();
 				final int angle = Integer.parseInt(op1field.getText());
 				final int speed = Integer.parseInt(op2field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
 					public void run() { 
 						try {
-							btSendR1.kick(angle, speed);
+							connection2A.kick(angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -273,7 +312,7 @@ public class ControlGUI extends JFrame {
 				Thread moveBot2 = new Thread(new Runnable() {
 					public void run() { 
 						try {
-							btSendR2.kick(angle, speed);
+							connection2D.kick(angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -283,7 +322,7 @@ public class ControlGUI extends JFrame {
 				moveBot1.start();
 				moveBot2.start();
 				try {
-					moveBot2.join();
+					moveBot1.join();
 					moveBot2.join();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
@@ -294,8 +333,8 @@ public class ControlGUI extends JFrame {
 
 		rotateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btSendR1.clearBuff();
-				btSendR2.clearBuff();
+				connection2D.clearBuff();
+//				btSendR2.clearBuff();
 				final int direction = Integer.parseInt(op1field.getText());
 				final int angle = Integer.parseInt(op2field.getText());
 				final int speed = Integer.parseInt(op3field.getText());
@@ -303,7 +342,7 @@ public class ControlGUI extends JFrame {
 
 					public void run() {
 						try {
-							btSendR1.rotate(direction, angle, speed);
+							connection2A.rotate(direction, angle, speed);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -314,19 +353,19 @@ public class ControlGUI extends JFrame {
 				Thread rotateBot2 = new Thread(new Runnable() {
 
 					public void run() {
-						try {
-							btSendR2.rotate(direction, angle, speed);
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}	
+					try {
+						connection2A.rotate(direction, angle, speed);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
 					}
 					
 				});
 				rotateBot1.start();
 				rotateBot2.start();
 				try {
-					rotateBot2.join();
+					rotateBot1.join();
 					rotateBot2.join();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block

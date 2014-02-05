@@ -23,9 +23,9 @@ public class Receiver {
 	private static InputStream inStream;
 	private static OutputStream outStream;
 	private static boolean forceQuit;
-	
+	private static Pilot pilot;
 	public static void main(String[] args) throws IOException, InterruptedException {	
-		Pilot pilot = new Pilot();
+		 pilot = new Pilot();
 		
 		while (!forceQuit) {
 			try {
@@ -91,11 +91,11 @@ public class Receiver {
 							break;
 	
 						case Commands.DISCONNECT: 
-							pilot.disconnect();
+							
 							break;
 	
 						case Commands.FORCEQUIT:
-							pilot.forcequit();
+							
 							forceQuit = true;
 							break;
 						default:
