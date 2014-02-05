@@ -55,7 +55,6 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	 */
 
 	public VecI getMaxXPixel(int y) {
-		
 		Set<VecI> pixels = getLargestRegion();
 		VecI max = new VecI(0,0);
 		
@@ -69,7 +68,6 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	}
 
 	public VecI getMaxYPixel(int x) {
-		
 	    Set<VecI> pixels = getLargestRegion();
 		VecI max = new VecI(0,0);
 		
@@ -83,42 +81,38 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	}
 
 	public VecI getMinXPixel(int y) {
-
-	Set<VecI> pixels = getLargestRegion();
-	VecI min = new VecI(1000,0);
-
-	for(VecI pixel : pixels)
-	{
-		if(pixel.x < min.x && pixel.y == y)
-			min = pixel;
-	}
-
-	return min;
+		Set<VecI> pixels = getLargestRegion();
+		VecI min = new VecI(1000,0);
+	
+		for(VecI pixel : pixels)
+		{
+			if(pixel.x < min.x && pixel.y == y)
+				min = pixel;
+		}
+	
+		return min;
 	}
 
 	public VecI getMinYPixel(int x) {
-
-	Set<VecI> pixels = getLargestRegion();
-	VecI min = new VecI(0,1000);
-
-	for(VecI pixel : pixels)
-	{
-		if(pixel.x < min.x && pixel.x == x)
-			min = pixel;
-	}
-
-	return min;
+		Set<VecI> pixels = getLargestRegion();
+		VecI min = new VecI(0,1000);
+	
+		for(VecI pixel : pixels)
+		{
+			if(pixel.x < min.x && pixel.x == x)
+				min = pixel;
+		}
+	
+		return min;
 	}
 	
 	/**
-	 * 
 	 * A set of functions for finding a pixel on the edge of a cluster.
 	 * 	
 	 * @return The (left/right/upper/bottom)most pixel in the largest cluster.
 	 */
 	
-public VecI getMaxXPixel() {
-		
+	public VecI getMaxXPixel() {
 		Set<VecI> pixels = getLargestRegion();
 		VecI max = new VecI(0,0);
 		
@@ -132,7 +126,6 @@ public VecI getMaxXPixel() {
 	}
 
 	public VecI getMaxYPixel() {
-		
 	    Set<VecI> pixels = getLargestRegion();
 		VecI max = new VecI(0,0);
 		
@@ -146,31 +139,29 @@ public VecI getMaxXPixel() {
 	}
 
 	public VecI getMinXPixel() {
-
-	Set<VecI> pixels = getLargestRegion();
-	VecI min = new VecI(1000,0);
-
-	for(VecI pixel : pixels)
-	{
-		if(pixel.x < min.x)
-			min = pixel;
-	}
-
-	return min;
+		Set<VecI> pixels = getLargestRegion();
+		VecI min = new VecI(1000,0);
+	
+		for(VecI pixel : pixels)
+		{
+			if(pixel.x < min.x)
+				min = pixel;
+		}
+	
+		return min;
 	}
 
 	public VecI getMinYPixel() {
-
-	Set<VecI> pixels = getLargestRegion();
-	VecI min = new VecI(0,1000);
-
-	for(VecI pixel : pixels)
-	{
-		if(pixel.x < min.x)
-			min = pixel;
-	}
-
-	return min;
+		Set<VecI> pixels = getLargestRegion();
+		VecI min = new VecI(0,1000);
+	
+		for(VecI pixel : pixels)
+		{
+			if(pixel.x < min.x)
+				min = pixel;
+		}
+	
+		return min;
 	}
 
 

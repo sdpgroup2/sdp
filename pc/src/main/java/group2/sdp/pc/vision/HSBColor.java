@@ -1,5 +1,7 @@
 package group2.sdp.pc.vision;
 
+import group2.sdp.pc.geom.MathU;
+
 import java.awt.Color;
 
 public class HSBColor {
@@ -8,9 +10,10 @@ public class HSBColor {
 	public static final int GREENMASK = new Color(0,255,0,0).getRGB();
 	public static final int BLUEMASK = new Color(0,0,255,0).getRGB();
 	
-	public final float h;
-	public final float s;
-	public final float b;
+	public float h;
+	public float s;
+	public float b;
+	float[] innerArray = new float[3];
 	
 	
 	public static boolean inRange(HSBColor color, HSBColor minColor, HSBColor maxColor) {
@@ -19,33 +22,66 @@ public class HSBColor {
 				((minColor.h <= maxColor.h) ? (minColor.h <= color.h && color.h <= maxColor.h) : (color.h >= minColor.h || color.h <= maxColor.h)));
 	}
 	
+	public HSBColor() {
+		set(0,0,0);
+	}
+	
 	public HSBColor(int color) {
-		float[] hsb = Color.RGBtoHSB((color & REDMASK) >> 16, (color & GREENMASK) >> 8, (color & BLUEMASK), null);
-		h = hsb[0];
-		s = hsb[1];
-		b = hsb[2];
+		set(color);
 	}
 	
 	public HSBColor(float h, float s, float b) {
+		set(h,s,b);
+	}
+	
+	public HSBColor(int h, int s, int b) {
+		set(h,s,b);
+	}
+	
+	public HSBColor(Color color) {
+		set(color);
+	}
+	
+	public HSBColor set(float h, float s, float b) {
 		this.h = h;
 		this.s = s;
 		this.b = b;
+		return this;
 	}
 	
-	/**
-	 * This constructor uses the same format as the GIMP.
-	 * @param h The hue, from 0 to 360
-	 * @param s The saturation, from 0 to 100
-	 * @param b The brightness, from 0 to 100
-	 */
-	public HSBColor(int h, int s, int b) {
+	public HSBColor set(int rgbColor) {
+		Color.RGBtoHSB((rgbColor & REDMASK) >> 16, (rgbColor & GREENMASK) >> 8, (rgbColor & BLUEMASK), innerArray);
+		this.h = innerArray[0];
+		this.s = innerArray[1];
+		this.b = innerArray[2];
+		return this;
+	}
+	
+	public HSBColor set(int h, int s, int b) {
 		this.h = ((float) h) / 360;
 		this.s = ((float) s) / 100;
 		this.b = ((float) b) / 100;
+		return this;
+	}
+	
+	public HSBColor set(Color color) {
+		set(color.getRGB());
+		return this;
+	}
+	
+	public HSBColor offset(float dh, float ds, float db) {
+		this.h += dh;
+		this.s = MathU.clamp(s+ds);
+		this.b = MathU.clamp(b+db);
+		return this;
 	}
 	
 	public Color getRGBColor() {
 		return Color.getHSBColor(h, s, b);
+	}
+	
+	public int getRGB() {
+		return Color.HSBtoRGB(h, s, b);
 	}
 	
 	public int iHue() {

@@ -10,6 +10,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class PitchLines extends HSBCluster {
+	
+	enum Dir {
+		Left,
+		Right,
+		Down,
+		Up
+	}
 
 	public PitchLines(String name) {
 		super(name, new HSBColor(0,0,33), new HSBColor(360,70,100), Color.white);
@@ -23,14 +30,23 @@ public class PitchLines extends HSBCluster {
 	public Shape getPitchShape() {		
 		ArrayList<VecI> corners = new ArrayList<VecI>();
 		
-		corners.add(getCorner("L","D"));
-		corners.add(getCorner("L","U"));
-		corners.add(getCorner("U","L"));
-		corners.add(getCorner("U","R"));
-		corners.add(getCorner("R","U"));
-		corners.add(getCorner("R","D"));
-		corners.add(getCorner("D","R"));
-		corners.add(getCorner("D","L"));
+		/*
+		 * Hey Julien, I changed the strings here to an enum because
+		 * it's a little neater. It should work just the same.
+		 * 
+		 * -J: Cheers, i was going to use case statements but it doesn't
+		 * work with strings. Didn't know about enum types until now,
+		 * but this is much better.
+		 */
+		
+		corners.add(getCorner(Dir.Left, Dir.Down));
+		corners.add(getCorner(Dir.Left, Dir.Up));
+		corners.add(getCorner(Dir.Up, 	Dir.Left));
+		corners.add(getCorner(Dir.Up, 	Dir.Right));
+		corners.add(getCorner(Dir.Right,Dir.Up));
+		corners.add(getCorner(Dir.Right,Dir.Down));
+		corners.add(getCorner(Dir.Down,	Dir.Right));
+		corners.add(getCorner(Dir.Down, Dir.Left));
 		
 		Shape finalShape = new Shape(corners);
 		return finalShape;
@@ -39,36 +55,31 @@ public class PitchLines extends HSBCluster {
 	/**
 	 * Finds a corner pixel of the pitch lines.
 	 * 
-	 * 
-	 * @param edge    The edge the corner lies on (L/R/D/U for Left/Down/Right/Up)
-	 * @param corner  Which corner of the edge we want to get (L/R/D/U)
+	 * @param edge    The edge the corner lies on (Left/Down/Right/Up)
+	 * @param corner  Which corner of the edge we want to get (Left/Right/Down/Up)
 	 * 
 	 * @return The vector corresponding to the desired corner of the pitch
 	 * 
-	 * Note: I would have used switch statements to make the code tidier,
-	 * however this version of Java does not seem to support strings as
-	 * conditions for switches.
 	 */
 	
-	public VecI getCorner(String edge, String corner) {
+	public VecI getCorner(Dir edge, Dir corner) {
 		
 		 VecI finalCorner, edgePixel = new VecI(0,0);
 		 int min, max, position = 0;
 		 
 		 // Start by taking the furthest pixel on the edge the corner
 		 // belongs to.
-		 if(edge.equals("L"))
-			 edgePixel = super.getMinXPixel();
-		 else if(edge.equals("R"))
-			 edgePixel = super.getMaxXPixel();
-		 else if(edge.equals("U"))
-			 edgePixel = super.getMinYPixel();
-		 else if(edge.equals("D"))
-			 edgePixel = super.getMaxYPixel();
-		 
+		 switch (edge) {
+		 case Left:	edgePixel = getMinXPixel(); break;
+		 case Right: edgePixel = getMaxXPixel(); break;
+		 case Up: edgePixel = getMinYPixel(); break;
+		 case Down: edgePixel = getMaxYPixel(); break;
+		 }
+
 		 // set a margin of error of 10 pixels perpendicular to the edge
 		 // in either direction when looking for the corner. 
-		 if(edge.equals("L") || edge.equals("R")) {
+	 
+		 if (edge == Dir.Left || edge == Dir.Right) {
 			 min = edgePixel.x - 10;
 			 max = edgePixel.x + 10;
 			 position = edgePixel.y;   // y value of the current pixel being
@@ -83,7 +94,7 @@ public class PitchLines extends HSBCluster {
 		 
 		 
 		 // move 1 pixel towards the corner we are looking for
-		 if(edge.equals("R") || edge.equals("D"))
+		 if (edge == Dir.Right || edge == Dir.Down)
 			 position++;
 		 else
 			 position--;
@@ -93,30 +104,28 @@ public class PitchLines extends HSBCluster {
 		 // axis coordinate by 1 (for example the y value if we are on the left or
 		 // right edges, which will move us up or down depending on the corner), and
 		 // have the other coordinate correspond to the furthest away pixel along that axis.		 
-		 while(true) {
+
+		 while (true) {
 			 VecI pixel = new VecI(0,0);
-			 if(edge.equals("L"))
-				 pixel = super.getMinXPixel(position);
-			 else if(edge.equals("R"))
-				 pixel = super.getMaxXPixel(position);
-			 else if(edge.equals("U"))
-				 pixel = super.getMinYPixel(position);
-			 else if(edge.equals("D"))
-				 pixel = super.getMaxYPixel(position);
-			 
-			 
-		 // We check which corner we are looking for (8 possible cases), and if
-		 // the current pixel is outside the 20 pixel margin of error, we backtrack
-		 // by 5 pixels and set this as the corner we are looking for (backtracking is
-		 // to make up for the overshot lookahead of the loop).
-		 // If the pixel is within the margin, we simply move to the next pixel.
-			 if(edge.equals("L") || edge.equals("R")) {
-				 if(corner.equals("U")) {
-					 if(pixel.x < min || pixel.x > max) {
-						 if(edge.equals("L"))
-							 finalCorner = super.getMinXPixel(position + 5);
+			 switch (edge) {
+			 case Left: getMinXPixel(position); break;
+			 case Right: getMaxXPixel(position); break;
+			 case Up: getMinYPixel(position); break;
+			 case Down: getMaxYPixel(position); break;
+			 }
+			 			 
+			 // We check which corner we are looking for (8 possible cases), and if
+			 // the current pixel is outside the 20 pixel margin of error, we backtrack
+			 // by 5 pixels and set this as the corner we are looking for (backtracking is
+			 // to make up for the overshot lookahead of the loop).
+			 // If the pixel is within the margin, we simply move to the next pixel.
+			 if (edge == Dir.Left || edge == Dir.Right) {
+				 if (corner == Dir.Up) {
+					 if (pixel.x < min || pixel.x > max) {
+						 if (edge == Dir.Left)
+							 finalCorner = getMinXPixel(position + 5);
 						 else
-							 finalCorner = super.getMaxXPixel(position + 5);
+							 finalCorner = getMaxXPixel(position + 5);
 						 break;
 					 }
 					 if (position <= 0)
@@ -125,7 +134,7 @@ public class PitchLines extends HSBCluster {
 				 }
 				 else {
 					 if(pixel.x < min || pixel.x > max) {
-						 if(edge.equals("L"))
+						 if(edge == Dir.Left)
 						 	finalCorner = super.getMinXPixel(position - 5);
 						 else
 							finalCorner = super.getMaxXPixel(position - 5);
@@ -137,9 +146,9 @@ public class PitchLines extends HSBCluster {
 				 }
 			 }
 			 else {
-				 if(corner.equals("L")) {
+				 if(corner == Dir.Left) {
 					 if(pixel.y < min || pixel.y > max) {
-						 if(edge.equals("U"))
+						 if(edge == Dir.Up)
 							 finalCorner = super.getMinYPixel(position + 5);
 						 else
 							 finalCorner = super.getMaxYPixel(position + 5);
@@ -151,7 +160,7 @@ public class PitchLines extends HSBCluster {
 				 }
 				 else {
 					 if(pixel.y < min || pixel.y > max) {
-						 if(edge.equals("U"))
+						 if(edge == Dir.Up)
 						 	finalCorner = super.getMinYPixel(position - 5);
 						 else
 							finalCorner = super.getMaxYPixel(position - 5);

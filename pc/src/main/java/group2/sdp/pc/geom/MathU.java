@@ -2,7 +2,7 @@ package group2.sdp.pc.geom;
 
 import java.util.Collection;
 
-public class GeomUtil {
+public class MathU {
 
 	/**
 	 * 
@@ -41,5 +41,24 @@ public class GeomUtil {
 		}
 		Rect rect = new Rect(minX, maxX, minY, maxY);
 		return rect;
-	}	
+	}
+	
+	/**
+	 * Clamps a value between 0 and 1.
+	 * @return
+	 */
+	public static float clamp(float value) {
+		return clamp(value, 0, 1);
+	}
+	
+	/**
+	 * Clamp one value between a min and a max
+	 * @param value
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public static float clamp(float value, float min, float max) {
+		return Math.max(min, Math.min(value, max));
+	}
 }
