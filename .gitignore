@@ -4,3 +4,5 @@
 *.class
 /target
 .metadata
+*.sublime-project
+*.sublime-workspace
