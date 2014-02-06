@@ -7,5 +7,4 @@
 *.sublime-project
 *.sublime-workspace
 */.settings/*
-*/.project
 *.externalToolBuilders
