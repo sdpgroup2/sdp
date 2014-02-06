@@ -36,11 +36,11 @@
 	</target>
 
     <target name="run-vision" depends="compile">
-        <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionSystem">
+        <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionGUI">
             <sysproperty key="java.library.path" path="${lib.dir}"/>
         </java>
     </target>
 
-	<target name="main" depends="clean, makedir, compile, run-vision">
+	<target name="main" depends="clean, makedir, compile">
 	</target>
 </project>
