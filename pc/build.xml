@@ -37,7 +37,7 @@
 	</target>
 
     <target name="run-vision" depends="compile">
-        <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionSystem">
+        <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionGUI">
             <sysproperty key="java.library.path" path="${lib.dir}"/>
 	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
