@@ -38,8 +38,7 @@ public class SkyCam {
 			if (inputInfo == null) {
 				throw new RuntimeException("Video device has no "+requiredInputName+" input mode.");
 			}
-			frameGrabber = device.getJPEGFrameGrabber(
-					640, 480, inputInfo.getIndex(), requiredStandard, V4L4JConstants.MAX_JPEG_QUALITY);
+			frameGrabber = device.getJPEGFrameGrabber(640, 480, inputInfo.getIndex(), requiredStandard, V4L4JConstants.MAX_JPEG_QUALITY);
 		} catch (V4L4JException e) {
 			e.printStackTrace();
 		}
