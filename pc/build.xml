@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <project name="bluetooth" default="main" basedir=".">
 
-	<property name="lib.dir" location="lib" />
-	<property name="src.dir" location="src/main/java" />
-	<property name="build.dir" location="target/classes" />
+    <property name="lib.dir" location="lib" />
+    <property name="src.dir" location="src/main/java" />
+    <property name="build.dir" location="target/classes" />
+    <property environment="env"/>
 
     <path id="build.classpath">
         <pathelement location="${lib.dir}"/>
@@ -38,9 +39,10 @@
     <target name="run-vision" depends="compile">
         <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionSystem">
             <sysproperty key="java.library.path" path="${lib.dir}"/>
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
     </target>
 
-	<target name="main" depends="clean, makedir, compile, run-vision">
+	<target name="main" depends="clean, makedir, compile">
 	</target>
 </project>
