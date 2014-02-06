@@ -247,6 +247,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 		
 		// Init color arrays
 		this.colorArray = vs.getColorArray();
+		this.outputArray = new int[frameSize.width * frameSize.height];
 		this.hsbArray = new HSBColor[frameSize.width * frameSize.height];
 		for (int i = 0; i < hsbArray.length; i++) {
 			this.hsbArray[i] = new HSBColor();
