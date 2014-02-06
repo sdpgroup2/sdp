@@ -253,14 +253,15 @@ public class ControlGUI extends JFrame {
 
 		moveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				connection2A.clearBuff();
-				connection2D.clearBuff();
+				
+				
 				final int direction = Integer.parseInt(op1field.getText());
 				final int angle = Integer.parseInt(op2field.getText());
 				final int speed = Integer.parseInt(op3field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
 					public void run() { 
 						try {
+							connection2A.clearBuff();
 							connection2A.move(direction, angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -272,6 +273,7 @@ public class ControlGUI extends JFrame {
 				Thread moveBot2 = new Thread(new Runnable() {
 					public void run() { 
 						try {
+							connection2D.clearBuff();
 							connection2D.move(direction, angle, speed);     
 						} catch (IOException e) {
 							// TODO Auto-generated catch block

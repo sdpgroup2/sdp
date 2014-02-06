@@ -89,7 +89,15 @@ public class Receiver {
 							pilot.stop();
 							replyToPC(opcode, outStream);
 							break;
-	
+						
+						case Commands.STEER:
+							LCD.clear();
+							LCD.drawString("Stopping!", 0, 2);
+							LCD.refresh();
+							pilot.steer();
+							replyToPC(opcode, outStream);
+							break;
+							
 						case Commands.DISCONNECT: 
 							
 							break;

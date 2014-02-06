@@ -51,6 +51,14 @@ public class Sender implements CommInterface {
 		
 	}
 	
+	public int steer() throws IOException {
+		int[] command = { Commands.STEER, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		System.out.println("Steer");
+		return confirmation;
+		
+	}
+	
 	public int stop() {
 		int[] command = { Commands.STOP, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
@@ -132,7 +140,7 @@ public class Sender implements CommInterface {
 		if (buffer < 2) {
 			byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2],
 					(byte) comm[3] };
-
+			
 			outStream.write(command);
 			outStream.flush();
 			buffer += 1;
@@ -164,6 +172,7 @@ public class Sender implements CommInterface {
 		inStream.read(res);
 		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
 				(int) res[3] };
+		
 		return ret;
 	}
 	
@@ -176,17 +185,26 @@ public class Sender implements CommInterface {
 	}
 
 	public void clearBuff() {
+		
 		buffer = 0;
 	}
 	
 	private int attemptConnection(int[] command) {
 		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
+		loop:
+		for (int i = 0; i<10; i++){
+			try {
+				confirmation = sendToRobot(command);
+				if (confirmation != -1 && confirmation != -2) {
+					break loop;
+				}
+			} catch (IOException e1) {
+				System.out.println("Could not send command");
+				e1.printStackTrace();
+			}
 		}
+	
 		return confirmation;
 	}
 }
+
