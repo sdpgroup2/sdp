@@ -5,5 +5,7 @@ import java.awt.image.BufferedImage;
 public interface VisionSystemCallback {
 
 	public void processImage(BufferedImage image);
+	
+	public void prepareVision(BufferedImage image);
 
 }

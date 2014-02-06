@@ -44,39 +44,38 @@ import javax.swing.event.ListSelectionListener;
  *
  */
 public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
-	    private static final int WINDOW_WIDTH = 1024;
-	    private static final int WINDOW_HEIGHT = 768;
+    private static final int WINDOW_WIDTH = 1024;
+    private static final int WINDOW_HEIGHT = 768;
+    private static final int PREPARE_FRAMES = 5;
 
-	    private Dimension frameSize;
+	// Pre-processing
+	private float meanSat = 0;
+	private float meanBright = 0;
+	private int preparationFrames = 0;
+    
+    private Dimension frameSize;
+    private JLabel imageLabel = new JLabel();
 
-	    private BufferedImage currentImage;
+    private BufferedImage currentImage;
 
-	    //GUI
-	    private JFrame windowFrame;
-	    private JPanel contentPanel;
-	    private JLabel imageLabel;
-	    private JList<HSBCluster> clusterList;
-	    private HSBPanel minHSBPanel;
-	    private HSBPanel maxHSBPanel;
-	    private ColorChecker colorChecker;
+    // Stores colors for the current frame
+    private int[] colorArray;
+    private HSBColor[] hsbArray;
+	private int[] outputArray;
 
-	    // Stores colors for the current frame
-	    private int[] colorArray;
-	    private HSBColor[] hsbArray;
-
-		// Clusters
-		private BallCluster ballCluster = new BallCluster("Ball");
-		private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
-		private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-		private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
-		private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
-		private HSBCluster[] clusters = new HSBCluster[] {
-			ballCluster,
-			blueRobotCluster,
-			yellowRobotCluster,
+	// Clusters
+	private BallCluster ballCluster = new BallCluster("Ball");
+	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
+	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
+	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+	private HSBCluster[] clusters = new HSBCluster[] {
+		ballCluster,
+		blueRobotCluster,
+		yellowRobotCluster,
 //			pitchSectionCluster,
 //			pitchLinesCluster
-		};
+	};
 
     public static void main(String[] args) {
     	new VisionGUI();
@@ -86,6 +85,13 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
      * Initialise a window frame. PLEASE EXCUSE THIS AWFUL FUNCTION. I'll clean it up later.
      */
     public void initWindow() {
+	    JFrame windowFrame;
+	    JPanel contentPanel;
+	    final JList<HSBCluster> clusterList = new JList<HSBCluster>(clusters);
+        final HSBPanel minHSBPanel = new HSBPanel("Min color");
+        final HSBPanel maxHSBPanel = new HSBPanel("Max color");
+	    final ColorChecker colorChecker = new ColorChecker();;
+	    
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.addWindowListener(this);
@@ -97,11 +103,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         contentPanel.setBorder(new EmptyBorder(10,10,10,10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));
 
-        // Color checker
-        colorChecker = new ColorChecker();
-
         // Image
-        imageLabel = new JLabel();
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
@@ -129,7 +131,6 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 
         // Cluster list
         JPanel listPanel = new JPanel();
-        clusterList = new JList<HSBCluster>(clusters);
         clusterList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         clusterList.setLayoutOrientation(JList.VERTICAL);
         clusterList.setVisibleRowCount(-1);
@@ -151,8 +152,6 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         controlPanel.add(listPanel);
 
         // Sliders
-        minHSBPanel = new HSBPanel("Min color");
-        maxHSBPanel = new HSBPanel("Max color");
         controlPanel.add(minHSBPanel);
         controlPanel.add(maxHSBPanel);
 
@@ -160,7 +159,12 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         JButton button = new JButton("Update");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                updateButton();
+                int index = clusterList.getSelectedIndex();
+                if (index >= 0) {
+                    HSBCluster cluster = clusters[index];
+                    cluster.setMinColor(minHSBPanel.getValue());
+                    cluster.setMaxColor(maxHSBPanel.getValue());
+                }
             }
         });
         controlPanel.add(button);
@@ -187,14 +191,28 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         windowFrame.setContentPane(contentPanel);
     }
 
+	/**
+	 * Not tested yet.
+	 */
+	private void normaliseImage() {
+		for (int x = 0; x < frameSize.width; x++) {
+			for (int y = 0; y < frameSize.height; y++) {
+				int index = y * frameSize.width + x;
+				HSBColor color = hsbArray[index].set(colorArray[index]);
+				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
+				outputArray[index] = color.getRGB();
+			}
+		}
+		currentImage.setRGB(0, 0, frameSize.width, frameSize.height,
+				outputArray, 0, frameSize.width);
+	}
 
-		/**
-		 * Processes an image to find positions of all the game objects.
-		 *
-		 * @param image
-		 *            - The current frame of video.
-		 */
-	public void processImage(BufferedImage currentImage) {
+	/**
+	 * Processes an image to find positions of all the game objects.
+	 *
+	 * @param image - The current frame of video.
+	 */
+    public void processImage(BufferedImage currentImage) {
 		this.currentImage = currentImage;
 		// Clear all clusters.
 		for (HSBCluster cluster : clusters) {
@@ -227,18 +245,43 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 		 */
 	}
 
-	public void updateButton() {
-        int index = clusterList.getSelectedIndex();
-        if (index >= 0) {
-            HSBCluster cluster = clusters[index];
-            cluster.setMinColor(minHSBPanel.getValue());
-            cluster.setMaxColor(maxHSBPanel.getValue());
-        }
-	}
-
 	public VisionGUI() {
 		super();
-		new VisionSystem(this);
+		// Init GUI
+		initWindow();
+		
+		// Start the vision system
+		VisionSystem vs = new VisionSystem(PREPARE_FRAMES, this);
+		this.frameSize = vs.getFrameSize();
+		
+		// Init color arrays
+		this.colorArray = vs.getColorArray();
+		this.hsbArray = new HSBColor[frameSize.width * frameSize.height];
+		for (int i = 0; i < hsbArray.length; i++) {
+			this.hsbArray[i] = new HSBColor();
+		}
+	}
+
+	@Override
+	public void prepareVision(BufferedImage currentImage) {
+		this.currentImage = currentImage;
+		double s = 0;
+		double b = 0;
+		for (int c = 0; c < colorArray.length; c++) {
+			HSBColor color = hsbArray[c].set(colorArray[c]);
+			s += color.s;
+			b += color.b;
+		}
+		s /= colorArray.length;
+		b /= colorArray.length;
+		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
+		meanSat += s;
+		meanBright += b;
+		preparationFrames += 1;
+		if (preparationFrames >= PREPARE_FRAMES) {
+			meanSat /= preparationFrames;
+			meanBright /= preparationFrames;
+		}
 	}
 
 }
