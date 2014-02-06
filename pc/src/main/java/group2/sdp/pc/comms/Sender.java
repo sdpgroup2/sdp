@@ -10,10 +10,10 @@ import lejos.pc.comm.*;
  * actions in the robot package
  * @author Gordon Edwards
  * @author Michael Mair
- * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
-	and from SDP Group 4 2013
+ * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 
+ * and from SDP Group 4 2013
  */
-public class Sender {   
+public class Sender implements CommInterface {   
 	private OutputStream outStream;
 	private InputStream inStream;
 	private NXTComm comm;
@@ -22,51 +22,30 @@ public class Sender {
 	private NXTInfo nxtInfo;
 	private boolean robotReady;
 	
-	
 	public Sender(String robotName, String robotMacAddress) throws IOException{
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
 		openBluetoothConn(robotName);
-		LCD.drawString("connected!", 0, 4);
+//		LCD.drawString("connected!", 0, 4);
 	}
 	
 	public int move(int direction, int angle, int speed) throws IOException {
 		int[] command = { Commands.ANGLEMOVE, direction, angle, speed};
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-			System.out.println("confirm:" +confirmation);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
-		System.out.println("move..");
+		int confirmation = attemptConnection(command);
+		System.out.println("Move...");
 		return confirmation;
 	} 
 	
-	
 	public int rotate(int direction, int angle, int speed) throws IOException {
 		int[] command = { Commands.ROTATE, direction, angle, speed };
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Rotate...");
 		return confirmation;
 	}
 	
 	public int kick(int angle, int speed) throws IOException {
 		int[] command = { Commands.KICK, angle, speed, 0 };
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Kick");
 		return confirmation;
 		
@@ -74,13 +53,7 @@ public class Sender {
 	
 	public int stop() {
 		int[] command = { Commands.STOP, 0, 0, 0 };
-		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
-		}
+		int confirmation = attemptConnection(command);
 		System.out.println("Stop...");
 		return confirmation;
 	}
@@ -119,7 +92,7 @@ public class Sender {
 		System.out.println("Force quit... Reset the brick.");
 	}
 	
-	public void openBluetoothConn(String robotName) throws IOException {
+	private void openBluetoothConn(String robotName) throws IOException {
 		
 		comm = null;
 		try {
@@ -141,7 +114,7 @@ public class Sender {
 		connected = true;
    }
 	
-	public void closeBluetoothConn() {
+	private void closeBluetoothConn() {
 		try {
 	    	inStream.close();
 	    	outStream.close();
@@ -192,7 +165,8 @@ public class Sender {
 		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
 				(int) res[3] };
 		return ret;
-	}	
+	}
+	
 	public boolean isConnected() {
 		return connected;
 	}
@@ -205,5 +179,14 @@ public class Sender {
 		buffer = 0;
 	}
 	
-
+	private int attemptConnection(int[] command) {
+		int confirmation = 0;
+		try {
+			confirmation = sendToRobot(command);
+		} catch (IOException e1) {
+			System.out.println("Could not send command");
+			e1.printStackTrace();
+		}
+		return confirmation;
+	}
 }

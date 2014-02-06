@@ -15,6 +15,6 @@ public class PitchSection extends HSBCluster {
 		
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(0, 480, 0, 200);
+		return getRects(100, 480, 50, 200);
 	}
 }

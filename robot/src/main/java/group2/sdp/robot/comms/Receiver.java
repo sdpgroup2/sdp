@@ -1,6 +1,6 @@
 package group2.sdp.robot.comms;
 
-import group2.sdp.robot.Actions;
+import group2.sdp.robot.Pilot;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +23,10 @@ public class Receiver {
 	private static InputStream inStream;
 	private static OutputStream outStream;
 	private static boolean forceQuit;
-
-	public static void main(String[] args) throws IOException, InterruptedException {
-
+	private static Pilot pilot;
+	public static void main(String[] args) throws IOException, InterruptedException {	
+		 pilot = new Pilot();
+		
 		while (!forceQuit) {
 			try {
 
@@ -56,49 +57,49 @@ public class Receiver {
 					option3 = byteBuffer[3];
 
 					switch (opcode) {
-
-					case Commands.ANGLEMOVE:
-						LCD.clear();
-						LCD.drawString("Moving at an angle!", 0, 2);
-						LCD.refresh();
-						Actions.move(option1, option2, option3);
-						replyToPC(opcode, outStream);
-						break;
-
-					case Commands.ROTATE:
-						LCD.clear();
-						LCD.drawString("Rotate!", 0, 2);
-						LCD.refresh();
-						Actions.rotate(option1, option2, option3);
-						replyToPC(opcode, outStream);
-						break;
-
-					case Commands.KICK:
-						LCD.clear();
-						LCD.drawString("Kicking!", 0, 2);
-						LCD.refresh();
-						Actions.kick(option1, option2);
-						replyToPC(opcode, outStream);
-						break;
-
-					case Commands.STOP:
-						LCD.clear();
-						LCD.drawString("Stopping!", 0, 2);
-						LCD.refresh();
-						Actions.stop();
-						replyToPC(opcode, outStream);
-						break;
-
-					case Commands.DISCONNECT:
-						Actions.disconnect();
-						break;
-
-					case Commands.FORCEQUIT:
-						Actions.forcequit();
-						forceQuit = true;
-						break;
-					default:
-						// Ignore it
+					
+						case Commands.ANGLEMOVE:
+							LCD.clear();
+							LCD.drawString("Moving at an angle!", 0, 2);
+							LCD.refresh();
+							pilot.move(option1, option2, option3);
+							replyToPC(opcode, outStream);
+							break;
+						
+						case Commands.ROTATE:
+							LCD.clear();
+							LCD.drawString("Rotate!", 0, 2);
+							LCD.refresh();
+							pilot.rotate(option1, option2, option3);
+							replyToPC(opcode, outStream);
+							break;
+	
+						case Commands.KICK:
+							LCD.clear();
+							LCD.drawString("Kicking!", 0, 2);
+							LCD.refresh();
+							pilot.kick(option1,option2);
+							replyToPC(opcode, outStream);
+							break;
+						
+						case Commands.STOP:
+							LCD.clear();
+							LCD.drawString("Stopping!", 0, 2);
+							LCD.refresh();
+							pilot.stop();
+							replyToPC(opcode, outStream);
+							break;
+	
+						case Commands.DISCONNECT: 
+							
+							break;
+	
+						case Commands.FORCEQUIT:
+							
+							forceQuit = true;
+							break;
+						default:
+							// Ignore it
 					}
 				}
 

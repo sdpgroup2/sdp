@@ -4,10 +4,9 @@ package group2.sdp.pc.comms;
  * Opcodes for commands.
  * Each command should be an int[] made up of 4 bytes.
  * First byte - opcode
- * Remaining three bytes will be options for the commands E.g.
+ * Remaining three bytes will be options for the commands.
  * @author Michael Mair
  * Based on code by SDP Group 4 2013
- *
  */
 public class Commands {
 	public final static int DO_NOTHING = 0;
