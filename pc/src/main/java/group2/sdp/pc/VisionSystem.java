@@ -1,7 +1,6 @@
 package group2.sdp.pc;
 
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
@@ -15,12 +14,11 @@ import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 
@@ -156,20 +154,6 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		imageLabel.setMinimumSize(frameSize);
 		imageLabel.setPreferredSize(frameSize);
 		imageLabel.setMaximumSize(frameSize);
-		imageLabel.addMouseMotionListener(new MouseMotionListener() {
-			public void mouseDragged(MouseEvent e) {
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				int x = e.getX();
-				int y = e.getY();
-				try {
-					colorChecker.updateColor(currentImage.getRGB(x, y));
-				} catch (ArrayIndexOutOfBoundsException ex) {
-					
-				}
-			}
-		});
 		contentPanel.add(imageLabel);
 		
 		// Sidebar
@@ -232,8 +216,16 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 				Debug.VISION_DRAW_BOUNDS = ((JCheckBox) e.getSource()).isSelected();
 			}
 		});
+		final JCheckBox normBox = new JCheckBox("Normalize image");
+		normBox.setSelected(Debug.VISION_NORMALIZE_IMAGE);
+		normBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				Debug.VISION_NORMALIZE_IMAGE = ((JCheckBox) e.getSource()).isSelected();
+			}
+		});
 		controlPanel.add(fillBox);
 		controlPanel.add(rectBox);
+		controlPanel.add(normBox);
 		
 		windowFrame.setContentPane(contentPanel);
 		
@@ -263,12 +255,20 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		}
 		// Draw image to frame.
 		imageLabel.setIcon(new ImageIcon(currentImage));
+		Point mouse = windowFrame.getMousePosition();
+		if (mouse != null) {
+			Point imgpos = imageLabel.getLocation();
+			int x = mouse.x - imgpos.x - 4;
+			int y = mouse.y - imgpos.y - 32;
+			if (0 <= x && x < frameSize.width && 0 <= y && y < frameSize.height) {
+				int color = currentImage.getRGB(x, y);
+				currentImage.setRGB(x, y, Color.white.getRGB());
+				colorChecker.updateColor(color);
+			}
+		}
 		frame.recycle();
 	}
 	
-	/**
-	 * Not tested yet.
-	 */
 	private void normalizeImage() {
 		for (int x=0; x<frameSize.width; x++) {
 			for (int y=0; y<frameSize.height; y++) {
@@ -280,7 +280,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 		}
 		currentImage.setRGB(0, 0, frameSize.width, frameSize.height, outputArray, 0, frameSize.width);
 	}
-	
+		
 	/**
 	 * Initializes the vision system to adjust to the video feed.
 	 */
@@ -311,28 +311,29 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 	 * @param image - The current frame of video.
 	 */
 	private void processImage() {
+		// Normalize image
+		boolean norming = Debug.VISION_NORMALIZE_IMAGE;
+		if (norming)
+			normalizeImage();
 		// Clear all clusters.
-		for (HSBCluster cluster: clusters) {
+		for (HSBCluster cluster: clusters)
 			cluster.clear();
-		}
 		// Loop through pixels.
 		for (int x=0; x < frameSize.width; x++) {
 			for (int y=0; y < frameSize.height; y++) {
 				int index = y*frameSize.width + x;
-				HSBColor color = hsbArray[index].set(colorArray[index]);
+				HSBColor color = (norming) ? hsbArray[index] : hsbArray[index].set(colorArray[index]);
 				// Test the pixel for each of the clusters
 				for (HSBCluster cluster: clusters) {
 					boolean matched = cluster.testPixel(x, y, color);
-					if (matched) {
+					if (matched)
 						Debug.drawPixel(currentImage, x, y, cluster.debugColor);
-					}
 				}
 			}
 		}
 		for (HSBCluster cluster: clusters) {
-			for (Rect rect: cluster.getImportantRects()) {
+			for (Rect rect: cluster.getImportantRects())
 				Debug.drawRect(currentImage, rect, cluster.debugColor);
-			}
 		}
 		/*
 		VecI corner = pitchLinesCluster.getCorner(Down, Left);
