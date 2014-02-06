@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 
@@ -37,12 +35,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-/**
- * The main class for the vision system. At the moment, it is runnable on its
- * own but in future, it may be created via a separate main class.
- * @author Paul Harris
- *
- */
+
 public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
@@ -107,20 +100,6 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
-        imageLabel.addMouseMotionListener(new MouseMotionListener() {
-            public void mouseDragged(MouseEvent e) {
-            }
-
-            public void mouseMoved(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                try {
-                    colorChecker.updateColor(currentImage.getRGB(x, y));
-                } catch (ArrayIndexOutOfBoundsException ex) {
-
-                }
-            }
-        });
         contentPanel.add(imageLabel);
 
         // Sidebar
@@ -185,8 +164,16 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
                 Debug.VISION_DRAW_BOUNDS = ((JCheckBox) e.getSource()).isSelected();
             }
         });
+        final JCheckBox normBox = new JCheckBox("Normalize image");
+		normBox.setSelected(Debug.VISION_NORMALIZE_IMAGE);
+		normBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				Debug.VISION_NORMALIZE_IMAGE = ((JCheckBox) e.getSource()).isSelected();
+			}
+		});
         controlPanel.add(fillBox);
         controlPanel.add(rectBox);
+        controlPanel.add(normBox);
 
         windowFrame.setContentPane(contentPanel);
     }
@@ -214,6 +201,10 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 	 */
     public void processImage(BufferedImage currentImage) {
 		this.currentImage = currentImage;
+		// Normalize image
+		boolean norming = Debug.VISION_NORMALIZE_IMAGE;
+		if (norming)
+			normaliseImage();
 		// Clear all clusters.
 		for (HSBCluster cluster : clusters) {
 			cluster.clear();
@@ -222,7 +213,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 		for (int x = 0; x < frameSize.width; x++) {
 			for (int y = 0; y < frameSize.height; y++) {
 				int index = y * frameSize.width + x;
-				HSBColor color = hsbArray[index].set(colorArray[index]);
+				HSBColor color = (norming) ? hsbArray[index] : hsbArray[index].set(colorArray[index]);
 				// Test the pixel for each of the clusters
 				for (HSBCluster cluster : clusters) {
 					boolean matched = cluster.testPixel(x, y, color);

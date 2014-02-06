@@ -11,6 +11,7 @@ public class Debug {
 	public static boolean DEBUG_LOGGING = true;
 	public static boolean VISION_FILL_PIXELS = true;
 	public static boolean VISION_DRAW_BOUNDS = true;
+	public static boolean VISION_NORMALIZE_IMAGE = true;
 	
 	public static void log(String message) {
 		if (DEBUG_LOGGING) {

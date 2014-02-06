@@ -10,9 +10,10 @@ import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
+
+
 /**
- * The main class for the vision system. At the moment, it is runnable on its
- * own but in future, it may be created via a separate main class.
+ * The main class for the vision system.
  * @author Paul Harris
  *
  */

@@ -1,7 +1,6 @@
 package group2.sdp.pc;
 
 //UI imports
-import group2.sdp.pc.comms.CommInterface;
 import group2.sdp.pc.comms.Sender;
 
 import java.awt.Dimension;
@@ -173,7 +172,7 @@ public class ControlGUI extends JFrame {
 		startStopQuitPanel.add(stratStartButton);
 		startStopQuitPanel.add(penaltyAtkButton);
 		startStopQuitPanel.add(penaltyDefButton);
-
+		
 		GridBagConstraints gbc_simpleMoveTestPanel = new GridBagConstraints();
 		gbc_simpleMoveTestPanel.anchor = GridBagConstraints.NORTH;
 		gbc_simpleMoveTestPanel.fill = GridBagConstraints.VERTICAL;
