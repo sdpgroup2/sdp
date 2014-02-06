@@ -6,5 +6,6 @@
 .metadata
 *.sublime-project
 *.sublime-workspace
-*.settings
-
+*/.settings/*
+*/.project
+*.externalToolBuilders
