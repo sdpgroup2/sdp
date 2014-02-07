@@ -44,6 +44,20 @@ public class Point implements Comparable<Point>
              + (this.y - other.y) * (this.y - other.y)
              );
     }
+    
+    public double getAngle(Point other)
+    {
+        double dtheta, theta1, theta2;
+        
+        theta1 = Math.atan2(this.getY(), this.getX());
+        theta2 = Math.atan2(other.getY(), other.getX());
+        dtheta = theta2 - theta1;
+        
+        while (dtheta > Math.PI)  { dtheta -= 2 * Math.PI; }
+        while (dtheta < -Math.PI) { dtheta += 2 * Math.PI; }
+        
+        return dtheta;
+    }
 
     public boolean less(Point other)
     { return this.compareTo(other) == -1; }

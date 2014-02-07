@@ -5,11 +5,24 @@ package group2.sdp.ai;
 
 public class Plane
 {
-
+    private String id = null;
     private PointSet outline = null;
+    private double eps = 1e-9;
     
-    public Plane()
-    { outline = new PointSet(); }
+    public Plane(String id)
+    {
+        this.id = id;
+        outline = new PointSet();
+    }
+    
+    public String getId()
+    { return id; }
+    
+    public void addPoint(Point p)
+    { outline.add(p); }
+    
+    public void addPoint(double x, double y)
+    { outline.add(new Point(x, y)); }
     
     public boolean isWellFormed()
     { return outline.size() > 2; }
@@ -17,8 +30,21 @@ public class Plane
     public boolean contains(Point p)
     {
         outline.sort();
-        // convex hull test for containment
-        return false;
+        int N = outline.size();
+        double angle = 0.0;
+        Point p1 = new Point(0, 0);
+        Point p2 = new Point(0, 0);
+        
+        for (int i = 0; i < N; i++)
+        {
+            p1.setX(outline.get(i).getX() - p.getX());
+            p1.setY(outline.get(i).getY() - p.getX());
+            p2.setX(outline.get((i + 1) % N).getX() - p.getX());
+            p2.setY(outline.get((i + 1) % N).getY() - p.getY());
+            angle += p1.getAngle(p2); 
+        }
+        
+        return Math.PI - Math.abs(angle) < eps;
     }
     
 }
