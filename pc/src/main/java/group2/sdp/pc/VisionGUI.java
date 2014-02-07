@@ -1,6 +1,6 @@
 package group2.sdp.pc;
 
-import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.geom.*;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
@@ -14,6 +14,7 @@ import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -40,35 +41,16 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
     private static final int PREPARE_FRAMES = 5;
-
-	// Pre-processing
-	private float meanSat = 0;
-	private float meanBright = 0;
-	private int preparationFrames = 0;
     
+    private VisionSystem visionSystem;
+    
+    private JFrame windowFrame;
     private Dimension frameSize;
     private JLabel imageLabel = new JLabel();
+    private ColorChecker colorChecker;
 
     private BufferedImage currentImage;
-
-    // Stores colors for the current frame
-    private int[] colorArray;
-    private HSBColor[] hsbArray;
-	private int[] outputArray;
-
-	// Clusters
-	private BallCluster ballCluster = new BallCluster("Ball");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
-	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
-	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
-	private HSBCluster[] clusters = new HSBCluster[] {
-		ballCluster,
-		blueRobotCluster,
-		yellowRobotCluster,
-//			pitchSectionCluster,
-//			pitchLinesCluster
-	};
+    private int[] postColorArray;
 
     public static void main(String[] args) {
     	new VisionGUI();
@@ -78,12 +60,11 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
      * Initialise a window frame. PLEASE EXCUSE THIS AWFUL FUNCTION. I'll clean it up later.
      */
     public void initWindow() {
-	    JFrame windowFrame;
 	    JPanel contentPanel;
-	    final JList<HSBCluster> clusterList = new JList<HSBCluster>(clusters);
+	    final JList<HSBCluster> clusterList = new JList<HSBCluster>(visionSystem.getClusters());
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
-	    final ColorChecker colorChecker = new ColorChecker();;
+	    colorChecker = new ColorChecker();;
 	    
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,7 +101,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
                 if (e.getValueIsAdjusting() == false) {
                     int index = clusterList.getSelectedIndex();
                     if (index >= 0) {
-                        HSBCluster cluster = clusters[index];
+                        HSBCluster cluster = visionSystem.getClusters()[index];
                         minHSBPanel.setValue(cluster.getMinColor());
                         maxHSBPanel.setValue(cluster.getMaxColor());
                     }
@@ -140,7 +121,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
             public void actionPerformed(ActionEvent e) {
                 int index = clusterList.getSelectedIndex();
                 if (index >= 0) {
-                    HSBCluster cluster = clusters[index];
+                    HSBCluster cluster = visionSystem.getClusters()[index];
                     cluster.setMinColor(minHSBPanel.getValue());
                     cluster.setMaxColor(maxHSBPanel.getValue());
                 }
@@ -177,103 +158,64 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 
         windowFrame.setContentPane(contentPanel);
     }
-
-	/**
-	 * Not tested yet.
-	 */
-	private void normaliseImage() {
-		for (int x = 0; x < frameSize.width; x++) {
-			for (int y = 0; y < frameSize.height; y++) {
-				int index = y * frameSize.width + x;
-				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
-				outputArray[index] = color.getRGB();
-			}
-		}
-		currentImage.setRGB(0, 0, frameSize.width, frameSize.height,
-				outputArray, 0, frameSize.width);
-	}
-
-	/**
-	 * Processes an image to find positions of all the game objects.
-	 *
-	 * @param image - The current frame of video.
-	 */
-    public void processImage(BufferedImage currentImage) {
-		this.currentImage = currentImage;
-		// Normalize image
-		boolean norming = Debug.VISION_NORMALIZE_IMAGE;
-		if (norming)
-			normaliseImage();
-		// Clear all clusters.
-		for (HSBCluster cluster : clusters) {
-			cluster.clear();
-		}
-		// Loop through pixels.
-		for (int x = 0; x < frameSize.width; x++) {
-			for (int y = 0; y < frameSize.height; y++) {
-				int index = y * frameSize.width + x;
-				HSBColor color = (norming) ? hsbArray[index] : hsbArray[index].set(colorArray[index]);
-				// Test the pixel for each of the clusters
-				for (HSBCluster cluster : clusters) {
-					boolean matched = cluster.testPixel(x, y, color);
-					if (matched) {
-						Debug.drawPixel(currentImage, x, y, cluster.debugColor);
-					}
-				}
-			}
-		}
-		for (HSBCluster cluster : clusters) {
-			for (Rect rect : cluster.getImportantRects()) {
-				Debug.drawRect(currentImage, rect, cluster.debugColor);
-			}
-		}
-		this.imageLabel.setIcon(new ImageIcon(currentImage));
-		/*
-		 * VecI corner = pitchLinesCluster.getCorner(Down, Left); if(corner !=
-		 * null) Debug.drawTestPixel(currentImage, corner.x, corner.y,
-		 * Color.white); else System.out.println("Cannot find corner");
-		 */
-	}
+    
+    @Override
+    public void onFrameGrabbed(BufferedImage image) {
+        currentImage = image;
+    }
+    
+    @Override
+    public void onPreparationFrame() {
+        showImage(currentImage);
+    }
+    
+    @Override
+    public void onImageFiltered(HSBColor[] hsbArray) {
+        if (Debug.VISION_NORMALIZE_IMAGE) {
+            for (int i=0; i<hsbArray.length; i++) {
+                postColorArray[i] = hsbArray[i].getRGB();
+            }
+            currentImage.setRGB(0, 0, frameSize.width, frameSize.height,
+                postColorArray, 0, frameSize.width);
+        }
+        Point mouse = windowFrame.getMousePosition();
+        if (mouse != null) {
+            int imgX = mouse.x - windowFrame.getX() - 14;
+            int imgY = mouse.y - windowFrame.getY() - 160;
+            if (0 <= imgX && imgX < frameSize.width &&
+                0 <= imgY && imgY < frameSize.height) {
+                    colorChecker.updateColor(currentImage.getRGB(imgX, imgY));
+                    currentImage.setRGB(imgX, imgY, Color.white.getRGB());
+            }
+        }
+    }
+    
+    @Override
+    public void onImageProcessed() {
+        for (HSBCluster cluster: visionSystem.getClusters()) {
+            for (VecI pixel: cluster.getPixels()) {
+                Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
+            }
+            for (Rect rect: cluster.getImportantRects()) {
+                Debug.drawRect(currentImage, rect, cluster.debugColor);
+            }
+        }
+        showImage(currentImage);
+    }
+    
+    private void showImage(BufferedImage image) {
+        imageLabel.setIcon(new ImageIcon(image));
+    }
 
 	public VisionGUI() {
 		super();
+		// Start the vision system
+		this.visionSystem = new VisionSystem(PREPARE_FRAMES, this);
+		this.frameSize = visionSystem.getFrameSize();
+		this.postColorArray = new int[frameSize.width * frameSize.height];
+		
 		// Init GUI
 		initWindow();
-		
-		// Start the vision system
-		VisionSystem vs = new VisionSystem(PREPARE_FRAMES, this);
-		this.frameSize = vs.getFrameSize();
-		
-		// Init color arrays
-		this.colorArray = vs.getColorArray();
-		this.outputArray = new int[frameSize.width * frameSize.height];
-		this.hsbArray = new HSBColor[frameSize.width * frameSize.height];
-		for (int i = 0; i < hsbArray.length; i++) {
-			this.hsbArray[i] = new HSBColor();
-		}
+		visionSystem.start();
 	}
-
-	@Override
-	public void prepareVision(BufferedImage currentImage) {
-		this.currentImage = currentImage;
-		double s = 0;
-		double b = 0;
-		for (int c = 0; c < colorArray.length; c++) {
-			HSBColor color = hsbArray[c].set(colorArray[c]);
-			s += color.s;
-			b += color.b;
-		}
-		s /= colorArray.length;
-		b /= colorArray.length;
-		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
-		meanSat += s;
-		meanBright += b;
-		preparationFrames += 1;
-		if (preparationFrames >= PREPARE_FRAMES) {
-			meanSat /= preparationFrames;
-			meanBright /= preparationFrames;
-		}
-	}
-
 }

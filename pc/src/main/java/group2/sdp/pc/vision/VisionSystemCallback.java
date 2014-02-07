@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 
 public interface VisionSystemCallback {
 
-	public void processImage(BufferedImage image);
-	
-	public void prepareVision(BufferedImage image);
-
+    public void onFrameGrabbed(BufferedImage image);
+    public void onImageFiltered(HSBColor[] hsbArray);
+    public void onPreparationFrame();
+	public void onImageProcessed();
 }

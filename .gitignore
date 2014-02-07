@@ -2,6 +2,7 @@
 *.nxj
 *.nxd
 *.class
+*.*~
 /target
 .metadata
 *.sublime-project
