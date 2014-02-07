@@ -48,13 +48,14 @@ public class Receiver {
 				while ((opcode != Commands.DISCONNECT) && (opcode != Commands.FORCEQUIT) && !(Button.ESCAPE.isDown())) {
 
 					// Get the next command from the inputstream
-					byte[] byteBuffer = new byte[4];
+					byte[] byteBuffer = new byte[8];
 					inStream.read(byteBuffer);
-
+					
 					opcode = byteBuffer[0];
-					option1 = byteBuffer[1];
-					option2 = byteBuffer[2];
-					option3 = byteBuffer[3];
+					int[] options = bytesToOptions(byteBuffer);
+					option1 = options[0];
+					option2 = options[1];
+					option3 = options[2];
 
 					switch (opcode) {
 					
@@ -62,6 +63,9 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Moving at an angle!", 0, 2);
 							LCD.refresh();
+							option1 = byteBuffer[1] << 8 | byteBuffer[2];
+							option2 = byteBuffer[3] << 8 | byteBuffer[4];
+							option3 = byteBuffer[5] << 8 | byteBuffer[6];
 							pilot.move(option1, option2, option3);
 							replyToPC(opcode, outStream);
 							break;
@@ -70,6 +74,9 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Rotate!", 0, 2);
 							LCD.refresh();
+							option1 = byteBuffer[1];
+							option2 = byteBuffer[2];
+							option3 = byteBuffer[3];
 							pilot.rotate(option1, option2, option3);
 							replyToPC(opcode, outStream);
 							break;
@@ -78,6 +85,8 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Kicking!", 0, 2);
 							LCD.refresh();
+							option1 = byteBuffer[1];
+							option2 = byteBuffer[2];
 							pilot.kick(option1,option2);
 							replyToPC(opcode, outStream);
 							break;
@@ -137,5 +146,15 @@ public class Receiver {
 		byte[] reply = { 111, (byte) opcode, 0, 0 };
 		os.write(reply);
 		os.flush();
+	}
+	
+	private static int[] bytesToOptions(byte[] bytes) {
+		
+		int[] options = new int[bytes.length];
+		options[0] = bytes[1] << 8 | bytes[2];
+		options[1] = bytes[3] << 8 | bytes[4];
+		options[2] = bytes[5] << 8 | bytes[6];
+		return options;
+		
 	}
 }

@@ -6,6 +6,7 @@ public class TestRunnable2A implements Runnable{
 
 	public void run() {
 		Sender connection = null;
+		
 		try {
 			connection = new Sender("SDP 2A","00165307D55F");
 		} catch (IOException e1) {
@@ -16,12 +17,12 @@ public class TestRunnable2A implements Runnable{
 		try {
 			connection.clearBuff();
 			connection.kick(34, 456);
-			Thread.sleep(5000);
-			connection.clearBuff();
+			Thread.sleep(1000);
+//			connection.clearBuff();
 			connection.rotate(1, 34, 45667);
 			connection.clearBuff();
 			connection.move(1, 34, 45667);
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 			connection.clearBuff();
 			connection.disconnect();
 		} catch (IOException e) {
@@ -30,6 +31,8 @@ public class TestRunnable2A implements Runnable{
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			connection.disconnect();
 		}
 		
 	}

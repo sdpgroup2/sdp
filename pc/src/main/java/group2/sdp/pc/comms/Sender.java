@@ -2,6 +2,8 @@ package group2.sdp.pc.comms;
 
 import java.io.*;
 
+import com.sun.corba.se.impl.ior.ByteBuffer;
+
 import lejos.nxt.LCD;
 import lejos.pc.comm.*;
 
@@ -26,7 +28,6 @@ public class Sender implements CommInterface {
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
 		openBluetoothConn(robotName);
-//		LCD.drawString("connected!", 0, 4);
 	}
 	
 	public int move(int direction, int angle, int speed) throws IOException {
@@ -138,8 +139,14 @@ public class Sender implements CommInterface {
 		if (!connected)
 			return -3;
 		if (buffer < 2) {
-			byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2],
-					(byte) comm[3] };
+			ByteBuffer b = new ByteBuffer(8);
+			
+			for (int i = 0; i < 4; i++) {
+				b.append(comm[i]);
+			}
+			
+			byte[] command = b.toArray();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
+					//(byte) comm[3] };
 			
 			outStream.write(command);
 			outStream.flush();
@@ -191,12 +198,12 @@ public class Sender implements CommInterface {
 	
 	private int attemptConnection(int[] command) {
 		int confirmation = 0;
-		loop:
+		
 		for (int i = 0; i<10; i++){
 			try {
 				confirmation = sendToRobot(command);
 				if (confirmation != -1 && confirmation != -2) {
-					break loop;
+					break;
 				}
 			} catch (IOException e1) {
 				System.out.println("Could not send command");
