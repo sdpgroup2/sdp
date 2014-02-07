@@ -50,7 +50,6 @@ public class PointSet implements Comparable<PointSet>
      * Read points from file
      * 
      * @param file (relative or absolute path to text file)
-     * @throws ReadonlyException 
      */
     public PointSet(String file)
     {
@@ -307,10 +306,7 @@ public class PointSet implements Comparable<PointSet>
     
     /**
      * Read and parse points from ASCII text file. Points should be represented
-     * as a pair of digits, each point per line. Example: 5 1 3 -1 -10 15 11 -12
-     * 
-     * @throws Error
-     *             if file is malformed.
+     * as a pair of digits, each point per line.
      */
     public void read(String file)
     {
