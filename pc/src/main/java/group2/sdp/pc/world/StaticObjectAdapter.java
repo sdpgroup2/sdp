@@ -8,7 +8,7 @@ public class StaticObjectAdapter implements StaticObject {
 	private Rectangle2D boundingRect;
 
 	public Point2D getPosition() {
-		return new Point2D.Double(boundingRect.getCenterX(), boundingRect.getCenterX());
+		return new Point2D.Double(boundingRect.getCenterX(), boundingRect.getCenterY());
 	}
 
 	public Rectangle2D getBoundingRect() {
