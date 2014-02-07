@@ -1,4 +1,4 @@
-package group2.sdp.pc.vision;
+package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.VecI;
