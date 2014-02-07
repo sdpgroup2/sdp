@@ -8,4 +8,5 @@ public interface VisionSystemCallback {
     public void onImageFiltered(HSBColor[] hsbArray);
     public void onPreparationFrame();
 	public void onImageProcessed();
+	public void processImage(HSBColor[] hsbArray);
 }
