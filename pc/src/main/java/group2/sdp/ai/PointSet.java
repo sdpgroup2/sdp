@@ -60,8 +60,7 @@ public class PointSet implements Comparable<PointSet>
 
     /**
      * Creates a subset of PointSet, private because should be invoke only
-     * indirectly via subset method, please check that method for more
-     * information.
+     * indirectly via subset method, please check [subset] for more information.
      */
     private PointSet(PointSet pointSet, int lo, int hi)
     {
@@ -93,8 +92,7 @@ public class PointSet implements Comparable<PointSet>
     }
 
     /**
-     * Create subset view into PointSet, hence it disables operation altering
-     * the original PointSet such as add, sort, removeDuplicates etc.
+     * Create subset view into PointSet.
      * 
      * @param left inclusive (all elements from this one)
      * @param right exclusive (all elements before this one)
@@ -116,9 +114,6 @@ public class PointSet implements Comparable<PointSet>
         return new PointSet(this, lo, hi);
     }
 
-    /**
-     * @throws Exception if point p is already in the set
-     */
     public void add(Point p)
     {
         if (!contains(p))
@@ -127,7 +122,7 @@ public class PointSet implements Comparable<PointSet>
 
     /**
      * Unsafe because as the result duplicates can be added. Used only when
-     * loading from file to optimize loading time (to avoid checking if element
+     * loading from file to optimise loading time (to avoid checking if element
      * is contained for each loaded value). Loading function should remove all
      * duplicates or raise an error in case there are any.
      */
@@ -147,8 +142,6 @@ public class PointSet implements Comparable<PointSet>
      * Time complexity: O (n * log(n)) if unsorted, otherwise O(n).
      * Space complexity: O(n) for the created copy of the points array.
      * where n - the size of points array.
-     * @throws ReadonlyException - can be performed on the former PointSet,
-     * not on a subset.
      */
     private void removeDuplicates()
     {
@@ -229,7 +222,7 @@ public class PointSet implements Comparable<PointSet>
 
     /**
      * Resize an existing array to have size of max elements. To guarantee
-     * amortized O(1) performance it is advised to double the size every time
+     * amortised O(1) performance it is advised to double the size every time
      * the array reaches its full capacity.
      */
     private void resize(int max)
@@ -286,7 +279,7 @@ public class PointSet implements Comparable<PointSet>
         return false;
     }
 
-    /** Parsing from a text file, recognizes points coordinates */
+    /** Parsing from a text file, recognises points coordinates */
     private boolean isWellFormed(String line)
     { return isWellFormed(line, 10); }
     
