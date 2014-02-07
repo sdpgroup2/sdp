@@ -180,8 +180,8 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         }
         Point mouse = windowFrame.getMousePosition();
         if (mouse != null) {
-            int imgX = mouse.x - windowFrame.getX() - 14;
-            int imgY = mouse.y - windowFrame.getY() - 160;
+            int imgX = mouse.x - 14;
+            int imgY = mouse.y - 160;
             if (0 <= imgX && imgX < frameSize.width &&
                 0 <= imgY && imgY < frameSize.height) {
                     colorChecker.updateColor(currentImage.getRGB(imgX, imgY));

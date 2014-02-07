@@ -154,7 +154,7 @@ public class VisionSystem implements CaptureCallback {
 				HSBColor color = hsbArray[index];
 				// Test the pixel for each of the clusters
 				for (HSBCluster cluster : clusters) {
-					cluster.testPixel(x, y, color);
+					cluster.testPixel(x,y,color);
 				}
 			}
 		}
