@@ -207,18 +207,10 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
             }
         }
     }
-
+    
     @Override
     public void onImageProcessed() {
-        for (HSBCluster cluster: clusters) {
-            for (VecI pixel: cluster.getPixels()) {
-                Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
-            }
-            for (Rect rect: cluster.getImportantRects()) {
-                Debug.drawRect(currentImage, rect, cluster.debugColor);
-            }
-        }
-        showImage(currentImage);
+    	
     }
 
 	@Override
@@ -241,6 +233,15 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         for (HSBCluster cluster: clusters) {
             cluster.getImportantRects();
         }
+        for (HSBCluster cluster: clusters) {
+            for (VecI pixel: cluster.getPixels()) {
+                Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
+            }
+            for (Rect rect: cluster.getImportantRects()) {
+                Debug.drawRect(currentImage, rect, cluster.debugColor);
+            }
+        }
+        showImage(currentImage);
 	}
 
     private void showImage(BufferedImage image) {
