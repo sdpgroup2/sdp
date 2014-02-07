@@ -5,6 +5,8 @@ package group2.sdp.ai;
 public class Team
 {
     private boolean ally;
+    private Plane defenseZone, attackZone;
+    private Robot defenseRobot, attackRobot;
     // add planes for defence, attack enhanced by robot information
     
     public Team(boolean ally)
