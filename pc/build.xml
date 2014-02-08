@@ -32,7 +32,7 @@
     </target>
 
 	<target name="run-bt" depends="compile">
-		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.comms.Communication">
+		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.comms.TestComms">
 		</java>
 	</target>
 

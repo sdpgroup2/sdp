@@ -5,11 +5,11 @@ import java.io.IOException;
 public class TestRunnable2A implements Runnable {
 	
 	private static final short KICK_ANGLE = 90;
-	private static final short KICK_SPEED = 1234;
+	private static final short KICK_SPEED = 15234;
 	private static final short ROTATE_ANGLE = 90;
-	private static final short ROTATE_SPEED = 1234;
+	private static final short ROTATE_SPEED = 15234;
 	private static final short MOVE_DIRECTION = 1;
-	private static final short MOVE_SPEED = 1234;
+	private static final short MOVE_SPEED = 15234;
 
 	public void run() {
 		Sender connection = null;

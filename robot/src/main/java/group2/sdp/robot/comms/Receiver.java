@@ -42,8 +42,8 @@ public class Receiver {
 				outStream.flush();
 
 				// Begin reading commands
-				int opcode = Commands.DO_NOTHING;
-				int option1, option2, option3;
+				short opcode = Commands.DO_NOTHING;
+				short option1, option2, option3;
 
 				while ((opcode != Commands.DISCONNECT) && (opcode != Commands.FORCEQUIT) && !(Button.ESCAPE.isDown())) {
 

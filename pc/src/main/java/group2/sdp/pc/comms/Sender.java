@@ -47,7 +47,7 @@ public class Sender implements CommInterface {
 	public int kick(short angle, short speed) throws IOException {
 		short[] command = { Commands.KICK, angle, speed, 0 };
 		int confirmation = attemptConnection(command);
-		System.out.println("Kick");
+		System.out.printf("Kick with angle %d and speed %d\n", angle, speed);
 		return confirmation;
 		
 	}
@@ -149,6 +149,15 @@ public class Sender implements CommInterface {
 			byte[] command = b.array();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
 					//(byte) comm[3] };
 
+			short[] commands = new short[4];
+
+			for (int i = 0; i < 4 ; i++) {
+				//commands[i] = b.getShort(i);
+				commands[i] = (short) (command[i*2] << 8 | command[i*2 + 1]);
+			}
+			
+			System.out.printf("Option 1: %d, Option 2: %d, Option 3: %d\n", commands[1], commands[2], commands[3]);
+			
 			outStream.write(command);
 			outStream.flush();
 			buffer += 1;
@@ -167,7 +176,9 @@ public class Sender implements CommInterface {
 				buffer -= 1;
 				return confirmation[1];
 			} else {
-				System.out.println("Could not receive confirmation");
+				System.out.printf("Con: [%d %d %d %d], Comm: [%d %d %d %d]\n", confirmation[0], confirmation[1], confirmation[2], confirmation[3], comm[0], comm[1], comm[2], comm[3]);
+				System.out.printf("Confirmation should be %d, was %d\n", comm[0], confirmation[1]);
+				//System.out.println("Could not receive confirmation");
 				buffer -= 1;
 				return -2;
 			}
@@ -204,17 +215,17 @@ public class Sender implements CommInterface {
 	private int attemptConnection(short[] command) {
 		int confirmation = 0;
 		
-		for (int i = 0; i<10; i++){
+		//for (int i = 0; i<10; i++){
 			try {
 				confirmation = sendToRobot(command);
 				if (confirmation != -1 && confirmation != -2) {
-					break;
+					//break;
 				}
 			} catch (IOException e1) {
 				System.out.println("Could not send command");
 				e1.printStackTrace();
 			}
-		}
+		//}
 	
 		return confirmation;
 	}
