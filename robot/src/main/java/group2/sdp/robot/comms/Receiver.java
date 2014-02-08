@@ -66,29 +66,31 @@ public class Receiver {
 							option1 = byteBuffer[1] << 8 | byteBuffer[2];
 							option2 = byteBuffer[3] << 8 | byteBuffer[4];
 							option3 = byteBuffer[5] << 8 | byteBuffer[6];
-							LCD.drawString(option1 + " "+ option2 + " " + option3, 0, 2);
+							LCD.drawString("M" + option1 + " "+ option2 + " " + option3, 0, 2);
 							pilot.move(option1, option2);
 							replyToPC(opcode, outStream);
 							break;
 						
 						case Commands.ROTATE:
 							LCD.clear();
-							LCD.drawString("Rotate!", 0, 2);
+//							LCD.drawString("Rotate!", 0, 2);
 							LCD.refresh();
 							option1 = byteBuffer[1];
 							option2 = byteBuffer[2];
 							option3 = byteBuffer[3];
 							pilot.rotate(option1, option2);
+							LCD.drawString("R" + option1 + " "+ option2 + " " + option3, 0, 2);
 							replyToPC(opcode, outStream);
 							break;
 	
 						case Commands.KICK:
 							LCD.clear();
-							LCD.drawString("Kicking!", 0, 2);
+//							LCD.drawString("Kicking!", 0, 2);
 							LCD.refresh();
 							option1 = byteBuffer[1];
 							option2 = byteBuffer[2];
 							pilot.kick(option1,option2);
+							LCD.drawString("K" + option1 + " "+ option2 + " " + option3, 0, 2);
 							replyToPC(opcode, outStream);
 							break;
 						
