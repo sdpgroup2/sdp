@@ -1,5 +1,6 @@
 package group2.sdp.pc.geom;
 
+import javax.vecmath.Vector2d;
 
 public class Vector extends Vector2d {
 
