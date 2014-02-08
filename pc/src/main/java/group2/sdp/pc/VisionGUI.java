@@ -8,6 +8,7 @@ import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
 import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.util.Debug;
 
 import java.awt.Color;
 import java.awt.Dimension;

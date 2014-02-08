@@ -95,10 +95,10 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	public Set<VecI> getLargestRegion() {
 		int max = 0;
 		Set<VecI> largestRegion = new HashSet<VecI>();
-		for (Set<VecI> region: getRegions()) {
+		for (Set<VecI> region : getRegions()) {			
 			if (region.size() > max) {
 				max = region.size();
-				largestRegion = region;
+				largestRegion = region;				
 			} 
 		}
 		

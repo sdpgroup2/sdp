@@ -17,12 +17,13 @@ public class TestRunnable2A implements Runnable{
 		try {
 			connection.clearBuff();
 			connection.kick(34, 456);
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 //			connection.clearBuff();
-			connection.rotate(1, 34, 45667);
+			connection.rotate(1, 34, 25667);
 			connection.clearBuff();
-			connection.move(1, 34, 45667);
-			Thread.sleep(1000);
+			Thread.sleep(3000);
+			connection.move(1, 34, 25667);
+			Thread.sleep(3000);
 			connection.clearBuff();
 			connection.disconnect();
 		} catch (IOException e) {

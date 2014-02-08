@@ -61,12 +61,13 @@ public class Receiver {
 					
 						case Commands.ANGLEMOVE:
 							LCD.clear();
-							LCD.drawString("Moving at an angle!", 0, 2);
+//							LCD.drawString("Moving at an angle!", 0, 2);
 							LCD.refresh();
 							option1 = byteBuffer[1] << 8 | byteBuffer[2];
 							option2 = byteBuffer[3] << 8 | byteBuffer[4];
 							option3 = byteBuffer[5] << 8 | byteBuffer[6];
-							pilot.move(option1, option2, option3);
+							LCD.drawString(option1 + " "+ option2 + " " + option3, 0, 2);
+							pilot.move(option1, option2);
 							replyToPC(opcode, outStream);
 							break;
 						
@@ -77,7 +78,7 @@ public class Receiver {
 							option1 = byteBuffer[1];
 							option2 = byteBuffer[2];
 							option3 = byteBuffer[3];
-							pilot.rotate(option1, option2, option3);
+							pilot.rotate(option1, option2);
 							replyToPC(opcode, outStream);
 							break;
 	
@@ -103,7 +104,7 @@ public class Receiver {
 							LCD.clear();
 							LCD.drawString("Stopping!", 0, 2);
 							LCD.refresh();
-							pilot.steer();
+							pilot.steer(option1);
 							replyToPC(opcode, outStream);
 							break;
 							

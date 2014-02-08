@@ -37,8 +37,8 @@ public class Sender implements CommInterface {
 		return confirmation;
 	} 
 	
-	public int rotate(int direction, int angle, int speed) throws IOException {
-		int[] command = { Commands.ROTATE, direction, angle, speed };
+	public int rotate(int angle, int speed) throws IOException {
+		int[] command = { Commands.ROTATE, angle, speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.println("Rotate...");
 		return confirmation;
@@ -52,7 +52,7 @@ public class Sender implements CommInterface {
 		
 	}
 	
-	public int steer() throws IOException {
+	public int steer(double turnRate) throws IOException {
 		int[] command = { Commands.STEER, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Steer");
@@ -145,9 +145,10 @@ public class Sender implements CommInterface {
 				b.append(comm[i]);
 			}
 			
+			
 			byte[] command = b.toArray();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
 					//(byte) comm[3] };
-			
+
 			outStream.write(command);
 			outStream.flush();
 			buffer += 1;
