@@ -1,11 +1,11 @@
 package group2.sdp.pc.vision;
 
-import group2.sdp.pc.Debug;
 import group2.sdp.pc.Timer;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+import group2.sdp.util.Debug;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;

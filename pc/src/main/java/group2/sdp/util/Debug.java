@@ -1,4 +1,4 @@
-package group2.sdp.pc;
+package group2.sdp.util;
 
 import group2.sdp.pc.geom.Rect;
 
