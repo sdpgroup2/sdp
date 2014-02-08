@@ -1,9 +1,10 @@
 package group2.sdp.pc.vision;
 
-import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.world.Ball;
+import group2.sdp.pc.world.Robot;
 
 import java.util.List;
 
@@ -12,18 +13,18 @@ public class Pitch {
 	private PitchLines lines;
 	private PitchSection sections;
 
-	private Rect pitchRect;
-	private Rect leftAttack;
-	private Rect rightAttack;
-	private Rect leftDefense;
-	private Rect rightDefense;
+	private Robot pitchRect;
+	private Robot leftAttack;
+	private Robot rightAttack;
+	private Robot leftDefense;
+	private Robot rightDefense;
 
-	private Rect leftDefender = null;
-	private Rect leftAttacker = null;
-	private Rect rightDefender = null;
-	private Rect rightAttacker = null;
+	private Robot leftDefender = null;
+	private Robot leftAttacker = null;
+	private Robot rightDefender = null;
+	private Robot rightAttacker = null;
 
-	private Rect ball;
+	private Ball ball;
 
 	private final VecI LEFT_DEF_POINT = new VecI(120, 240);
 	private final VecI LEFT_ATT_POINT = new VecI(270, 240);
@@ -42,10 +43,10 @@ public class Pitch {
 
 	}
 
-	public Rect getPitchRect(VecI rectMember) {
-		Rect result = new Rect(0, 1, 0, 1);
-		List<Rect> rects = sections.getImportantRects();
-		for (Rect rect : rects) {
+	public Robot getPitchRect(VecI rectMember) {
+		Robot result = new Robot(0, 1, 0, 1);
+		List<Robot> rects = sections.getImportantRects();
+		for (Robot rect : rects) {
 			if (rectMember.x > rect.minX && rectMember.x < rect.maxX && rectMember.y > rect.minY && rectMember.y < rect.maxY) {
 				result = rect;
 			}
@@ -54,7 +55,7 @@ public class Pitch {
 		return result;
 	}
 
-	public void addBall(Rect ball) {
+	public void addBall(Ball ball) {
 		this.ball = ball;
 	}
 
@@ -67,11 +68,11 @@ public class Pitch {
 	 * @param yellowRobots
 	 *            - List of rectangles of yellow robots.
 	 */
-	public void addRobots(List<Rect> blueRobots, List<Rect> yellowRobots) {
-		Rect firstBlueRobot = blueRobots.get(0);
-		Rect secondBlueRobot = blueRobots.get(1);
-		Rect firstYellowRobot = yellowRobots.get(0);
-		Rect secondYellowRobot = yellowRobots.get(1);
+	public void addRobots(List<Robot> blueRobots, List<Robot> yellowRobots) {
+		Robot firstBlueRobot = blueRobots.get(0);
+		Robot secondBlueRobot = blueRobots.get(1);
+		Robot firstYellowRobot = yellowRobots.get(0);
+		Robot secondYellowRobot = yellowRobots.get(1);
 
 		if (this.leftDefense.contains(firstBlueRobot)) {
 			this.leftDefender = firstBlueRobot;
@@ -104,7 +105,7 @@ public class Pitch {
 		}
 	}
 
-	public Rect getPitchRect() {
+	public Robot getPitchRect() {
 		return lines.getImportantRects().get(0);
 	}
 }
