@@ -54,4 +54,16 @@ public class Point extends Point2D.Double implements Comparable<Point> {
         }
     }
 
+    public Point(double x, double y) {
+    	super(x, y);
+    }
+
+    public void setX(double x) {
+    	this.x = x;
+    }
+
+    public void setY(double y) {
+    	this.y = y;
+    }
+
 }

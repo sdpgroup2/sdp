@@ -2,7 +2,10 @@
  * @author Jaroslaw Hirniak, s1143166
  */
 
-package group2.sdp.ai;
+package group2.sdp.pc.world;
+
+import group2.sdp.pc.geom.Point;
+import group2.sdp.pc.geom.PointSet;
 
 /** Note that recommended units for the pitch are in tacho counts. Hence, we
  *  should measure how many pixels are how many tachos and work with those

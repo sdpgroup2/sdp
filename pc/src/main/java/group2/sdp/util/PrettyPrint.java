@@ -1,7 +1,10 @@
 
 /** @author Jaroslaw Hirniak */
 
-package group2.sdp.ai;
+package group2.sdp.util;
+
+import group2.sdp.pc.geom.Point;
+import group2.sdp.pc.geom.PointSet;
 
 import java.io.BufferedWriter;
 import java.io.File;

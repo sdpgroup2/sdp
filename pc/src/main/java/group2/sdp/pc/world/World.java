@@ -1,7 +1,7 @@
 
 /** @author Jaroslaw Hirniak */
 
-package group2.sdp.ai;
+package group2.sdp.pc.world;
 
 import java.util.concurrent.ConcurrentHashMap;
 
