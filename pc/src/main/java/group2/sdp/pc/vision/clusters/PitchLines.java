@@ -11,12 +11,13 @@ import java.util.ArrayList;
 
 public class PitchLines extends HSBCluster {
 	
-	enum Dir {
+	/*enum Dir {
 		Left,
 		Right,
 		Down,
-		Up
-	}
+		Up;
+	}*/
+	
 
 	public PitchLines(String name) {
 		super(name, new HSBColor(0,0,33), new HSBColor(360,70,100), Color.white);
@@ -90,14 +91,14 @@ public class PitchLines extends HSBCluster {
 			 max = edgePixel.y + 10;
 			 position = edgePixel.x;   // x value of the current pixel being
                                        // looked at
-		 }			 		
+		 }
 		 
 		 
 		 // move 1 pixel towards the corner we are looking for
 		 if (edge == Dir.Right || edge == Dir.Down)
 			 position++;
 		 else
-			 position--;
+		 	 position--;
 		 
 		 // In this part, we loop through the pixels along the edge of the
 		 // cluster towards the corner. Each time we increment the perpendicular
