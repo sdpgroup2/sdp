@@ -98,7 +98,7 @@ public class ControlGUI extends JFrame {
 		connection2A = null;
 		
 		
-		boolean connectedR1 = false;
+		
 		Thread connectTo2A = new Thread(new Runnable() {
 
 			public void run() {
@@ -252,16 +252,14 @@ public class ControlGUI extends JFrame {
 
 		moveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				final int direction = Integer.parseInt(op1field.getText());
-				final int angle = Integer.parseInt(op2field.getText());
-				final int speed = Integer.parseInt(op3field.getText());
+				connection2A.clearBuff();
+				connection2D.clearBuff();
+				final short direction = (short) Integer.parseInt(op1field.getText());
+				final short speed = (short) Integer.parseInt(op3field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
 					public void run() { 
 						try {
-							connection2A.clearBuff();
-							connection2A.move(direction, angle, speed);
+							connection2A.move(direction, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -273,7 +271,7 @@ public class ControlGUI extends JFrame {
 					public void run() { 
 						try {
 							connection2D.clearBuff();
-							connection2D.move(direction, angle, speed);     
+							connection2D.move(direction, speed);     
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -297,8 +295,8 @@ public class ControlGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				connection2A.clearBuff();
 				connection2D.clearBuff();
-				final int angle = Integer.parseInt(op1field.getText());
-				final int speed = Integer.parseInt(op2field.getText());
+				final short angle = (short) Integer.parseInt(op1field.getText());
+				final short speed = (short) Integer.parseInt(op2field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
 					public void run() { 
 						try {
@@ -336,14 +334,14 @@ public class ControlGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				connection2D.clearBuff();
 //				btSendR2.clearBuff();
-				final int direction = Integer.parseInt(op1field.getText());
-				final int angle = Integer.parseInt(op2field.getText());
-				final int speed = Integer.parseInt(op3field.getText());
+				
+				final short angle = (short)Integer.parseInt(op2field.getText());
+				final short speed = (short) Integer.parseInt(op3field.getText());
 				Thread rotateBot1 = new Thread(new Runnable() {
 
 					public void run() {
 						try {
-							connection2A.rotate(direction, angle, speed);
+							connection2A.rotate(angle, speed);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -355,7 +353,7 @@ public class ControlGUI extends JFrame {
 
 					public void run() {
 					try {
-						connection2A.rotate(direction, angle, speed);
+						connection2A.rotate(angle, speed);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
