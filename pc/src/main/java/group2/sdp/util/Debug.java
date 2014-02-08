@@ -48,7 +48,7 @@ public class Debug {
 	public static void drawLine(BufferedImage dest, Line line) {
 		Graphics g = dest.getGraphics();
 		g.setColor(Color.magenta);
-		g.drawLine(line.x1, line.x2, line.y1, line.y2);
+		g.drawLine((int) line.x1, (int) line.x2, (int) line.y1, (int) line.y2);
 	}
 
 }

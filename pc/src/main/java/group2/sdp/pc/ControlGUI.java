@@ -1,7 +1,6 @@
 package group2.sdp.pc;
 
 //UI imports
-import group2.sdp.pc.comms.CommInterface;
 import group2.sdp.pc.comms.Sender;
 
 import java.awt.Dimension;
@@ -79,10 +78,10 @@ public class ControlGUI extends JFrame {
 	private final JTextField op3field = new JTextField();
 	public static JTextField op4field = new JTextField();
 	public static JTextField op5field = new JTextField();
-	
+
 	private static Sender connection2D;
 	private static Sender connection2A;
-	
+
 	public static void main(String[] args) throws IOException {
 		// Make the GUI pretty
 		try {
@@ -94,14 +93,15 @@ public class ControlGUI extends JFrame {
 		// Sets up the GUI
 		ControlGUI gui = new ControlGUI();
 		gui.setVisible(true);
-		
+
 		connection2D = null;
 		connection2A = null;
-		
-		
+
+
 		boolean connectedR1 = false;
 		Thread connectTo2A = new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				for (int i = 0; i< 5; i++){
 					try {
@@ -117,17 +117,18 @@ public class ControlGUI extends JFrame {
 					}
 				}
 			}
-			
+
 		});
 		Thread connectTo2D = new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				for (int i = 0; i< 5; i++){
 					try {
 						//note of name and MAC
 						connection2D = new Sender("SDP 2D","0016530BBBEA");
 						break;
-						
+
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						System.out.println("problem connecting" + e1.getMessage());
@@ -137,13 +138,13 @@ public class ControlGUI extends JFrame {
 					}
 				}
 			}
-			
+
 		});
 		connectTo2A.start();
 		connectTo2D.start();
-		
+
 	}
-	
+
 	public ControlGUI() {
 
 		this.setTitle("Group 2 control GUI");
@@ -243,6 +244,7 @@ public class ControlGUI extends JFrame {
 		this.addWindowListener(new ListenCloseWdw());
 
 		stopButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				connection2A.clearBuff();
 				connection2D.clearBuff();
@@ -252,6 +254,7 @@ public class ControlGUI extends JFrame {
 		});
 
 		moveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				connection2A.clearBuff();
 				connection2D.clearBuff();
@@ -259,25 +262,27 @@ public class ControlGUI extends JFrame {
 				final int angle = Integer.parseInt(op2field.getText());
 				final int speed = Integer.parseInt(op3field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
-					public void run() { 
+					@Override
+					public void run() {
 						try {
 							connection2A.move(direction, angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
-					}		
+
+					}
 				});
 				Thread moveBot2 = new Thread(new Runnable() {
-					public void run() { 
+					@Override
+					public void run() {
 						try {
-							connection2D.move(direction, angle, speed);     
+							connection2D.move(direction, angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}		
+					}
 				});
 				moveBot1.start();
 				moveBot2.start();
@@ -289,35 +294,38 @@ public class ControlGUI extends JFrame {
 					e1.printStackTrace();
 				}
 			}
-			
+
 		});
-		
+
 		kickButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				connection2A.clearBuff();
 				connection2D.clearBuff();
 				final int angle = Integer.parseInt(op1field.getText());
 				final int speed = Integer.parseInt(op2field.getText());
 				Thread moveBot1 = new Thread(new Runnable() {
-					public void run() { 
+					@Override
+					public void run() {
 						try {
 							connection2A.kick(angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
-					}		
+
+					}
 				});
 				Thread moveBot2 = new Thread(new Runnable() {
-					public void run() { 
+					@Override
+					public void run() {
 						try {
 							connection2D.kick(angle, speed);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}		
+					}
 				});
 				moveBot1.start();
 				moveBot2.start();
@@ -332,6 +340,7 @@ public class ControlGUI extends JFrame {
 		});
 
 		rotateButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				connection2D.clearBuff();
 //				btSendR2.clearBuff();
@@ -340,27 +349,29 @@ public class ControlGUI extends JFrame {
 				final int speed = Integer.parseInt(op3field.getText());
 				Thread rotateBot1 = new Thread(new Runnable() {
 
+					@Override
 					public void run() {
 						try {
 							connection2A.rotate(direction, angle, speed);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}	
+						}
 					}
-					
+
 				});
 				Thread rotateBot2 = new Thread(new Runnable() {
 
+					@Override
 					public void run() {
 					try {
 						connection2A.rotate(direction, angle, speed);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}	
 					}
-					
+					}
+
 				});
 				rotateBot1.start();
 				rotateBot2.start();
@@ -371,11 +382,12 @@ public class ControlGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+
 			}
 		});
-		
+
 		disconnectButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Quitting the GUI");
 //				cleanQuit();
@@ -383,55 +395,64 @@ public class ControlGUI extends JFrame {
 		});
 
 		forceQuitButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Quitting the GUI");
 				System.exit(0);
 			}
 		});
-		
+
 		forwardButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 
 		backwardButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 
 		leftButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 
 		rightButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 			}
 		});
 
 		dribbleButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-			
+
 			}
 		});
-		
+
 		moveToButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 			}
 		});
 
 		rotateAndMoveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 			}
 		});
 
 		resetButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Disconnecting...");
 				// Kill the mover and wait for it to stop completely
@@ -460,6 +481,7 @@ public class ControlGUI extends JFrame {
 	}
 
 	public class ListenCloseWdw extends WindowAdapter {
+		@Override
 		public void windowClosing(WindowEvent e) {
 			System.out.println("Quitting the GUI");
 //			cleanQuit();

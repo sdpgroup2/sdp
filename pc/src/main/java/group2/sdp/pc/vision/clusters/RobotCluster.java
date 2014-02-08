@@ -5,6 +5,7 @@ import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public class RobotCluster extends HSBCluster {
 	}
 
 	public List<Vector> getRobotVectors(HSBColor[] hsbArray) {
-		List<Vector> lst = new List<Vector>();
+		List<Vector> lst = new ArrayList<Vector>();
 		DotCluster cluster = new DotCluster("Dot");
 		for (Rect rect : getImportantRects().subList(0, 2)) {
 			Rect expandedRect = rect.expand(2);
