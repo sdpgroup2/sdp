@@ -1,5 +1,6 @@
 package group2.sdp.util;
 
+import group2.sdp.pc.geom.Line;
 import group2.sdp.pc.geom.Rect;
 
 import java.awt.Color;
@@ -42,6 +43,12 @@ public class Debug {
 			g.setColor(Color.WHITE);
 			g.drawRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
 		}
+	}
+
+	public static void drawLine(BufferedImage dest, Line line) {
+		Graphics g = dest.getGraphics();
+		g.setColor(Color.magenta);
+		g.drawLine(line.x1, line.x2, line.y1, line.y2);
 	}
 
 }

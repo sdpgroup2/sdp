@@ -66,4 +66,8 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.y = y;
     }
 
+    public Vector sub(Point other) {
+    	return new Vector(this.x - other.x, this.y - other.y);
+    }
+
 }

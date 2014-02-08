@@ -1,6 +1,7 @@
 package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Timer;
+import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
@@ -9,6 +10,7 @@ import group2.sdp.util.Debug;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
@@ -92,8 +94,10 @@ public class VisionService implements CaptureCallback {
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
 					state = VisionState.Processing;
+					this.callback.onPreparationReady(currentImage, clusters);
+				} else {
+					this.callback.onPreparationFrame();
 				}
-				this.callback.onPreparationFrame();
 				break;
 			}
 			case Processing: {
@@ -180,6 +184,18 @@ public class VisionService implements CaptureCallback {
 	public HSBCluster[] getClusters() {
 	    return clusters;
     }
+
+	public List<Rect> getYellowRobots() {
+		return yellowRobotCluster.getImportantRects();
+	}
+
+	public List<Rect> getBlueRobots() {
+		return blueRobotCluster.getImportantRects();
+	}
+
+	public HSBColor[] getHSBArray() {
+		return hsbArray;
+	}
 
 	/**
 	 * Called if there is an exception raised by the listener.

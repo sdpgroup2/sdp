@@ -7,7 +7,7 @@ public class Robot extends RectangularObjectAdapter implements MovingObject {
 
 	private Vector velocity;
 
-	public Robot(Rect boundingRect) {
+	public Robot(Rect boundingRect, Vector velocity) {
 		super(boundingRect);
 		this.velocity = velocity;
 	}

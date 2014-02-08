@@ -9,4 +9,8 @@ public class Line extends Line2D.Double {
 
 	private static final long serialVersionUID = 1L;
 
+	public Line(double x1, double x2, double y1, double y2) {
+		super(x1, x2, y1, y2);
+	}
+
 }

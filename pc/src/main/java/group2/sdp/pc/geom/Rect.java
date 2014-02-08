@@ -16,6 +16,18 @@ public class Rect extends Rectangle2D.Double {
 		return String.format("Rect((%.2f, %.2f)(%.2f, %.2f))", x, y, x + width, y + height);
 	}
 
+	public Rect expand(int multiplier) {
+		Point center = this.getCenter();
+		double width = this.width * multiplier;
+		double height = this.height * multiplier;
+		return new Rect(
+			center.x - (width / 2),
+			center.y - (height / 2),
+			width,
+			height
+		);
+	}
+
 	public Rect(double x, double y, double width, double height) {
 		super(x, y, width, height);
 	}
