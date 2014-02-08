@@ -1,6 +1,7 @@
 package group2.sdp.pc.vision;
 
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.geom.Shape;
 import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
@@ -12,6 +13,7 @@ public class Pitch {
 	private PitchLines lines;
 	private PitchSection sections;
 	
+	private Shape pitchArea;
 	private Rect pitchRect;
 	private Rect leftAttack;
 	private Rect rightAttack;

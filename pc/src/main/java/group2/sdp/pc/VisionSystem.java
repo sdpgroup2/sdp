@@ -8,6 +8,7 @@ import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.SkyCam;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.Dir;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
@@ -334,13 +335,7 @@ public class VisionSystem extends WindowAdapter implements CaptureCallback {
 				Debug.drawRect(currentImage, rect, cluster.debugColor);
 			}
 		}
-		/*
-		VecI corner = pitchLinesCluster.getCorner(Down, Left);
-		if(corner != null)
-			Debug.drawTestPixel(currentImage, corner.x, corner.y, Color.white);
-		else
-			System.out.println("Cannot find corner");
-		*/
+		
 	}
 	
 	/**

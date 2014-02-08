@@ -141,9 +141,10 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	public VecI getMinXPixel() {
 		Set<VecI> pixels = getLargestRegion();
 		VecI min = new VecI(1000,0);
-	
+		
 		for(VecI pixel : pixels)
 		{
+			System.out.println(pixel.x);
 			if(pixel.x < min.x)
 				min = pixel;
 		}
