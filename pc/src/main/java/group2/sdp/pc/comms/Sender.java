@@ -29,9 +29,9 @@ public class Sender implements CommInterface {
 				robotMacAddress);
 		openBluetoothConn(robotName);
 	}
-	
-	public int move(int direction, int angle, int speed) throws IOException {
-		int[] command = { Commands.ANGLEMOVE, direction, angle, speed};
+
+	public int move(int direction, int speed) throws IOException {
+		int[] command = { Commands.ANGLEMOVE, direction, speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.println("Move...");
 		return confirmation;

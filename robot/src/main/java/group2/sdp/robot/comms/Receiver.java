@@ -148,9 +148,15 @@ public class Receiver {
 		os.flush();
 	}
 	
-	private static int[] bytesToOptions(byte[] bytes) {
+	private static int[] bytesToOptions(byte[] bytes, int[] pattern) {
 		
-		int[] options = new int[bytes.length];
+		int[] options = new int[pattern.length];
+		int byteNum = 1;
+		for (int i = 0; i < pattern.length; i++) {
+			for (int j = pattern[i]; j > 0; j--) {
+				options[i] = bytes[byteNum];
+			}
+		}
 		options[0] = bytes[1] << 8 | bytes[2];
 		options[1] = bytes[3] << 8 | bytes[4];
 		options[2] = bytes[5] << 8 | bytes[6];
