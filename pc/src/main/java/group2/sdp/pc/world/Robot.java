@@ -1,12 +1,25 @@
 package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.Velocity;
+import group2.sdp.pc.geom.Vector;
 
-public class Robot extends MovingObjectAdapter {
+public class Robot extends RectangularObjectAdapter implements MovingObject {
 
-	public Robot(Rect boundingRect, Velocity velocity) {
-		super(boundingRect, velocity);
+	private Vector velocity;
+
+	public Robot(Rect boundingRect) {
+		super(boundingRect);
+		this.velocity = velocity;
+	}
+
+	@Override
+	public Vector getVelocity() {
+		return this.velocity;
+	}
+
+	@Override
+	public boolean isNearWall(Pitch pitch, double distance) {
+		return false;
 	}
 
 }
