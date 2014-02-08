@@ -2,6 +2,10 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Debug;
 import group2.sdp.pc.Timer;
+import group2.sdp.pc.vision.clusters.BallCluster;
+import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -16,7 +20,7 @@ import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 
 
-public class SkyCam implements CaptureCallback {
+public class VisionService implements CaptureCallback {
 
 	public static final String DEFAULT_DEVICE = "/dev/video0";
 	public static final String requiredInputName = "S-Video";
@@ -46,6 +50,20 @@ public class SkyCam implements CaptureCallback {
 	private float meanBright = 0;
 
 	private VideoDevice device;
+
+	// Clusters
+	private BallCluster ballCluster = new BallCluster("Ball");
+	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
+//	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
+//	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+	private HSBCluster[] clusters = new HSBCluster[] {
+		ballCluster,
+		blueRobotCluster,
+		yellowRobotCluster,
+//			pitchSectionCluster,
+//			pitchLinesCluster
+	};
 
 	public void start() {
 		Debug.log("Vision started.");
@@ -82,7 +100,8 @@ public class SkyCam implements CaptureCallback {
 			case Processing: {
 			    this.normaliseImage(colorArray);
 			    this.callback.onImageFiltered(hsbArray);
-				this.callback.processImage(hsbArray);
+				this.processImage();
+				this.callback.onImageProcessed();
 				break;
 			}
 		}
@@ -123,6 +142,27 @@ public class SkyCam implements CaptureCallback {
 		}
 	}
 
+	public void processImage() {
+		// Clear all clusters.
+		for (HSBCluster cluster : clusters) {
+			cluster.clear();
+		}
+		// Loop through pixels.
+		for (int x = 0; x < getSize().width; x++) {
+			for (int y = 0; y < getSize().height; y++) {
+				int index = y * getSize().width + x;
+				HSBColor color = hsbArray[index];
+				// Test the pixel for each of the clusters
+				for (HSBCluster cluster : clusters) {
+					cluster.testPixel(x, y, color);
+				}
+			}
+		}
+        for (HSBCluster cluster: clusters) {
+            cluster.getImportantRects();
+        }
+	}
+
 	public void stopVision() {
 		Debug.log("Vision stopped.");
 		this.frameGrabber.stopCapture();
@@ -138,6 +178,10 @@ public class SkyCam implements CaptureCallback {
 		return new Dimension(frameGrabber.getWidth(), frameGrabber.getHeight());
 	}
 
+	public HSBCluster[] getClusters() {
+	    return clusters;
+    }
+
 	/**
 	 * Called if there is an exception raised by the listener.
 	 * @param e - The exception raised.
@@ -148,7 +192,7 @@ public class SkyCam implements CaptureCallback {
 
 	}
 
-	public SkyCam(String deviceName, int preparationFrames, VisionSystemCallback callback) {
+	public VisionService(String deviceName, int preparationFrames, VisionSystemCallback callback) {
 		this.callback = callback;
 		this.preparationFrames = preparationFrames;
 		try {
@@ -170,7 +214,7 @@ public class SkyCam implements CaptureCallback {
 		frameGrabber.setCaptureCallback(this);
 	}
 
-	public SkyCam(int preparationFrames, VisionSystemCallback callback) {
+	public VisionService(int preparationFrames, VisionSystemCallback callback) {
 		this(DEFAULT_DEVICE, preparationFrames, callback);
 	}
 

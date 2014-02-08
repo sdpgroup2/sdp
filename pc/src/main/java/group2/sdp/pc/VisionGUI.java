@@ -5,12 +5,9 @@ import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
-import group2.sdp.pc.vision.SkyCam;
+import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionSystemCallback;
-import group2.sdp.pc.vision.clusters.BallCluster;
-import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,7 +38,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
 
-    private SkyCam skyCam;
+    private VisionService visionService;
 
     private JFrame windowFrame;
     private Dimension frameSize;
@@ -51,19 +48,6 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
     private BufferedImage currentImage;
     private int[] postColorArray;
 
-	// Clusters
-	private BallCluster ballCluster = new BallCluster("Ball");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
-	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-//	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
-//	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
-	private HSBCluster[] clusters = new HSBCluster[] {
-		ballCluster,
-		blueRobotCluster,
-		yellowRobotCluster,
-//			pitchSectionCluster,
-//			pitchLinesCluster
-	};
 
     public static void main(String[] args) {
     	new VisionGUI();
@@ -73,6 +57,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
      * Initialise a window frame. PLEASE EXCUSE THIS AWFUL FUNCTION. I'll clean it up later.
      */
     public void initWindow() {
+    	final HSBCluster[] clusters = visionService.getClusters();
 	    JPanel contentPanel;
 	    final JList<HSBCluster> clusterList = new JList<HSBCluster>(clusters);
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
@@ -210,7 +195,7 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 
     @Override
     public void onImageProcessed() {
-        for (HSBCluster cluster: clusters) {
+        for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
                 Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
             }
@@ -221,28 +206,6 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
         showImage(currentImage);
     }
 
-	@Override
-	public void processImage(HSBColor[] hsbArray) {
-		// Clear all clusters.
-		for (HSBCluster cluster : clusters) {
-			cluster.clear();
-		}
-		// Loop through pixels.
-		for (int x = 0; x < frameSize.width; x++) {
-			for (int y = 0; y < frameSize.height; y++) {
-				int index = y * frameSize.width + x;
-				HSBColor color = hsbArray[index];
-				// Test the pixel for each of the clusters
-				for (HSBCluster cluster : clusters) {
-					cluster.testPixel(x, y, color);
-				}
-			}
-		}
-        for (HSBCluster cluster: clusters) {
-            cluster.getImportantRects();
-        }
-	}
-
     private void showImage(BufferedImage image) {
         imageLabel.setIcon(new ImageIcon(image));
     }
@@ -250,12 +213,12 @@ public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
 	public VisionGUI() {
 		super();
 		// Start the vision system
-		this.skyCam = new SkyCam(5, this);
-		this.frameSize = skyCam.getSize();
+		this.visionService = new VisionService(5, this);
+		this.frameSize = visionService.getSize();
 		this.postColorArray = new int[frameSize.width * frameSize.height];
 
 		// Init GUI
 		initWindow();
-		skyCam.start();
+		visionService.start();
 	}
 }
