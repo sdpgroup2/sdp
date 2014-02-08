@@ -36,10 +36,6 @@ public class VecI {
 		return new VecI(this.x*c, this.y*c);
 	}
 
-	public VecF toFloats() {
-		return new VecF(x, y);
-	}
-
 	@Override
 	public String toString() {
 		return "("+x+", "+y+")";

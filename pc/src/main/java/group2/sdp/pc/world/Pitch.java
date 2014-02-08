@@ -7,7 +7,7 @@ import group2.sdp.pc.vision.clusters.PitchSection;
 
 import java.util.List;
 
-public class Pitch implements IPitch {
+public class Pitch {
 
 	private PitchLines lines;
 	private PitchSection sections;
@@ -59,31 +59,31 @@ public class Pitch implements IPitch {
 		Robot firstYellowRobot = yellowRobots.get(0);
 		Robot secondYellowRobot = yellowRobots.get(1);
 
-		if (this.leftDefenseZone.contains(firstBlueRobot)) {
+		if (this.leftDefenseZone.contains(firstBlueRobot.getBoundingRect())) {
 			this.leftDefender = firstBlueRobot;
 			this.leftAttacker = secondBlueRobot;
-			if (this.rightDefenseZone.contains(firstYellowRobot)) {
+			if (this.rightDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
 				this.rightDefender = firstYellowRobot;
 				this.rightAttacker = secondYellowRobot;
 			}
-		} else if (this.leftAttackZone.contains(firstBlueRobot)) {
+		} else if (this.leftAttackZone.contains(firstBlueRobot.getBoundingRect())) {
 			this.leftAttacker = firstBlueRobot;
 			this.leftDefender = secondBlueRobot;
-			if (this.rightDefenseZone.contains(firstYellowRobot)) {
+			if (this.rightDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
 				this.rightDefender = firstYellowRobot;
 				this.rightAttacker = secondYellowRobot;
 			}
-		} else if (this.rightDefenseZone.contains(firstBlueRobot)) {
+		} else if (this.rightDefenseZone.contains(firstBlueRobot.getBoundingRect())) {
 			this.rightDefender = firstBlueRobot;
 			this.rightAttacker = secondBlueRobot;
-			if (this.leftDefenseZone.contains(firstYellowRobot)) {
+			if (this.leftDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
 				this.leftDefender = firstYellowRobot;
 				this.leftAttacker = secondYellowRobot;
 			}
 		} else {
 			this.rightAttacker = firstBlueRobot;
 			this.rightDefender = secondBlueRobot;
-			if (this.leftDefenseZone.contains(firstYellowRobot)) {
+			if (this.leftDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
 				this.leftDefender = firstYellowRobot;
 				this.leftAttacker = secondYellowRobot;
 			}
