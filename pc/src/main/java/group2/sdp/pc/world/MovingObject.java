@@ -1,0 +1,11 @@
+package group2.sdp.pc.world;
+
+import group2.sdp.pc.geom.Velocity;
+
+public interface MovingObject extends StaticObject {
+
+	public Velocity getVelocity();
+
+	public boolean isNearWall(Pitch pitch, double distance);
+
+}

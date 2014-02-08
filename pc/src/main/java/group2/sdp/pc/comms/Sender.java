@@ -2,6 +2,8 @@ package group2.sdp.pc.comms;
 
 import java.io.*;
 
+import com.sun.corba.se.impl.ior.ByteBuffer;
+
 import lejos.nxt.LCD;
 import lejos.pc.comm.*;
 
@@ -26,7 +28,6 @@ public class Sender implements CommInterface {
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
 		openBluetoothConn(robotName);
-//		LCD.drawString("connected!", 0, 4);
 	}
 	
 	public int move(int direction, int angle, int speed) throws IOException {
@@ -47,6 +48,14 @@ public class Sender implements CommInterface {
 		int[] command = { Commands.KICK, angle, speed, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Kick");
+		return confirmation;
+		
+	}
+	
+	public int steer() throws IOException {
+		int[] command = { Commands.STEER, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		System.out.println("Steer");
 		return confirmation;
 		
 	}
@@ -130,9 +139,15 @@ public class Sender implements CommInterface {
 		if (!connected)
 			return -3;
 		if (buffer < 2) {
-			byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2],
-					(byte) comm[3] };
-
+			ByteBuffer b = new ByteBuffer(8);
+			
+			for (int i = 0; i < 4; i++) {
+				b.append(comm[i]);
+			}
+			
+			byte[] command = b.toArray();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
+					//(byte) comm[3] };
+			
 			outStream.write(command);
 			outStream.flush();
 			buffer += 1;
@@ -164,6 +179,7 @@ public class Sender implements CommInterface {
 		inStream.read(res);
 		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
 				(int) res[3] };
+		
 		return ret;
 	}
 	
@@ -176,17 +192,26 @@ public class Sender implements CommInterface {
 	}
 
 	public void clearBuff() {
+		
 		buffer = 0;
 	}
 	
 	private int attemptConnection(int[] command) {
 		int confirmation = 0;
-		try {
-			confirmation = sendToRobot(command);
-		} catch (IOException e1) {
-			System.out.println("Could not send command");
-			e1.printStackTrace();
+		
+		for (int i = 0; i<10; i++){
+			try {
+				confirmation = sendToRobot(command);
+				if (confirmation != -1 && confirmation != -2) {
+					break;
+				}
+			} catch (IOException e1) {
+				System.out.println("Could not send command");
+				e1.printStackTrace();
+			}
 		}
+	
 		return confirmation;
 	}
 }
+

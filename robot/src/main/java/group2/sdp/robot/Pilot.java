@@ -40,7 +40,9 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public void stop() {
 		this.stop();
 	}
-	
+	public void steer() {
+		
+	}
 
 	public Pilot() {
 		super(56, 98, Motor.A, Motor.C, true);

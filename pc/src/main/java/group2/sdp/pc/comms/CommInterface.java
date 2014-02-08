@@ -12,6 +12,8 @@ public interface CommInterface {
 	
 	public int stop();
 	
+	public int steer() throws IOException;
+
 	public void disconnect();
 	
 	public void forcequit();

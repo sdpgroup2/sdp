@@ -9,8 +9,9 @@ import java.awt.image.BufferedImage;
 public class Debug {
 
 	public static boolean DEBUG_LOGGING = true;
-	public static boolean VISION_FILL_PIXELS = true;
-	public static boolean VISION_DRAW_BOUNDS = true;
+	public static boolean VISION_FILL_PIXELS = false;
+	public static boolean VISION_DRAW_BOUNDS = false;
+	public static boolean VISION_NORMALIZE_IMAGE = false;
 	
 	public static void log(String message) {
 		if (DEBUG_LOGGING) {
@@ -35,10 +36,10 @@ public class Debug {
 
 	}
 	
-	public static void drawRect(BufferedImage dest, Rect rect, Color color) {
+	public static void drawRect(BufferedImage dest, Rect rect, Color unused) {
 		if (VISION_DRAW_BOUNDS && rect != null) {
 			Graphics g = dest.getGraphics();
-			g.setColor(color);
+			g.setColor(Color.WHITE);
 			g.drawRect(rect.minX, rect.minY, rect.width, rect.height);
 		}
 	}
