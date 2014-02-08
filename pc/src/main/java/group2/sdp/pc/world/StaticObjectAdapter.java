@@ -1,18 +1,27 @@
 package group2.sdp.pc.world;
 
+import group2.sdp.pc.geom.Point;
+import group2.sdp.pc.geom.Rect;
+
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
-public class StaticObjectAdapter implements StaticObject {
+public abstract class StaticObjectAdapter implements StaticObject {
 
-	private Rectangle2D boundingRect;
+	protected Point position;
 
+	public StaticObjectAdapter(Rect boundingBox) {
+		this.position = new Point(
+			boundingBox.x + boundingBox.width / 2,
+			boundingBox.y + boundingBox.height / 2
+		);
+	}
+
+	@Override
 	public Point2D getPosition() {
-		return new Point2D.Double(boundingRect.getCenterX(), boundingRect.getCenterY());
+		return position;
 	}
 
-	public Rectangle2D getBoundingRect() {
-		return this.boundingRect;
-	}
+	@Override
+	public abstract Rect getBoundingRect();
 
 }

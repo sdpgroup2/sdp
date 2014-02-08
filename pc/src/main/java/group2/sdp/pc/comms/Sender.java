@@ -2,7 +2,7 @@ package group2.sdp.pc.comms;
 
 import java.io.*;
 
-import com.sun.corba.se.impl.ior.ByteBuffer;
+import java.nio.ByteBuffer;
 
 import lejos.nxt.LCD;
 import lejos.pc.comm.*;
@@ -29,46 +29,46 @@ public class Sender implements CommInterface {
 				robotMacAddress);
 		openBluetoothConn(robotName);
 	}
-	
-	public int move(int direction, int speed) throws IOException {
-		int[] command = { Commands.ANGLEMOVE, direction, speed, 0};
+
+	public int move(short direction, short speed) throws IOException {
+		short[] command = { Commands.ANGLEMOVE, direction, speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.println("Move...");
 		return confirmation;
 	} 
 	
-	public int rotate(int angle, int speed) throws IOException {
-		int[] command = { Commands.ROTATE, angle, speed, 0};
+	public int rotate(short angle, short speed) throws IOException {
+		short[] command = { Commands.ROTATE, angle, speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.println("Rotate...");
 		return confirmation;
 	}
 	
-	public int kick(int angle, int speed) throws IOException {
-		int[] command = { Commands.KICK, angle, speed, 0 };
+	public int kick(short angle, short speed) throws IOException {
+		short[] command = { Commands.KICK, angle, speed, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Kick");
 		return confirmation;
 		
 	}
 	
-	public int steer(double turnRate) throws IOException {
-		int[] command = { Commands.STEER, 0, 0, 0 };
+	public int steer(short turnRate) throws IOException {
+		short[] command = { Commands.STEER, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
-		System.out.println("Steer");
+		System.out.println("Steer...");
 		return confirmation;
 		
 	}
 	
 	public int stop() {
-		int[] command = { Commands.STOP, 0, 0, 0 };
+		short[] command = { Commands.STOP, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
-		System.out.println("Stop...");
+		System.out.println("Stop");
 		return confirmation;
 	}
 	
 	public void disconnect() {
-		int[] command = { Commands.DISCONNECT, 0, 0, 0 };
+		short[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
 			// Give the command time to send - prevents brick crash
@@ -85,7 +85,7 @@ public class Sender implements CommInterface {
 	}
 
 	public void forcequit() {
-		int[] command = { Commands.FORCEQUIT, 0, 0, 0 };
+		short[] command = { Commands.FORCEQUIT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
 			// Give the command time to send - prevents brick crash
@@ -135,18 +135,18 @@ public class Sender implements CommInterface {
 	    }
 	}
 	
-	private int sendToRobot(int[] comm) throws IOException {
+	private int sendToRobot(short[] comm) throws IOException {
 		if (!connected)
 			return -3;
 		if (buffer < 2) {
-			ByteBuffer b = new ByteBuffer(8);
+			ByteBuffer b = ByteBuffer.allocate(8);
 			
 			for (int i = 0; i < 4; i++) {
-				b.append(comm[i]);
+				b.putShort(comm[i]);
 			}
 			
 			
-			byte[] command = b.toArray();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
+			byte[] command = b.array();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
 					//(byte) comm[3] };
 
 			outStream.write(command);
@@ -154,6 +154,7 @@ public class Sender implements CommInterface {
 			buffer += 1;
 		} else {
 			// The buffer is full we can't send a package;
+			System.out.println("Buffer is full, command not sent!");
 			return -1;
 		}
 
@@ -165,14 +166,17 @@ public class Sender implements CommInterface {
 				System.out.println("Successfully sent message");
 				buffer -= 1;
 				return confirmation[1];
+			} else {
+				System.out.println("Could not receive confirmation");
+				buffer -= 1;
+				return -2;
 			}
 		} catch (IOException e1) {
 			System.out.println("Could not receive confirmation");
 			buffer -= 1;
 			return -2;
 		}
-		System.out.println("Buffer is full, command not sent!");
-		return -2;
+
 	}
 	
 	private int[] receiveFromRobot() throws IOException {
@@ -197,7 +201,7 @@ public class Sender implements CommInterface {
 		buffer = 0;
 	}
 	
-	private int attemptConnection(int[] command) {
+	private int attemptConnection(short[] command) {
 		int confirmation = 0;
 		
 		for (int i = 0; i<10; i++){

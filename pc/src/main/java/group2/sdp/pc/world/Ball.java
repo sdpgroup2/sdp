@@ -1,17 +1,25 @@
 package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.Velocity;
+import group2.sdp.pc.geom.Vector;
 
-public class Ball extends MovingObjectAdapter {
+public class Ball extends CircularObjectAdapter implements MovingObject {
 
-	public Ball(Rect boundingRect, Velocity velocity) {
-		super(boundingRect, velocity);
+	private Vector velocity;
+
+	public Ball(Rect boundingRect, Vector velocity) {
+		super(boundingRect);
+		this.velocity = velocity;
 	}
 
 	@Override
 	public boolean isNearWall(Pitch pitch, double distance) {
 		return false;
+	}
+
+	@Override
+	public Vector getVelocity() {
+		return this.velocity;
 	}
 
 }
