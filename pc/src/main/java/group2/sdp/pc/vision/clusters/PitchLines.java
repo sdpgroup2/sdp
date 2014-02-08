@@ -11,12 +11,12 @@ import java.util.ArrayList;
 
 public class PitchLines extends HSBCluster {
 	
-	/*enum Dir {
+	enum Dir {
 		Left,
 		Right,
 		Down,
 		Up;
-	}*/
+	}
 	
 
 	public PitchLines(String name) {
