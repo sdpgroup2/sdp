@@ -6,7 +6,7 @@ import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
-import group2.sdp.pc.vision.VisionSystemCallback;
+import group2.sdp.pc.vision.VisionServiceCallback;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 
 import java.awt.Color;
@@ -34,7 +34,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 
-public class VisionGUI extends WindowAdapter implements VisionSystemCallback {
+public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
 

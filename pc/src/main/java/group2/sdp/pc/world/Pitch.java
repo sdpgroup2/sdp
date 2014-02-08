@@ -1,10 +1,8 @@
-package group2.sdp.pc.vision;
+package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
-import group2.sdp.pc.world.Ball;
-import group2.sdp.pc.world.Robot;
 
 import java.util.List;
 

@@ -29,7 +29,7 @@ public class VisionService implements CaptureCallback {
 	private InputInfo inputInfo = null;
 	private JPEGFrameGrabber frameGrabber;
 
-	private VisionSystemCallback callback;
+	private VisionServiceCallback callback;
 
 	private VisionState state = VisionState.Preparation;
 	private int currentFrame = 0;
@@ -192,7 +192,7 @@ public class VisionService implements CaptureCallback {
 
 	}
 
-	public VisionService(String deviceName, int preparationFrames, VisionSystemCallback callback) {
+	public VisionService(String deviceName, int preparationFrames, VisionServiceCallback callback) {
 		this.callback = callback;
 		this.preparationFrames = preparationFrames;
 		try {
@@ -214,7 +214,7 @@ public class VisionService implements CaptureCallback {
 		frameGrabber.setCaptureCallback(this);
 	}
 
-	public VisionService(int preparationFrames, VisionSystemCallback callback) {
+	public VisionService(int preparationFrames, VisionServiceCallback callback) {
 		this(DEFAULT_DEVICE, preparationFrames, callback);
 	}
 
