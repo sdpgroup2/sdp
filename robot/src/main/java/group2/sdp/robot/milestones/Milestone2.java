@@ -27,12 +27,12 @@ public class Milestone2 {
 		
 		// Menu which allows selecting the position
 		
-		String[] menuItems = { "100", "150", "180", "200", "400", "500", "1000", "5000", "10000", "100000" };
+		String[] menuItems = { "100", "150", "180", "200", "400", "500", "1000", "5000", "10000", "1000000" };
 		TextMenu textMenu = new TextMenu(menuItems, 1, "Select Speed:");
 		kick_speed = Integer.parseInt(menuItems[textMenu.select()]);
 		LCD.clear();
 		
 		Pilot pilot = new Pilot();
-		pilot.kick(-90, kick_speed);
+		pilot.kick(90, kick_speed);
 	}
 }

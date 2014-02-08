@@ -14,16 +14,16 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public static int WHITE_THRESHOLD = 37;
 	public MyLightSensor rightSensor;
 
-	public void move(int direction, int angle, int speed) {
+	public void move(int direction, int speed) {
 		LCD.drawString("moving forward!", 10, 10);
 		forward();
 		setTravelSpeed(speed);
 	} 
 
-	public void rotate(int direction, int angle, int speed) {
+	public void rotate(int angle, int speed) {
 		LCD.drawString("rotating!", 10, 10);
 		setRotateSpeed(speed);
-		rotate(direction * angle);
+		rotate(angle);
 	}
 	
 	public void moveForward(double speed) {
@@ -40,8 +40,8 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public void stop() {
 		this.stop();
 	}
-	public void steer() {
-		
+	public void steer(double turnRatio) {
+		this.steer(turnRatio);
 	}
 
 	public Pilot() {
