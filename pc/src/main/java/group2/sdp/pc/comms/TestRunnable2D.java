@@ -16,22 +16,20 @@ public class TestRunnable2D implements Runnable{
 		try {
 			connection.clearBuff();
 			connection.move(1, 34, 45667);
-			Thread.sleep(5000);
-			connection.clearBuff();
+			Thread.sleep(1000);
 			connection.rotate(1, 34, 45667);
-
-			Thread.sleep(4000);
+			Thread.sleep(1000);
 			connection.clearBuff();
 			connection.kick(34, 456);
-			connection.clearBuff();
-			Thread.sleep(2000);
-			connection.forcequit();
+			Thread.sleep(1000);	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			connection.disconnect();
 		}
 		
 	}
