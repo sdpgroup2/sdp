@@ -1,44 +1,23 @@
 package group2.sdp.pc.geom;
 
-public class Rect {
-	
-	public final int minX;
-	public final int maxX;
-	public final int minY;
-	public final int maxY;
-	public final int width;
-	public final int height;
-	
-	public Rect(int minX, int maxX, int minY, int maxY) {
-		this.minX = minX;
-		this.maxX = maxX;
-		this.minY = minY;
-		this.maxY = maxY;
-		width = maxX-minX+1;
-		height = maxY-minY+1;
+import java.awt.geom.Rectangle2D;
+
+
+public class Rect extends Rectangle2D.Double {
+
+	private static final long serialVersionUID = 1L;
+
+	public Point getCenter() {
+		return new Point(this.getCenterX(), this.getCenterY());
 	}
-	
-	public VecI getCentre() {
-		return new VecI((minX+maxX)/2, (minY+maxY)/2);
-	}
-	
+
 	@Override
 	public String toString() {
-		return "Rect(("+minX+", "+minY+") to ("+maxX+", "+maxY+"))";
+		return String.format("Rect((%.2f, %.2f)(%.2f, %.2f))", x, y, x + width, y + height);
 	}
-	
-	public boolean contains(Rect other) {
-		return (other.minX >= this.minX && other.maxX <= this.maxX
-				&& other.minY >= this.minY && other.maxY <= this.maxY);
+
+	public Rect(double x, double y, double width, double height) {
+		super(x, y, width, height);
 	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof Rect) {
-			Rect r = (Rect) other;
-			return (minX == r.minX && maxX == r.maxX && minY == r.minY && maxY == r.maxY);
-		}
-		return false;
-	}
-	
+
 }
