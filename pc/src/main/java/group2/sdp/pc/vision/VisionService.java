@@ -140,7 +140,7 @@ public class VisionService implements CaptureCallback {
 			for (int y = 0; y < this.getSize().height; y++) {
 				int index = y * this.getSize().width + x;
 				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
+//				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
 			}
 		}
 	}

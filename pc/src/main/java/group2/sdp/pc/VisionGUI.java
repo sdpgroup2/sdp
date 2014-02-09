@@ -34,6 +34,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import static com.googlecode.javacv.cpp.opencv_core.*;
+import static com.googlecode.javacv.cpp.opencv_highgui.*;
+import static com.googlecode.javacv.cpp.opencv_imgproc.*;
+
 
 public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private static final int WINDOW_WIDTH = 1024;

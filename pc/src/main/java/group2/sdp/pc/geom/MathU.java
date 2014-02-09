@@ -39,7 +39,7 @@ public class MathU {
 				maxY = pixel.y;
 			}
 		}
-		Rect rect = new Rect(minX, maxX, minY, maxY);
+		Rect rect = new Rect(minX, minY, maxX - minX, maxY - minY);
 		return rect;
 	}
 	
