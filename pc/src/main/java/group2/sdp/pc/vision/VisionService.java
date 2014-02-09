@@ -4,6 +4,7 @@ import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
@@ -56,12 +57,14 @@ public class VisionService implements CaptureCallback {
 	private BallCluster ballCluster = new BallCluster("Ball");
 	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
+	private DotCluster dotCluster = new DotCluster("Dot");
 //	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
 //	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
 		yellowRobotCluster,
+		dotCluster
 //			pitchSectionCluster,
 //			pitchLinesCluster
 	};
@@ -104,7 +107,7 @@ public class VisionService implements CaptureCallback {
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed();
+				this.callback.onImageProcessed(currentImage, hsbArray);
 				break;
 			}
 		}
@@ -231,6 +234,7 @@ public class VisionService implements CaptureCallback {
 			if (inputInfo == null) {
 				throw new RuntimeException("Video device has no " + requiredInputName + " input mode.");
 			}
+			
 			this.frameGrabber = device.getJPEGFrameGrabber(FRAME_WIDTH, FRAME_HEIGHT, inputInfo.getIndex(), requiredStandard, V4L4JConstants.MAX_JPEG_QUALITY);
 		} catch (V4L4JException e) {
 			e.printStackTrace();
