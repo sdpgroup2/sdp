@@ -87,9 +87,9 @@ public class Receiver {
 							break;
 						
 						case Commands.STOP:
-							LCD.clear();
-							LCD.drawString("Stopping!", 0, 2);
-							LCD.refresh();
+//							LCD.clear();
+//							LCD.drawString("Stopping!", 0, 2);
+//							LCD.refresh();
 							pilot.stop();
 							replyToPC(opcode, outStream);
 							break;
