@@ -13,6 +13,6 @@ import java.awt.Color;
 public class YellowRobotCluster extends RobotCluster {
 	
 	public YellowRobotCluster(String name) {
-		super(name, new HSBColor(25,55,50), new HSBColor(40,100,90), Color.blue);
+		super(name, new HSBColor(25,55,50), new HSBColor(40,100,90), Color.yellow);
 	}
 }

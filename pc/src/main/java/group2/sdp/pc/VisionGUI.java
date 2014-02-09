@@ -55,15 +55,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 
 
     public static void main(String[] args) {
-        CvMat m = CvMat.create(5, 5);
-        System.out.println("OpenCV Mat: ");
-        System.out.println(m);
-        CvMat mr1 = m.rows(1);
-        mr1.put(1);
-        CvMat mc5 = m.cols(5);
-        mc5.put(5);
-        System.out.println("OpenCV Mat data:\n" + m.toString());
-//    	new VisionGUI();
+    	new VisionGUI();
     }
 
     /**

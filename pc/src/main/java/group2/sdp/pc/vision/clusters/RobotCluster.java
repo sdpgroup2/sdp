@@ -20,7 +20,7 @@ public class RobotCluster extends HSBCluster {
 
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(8, 200, 4, 200, 0.00000001f, 1.1f);
+		return getRects(8, 30, 4, 30, 0.5f, 1.1f);
 	}
 
 }
