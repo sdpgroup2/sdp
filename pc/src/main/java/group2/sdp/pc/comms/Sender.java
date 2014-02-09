@@ -46,8 +46,10 @@ public class Sender implements CommInterface {
 	
 	public int kick(short angle, short speed) throws IOException {
 		short[] command = { Commands.KICK, angle, speed, 0 };
+		long timeStart = System.currentTimeMillis();
 		int confirmation = attemptConnection(command);
-		System.out.printf("Kick with angle %d and speed %d\n", angle, speed);
+		long timeEnd = System.currentTimeMillis();
+		System.out.printf("Kick with angle %d and speed %d, took %dms\n", angle, speed, timeEnd-timeStart);
 		return confirmation;
 		
 	}

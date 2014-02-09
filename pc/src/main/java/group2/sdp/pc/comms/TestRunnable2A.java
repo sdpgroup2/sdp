@@ -25,32 +25,32 @@ public class TestRunnable2A implements Runnable {
 			connection.clearBuff();
 			connection.kick(KICK_ANGLE, KICK_SPEED);
 			Thread.sleep(1000);
+////			connection.clearBuff();
+//			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
 //			connection.clearBuff();
-			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
-			connection.clearBuff();
-			Thread.sleep(1000);
-			connection.stop();
-			Thread.sleep(3000);
-			connection.move(MOVE_DIRECTION, MOVE_SPEED);
-			Thread.sleep(1000);
-			connection.clearBuff();
+//			Thread.sleep(1000);
+//			connection.stop();
+//			Thread.sleep(3000);
+//			connection.move(MOVE_DIRECTION, MOVE_SPEED);
+//			Thread.sleep(1000);
 //			connection.clearBuff();
-			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
-			connection.clearBuff();
-			Thread.sleep(1000);
-			connection.move(MOVE_DIRECTION, MOVE_SPEED);
-			Thread.sleep(1000);
-			
-			connection.clearBuff();
-			connection.kick(KICK_ANGLE, KICK_SPEED);
-			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
-			connection.clearBuff();
-			Thread.sleep(1000);
-			connection.move(MOVE_DIRECTION, MOVE_SPEED);
-			Thread.sleep(1000);
-			connection.clearBuff();
-			connection.kick(KICK_ANGLE, KICK_SPEED);
-			Thread.sleep(1000);
+////			connection.clearBuff();
+//			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
+//			connection.clearBuff();
+//			Thread.sleep(1000);
+//			connection.move(MOVE_DIRECTION, MOVE_SPEED);
+//			Thread.sleep(1000);
+//			
+//			connection.clearBuff();
+//			connection.kick(KICK_ANGLE, KICK_SPEED);
+//			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
+//			connection.clearBuff();
+//			Thread.sleep(1000);
+//			connection.move(MOVE_DIRECTION, MOVE_SPEED);
+//			Thread.sleep(1000);
+//			connection.clearBuff();
+//			connection.kick(KICK_ANGLE, KICK_SPEED);
+//			Thread.sleep(1000);
 			connection.stop();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
