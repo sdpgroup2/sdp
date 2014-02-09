@@ -25,10 +25,6 @@ public class MasterController implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onImageProcessed() {
-	}
-
-	@Override
 	public void onPreparationReady(BufferedImage image, HSBCluster[] clusters) {
 //		this.pitch;
 //		this.pitch.addBall(clusters[0].)
@@ -55,6 +51,12 @@ public class MasterController implements VisionServiceCallback {
 
 	public MasterController() {
 		this.visionService = new VisionService(5, this);
+	}
+
+	@Override
+	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
