@@ -34,6 +34,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import static com.googlecode.javacv.cpp.opencv_core.*;
+import static com.googlecode.javacv.cpp.opencv_highgui.*;
+import static com.googlecode.javacv.cpp.opencv_imgproc.*;
+
 
 public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private static final int WINDOW_WIDTH = 1024;
@@ -51,7 +55,15 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 
 
     public static void main(String[] args) {
-    	new VisionGUI();
+        CvMat m = CvMat.create(5, 5);
+        System.out.println("OpenCV Mat: ");
+        System.out.println(m);
+        CvMat mr1 = m.rows(1);
+        mr1.put(1);
+        CvMat mc5 = m.cols(5);
+        mc5.put(5);
+        System.out.println("OpenCV Mat data:\n" + m.toString());
+//    	new VisionGUI();
     }
 
     /**
