@@ -153,7 +153,7 @@ public class Sender implements CommInterface {
 
 			for (int i = 0; i < 4 ; i++) {
 				//commands[i] = b.getShort(i);
-				commands[i] = (short) (command[i*2] << 8 | command[i*2 + 1]);
+				commands[i] = (short) (command[i*2] << 8 | command[i*2 + 1] & 0xFF);
 			}
 			
 			System.out.printf("Option 1: %d, Option 2: %d, Option 3: %d\n", commands[1], commands[2], commands[3]);

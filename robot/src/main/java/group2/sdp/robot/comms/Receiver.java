@@ -48,10 +48,10 @@ public class Receiver {
 				while ((opcode != Commands.DISCONNECT) && (opcode != Commands.FORCEQUIT) && !(Button.ESCAPE.isDown())) {
 
 					// Get the next command from the inputstream
-					byte[] byteBuffer = new byte[8];
-					inStream.read(byteBuffer);
+					byte[] bytes = new byte[8];
+					inStream.read(bytes, 0, 8);
 					
-					short[] command = bytesToCommand(byteBuffer);
+					short[] command = bytesToCommand(bytes);
 					opcode = command[0];
 					option1 = command[1];
 					option2 = command[2];
@@ -148,7 +148,7 @@ public class Receiver {
 		short[] command = new short[4];
 
 		for (int i = 0; i < 4 ; i++) {
-			command[i] = (short) (bytes[i*2] << 8 | bytes[i*2 + 1]);
+			command[i] = (short) (bytes[i*2] << 8 | bytes[i*2 + 1] & 0xFF);
 		}
 
 		return command;
