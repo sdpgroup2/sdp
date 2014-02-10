@@ -5,11 +5,11 @@ import java.io.IOException;
 public class TestRunnable2A implements Runnable {
 	
 	private static final short KICK_ANGLE = 90;
-	private static final short KICK_SPEED = 1234;
+	private static final short KICK_SPEED = 15234;
 	private static final short ROTATE_ANGLE = 90;
-	private static final short ROTATE_SPEED = 1234;
+	private static final short ROTATE_SPEED = 15234;
 	private static final short MOVE_DIRECTION = 1;
-	private static final short MOVE_SPEED = 1234;
+	private static final short MOVE_SPEED = 15234;
 
 	public void run() {
 		Sender connection = null;
@@ -24,15 +24,34 @@ public class TestRunnable2A implements Runnable {
 		try {
 			connection.clearBuff();
 			connection.kick(KICK_ANGLE, KICK_SPEED);
-			Thread.sleep(3000);
+			Thread.sleep(1000);
+////			connection.clearBuff();
+//			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
 //			connection.clearBuff();
-			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
-			connection.clearBuff();
-			Thread.sleep(3000);
-			connection.move(MOVE_DIRECTION, MOVE_SPEED);
-			Thread.sleep(3000);
-			connection.clearBuff();
-			connection.disconnect();
+//			Thread.sleep(1000);
+//			connection.stop();
+//			Thread.sleep(3000);
+//			connection.move(MOVE_DIRECTION, MOVE_SPEED);
+//			Thread.sleep(1000);
+//			connection.clearBuff();
+////			connection.clearBuff();
+//			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
+//			connection.clearBuff();
+//			Thread.sleep(1000);
+//			connection.move(MOVE_DIRECTION, MOVE_SPEED);
+//			Thread.sleep(1000);
+//			
+//			connection.clearBuff();
+//			connection.kick(KICK_ANGLE, KICK_SPEED);
+//			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
+//			connection.clearBuff();
+//			Thread.sleep(1000);
+//			connection.move(MOVE_DIRECTION, MOVE_SPEED);
+//			Thread.sleep(1000);
+//			connection.clearBuff();
+//			connection.kick(KICK_ANGLE, KICK_SPEED);
+//			Thread.sleep(1000);
+			connection.stop();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,6 +59,7 @@ public class TestRunnable2A implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
+			connection.clearBuff();
 			connection.disconnect();
 		}
 		

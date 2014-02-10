@@ -26,13 +26,13 @@
 
     <target name="compile" depends="clean, makedir">
         <javac target="1.7" source="1.7" srcdir="${src.dir}" destdir="${build.dir}"
-            classpathref="build.classpath" includeantruntime="true">
+            classpathref="build.classpath" includeantruntime="true" debug="true">
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 
 	<target name="run-bt" depends="compile">
-		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.comms.Communication">
+		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.comms.TestComms">
 		</java>
 	</target>
 

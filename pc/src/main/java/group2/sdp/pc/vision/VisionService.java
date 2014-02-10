@@ -3,6 +3,7 @@ package group2.sdp.pc.vision;
 import group2.sdp.pc.Timer;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.GrayRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
@@ -54,12 +55,14 @@ public class VisionService implements CaptureCallback {
 	private BallCluster ballCluster = new BallCluster("Ball");
 	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
+	private GrayRobotCluster grayRobotCluster = new GrayRobotCluster("Gray dots on robots");
 //	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
 //	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
 		yellowRobotCluster,
+		grayRobotCluster,
 //			pitchSectionCluster,
 //			pitchLinesCluster
 	};
@@ -86,6 +89,7 @@ public class VisionService implements CaptureCallback {
 
 		// Read image into array colorArray
 		currentImage.getRGB(0, 0, this.frameGrabber.getWidth(), this.frameGrabber.getHeight(), colorArray, 0, this.frameGrabber.getWidth());
+		
 		switch (state) {
 			case Preparation: {
 				this.prepareVision();
@@ -136,7 +140,7 @@ public class VisionService implements CaptureCallback {
 			for (int y = 0; y < this.getSize().height; y++) {
 				int index = y * this.getSize().width + x;
 				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
+//				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
 			}
 		}
 	}

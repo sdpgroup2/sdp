@@ -42,16 +42,16 @@ public class Receiver {
 				outStream.flush();
 
 				// Begin reading commands
-				int opcode = Commands.DO_NOTHING;
-				int option1, option2, option3;
+				short opcode = Commands.DO_NOTHING;
+				short option1, option2, option3;
 
 				while ((opcode != Commands.DISCONNECT) && (opcode != Commands.FORCEQUIT) && !(Button.ESCAPE.isDown())) {
 
 					// Get the next command from the inputstream
-					byte[] byteBuffer = new byte[8];
-					inStream.read(byteBuffer);
+					byte[] bytes = new byte[8];
+					inStream.read(bytes, 0, 8);
 					
-					short[] command = bytesToCommand(byteBuffer);
+					short[] command = bytesToCommand(bytes);
 					opcode = command[0];
 					option1 = command[1];
 					option2 = command[2];
@@ -87,9 +87,9 @@ public class Receiver {
 							break;
 						
 						case Commands.STOP:
-							LCD.clear();
-							LCD.drawString("Stopping!", 0, 2);
-							LCD.refresh();
+//							LCD.clear();
+//							LCD.drawString("Stopping!", 0, 2);
+//							LCD.refresh();
 							pilot.stop();
 							replyToPC(opcode, outStream);
 							break;
@@ -148,7 +148,7 @@ public class Receiver {
 		short[] command = new short[4];
 
 		for (int i = 0; i < 4 ; i++) {
-			command[i] = (short) (bytes[i*2] << 8 | bytes[i*2 + 1]);
+			command[i] = (short) (bytes[i*2] << 8 | bytes[i*2 + 1] & 0xFF);
 		}
 
 		return command;
