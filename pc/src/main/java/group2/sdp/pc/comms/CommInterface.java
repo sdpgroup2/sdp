@@ -12,7 +12,7 @@ public interface CommInterface {
 	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int move(short direction, short speed) throws IOException;
+	public int move(int direction, int speed) throws IOException;
 	
 	/**
 	 * 
@@ -22,7 +22,7 @@ public interface CommInterface {
 	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int rotate(short angle, short speed) throws IOException;
+	public int rotate(int angle, int speed) throws IOException;
 	
 	/**
 	 * 
@@ -32,7 +32,7 @@ public interface CommInterface {
 	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int kick(short angle, short speed) throws IOException;
+	public int kick(int angle, int speed) throws IOException;
 	
 	/**
 	 * 
@@ -49,7 +49,7 @@ public interface CommInterface {
 	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int steer(short turnRate) throws IOException;
+	public int steer(int turnRate) throws IOException;
 	
 	/**
 	 * @throws IOException

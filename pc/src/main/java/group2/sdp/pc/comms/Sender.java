@@ -30,22 +30,22 @@ public class Sender implements CommInterface {
 		openBluetoothConn(robotName);
 	}
 
-	public int move(short direction, short speed) throws IOException {
-		short[] command = { Commands.ANGLEMOVE, direction, speed, 0};
+	public int move(int direction, int speed) throws IOException {
+		short[] command = { Commands.ANGLEMOVE, (short) direction, (short) speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.println("Move...");
 		return confirmation;
 	} 
 	
-	public int rotate(short angle, short speed) throws IOException {
-		short[] command = { Commands.ROTATE, angle, speed, 0};
+	public int rotate(int angle, int speed) throws IOException {
+		short[] command = { Commands.ROTATE, (short) angle, (short) speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.println("Rotate...");
 		return confirmation;
 	}
 	
-	public int kick(short angle, short speed) throws IOException {
-		short[] command = { Commands.KICK, angle, speed, 0 };
+	public int kick(int angle, int speed) throws IOException {
+		short[] command = { Commands.KICK, (short) angle, (short) speed, 0 };
 		long timeStart = System.currentTimeMillis();
 		int confirmation = attemptConnection(command);
 		long timeEnd = System.currentTimeMillis();
@@ -54,8 +54,8 @@ public class Sender implements CommInterface {
 		
 	}
 	
-	public int steer(short turnRate) throws IOException {
-		short[] command = { Commands.STEER, 0, 0, 0 };
+	public int steer(int turnRate) throws IOException {
+		short[] command = { Commands.STEER, (short) turnRate, 0, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Steer...");
 		return confirmation;
@@ -147,19 +147,8 @@ public class Sender implements CommInterface {
 				b.putShort(comm[i]);
 			}
 			
-			
-			byte[] command = b.array();//{ (byte) comm[0], (byte) comm[1], (byte) comm[2],
-					//(byte) comm[3] };
+			byte[] command = b.array();
 
-			short[] commands = new short[4];
-
-			for (int i = 0; i < 4 ; i++) {
-				//commands[i] = b.getShort(i);
-				commands[i] = (short) (command[i*2] << 8 | command[i*2 + 1] & 0xFF);
-			}
-			
-			System.out.printf("Option 1: %d, Option 2: %d, Option 3: %d\n", commands[1], commands[2], commands[3]);
-			
 			outStream.write(command);
 			outStream.flush();
 			buffer += 1;
@@ -169,7 +158,7 @@ public class Sender implements CommInterface {
 			return -1;
 		}
 
-		int[] confirmation;
+		short[] confirmation;
 		try {
 			confirmation = receiveFromRobot();
 			if (confirmation[1] == comm[0]) {
@@ -192,11 +181,14 @@ public class Sender implements CommInterface {
 
 	}
 	
-	private int[] receiveFromRobot() throws IOException {
+	private short[] receiveFromRobot() throws IOException {
 		byte[] res = new byte[4];
 		inStream.read(res);
-		int[] ret = { (int) res[0], (int) res[1], (int) res[2],
-				(int) res[3] };
+		short[] ret = { (short) (res[0] << 8 | (res[1] & 0xFF)),
+						(short) (res[2] << 8 | (res[3] & 0xFF)),
+						(short) (res[4] << 8 | (res[5] & 0xFF)),
+						(short) (res[6] << 8 | (res[7] & 0xFF))
+						};
 		
 		return ret;
 	}
