@@ -7,7 +7,7 @@ import java.awt.Color;
 public class RobotBaseCluster extends HSBCluster {
 
 	public RobotBaseCluster(String name) {
-		super(name, new HSBColor(0,0,0), new HSBColor(0,0,0), Color.cyan);
+		super(name, new HSBColor(100,90,48), new HSBColor(170,100,65), Color.cyan);
 	}
 
 }

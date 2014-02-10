@@ -6,8 +6,8 @@ import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.PitchLines;
-import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
 
@@ -59,17 +59,13 @@ public class VisionService implements CaptureCallback {
 	private BallCluster ballCluster = new BallCluster("Ball");
 	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
-	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
+	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
 	private DotCluster dotCluster = new DotCluster("Dot");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
 		yellowRobotCluster,
-		pitchSectionCluster,
-		pitchLinesCluster,
-		dotCluster
-
 	};
 
 	public void start() {
@@ -136,7 +132,7 @@ public class VisionService implements CaptureCallback {
 		meanSat += s;
 		meanBright += b;
 		this.currentFrame += 1;
-		if (preparationFrames >= preparationFrames) {
+		if (currentFrame >= preparationFrames) {
 			meanSat /= preparationFrames;
 			meanBright /= preparationFrames;
 		}
@@ -147,7 +143,7 @@ public class VisionService implements CaptureCallback {
 			for (int y = 0; y < this.getSize().height; y++) {
 				int index = y * this.getSize().width + x;
 				HSBColor color = hsbArray[index].set(colorArray[index]);
-//				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
+				color.offset(0, color.s - meanSat, color.b - meanBright);
 			}
 		}
 	}

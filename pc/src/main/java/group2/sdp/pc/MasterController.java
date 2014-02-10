@@ -6,8 +6,8 @@ import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
-import group2.sdp.pc.vision.clusters.PitchLines;
-import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Constants;
@@ -38,7 +38,7 @@ public class MasterController implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(PitchLines lines, PitchSection sections,
+	public void onPreparationReady(PitchLinesCluster lines, PitchSectionCluster sections,
 			BallCluster ballCluster, YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
 		this.pitch = new Pitch(lines, sections);
 		Ball ball = new Ball(ballCluster.getImportantRects().get(0));

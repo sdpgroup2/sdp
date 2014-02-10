@@ -2,8 +2,8 @@ package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.vision.clusters.PitchLines;
-import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.world.Constants.TeamColor;
 import group2.sdp.util.CoordinateTranslator;
 
@@ -19,8 +19,8 @@ public class Pitch {
 		this.pitchRect = pitchRect;
 	}
 
-	private PitchLines lines;
-	private PitchSection sections;
+	private PitchLinesCluster lines;
+	private PitchSectionCluster sections;
 
 	private Rect pitchRect;
 	private Rect leftAttackZone;
@@ -41,7 +41,7 @@ public class Pitch {
 	private final Point RIGHT_DEF_POINT = new Point(370, 240);
 	private final Point RIGHT_ATT_POINT = new Point(410, 240);
 
-	public Pitch(PitchLines lines, PitchSection sections) {
+	public Pitch(PitchLinesCluster lines, PitchSectionCluster sections) {
 		this.lines = lines;
 		this.sections = sections;
 

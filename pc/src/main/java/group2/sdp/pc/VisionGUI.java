@@ -11,8 +11,8 @@ import group2.sdp.pc.vision.VisionServiceCallback;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.PitchLines;
-import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
@@ -212,6 +212,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
         }
+        /*
         RobotCluster robotCluster = (RobotCluster) visionService.getClusters()[2];
         List<Vector> vecs = robotCluster.getRobotVectors(hsbArray);
         if (vecs == null) {
@@ -237,7 +238,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
         		Debug.drawVector(image, rects.get(0).getCenter(), vec);
         	}
         }
-
+		*/
         showImage(currentImage);
     }
 
@@ -258,7 +259,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(PitchLines lines, PitchSection sections, BallCluster ballCluster,
+	public void onPreparationReady(PitchLinesCluster lines, PitchSectionCluster sections, BallCluster ballCluster,
 			YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
 	}
 
