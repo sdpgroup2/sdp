@@ -4,6 +4,7 @@ import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.CompoundRobotCluster;
 import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
@@ -58,11 +59,14 @@ public class VisionService implements CaptureCallback {
 	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
 	private DotCluster dotCluster = new DotCluster("Dot");
+	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 //	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
 //	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+	
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-		blueRobotCluster,
+//		blueRobotCluster,
+		blueCompoundRobot,
 		yellowRobotCluster,
 		dotCluster
 //			pitchSectionCluster,

@@ -38,10 +38,13 @@ public class RobotCluster extends HSBCluster {
 		for (Set<VecI> reg : regions.subList(0, 2)) {
 			System.out.println(reg);
 			Rect rect = MathU.getBoundingBox(reg);
+			System.out.println(rect);
 			Rect expandedRect = rect.expand(2);
 			for (int x = (int) expandedRect.getX(); x < expandedRect.getX() + expandedRect.getWidth(); x++) {
 				for (int y = (int) expandedRect.getY(); y < expandedRect.getY() + expandedRect.getHeight(); y++) {
 					int index = (int) (y * 640 + x); // SORRY
+					index = Math.max(index, 0);
+					index = Math.min(index, 640*480);
 					HSBColor color = hsbArray[index];
 					dotCluster.testPixel(x, y, color);
 				}
