@@ -10,13 +10,12 @@ import java.util.List;
 public class DotCluster extends HSBCluster {
 
 	public DotCluster(String name) {
-		super(name, new HSBColor(38, 15, 15), new HSBColor(130, 33, 33), Color.ORANGE);
-//		super(name, new HSBColor(112, 20, 22), new HSBColor(15, 33, 33), Color.ORANGE);
+		super(name, new HSBColor(111, 55, 27), new HSBColor(172, 100, 36), Color.ORANGE);
 	}
 
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(2, 10, 2, 10, 0.5f, Float.MAX_VALUE);
+		return getRects(3, 10, 3, 10, 0.5f, 1.1f);
 	}
 	
 }

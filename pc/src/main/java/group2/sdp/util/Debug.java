@@ -57,6 +57,7 @@ public class Debug {
 		if (VISION_DRAW_BOUNDS && pos != null && vec != null) {
 			Graphics g = dest.getGraphics();
 			g.setColor(Color.magenta);
+			g.drawOval((int) pos.x -2 , (int) pos.y - 2, 4, 4);
 			g.drawLine((int) pos.x, (int) pos.y, (int) (pos.x + vec.x), (int) (pos.y + vec.y));
 		}
 	}

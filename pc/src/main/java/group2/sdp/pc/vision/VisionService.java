@@ -63,19 +63,20 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
-	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
+//	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+//	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
 //	private DotCluster dotCluster = new DotCluster("Dot");
-	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
+//	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
-	private RobotBaseCluster baseCluster = new RobotBaseCluster("Bases");
+	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-		blueRobotCluster,
+//		blueRobotCluster,
 //		blueCompoundRobot,
-		yellowRobotCluster,
-		baseCluster,
+//		yellowRobotCluster,
+		baseRobotCluster,
+//		dotCluster
 	};
 	
 	private Rect processingRegion;
@@ -96,6 +97,7 @@ public class VisionService implements CaptureCallback {
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame) {
+		System.out.println("blablba");
 		timer.tick(25); // Prints the framerate every 25 frames
 		currentImage = frame.getBufferedImage();
 		callback.onFrameGrabbed(currentImage);
@@ -109,8 +111,7 @@ public class VisionService implements CaptureCallback {
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
 					state = VisionState.StaticDetection;
-					this.callback.onPreparationReady(pitchLinesCluster, pitchSectionCluster,
-							ballCluster, yellowRobotCluster, blueRobotCluster);
+					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
@@ -134,7 +135,7 @@ public class VisionService implements CaptureCallback {
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed(currentImage, hsbArray);
+				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
 				break;
 			}
 		}
@@ -228,36 +229,36 @@ public class VisionService implements CaptureCallback {
 
 	// these should be changed to get[Yellow/Blue]RobotRects() as they
 	// return rects and not robot objects
-	public List<Rect> getYellowRobots() {
-		return yellowRobotCluster.getImportantRects();
-	}
-
-	public List<Rect> getBlueRobots() {
-		return blueRobotCluster.getImportantRects();
-	}
-	
-	public List<Rect> getRobotBases() {
-		return baseCluster.getImportantRects();
-	}
+//	public List<Rect> getYellowRobots() {
+//		return yellowRobotCluster.getImportantRects();
+//	}
+//
+//	public List<Rect> getBlueRobots() {
+//		return blueRobotCluster.getImportantRects();
+//	}
+//	
+//	public List<Rect> getRobotBases() {
+//		return baseCluster.getImportantRects();
+//	}
 
 	public HSBColor[] getHSBArray() {
 		return hsbArray;
 	}
 	
-	//Should be changed to getYellowRobots()
-	public List<Robot> getYellowRobotObjects() {		
-		ArrayList<Robot> robots = new ArrayList<Robot>();
-		List<Rect> colorRects = getYellowRobots();
-		for(Rect colorRect : colorRects) {
-			for(Rect base : getRobotBases()) {
-				if (base.contains(colorRect)) {
-					Robot robot = new Robot(colorRect, base);
-					robots.add(robot);
-				}
-			}
-		}
-		return robots;
-	}
+//	//Should be changed to getYellowRobots()
+//	public List<Robot> getYellowRobotObjects() {
+//		ArrayList<Robot> robots = new ArrayList<Robot>();
+//		List<Rect> colorRects = getYellowRobots();
+//		for(Rect colorRect : colorRects) {
+//			for(Rect base : getRobotBases()) {
+//				if (base.contains(colorRect)) {
+//					Robot robot = new Robot(colorRect, base);
+//					robots.add(robot);
+//				}
+//			}
+//		}
+//		return robots;
+//	}
 
 	/**
 	 * Called if there is an exception raised by the listener.

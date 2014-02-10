@@ -7,22 +7,18 @@ import group2.sdp.pc.geom.Vector;
 public class Robot extends RectangularObjectAdapter implements MovingObject {
 
 	private Point previousPosition;
-	private Rect color;
+	private Vector direction;
 	
-	public Robot(Rect color, Rect boundingRect) {
+	public Robot(Rect boundingRect, Vector direction) {
 		super(boundingRect);
+		this.direction = direction;
 		this.previousPosition = boundingRect.getCenter();
-		this.color = color;
 	}
 	
 	public Vector getDirection() {
-		return super.getBoundingRect().getCenter().sub(color.getCenter());
+		return direction;
 	}
 	
-	public Point getColorCenter() {
-		return color.getCenter();
-	}
-
 	@Override
 	public Vector getVelocity() {
 		return this.position.sub(previousPosition);
@@ -31,6 +27,20 @@ public class Robot extends RectangularObjectAdapter implements MovingObject {
 	@Override
 	public boolean isNearWall(Pitch pitch, double distance) {
 		return false;
+	}
+	
+	public double angleToVector(Vector destinationVector) {
+		return this.direction.angle(destinationVector);
+	}
+	
+	@Override
+	public void setPosition(Point robotPosition) {
+		this.previousPosition = this.position;
+		this.position = robotPosition;
+	}
+	
+	public void setDirection(Vector direction) {
+		this.direction = direction;
 	}
 
 }
