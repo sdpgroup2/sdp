@@ -27,6 +27,13 @@ public class Rect extends Rectangle2D.Double {
 			height
 		);
 	}
+	
+	/*public boolean contains(Rect rect2) {
+		if (x <= rect2.x && y <= y
+			(x + width) <= (rect2.x + rect2.width) && (y + height)  ){
+			
+		}
+	}*/
 
 	public Rect(double x, double y, double width, double height) {
 		super(x, y, width, height);

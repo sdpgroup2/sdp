@@ -139,6 +139,8 @@ public class VisionService implements CaptureCallback {
 	}
 
 	private void normaliseImage() {
+		// Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
+		Debug.log("Sat: " + meanSat + ", Brt: " + meanBright );
 		for (int x = 0; x < this.getSize().width; x++) {
 			for (int y = 0; y < this.getSize().height; y++) {
 				int index = y * this.getSize().width + x;
@@ -164,9 +166,7 @@ public class VisionService implements CaptureCallback {
 				}
 			}
 		}
-        for (HSBCluster cluster: clusters) {
-            cluster.getImportantRects();
-        }
+        
 	}
 
 	public void stopVision() {
