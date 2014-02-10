@@ -3,48 +3,59 @@ package group2.sdp.pc.comms;
 import java.io.IOException;
 
 public interface CommInterface {
+	
 	/**
 	 * 
 	 * @param direction = 1 clockwise, -1 anti-clockwise
 	 * @param speed
-	 * @return 12 if sent, -1 or -2 if failed
+	 * @return 12 - sent successfully; -1 - buffer full; -2 - confirmation failed;
+	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int move(int direction, int speed) throws IOException;
+	public int move(short direction, short speed) throws IOException;
 	
 	/**
 	 * 
 	 * @param angle
 	 * @param speed
-	 * @return 6 if sent, -1 or -2 if failed
+	 * @return 6 - sent successfully; -1 - buffer full; -2 - confirmation failed;
+	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int rotate(int angle, int speed) throws IOException;
+	public int rotate(short angle, short speed) throws IOException;
+	
 	/**
 	 * 
 	 * @param angle
 	 * @param speed
-	 * @return 4 if sent, -1 or -2 if failed
+	 * @return 4 - sent successfully; -1 - buffer full; -2 - confirmation failed;
+	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int kick(int angle, int speed) throws IOException;
+	public int kick(short angle, short speed) throws IOException;
+	
 	/**
 	 * 
-	 * @return 3 if sent, -1 or -2 if failed
+	 * @return 3 - sent successfully; -1 - buffer full; -2 - confirmation failed;
+	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
 	public int stop();
+	
 	/**
 	 * 
 	 * @param turnRate
-	 * @return 36 if sent, -1 or -2 if failed
+	 * @return 36 - sent successfully; -1 - buffer full; -2 - confirmation failed;
+	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int steer(double turnRate) throws IOException;
+	public int steer(short turnRate) throws IOException;
+	
 	/**
 	 * @throws IOException
 	 */
 	public void disconnect();
+	
 	/**
 	 * @throws IOException
 	 */

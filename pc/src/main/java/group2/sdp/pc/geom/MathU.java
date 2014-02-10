@@ -39,7 +39,8 @@ public class MathU {
 				maxY = pixel.y;
 			}
 		}
-		Rect rect = new Rect(minX, maxX, minY, maxY);
+		// Adding one below because 521-520 is 2 units not 1
+		Rect rect = new Rect(minX, minY, maxX - minX + 1, maxY - minY + 1);
 		return rect;
 	}
 	

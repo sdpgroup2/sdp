@@ -1,12 +1,15 @@
 package group2.sdp.pc.vision.clusters;
 
+import group2.sdp.pc.geom.MathU;
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -22,26 +25,33 @@ public class RobotCluster extends HSBCluster {
 
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(8, 20, 4, 20, 0.5f, 1.1f);
+		return getRects(4, 20, 4, 20, 0.5f, 1.1f);
 	}
 
 	public List<Vector> getRobotVectors(HSBColor[] hsbArray) {
 		List<Vector> lst = new ArrayList<Vector>();
-		DotCluster cluster = new DotCluster("Dot");
-		for (Rect rect : getImportantRects().subList(0, 2)) {
+		DotCluster dotCluster = new DotCluster("Dot");
+		List<Set<VecI>> regions = this.getRegions();
+		if (regions.size() < 2) {
+			return null;
+		}
+		for (Set<VecI> reg : regions.subList(0, 2)) {
+			System.out.println(reg);
+			Rect rect = MathU.getBoundingBox(reg);
 			Rect expandedRect = rect.expand(2);
-			for (int x = (int) rect.getX(); x < rect.getX() + rect.getWidth(); x++) {
-				for (int y = (int) rect.getY(); y < rect.getY() + rect.getHeight(); y++) {
-					int index = y * 640 + x; // SORRY
+			for (int x = (int) expandedRect.getX(); x < expandedRect.getX() + expandedRect.getWidth(); x++) {
+				for (int y = (int) expandedRect.getY(); y < expandedRect.getY() + expandedRect.getHeight(); y++) {
+					int index = (int) (y * 640 + x); // SORRY
 					HSBColor color = hsbArray[index];
-					cluster.testPixel(x, y, color);
+					dotCluster.testPixel(x, y, color);
 				}
-
 			}
-			Vector vec = rect.getCenter().sub(cluster.getRects().get(0).getCenter());
-			lst.add(vec);
-			cluster.clear();
-
+			List<Rect> boundingRects = dotCluster.getImportantRects();
+			if (boundingRects.size() > 0) {
+				Vector vec = (boundingRects.get(0).getCenter().sub(rect.getCenter()));
+				lst.add(vec);
+			}
+			dotCluster.clear();
 		}
 		return lst;
 	}

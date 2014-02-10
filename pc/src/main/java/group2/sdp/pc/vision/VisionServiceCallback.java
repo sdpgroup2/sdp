@@ -19,6 +19,6 @@ public interface VisionServiceCallback {
 
     public void onPreparationFrame();
 
-	public void onImageProcessed();
+	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray);
 
 }

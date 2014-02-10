@@ -4,6 +4,7 @@ import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
@@ -60,12 +61,15 @@ public class VisionService implements CaptureCallback {
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
 	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
 	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+	private DotCluster dotCluster = new DotCluster("Dot");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
 		yellowRobotCluster,
 		pitchSectionCluster,
-		pitchLinesCluster
+		pitchLinesCluster,
+		dotCluster
+
 	};
 
 	public void start() {
@@ -107,7 +111,7 @@ public class VisionService implements CaptureCallback {
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed();
+				this.callback.onImageProcessed(currentImage, hsbArray);
 				break;
 			}
 		}
@@ -143,7 +147,7 @@ public class VisionService implements CaptureCallback {
 			for (int y = 0; y < this.getSize().height; y++) {
 				int index = y * this.getSize().width + x;
 				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
+//				color.offset(0, 0.5f - meanSat, 0.5f - meanBright);
 			}
 		}
 	}
@@ -234,6 +238,7 @@ public class VisionService implements CaptureCallback {
 			if (inputInfo == null) {
 				throw new RuntimeException("Video device has no " + requiredInputName + " input mode.");
 			}
+
 			this.frameGrabber = device.getJPEGFrameGrabber(FRAME_WIDTH, FRAME_HEIGHT, inputInfo.getIndex(), requiredStandard, V4L4JConstants.MAX_JPEG_QUALITY);
 		} catch (V4L4JException e) {
 			e.printStackTrace();
