@@ -28,7 +28,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 public class VisionService implements CaptureCallback {
 
 	private enum VisionState {
-		Preparation, Processing
+		Preparation, StaticDetection, Processing
 	}
 
 	public static final int FRAME_WIDTH = 640;
@@ -67,6 +67,8 @@ public class VisionService implements CaptureCallback {
 		blueRobotCluster,
 		yellowRobotCluster,
 	};
+	
+	private Rect processingRegion;
 
 	public void start() {
 		Debug.log("Vision started.");
@@ -95,13 +97,21 @@ public class VisionService implements CaptureCallback {
 				this.prepareVision();
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
-					state = VisionState.Processing;
+					state = VisionState.StaticDetection;
 					this.callback.onPreparationReady(pitchLinesCluster, pitchSectionCluster,
 							ballCluster, yellowRobotCluster, blueRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
 				break;
+			}
+			case StaticDetection: {
+				this.normaliseImage();
+				Rect pitchRect = this.findPitch();
+				if (pitchRect != null) {
+					processingRegion = pitchRect;
+					state = VisionState.Processing;
+				}
 			}
 			case Processing: {
 			    this.normaliseImage();
@@ -112,6 +122,18 @@ public class VisionService implements CaptureCallback {
 			}
 		}
 		frame.recycle();
+	}
+	
+	private Rect findPitch() {
+		for (int x=0; x<getSize().width; x++) {
+			for (int y=0; y<getSize().height; y++) {
+				int index = y * getSize().width + x;
+				HSBColor color = hsbArray[index];
+				pitchLinesCluster.testPixel(x, y, color);
+			}
+		}
+		List<Rect> rects = pitchLinesCluster.getImportantRects();
+		return (!rects.isEmpty()) ? rects.get(0) : null;
 	}
 
 	/**
@@ -140,9 +162,8 @@ public class VisionService implements CaptureCallback {
 
 	private void normaliseImage() {
 		// Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
-		Debug.log("Sat: " + meanSat + ", Brt: " + meanBright );
-		for (int x = 0; x < this.getSize().width; x++) {
-			for (int y = 0; y < this.getSize().height; y++) {
+		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion.getMaxX(); x++) {
+			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion.getMaxY(); y++) {
 				int index = y * this.getSize().width + x;
 				HSBColor color = hsbArray[index].set(colorArray[index]);
 				color.offset(0, color.s - meanSat, color.b - meanBright);
@@ -156,8 +177,8 @@ public class VisionService implements CaptureCallback {
 			cluster.clear();
 		}
 		// Loop through pixels.
-		for (int x = 0; x < getSize().width; x++) {
-			for (int y = 0; y < getSize().height; y++) {
+		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion.getMaxX(); x++) {
+			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion.getMaxY(); y++) {
 				int index = y * getSize().width + x;
 				HSBColor color = hsbArray[index];
 				// Test the pixel for each of the clusters
@@ -241,6 +262,7 @@ public class VisionService implements CaptureCallback {
 		}
 		frameGrabber.setCaptureCallback(this);
 		this.initColorArrays();
+		this.processingRegion = new Rect(0, 0, getSize().width, getSize().height);
 	}
 
 	public VisionService(int preparationFrames, VisionServiceCallback callback) {
