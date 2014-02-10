@@ -182,7 +182,7 @@ public class Sender implements CommInterface {
 	}
 	
 	private short[] receiveFromRobot() throws IOException {
-		byte[] res = new byte[4];
+		byte[] res = new byte[8];
 		inStream.read(res);
 		short[] ret = { (short) (res[0] << 8 | (res[1] & 0xFF)),
 						(short) (res[2] << 8 | (res[3] & 0xFF)),

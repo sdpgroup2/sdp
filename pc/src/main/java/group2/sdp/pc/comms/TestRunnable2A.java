@@ -12,18 +12,22 @@ public class TestRunnable2A implements Runnable {
 	private static final short MOVE_SPEED = 15234;
 
 	public void run() {
-		Sender connection = null;
+		Sender sender = null;
 		
 		try {
-			connection = new Sender("SDP 2A","00165307D55F");
+			sender = new Sender("SDP 2A","00165307D55F");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
-		connection.clearBuff();
+		sender.clearBuff();
 		try {
-			connection.clearBuff();
-			connection.kick(KICK_ANGLE, KICK_SPEED);
+			sender.move(1, 4554, 200);
+			Thread.sleep(1000);
+			sender.clearBuff();
+			sender.kick(KICK_ANGLE, KICK_SPEED);
+			Thread.sleep(1000);
+			sender.move(1, 4554, -200);
 			Thread.sleep(1000);
 ////			connection.clearBuff();
 //			connection.rotate(ROTATE_ANGLE, ROTATE_SPEED);
@@ -51,7 +55,7 @@ public class TestRunnable2A implements Runnable {
 //			connection.clearBuff();
 //			connection.kick(KICK_ANGLE, KICK_SPEED);
 //			Thread.sleep(1000);
-			connection.stop();
+			sender.stop();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,8 +63,8 @@ public class TestRunnable2A implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			connection.clearBuff();
-			connection.disconnect();
+			sender.clearBuff();
+			sender.disconnect();
 		}
 		
 	}

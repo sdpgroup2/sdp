@@ -8,6 +8,7 @@ public interface CommInterface {
 	 * 
 	 * @param direction = 1 clockwise, -1 anti-clockwise
 	 * @param speed
+	 * @param distance in mm to travel
 	 * @return 12 - sent successfully; -1 - buffer full; -2 - confirmation failed;
 	 * 		   -3 - not connected to robot
 	 * @throws IOException
