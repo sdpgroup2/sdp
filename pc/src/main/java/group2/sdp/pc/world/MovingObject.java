@@ -7,6 +7,6 @@ public interface MovingObject extends StaticObject {
 
 	public Vector getVelocity();
 
-	public boolean isNearWall(Pitch pitch, double distance);
+	public boolean isNearWall(PitchM pitch, double distance);
 
 }
