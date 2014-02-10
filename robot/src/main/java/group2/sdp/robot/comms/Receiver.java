@@ -35,6 +35,7 @@ public class Receiver {
 				outStream = connection.openOutputStream();
 				LCD.clear();
 				LCD.drawString("Connected!", 0, 2);
+
 				// Begin reading commands
 				short opcode = Commands.DO_NOTHING;
 				short option1, option2, option3;
