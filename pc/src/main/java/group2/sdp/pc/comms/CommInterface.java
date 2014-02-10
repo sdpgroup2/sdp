@@ -12,7 +12,7 @@ public interface CommInterface {
 	 * 		   -3 - not connected to robot
 	 * @throws IOException
 	 */
-	public int move(short direction, short speed) throws IOException;
+	public int move(short direction, short speed, short distance) throws IOException;
 	
 	/**
 	 * 

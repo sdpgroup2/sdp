@@ -30,8 +30,8 @@ public class Sender implements CommInterface {
 		openBluetoothConn(robotName);
 	}
 
-	public int move(short direction, short speed) throws IOException {
-		short[] command = { Commands.ANGLEMOVE, direction, speed, 0};
+	public int move(short direction, short speed, short distance) throws IOException {
+		short[] command = { Commands.ANGLEMOVE, direction, speed, distance };
 		int confirmation = attemptConnection(command);
 		System.out.println("Move...");
 		return confirmation;
