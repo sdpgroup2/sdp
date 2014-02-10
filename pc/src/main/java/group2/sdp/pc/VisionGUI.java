@@ -15,6 +15,7 @@ import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+import group2.sdp.pc.world.Robot;
 import group2.sdp.util.Debug;
 
 import java.awt.Color;
@@ -212,6 +213,15 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
         }
+        
+        List<Robot> robots = visionService.getYellowRobotObjects();
+        if (robots != null) {
+        	for(Robot robot : robots) {      		
+        		Debug.drawVector(image, robot.getColorCenter(), robot.getDirection());
+        	}
+        }
+        
+        
         /*
         RobotCluster robotCluster = (RobotCluster) visionService.getClusters()[2];
         List<Vector> vecs = robotCluster.getRobotVectors(hsbArray);
