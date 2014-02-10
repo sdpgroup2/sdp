@@ -7,7 +7,12 @@ import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
+import group2.sdp.pc.vision.clusters.BallCluster;
+import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.pc.vision.clusters.PitchLines;
+import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
 
 import java.awt.Color;
@@ -222,4 +227,10 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		initWindow();
 		visionService.start();
 	}
+
+	@Override
+	public void onPreparationReady(PitchLines lines, PitchSection sections, BallCluster ballCluster,
+			YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
+	}
+
 }

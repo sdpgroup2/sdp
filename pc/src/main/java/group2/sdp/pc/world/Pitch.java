@@ -4,10 +4,19 @@ import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.util.CoordinateTranslator;
 
 import java.util.List;
 
 public class Pitch {
+
+	public Rect getPitchRect() {
+		return pitchRect;
+	}
+
+	public void setPitchRect(Rect pitchRect) {
+		this.pitchRect = pitchRect;
+	}
 
 	private PitchLines lines;
 	private PitchSection sections;
@@ -34,12 +43,11 @@ public class Pitch {
 		this.lines = lines;
 		this.sections = sections;
 
-		pitchRect = getPitchRect();
+		pitchRect = lines.getImportantRects().get(0);
 		leftDefenseZone = getPitchRect(LEFT_DEF_POINT);
 		leftAttackZone = getPitchRect(LEFT_ATT_POINT);
 		rightDefenseZone = getPitchRect(RIGHT_DEF_POINT);
 		rightAttackZone = getPitchRect(RIGHT_ATT_POINT);
-
 	}
 
 	public void addBall(Ball ball) {
@@ -59,35 +67,40 @@ public class Pitch {
 		Robot firstYellowRobot = yellowRobots.get(0);
 		Robot secondYellowRobot = yellowRobots.get(1);
 
-		if (this.leftDefenseZone.contains(firstBlueRobot.getBoundingRect())) {
+		if (this.leftDefenseZone.contains(firstBlueRobot.getPosition())) {
 			this.leftDefender = firstBlueRobot;
 			this.leftAttacker = secondBlueRobot;
-			if (this.rightDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
+			if (this.rightDefenseZone.contains(firstYellowRobot.getPosition())) {
 				this.rightDefender = firstYellowRobot;
 				this.rightAttacker = secondYellowRobot;
 			}
-		} else if (this.leftAttackZone.contains(firstBlueRobot.getBoundingRect())) {
+		} else if (this.leftAttackZone.contains(firstBlueRobot.getPosition())) {
 			this.leftAttacker = firstBlueRobot;
 			this.leftDefender = secondBlueRobot;
-			if (this.rightDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
+			if (this.rightDefenseZone.contains(firstYellowRobot.getPosition())) {
 				this.rightDefender = firstYellowRobot;
 				this.rightAttacker = secondYellowRobot;
 			}
-		} else if (this.rightDefenseZone.contains(firstBlueRobot.getBoundingRect())) {
+		} else if (this.rightDefenseZone.contains(firstBlueRobot.getPosition())) {
 			this.rightDefender = firstBlueRobot;
 			this.rightAttacker = secondBlueRobot;
-			if (this.leftDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
+			if (this.leftDefenseZone.contains(firstYellowRobot.getPosition())) {
 				this.leftDefender = firstYellowRobot;
 				this.leftAttacker = secondYellowRobot;
 			}
 		} else {
 			this.rightAttacker = firstBlueRobot;
 			this.rightDefender = secondBlueRobot;
-			if (this.leftDefenseZone.contains(firstYellowRobot.getBoundingRect())) {
+			if (this.leftDefenseZone.contains(firstYellowRobot.getPosition())) {
 				this.leftDefender = firstYellowRobot;
 				this.leftAttacker = secondYellowRobot;
 			}
 		}
+	}
+
+	public void translate(StaticObject object) {
+		Point translatedPt = CoordinateTranslator.fromVisionToPitch(object.getPosition(), this);
+		object.setPosition(translatedPt);
 	}
 
 	public Rect getPitchRect(Point rectMember) {
@@ -101,7 +114,4 @@ public class Pitch {
        return result;
 	}
 
-	public Rect getPitchRect() {
-		return lines.getImportantRects().get(0);
-	}
 }

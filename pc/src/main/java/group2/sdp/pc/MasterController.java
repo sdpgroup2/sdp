@@ -1,18 +1,20 @@
 package group2.sdp.pc;
 
-import group2.sdp.pc.geom.Line;
-import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
-import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.RobotCluster;
+import group2.sdp.pc.vision.clusters.BallCluster;
+import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.PitchLines;
+import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Pitch;
-import group2.sdp.util.Debug;
+import group2.sdp.pc.world.Robot;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MasterController implements VisionServiceCallback {
@@ -29,17 +31,20 @@ public class MasterController implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(BufferedImage image, HSBCluster[] clusters) {
-//		this.pitch;
-//		this.pitch.addBall(clusters[0].)
-		RobotCluster robotCluster = (RobotCluster) clusters[2];
-		List<Vector> vecs = robotCluster.getRobotVectors(this.visionService.getHSBArray());
-		List<Rect> rects = robotCluster.getImportantRects();
-		for (int i = 0; i < rects.size(); i++) {
-			Point center = rects.get(i).getCenter();
-			Line line = new Line(center.x, center.x + vecs.get(i).x, center.y, center.y + vecs.get(i).y);
-			Debug.drawLine(image, line);
+	public void onPreparationReady(PitchLines lines, PitchSection sections,
+			BallCluster ballCluster, YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
+		this.pitch = new Pitch(lines, sections);
+		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
+		pitch.addBall(ball);
+		List<Robot> blueRobots = new ArrayList<Robot>();
+		List<Robot> yellowRobots = new ArrayList<Robot>();
+		for (Rect rect : blueCluster.getImportantRects().subList(0, 2)) {
+			blueRobots.add(new Robot(rect));
 		}
+		for (Rect rect : yellowCluster.getImportantRects().subList(0, 2)) {
+			yellowRobots.add(new Robot(rect));
+		}
+		pitch.addRobots(blueRobots, yellowRobots);
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.pc.vision.clusters.PitchLines;
+import group2.sdp.pc.vision.clusters.PitchSection;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
 
@@ -56,14 +58,14 @@ public class VisionService implements CaptureCallback {
 	private BallCluster ballCluster = new BallCluster("Ball");
 	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-//	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
-//	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
+	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
 		yellowRobotCluster,
-//			pitchSectionCluster,
-//			pitchLinesCluster
+		pitchSectionCluster,
+		pitchLinesCluster
 	};
 
 	public void start() {
@@ -94,7 +96,8 @@ public class VisionService implements CaptureCallback {
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
 					state = VisionState.Processing;
-					this.callback.onPreparationReady(currentImage, clusters);
+					this.callback.onPreparationReady(pitchLinesCluster, pitchSectionCluster,
+							ballCluster, yellowRobotCluster, blueRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
