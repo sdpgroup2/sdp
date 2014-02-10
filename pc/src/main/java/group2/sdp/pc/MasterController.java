@@ -10,6 +10,9 @@ import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchSection;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.pc.world.Ball;
+import group2.sdp.pc.world.Constants;
+import group2.sdp.pc.world.Constants.PitchType;
+import group2.sdp.pc.world.Constants.TeamColor;
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
 
@@ -19,10 +22,18 @@ import java.util.List;
 
 public class MasterController implements VisionServiceCallback {
 
+	public static TeamColor ourTeam;
+	public static PitchType pitchPlayed;
 	private Pitch pitch;
 	private VisionService visionService;
 
 	public static void main(String[] args) {
+		if (args.length < 2) {
+			System.out.println("Not specified which team we are and what pitch we're playing");
+			System.exit(0);
+		}
+		ourTeam = Integer.parseInt(args[0]) == Constants.YELLOW_TEAM ? TeamColor.YELLOW : TeamColor.BLUE;
+		pitchPlayed = Integer.parseInt(args[1]) == Constants.MAIN_PITCH ? PitchType.MAIN : PitchType.SIDE;
 		MasterController mc = new MasterController();
 	}
 
@@ -44,7 +55,7 @@ public class MasterController implements VisionServiceCallback {
 		for (Rect rect : yellowCluster.getImportantRects().subList(0, 2)) {
 			yellowRobots.add(new Robot(rect));
 		}
-		pitch.addRobots(blueRobots, yellowRobots);
+		pitch.addRobots(blueRobots, yellowRobots, ourTeam);
 	}
 
 	@Override
