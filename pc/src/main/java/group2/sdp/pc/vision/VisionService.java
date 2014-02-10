@@ -94,6 +94,7 @@ public class VisionService implements CaptureCallback {
 		currentImage.getRGB(0, 0, this.frameGrabber.getWidth(), this.frameGrabber.getHeight(), colorArray, 0, this.frameGrabber.getWidth());
 		switch (state) {
 			case Preparation: {
+				// Prepare the vision: get parameters for normalisation.
 				this.prepareVision();
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
@@ -106,14 +107,20 @@ public class VisionService implements CaptureCallback {
 				break;
 			}
 			case StaticDetection: {
+				// Find the objects that will not move and restrict processing region.
 				this.normaliseImage();
 				Rect pitchRect = this.findPitch();
 				if (pitchRect != null) {
 					processingRegion = pitchRect;
+					// Clear image to make new region obvious
+					for (int i=0; i<hsbArray.length; i++) {
+						hsbArray[i].set(0,0,0);
+					}
 					state = VisionState.Processing;
 				}
 			}
 			case Processing: {
+				// Process the images.
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
