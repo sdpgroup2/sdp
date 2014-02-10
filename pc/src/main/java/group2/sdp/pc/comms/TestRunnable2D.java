@@ -3,7 +3,7 @@ package group2.sdp.pc.comms;
 import java.io.IOException;
 
 public class TestRunnable2D implements Runnable {
-	
+
 	private static final short KICK_ANGLE = 90;
 	private static final short KICK_SPEED = 1234;
 	private static final short ROTATE_ANGLE = 90;
@@ -11,6 +11,7 @@ public class TestRunnable2D implements Runnable {
 	private static final short MOVE_DIRECTION = 1;
 	private static final short MOVE_SPEED = 1234;
 
+	@Override
 	public void run() {
 		Sender connection = null;
 		try {
@@ -28,7 +29,7 @@ public class TestRunnable2D implements Runnable {
 			Thread.sleep(1000);
 			connection.clearBuff();
 			connection.kick(MOVE_DIRECTION, MOVE_SPEED);
-			Thread.sleep(1000);	
+			Thread.sleep(1000);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,7 +39,7 @@ public class TestRunnable2D implements Runnable {
 		} finally {
 			connection.disconnect();
 		}
-		
+
 	}
 
 

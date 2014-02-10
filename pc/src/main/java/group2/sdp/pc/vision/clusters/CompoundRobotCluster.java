@@ -3,25 +3,32 @@ package group2.sdp.pc.vision.clusters;
 import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CompoundRobotCluster extends CompoundCluster {
 
 	public CompoundRobotCluster() {
 		super(
 			"Compound Blue Cluster",
-			new ArrayList<HSBColor[]>() {{
-				add(new HSBColor[] {
-					new HSBColor(155, 44, 30),
-					new HSBColor(206, 63, 60)
-				});
-				add(new HSBColor[] {
-					new HSBColor(136, 66, 28),
-					new HSBColor(174, 91, 40)
-				});
-			}},
-			Color.PINK
+			new HSBCluster[] {
+				new HSBCluster(
+					"blue",
+					new HSBColor(170, 95, 40),
+					new HSBColor(210,100,75),
+					Color.PINK
+				),
+//				new HSBCluster(
+//					"dot",
+//					new HSBColor(130, 40, 25),
+//					new HSBColor(170, 100, 33),
+//					Color.PINK
+//				),
+				new HSBCluster(
+					"base",
+					new HSBColor(100,90,48),
+					new HSBColor(170,100,70),
+					Color.PINK
+				)
+			}
 		);
 	}
 

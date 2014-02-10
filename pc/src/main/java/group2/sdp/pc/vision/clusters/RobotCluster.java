@@ -17,6 +17,7 @@ import java.util.Set;
  * @author Paul Harris
  *
  */
+
 public class RobotCluster extends HSBCluster {
 
 	public RobotCluster(String name, HSBColor minColor, HSBColor maxColor, Color debugColor) {
@@ -25,7 +26,7 @@ public class RobotCluster extends HSBCluster {
 
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(4, 20, 4, 20, 0.5f, 1.1f);
+		return getRects(8, 20, 6, 20, 0.5f, 1.1f);
 	}
 
 	public List<Vector> getRobotVectors(HSBColor[] hsbArray) {

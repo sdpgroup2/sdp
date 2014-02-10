@@ -1,20 +1,31 @@
 package group2.sdp.pc.world;
 
+import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
 
 public class Robot extends RectangularObjectAdapter implements MovingObject {
 
-	private Vector velocity;
-
-	public Robot(Rect boundingRect, Vector velocity) {
+	private Point previousPosition;
+	private Rect color;
+	
+	public Robot(Rect color, Rect boundingRect) {
 		super(boundingRect);
-		this.velocity = velocity;
+		this.previousPosition = boundingRect.getCenter();
+		this.color = color;
+	}
+	
+	public Vector getDirection() {
+		return super.getBoundingRect().getCenter().sub(color.getCenter());
+	}
+	
+	public Point getColorCenter() {
+		return color.getCenter();
 	}
 
 	@Override
 	public Vector getVelocity() {
-		return this.velocity;
+		return this.position.sub(previousPosition);
 	}
 
 	@Override

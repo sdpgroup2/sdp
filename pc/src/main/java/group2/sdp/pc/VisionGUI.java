@@ -8,8 +8,15 @@ import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
+import group2.sdp.pc.vision.clusters.BallCluster;
+import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+import group2.sdp.pc.vision.clusters.CompoundRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotCluster;
+import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+import group2.sdp.pc.world.Robot;
 import group2.sdp.util.Debug;
 
 import java.awt.Color;
@@ -207,6 +214,24 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
         }
+        
+        List<Robot> robots = visionService.getYellowRobotObjects();
+        if (robots != null) {
+        	for(Robot robot : robots) {      		
+        		Debug.drawVector(image, robot.getColorCenter(), robot.getDirection());
+        	}
+        }
+        
+//        CompoundRobotCluster robotCluster = (CompoundRobotCluster) visionService.getClusters()[1];
+//        group2.sdp.pc.geom.Point dotCenter = robotCluster.getdotCenter(hsbArray);
+//        System.out.println(dotCenter);
+//    	List<Rect> rects = robotCluster.getImportantRects();
+//    	if (rects.size() > 0) {
+//    		Vector vec = rects.get(0).getCenter().sub(dotCenter);
+//    		Debug.drawVector(image, rects.get(0).getCenter(), vec);
+//    	}
+        		
+        /*
         RobotCluster robotCluster = (RobotCluster) visionService.getClusters()[2];
         List<Vector> vecs = robotCluster.getRobotVectors(hsbArray);
         if (vecs == null) {
@@ -219,7 +244,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
         		Debug.drawVector(image, rects.get(0).getCenter(), vec);
         	}
         }
-        
+
         robotCluster = (RobotCluster) visionService.getClusters()[1];
         vecs = robotCluster.getRobotVectors(hsbArray);
         if (vecs == null) {
@@ -232,7 +257,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
         		Debug.drawVector(image, rects.get(0).getCenter(), vec);
         	}
         }
-        
+		*/
         showImage(currentImage);
     }
 
@@ -253,8 +278,8 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(BufferedImage image, HSBCluster[] clusters) {
-		// TODO Auto-generated method stub
-		
+	public void onPreparationReady(PitchLinesCluster lines, PitchSectionCluster sections, BallCluster ballCluster,
+			YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
 	}
+
 }
