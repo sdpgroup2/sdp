@@ -35,12 +35,6 @@ public class Receiver {
 				outStream = connection.openOutputStream();
 				LCD.clear();
 				LCD.drawString("Connected!", 0, 2);
-				byte[] robotReady = { 0, 0, 0, 0 };
-				if (outStream == null)
-					throw new Exception("Output stream is null!");
-				outStream.write(robotReady);
-				outStream.flush();
-
 				// Begin reading commands
 				short opcode = Commands.DO_NOTHING;
 				short option1, option2, option3;
