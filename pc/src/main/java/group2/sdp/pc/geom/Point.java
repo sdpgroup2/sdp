@@ -10,7 +10,7 @@ import java.awt.geom.Point2D;
  * Implements lexicographical order.
  */
 
-public class Point extends Point2D.Float implements Comparable<Point> {
+public class Point extends Point2D.Double implements Comparable<Point> {
 
 	private static final long serialVersionUID = 13L;
 	private long timestamp;
@@ -55,16 +55,22 @@ public class Point extends Point2D.Float implements Comparable<Point> {
         }
     }
 
-    public Point(float x, float y) {
+    public Point(double x, double y) {
     	super(x, y);
     	this.timestamp = System.currentTimeMillis();
     }
 
-    public void setX(float x) {
+    public double getX()
+    { return x; }
+    
+    public double getY()
+    { return y; }
+    
+    public void setX(double x) {
     	this.x = x;
     }
 
-    public void setY(float y) {
+    public void setY(double y) {
     	this.y = y;
     }
     
