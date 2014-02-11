@@ -126,7 +126,8 @@ public class VisionService implements CaptureCallback {
 				this.normaliseImage();
 				Rect pitchRect = this.findPitch();
 				if (pitchRect != null) {
-					processingRegion = pitchRect;
+					processingRegion = new Rect(pitchRect.x-15, pitchRect.y-15,
+							pitchRect.width+30, pitchRect.height+30);
 					Debug.log("Found pitch");
 					// Clear image to make new region obvious
 					for (int i=0; i<hsbArray.length; i++) {
@@ -165,6 +166,10 @@ public class VisionService implements CaptureCallback {
 	 * @param colorArray - RGB array representing the image
 	 */
 	public void prepareVision() {
+		if (currentFrame == 0) {
+			// First frame sometimes has scanlines etc. Ignore it.
+			return;
+		}
 		double s = 0;
 		double b = 0;
 		for (int c = 0; c < colorArray.length; c++) {
@@ -180,19 +185,18 @@ public class VisionService implements CaptureCallback {
 	}
 	
 	public void endPrepareVision() {
-		meanSat /= preparationFrames;
-		meanBright /= preparationFrames;
+		// We ignored the first frame.
+		int frames = preparationFrames - 1;
+		meanSat /= frames;
+		meanBright /= frames;
 		Debug.logf("Final mean saturation: %f, mean brightness: %f", meanSat, meanBright);
 	}
 
 	private void normaliseImage() {
 		// Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
-		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion.getMaxX(); x++) {
-			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion.getMaxY(); y++) {
-				int index = y * this.getSize().width + x;
-				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, color.s - meanSat, color.b - meanBright);
-			}
+		for (int i=0; i<hsbArray.length; i++) {
+			HSBColor color = hsbArray[i].set(colorArray[i]);
+			color.offset(0, color.s - meanSat, color.b - meanBright);
 		}
 	}
 

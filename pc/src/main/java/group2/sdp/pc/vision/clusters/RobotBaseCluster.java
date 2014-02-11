@@ -11,7 +11,7 @@ import java.util.List;
 public class RobotBaseCluster extends HSBCluster {
 
 	public RobotBaseCluster(String name) {
-		super(name, new HSBColor(100,90,48), new HSBColor(170,100,70), Color.cyan);
+		super(name, new HSBColor(80,70,34), new HSBColor(170,100,80), Color.cyan);
 	}
 	
 	@Override
