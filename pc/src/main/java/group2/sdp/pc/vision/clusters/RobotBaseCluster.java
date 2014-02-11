@@ -22,7 +22,7 @@ public class RobotBaseCluster extends HSBCluster {
 
 	public Vector getRobotVector(HSBColor[] hsbArray) {
 		DotCluster dotCluster = new DotCluster("Dot");
-		BlueRobotCluster robotCluster = new BlueRobotCluster("Blue robot");
+		YellowRobotCluster robotCluster = new YellowRobotCluster("Blue robot");
 		List<Rect> impRects = this.getImportantRects();
 		if (impRects.size() < 1) {
 			return null;
