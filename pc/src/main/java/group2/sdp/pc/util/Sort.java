@@ -1,7 +1,7 @@
 
 /** @author Jaroslaw Hirniak */
 
-package group2.sdp.util;
+package group2.sdp.pc.util;
 
 /**
  * Heapsort.

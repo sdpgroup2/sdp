@@ -1,7 +1,7 @@
 package group2.sdp.pc.vision.clusters;
 
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.vision.HSBColor;
+import group2.sdp.pc.util.ColorConfig;
 
 import java.awt.Color;
 import java.util.List;
@@ -14,12 +14,12 @@ import java.util.List;
 public class BallCluster extends HSBCluster {
 	
 	public BallCluster(String name) {
-		super(name, new HSBColor(343, 69, 49), new HSBColor(30, 100, 100), Color.red);
+		super(name, ColorConfig.BALL_2_MIN, ColorConfig.BALL_2_MAX, Color.red);
 	}
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(8, 24, 8, 24, 0.5f, 1.1f);
+		return getRects(4, 24, 4, 24, 0.5f, 1.1f);
 	}
 
 }
