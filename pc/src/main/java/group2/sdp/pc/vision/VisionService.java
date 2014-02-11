@@ -89,7 +89,6 @@ public class VisionService implements CaptureCallback {
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame) {
-		System.out.println("blablba");
 		timer.tick(25); // Prints the framerate every 25 frames
 		currentImage = frame.getBufferedImage();
 		callback.onFrameGrabbed(currentImage);
