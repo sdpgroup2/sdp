@@ -6,6 +6,7 @@ package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.PointSet;
+import group2.sdp.pc.strategy.Zone;
 
 /** Note that recommended units for the pitch are in tacho counts. Hence, we
  *  should measure how many pixels are how many tachos and work with those
@@ -23,6 +24,7 @@ public interface IPitch
      *  @param ps - convex hull of the zone, note points can be in any order,
      *              as sorting method is in place. */
     public void setZone(byte id, PointSet ps);
+    public Zone getZone(byte id);
     
     /** From the origin, is ally on even or odd number fields
      *  @param boolean even - is on even fields? */

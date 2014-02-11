@@ -24,10 +24,8 @@ public class Pitch extends Plane implements IPitch {
 	{ this.even = even; }
 
 	@Override
-	public void updateBallPosition(Point p) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void updateBallPosition(Point p)
+	{ ball.updatePoisition(p); }
 
 	@Override
 	public void updateRobotState(byte id, Point p, double theta) {
@@ -75,6 +73,11 @@ public class Pitch extends Plane implements IPitch {
 	public void resetToTachoTranslation() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Zone getZone(byte id) {
+		return zones[id];
 	}
 
 }

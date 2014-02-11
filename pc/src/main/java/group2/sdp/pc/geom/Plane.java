@@ -105,6 +105,26 @@ public class Plane
     	return m.intersectsLine(n);
     }
     
+    /** Check if the line intersects the zone */
+    public boolean intersects(Line m)
+    {
+    	for (int i = 1; i < outline.size(); i++)
+    	{
+    		Point p0 = outline.get(i - 1);
+    		Point p1 = outline.get(i);
+    		Line wall = new Line();
+    		wall.x1 = (float) p0.x;
+    		wall.x2 = (float) p1.x;
+    		wall.y1 = (float) p0.y;
+    		wall.y2 = (float) p1.y;
+    		
+    		if (intersects(m, wall))
+    		{ return true; }
+    	}
+    	
+    	return false;
+    }
+    
     public Point getIntersection(Line line, Line wall)
     {
     	float ix, iy;
