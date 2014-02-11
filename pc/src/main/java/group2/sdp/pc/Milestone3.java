@@ -73,6 +73,7 @@ public class Milestone3 implements VisionServiceCallback {
 		List<Rect> ballRects = ballCluster.getImportantRects();
 		if (ballRects == null || ballRects.size() < 1) {
 			System.out.println("No ball found.");
+			System.exit(1);
 		}
 		Point ballPosition = ballRects.get(0).getCenter();
 		pitch.updateBallPosition(ballPosition);
@@ -81,9 +82,14 @@ public class Milestone3 implements VisionServiceCallback {
 		List<Rect> robotRects = robotBaseCluster.getImportantRects();
 		if (robotRects == null || robotRects.size() < 1) {
 			System.out.println("No robot found.");
+			System.exit(1);
 		}
 		Point blueRobotPosition = robotRects.get(0).getCenter();
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
+		if (blueRobotDirection == null) {
+			System.out.println("No direction for the robot.");
+			System.exit(1);
+		}
 		
 		// Average out the direction vector
 		if (robotDirectionVector == null) {
@@ -95,6 +101,7 @@ public class Milestone3 implements VisionServiceCallback {
 		}
 		System.out.println(robotDirectionVector);
 		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
+//		pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
 		
 		// Calculate the vector between ball and robot
 		Vector vectorToGo = pitch.getRobotBallVector();
