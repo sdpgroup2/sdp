@@ -28,6 +28,8 @@ public class Milestone3 implements VisionServiceCallback {
 	private Pitch pitch;
 	private VisionService visionService;
 	private Sender sender = null;
+	private Vector robotDirectionVector;
+	private int robotDirectionCounter;
 	
 	public static void main(String[] args) {
 //		if (args.length < 2) {
@@ -74,7 +76,15 @@ public class Milestone3 implements VisionServiceCallback {
 		// Update the robot position
 		Point blueRobotPosition = robotCluster.getImportantRects().get(0).getCenter();
 		Vector blueRobotDirection = robotCluster.getRobotVector(hsbArray);
-		pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
+		
+		// Average out the direction vector
+		if (robotDirectionVector == null) {
+			robotDirectionVector = blueRobotDirection;
+		} else {
+			robotDirectionVector.averageWith(blueRobotDirection);
+		}
+		
+		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
 		
 		// Calculate the vector between ball and robot
 		Vector vectorToGo = pitch.getRobotBallVector();

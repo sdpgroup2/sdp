@@ -10,7 +10,11 @@ public class Vector extends Vector2d {
 	public Vector(double d, double e) {
 		super(d, e);
 	}
-
+	
+	public void averageWith(Vector other) {
+		this.x = (this.x + other.x) / 2;
+		this.y = (this.y + other.y) / 2;
+	}
 
 	@Override
 	public String toString() {
