@@ -2,12 +2,20 @@ package group2.sdp.pc;
 
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.VecI;
+import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
+import group2.sdp.pc.vision.clusters.BallCluster;
+import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
+import group2.sdp.pc.vision.clusters.RobotBaseCluster;
+import group2.sdp.pc.vision.clusters.RobotCluster;
+import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 import group2.sdp.util.Debug;
 
 import java.awt.Color;
@@ -19,6 +27,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -33,10 +42,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import static com.googlecode.javacv.cpp.opencv_core.*;
-import static com.googlecode.javacv.cpp.opencv_highgui.*;
-import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 
 
 public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
@@ -199,7 +204,9 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     }
 
     @Override
-    public void onImageProcessed() {
+    public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
+    		BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
+        
         for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
                 Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
@@ -207,8 +214,30 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             for (Rect rect: cluster.getImportantRects()) {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
+        }        
+        
+        RobotBaseCluster robotCluster = (RobotBaseCluster) visionService.getClusters()[1];
+        Vector vec = robotCluster.getRobotVector(hsbArray);
+        if (vec != null) {
+	    	List<Rect> rects = robotCluster.getImportantRects();
+	    	if (rects.size() > 0) {
+	    		vec.scale(10);
+	    		Debug.drawVector(image, rects.get(0).getCenter(), vec);
+	    	}
         }
-        showImage(currentImage);
+
+//        robotCluster = (RobotCluster) visionService.getClusters()[1];
+//        vecs = robotCluster.getRobotVectors(hsbArray);
+//        if (vecs == null) {
+//        	return;
+//        }
+//        for (Vector vec : vecs) {
+//        	List<Rect> rects = robotCluster.getImportantRects();
+//        	if (rects.size() > 0) {
+//        		Debug.drawVector(image, rects.get(0).getCenter(), vec);
+//        	}
+//        }
+    	showImage(currentImage);
     }
 
     private void showImage(BufferedImage image) {
@@ -226,4 +255,13 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		initWindow();
 		visionService.start();
 	}
+
+	@Override
+	public void onPreparationReady(HSBColor[] hsbArray,
+			PitchLinesCluster lines, PitchSectionCluster sections,
+			BallCluster ballCluster, RobotBaseCluster robotCluster) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

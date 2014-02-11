@@ -3,8 +3,6 @@ package group2.sdp.pc.world;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 
-import java.awt.geom.Point2D;
-
 public abstract class StaticObjectAdapter implements StaticObject {
 
 	protected Point position;
@@ -17,8 +15,12 @@ public abstract class StaticObjectAdapter implements StaticObject {
 	}
 
 	@Override
-	public Point2D getPosition() {
+	public Point getPosition() {
 		return position;
+	}
+
+	public void setPosition(Point pt) {
+		this.position = pt;
 	}
 
 	@Override

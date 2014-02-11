@@ -1,15 +1,25 @@
 package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Timer;
+import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
-import group2.sdp.pc.vision.clusters.GrayRobotCluster;
+import group2.sdp.pc.vision.clusters.CompoundRobotCluster;
+import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
+import group2.sdp.pc.vision.clusters.PitchLines;
+import group2.sdp.pc.vision.clusters.PitchLinesCluster;
+import group2.sdp.pc.vision.clusters.PitchSection;
+import group2.sdp.pc.vision.clusters.PitchSectionCluster;
+import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+import group2.sdp.pc.world.Robot;
 import group2.sdp.util.Debug;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
@@ -24,7 +34,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 public class VisionService implements CaptureCallback {
 
 	private enum VisionState {
-		Preparation, Processing
+		Preparation, StaticDetection, Processing
 	}
 
 	public static final int FRAME_WIDTH = 640;
@@ -53,19 +63,23 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
-	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-	private GrayRobotCluster grayRobotCluster = new GrayRobotCluster("Gray dots on robots");
-//	private PitchSection pitchSectionCluster = new PitchSection("Pitch sections");
-//	private PitchLines pitchLinesCluster = new PitchLines("Pitch lines");
+//	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+//	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
+//	private DotCluster dotCluster = new DotCluster("Dot");
+//	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
+	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
+	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
+	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-		blueRobotCluster,
-		yellowRobotCluster,
-		grayRobotCluster,
-//			pitchSectionCluster,
-//			pitchLinesCluster
+//		blueRobotCluster,
+//		blueCompoundRobot,
+//		yellowRobotCluster,
+		baseRobotCluster,
+//		dotCluster
 	};
+	
+	private Rect processingRegion;
 
 	public void start() {
 		Debug.log("Vision started.");
@@ -92,23 +106,59 @@ public class VisionService implements CaptureCallback {
 		
 		switch (state) {
 			case Preparation: {
+				// Prepare the vision: get parameters for normalisation.
 				this.prepareVision();
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
+					endPrepareVision();
+					state = VisionState.StaticDetection;
+					this.normaliseImage();
+					this.processImage(); // Process when ready so we have clusters
+					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster);
+				} else {
+					this.callback.onPreparationFrame();
+				}
+				break;
+			}
+			case StaticDetection: {
+				// Find the objects that will not move and restrict processing region.
+				Debug.log("Looking for pitch...");
+				this.normaliseImage();
+				Rect pitchRect = this.findPitch();
+				if (pitchRect != null) {
+					processingRegion = new Rect(pitchRect.x-15, pitchRect.y-15,
+							pitchRect.width+30, pitchRect.height+30);
+					Debug.log("Found pitch");
+					// Clear image to make new region obvious
+					for (int i=0; i<hsbArray.length; i++) {
+						hsbArray[i].set(0,0,0);
+					}
 					state = VisionState.Processing;
 				}
-				this.callback.onPreparationFrame();
 				break;
 			}
 			case Processing: {
+				// Process the images.
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed();
+				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
 				break;
 			}
 		}
 		frame.recycle();
+	}
+	
+	private Rect findPitch() {
+		for (int x=0; x<getSize().width; x++) {
+			for (int y=0; y<getSize().height; y++) {
+				int index = y * getSize().width + x;
+				HSBColor color = hsbArray[index];
+				pitchLinesCluster.testPixel(x, y, color);
+			}
+		}
+		List<Rect> rects = pitchLinesCluster.getImportantRects();
+		return (!rects.isEmpty()) ? rects.get(0) : null;
 	}
 
 	/**
@@ -116,6 +166,10 @@ public class VisionService implements CaptureCallback {
 	 * @param colorArray - RGB array representing the image
 	 */
 	public void prepareVision() {
+		if (currentFrame == 0) {
+			// First frame sometimes has scanlines etc. Ignore it.
+			return;
+		}
 		double s = 0;
 		double b = 0;
 		for (int c = 0; c < colorArray.length; c++) {
@@ -128,20 +182,21 @@ public class VisionService implements CaptureCallback {
 		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
 		meanSat += s;
 		meanBright += b;
-		this.currentFrame += 1;
-		if (currentFrame >= preparationFrames) {
-			meanSat /= preparationFrames;
-			meanBright /= preparationFrames;
-		}
+	}
+	
+	public void endPrepareVision() {
+		// We ignored the first frame.
+		int frames = preparationFrames - 1;
+		meanSat /= frames;
+		meanBright /= frames;
+		Debug.logf("Final mean saturation: %f, mean brightness: %f", meanSat, meanBright);
 	}
 
 	private void normaliseImage() {
-		for (int x = 0; x < this.getSize().width; x++) {
-			for (int y = 0; y < this.getSize().height; y++) {
-				int index = y * this.getSize().width + x;
-				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, color.s - meanSat, color.b - meanBright);
-			}
+		// Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
+		for (int i=0; i<hsbArray.length; i++) {
+			HSBColor color = hsbArray[i].set(colorArray[i]);
+			color.offset(0, color.s - meanSat, color.b - meanBright);
 		}
 	}
 
@@ -151,8 +206,8 @@ public class VisionService implements CaptureCallback {
 			cluster.clear();
 		}
 		// Loop through pixels.
-		for (int x = 0; x < getSize().width; x++) {
-			for (int y = 0; y < getSize().height; y++) {
+		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion.getMaxX(); x++) {
+			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion.getMaxY(); y++) {
 				int index = y * getSize().width + x;
 				HSBColor color = hsbArray[index];
 				// Test the pixel for each of the clusters
@@ -161,9 +216,7 @@ public class VisionService implements CaptureCallback {
 				}
 			}
 		}
-        for (HSBCluster cluster: clusters) {
-            cluster.getImportantRects();
-        }
+        
 	}
 
 	public void stopVision() {
@@ -184,6 +237,39 @@ public class VisionService implements CaptureCallback {
 	public HSBCluster[] getClusters() {
 	    return clusters;
     }
+
+	// these should be changed to get[Yellow/Blue]RobotRects() as they
+	// return rects and not robot objects
+//	public List<Rect> getYellowRobots() {
+//		return yellowRobotCluster.getImportantRects();
+//	}
+//
+//	public List<Rect> getBlueRobots() {
+//		return blueRobotCluster.getImportantRects();
+//	}
+//	
+//	public List<Rect> getRobotBases() {
+//		return baseCluster.getImportantRects();
+//	}
+
+	public HSBColor[] getHSBArray() {
+		return hsbArray;
+	}
+	
+//	//Should be changed to getYellowRobots()
+//	public List<Robot> getYellowRobotObjects() {
+//		ArrayList<Robot> robots = new ArrayList<Robot>();
+//		List<Rect> colorRects = getYellowRobots();
+//		for(Rect colorRect : colorRects) {
+//			for(Rect base : getRobotBases()) {
+//				if (base.contains(colorRect)) {
+//					Robot robot = new Robot(colorRect, base);
+//					robots.add(robot);
+//				}
+//			}
+//		}
+//		return robots;
+//	}
 
 	/**
 	 * Called if there is an exception raised by the listener.
@@ -219,12 +305,14 @@ public class VisionService implements CaptureCallback {
 			if (inputInfo == null) {
 				throw new RuntimeException("Video device has no " + requiredInputName + " input mode.");
 			}
+
 			this.frameGrabber = device.getJPEGFrameGrabber(FRAME_WIDTH, FRAME_HEIGHT, inputInfo.getIndex(), requiredStandard, V4L4JConstants.MAX_JPEG_QUALITY);
 		} catch (V4L4JException e) {
 			e.printStackTrace();
 		}
 		frameGrabber.setCaptureCallback(this);
 		this.initColorArrays();
+		this.processingRegion = new Rect(0, 0, getSize().width, getSize().height);
 	}
 
 	public VisionService(int preparationFrames, VisionServiceCallback callback) {

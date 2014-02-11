@@ -14,12 +14,12 @@ import java.util.List;
 public class BallCluster extends HSBCluster {
 	
 	public BallCluster(String name) {
-		super(name, new HSBColor(343, 69, 49), new HSBColor(30, 100, 100), Color.red);
+		super(name, new HSBColor(343, 85, 50), new HSBColor(30, 100, 100), Color.red);
 	}
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(8, 24, 8, 24, 0.5f, 1.1f);
+		return getRects(4, 24, 4, 24, 0.5f, 1.1f);
 	}
 
 }
