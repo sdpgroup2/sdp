@@ -14,9 +14,10 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public static int WHITE_THRESHOLD = 37;
 	public MyLightSensor rightSensor;
 
-	public void move(int direction, int speed) {
+	public void move(int direction, int speed, int distance) {
 		LCD.drawString("moving forward!", 10, 10);
-		super.forward();
+		super.travel(direction * distance);
+//		super.stop();
 		super.setTravelSpeed(speed);
 	} 
 
@@ -45,7 +46,7 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	}
 
 	public Pilot() {
-		super(56, 98, Motor.A, Motor.C, true);
+		super(56, 125, Motor.A, Motor.C, true);
 		this.leftSensor = new MyLightSensor("L", SensorPort.S4, 100);
 		this.leftSensor.addListener(this);
 		this.rightSensor = new MyLightSensor("R", SensorPort.S1, 100);

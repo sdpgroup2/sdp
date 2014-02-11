@@ -104,6 +104,7 @@ public class VisionService implements CaptureCallback {
 
 		// Read image into array colorArray
 		currentImage.getRGB(0, 0, this.frameGrabber.getWidth(), this.frameGrabber.getHeight(), colorArray, 0, this.frameGrabber.getWidth());
+		
 		switch (state) {
 			case Preparation: {
 				// Prepare the vision: get parameters for normalisation.
@@ -111,6 +112,8 @@ public class VisionService implements CaptureCallback {
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
 					state = VisionState.StaticDetection;
+					this.normaliseImage();
+					this.processImage(); // Process when ready so we have clusters
 					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();

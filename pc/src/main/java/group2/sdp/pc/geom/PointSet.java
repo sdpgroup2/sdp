@@ -390,4 +390,7 @@ public class PointSet implements Comparable<PointSet>
         else { return 1; }
     }
     
+    public boolean isWithinTimestamp(int i, long significantTime)
+    { return right().getTimestamp() - get(i).getTimestamp() < significantTime; }
+    
 }

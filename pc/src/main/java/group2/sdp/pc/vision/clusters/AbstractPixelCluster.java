@@ -87,7 +87,7 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	}
 
 	public List<Rect> getRects() {
-		return getRects(0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, 0, 2);
+		return getRects(0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, 0.0f, 2.0f);
 	}
 
 	/**

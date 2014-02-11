@@ -35,11 +35,6 @@ public class Receiver {
 				outStream = connection.openOutputStream();
 				LCD.clear();
 				LCD.drawString("Connected!", 0, 2);
-				byte[] robotReady = { 0, 0, 0, 0 };
-				if (outStream == null)
-					throw new Exception("Output stream is null!");
-				outStream.write(robotReady);
-				outStream.flush();
 
 				// Begin reading commands
 				short opcode = Commands.DO_NOTHING;
@@ -61,16 +56,14 @@ public class Receiver {
 					
 						case Commands.ANGLEMOVE:
 							LCD.clear();
-//							LCD.drawString("Moving at an angle!", 0, 2);
 							LCD.refresh();
 							LCD.drawString("M" + option1 + " "+ option2 + " " + option3, 0, 2);
-							pilot.move(option1, option2);
+							pilot.move(option1, option2, option3);
 							replyToPC(opcode, outStream);
 							break;
 						
 						case Commands.ROTATE:
 							LCD.clear();
-//							LCD.drawString("Rotate!", 0, 2);
 							LCD.refresh();
 							pilot.rotate(option1, option2);
 							LCD.drawString("R" + option1 + " "+ option2 + " " + option3, 0, 2);
@@ -79,7 +72,6 @@ public class Receiver {
 	
 						case Commands.KICK:
 							LCD.clear();
-//							LCD.drawString("Kicking!", 0, 2);
 							LCD.refresh();
 							LCD.drawString("K" + option1 + " "+ option2 + " " + option3, 0, 2);
 							pilot.kick(option1, option2);
@@ -87,9 +79,6 @@ public class Receiver {
 							break;
 						
 						case Commands.STOP:
-//							LCD.clear();
-//							LCD.drawString("Stopping!", 0, 2);
-//							LCD.refresh();
 							pilot.stop();
 							replyToPC(opcode, outStream);
 							break;

@@ -12,7 +12,8 @@ import java.awt.geom.Point2D;
 
 public class Point extends Point2D.Double implements Comparable<Point> {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 13L;
+	private long timestamp;
 
 	public double getAngle(Point other) {
         double dtheta, theta1, theta2;
@@ -56,6 +57,7 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 
     public Point(double x, double y) {
     	super(x, y);
+    	this.timestamp = System.currentTimeMillis();
     }
 
     public void setX(double x) {
@@ -65,6 +67,9 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     public void setY(double y) {
     	this.y = y;
     }
+    
+    public long getTimestamp()
+    { return timestamp; }
 
     public Vector sub(Point other) {
     	return new Vector(this.x - other.x, this.y - other.y);

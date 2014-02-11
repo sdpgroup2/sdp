@@ -47,17 +47,13 @@ public class Pitch {
 		this.lines = lines;
 		this.sections = sections;
 
-		pitchRect = lines.getImportantRects().get(0);
-		leftDefenseZone = getPitchRect(LEFT_DEF_POINT);
-		leftAttackZone = getPitchRect(LEFT_ATT_POINT);
-		rightDefenseZone = getPitchRect(RIGHT_DEF_POINT);
-		rightAttackZone = getPitchRect(RIGHT_ATT_POINT);
+//		pitchRect = lines.getImportantRects().get(0);
+//		leftDefenseZone = getPitchRect(LEFT_DEF_POINT);
+//		leftAttackZone = getPitchRect(LEFT_ATT_POINT);
+//		rightDefenseZone = getPitchRect(RIGHT_DEF_POINT);
+//		rightAttackZone = getPitchRect(RIGHT_ATT_POINT);
+		
 	}
-
-	public void addBall(Ball ball) {
-		this.ball = ball;
-	}
-
 //	/**
 //	 * Adds the robot to the pitch model, depending on the location of their
 //	 * rectangle.
@@ -102,6 +98,10 @@ public class Pitch {
 //		}
 //	}
 	
+	public void addBall(Ball ball) {
+		this.ball = ball;
+	}
+	
 	public void addRobot(Robot robot) {
 		this.robot = robot;
 	}
@@ -123,17 +123,17 @@ public class Pitch {
 	public Vector getRobotBallVector() {
 		return this.ball.getPosition().sub(this.robot.getPosition());
 	}
-
+	
 	public Rect getPitchRect(Point rectMember) {
-       Rect result = new Rect(0.0, 1.0, 0.0, 1.0);
-       List<Rect> rects = sections.getImportantRects();
-       for (Rect rect : rects) {
-    	   if (rect.contains(rectMember)) {
-    		   result = rect;
-    	   }
-        }
-       return result;
-	}
+	       Rect result = new Rect(0.0, 1.0, 0.0, 1.0);
+	       List<Rect> rects = sections.getImportantRects();
+	       for (Rect rect : rects) {
+	    	   if (rect.contains(rectMember)) {
+	    		   result = rect;
+	    	   }
+	        }
+	       return result;
+		}
 	
 	public Robot getRobot() { 
 		return this.robot;

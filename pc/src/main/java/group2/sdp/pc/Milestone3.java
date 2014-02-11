@@ -27,7 +27,7 @@ public class Milestone3 implements VisionServiceCallback {
 	public static PitchType pitchPlayed;
 	private Pitch pitch;
 	private VisionService visionService;
-	private Sender sender;
+	private Sender sender = null;
 	
 	public static void main(String[] args) {
 //		if (args.length < 2) {
@@ -79,25 +79,31 @@ public class Milestone3 implements VisionServiceCallback {
 		// Calculate the vector between ball and robot
 		Vector vectorToGo = pitch.getRobotBallVector();
 		
+		if (vectorToGo.length() < 10) {
+			sender.stop();
+		}
+		
 		// Calculate the angle we need to turn
-		double angleToTurn = pitch.getRobot().angleToVector(vectorToGo);		
+		double angleToTurn = pitch.getRobot().angleToVector(vectorToGo);
+		System.out.println("Turning angles");
 		try {
-			sender.rotate((short) angleToTurn, (short) 400);
+			sender.rotate((int) -angleToTurn, 40);
+			sender.move(1, 40, 1000);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			sender.disconnect();
 		}
 	}
 
 	public Milestone3() {
-		this.visionService = new VisionService(5, this);
 		try {
-			sender = new Sender("SDP 2A","00165307D55F");
+			sender = new Sender("SDP2A","00165307D55F");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Done bluetooth and vision");
-		
+		this.visionService = new VisionService(5, this);
+		this.visionService.start();
 	}
 	
 }

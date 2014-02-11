@@ -25,12 +25,13 @@ public class Robot extends RectangularObjectAdapter implements MovingObject {
 	}
 
 	@Override
-	public boolean isNearWall(Pitch pitch, double distance) {
+	public boolean isNearWall(PitchM pitch, double distance) {
 		return false;
 	}
 	
 	public double angleToVector(Vector destinationVector) {
-		return this.direction.angle(destinationVector);
+		double radians = this.direction.angle(destinationVector);
+		return Math.toDegrees(radians);
 	}
 	
 	@Override

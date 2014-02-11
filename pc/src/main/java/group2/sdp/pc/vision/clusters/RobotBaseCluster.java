@@ -15,7 +15,7 @@ public class RobotBaseCluster extends HSBCluster {
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(30, 75, 30, 75, 0.3f, 1.1f);
+		return getRects(25, 75, 25, 75, 0.5f, 1.1f);
 	} 
 
 	public Vector getRobotVector(HSBColor[] hsbArray) {
