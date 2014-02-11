@@ -4,6 +4,7 @@ import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.vision.HSBColor;
+import group2.sdp.util.Debug;
 
 import java.awt.Color;
 import java.util.List;
@@ -11,12 +12,12 @@ import java.util.List;
 public class RobotBaseCluster extends HSBCluster {
 
 	public RobotBaseCluster(String name) {
-		super(name, new HSBColor(100,90,48), new HSBColor(170,100,70), Color.cyan);
+		super(name, new HSBColor(80,70,34), new HSBColor(170,100,80), Color.cyan);
 	}
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(25, 75, 25, 75, 0.5f, 1.1f);
+		return getRects(25, 75, 25, 75, 0.3f, 1.1f);
 	} 
 
 	public Vector getRobotVector(HSBColor[] hsbArray) {
