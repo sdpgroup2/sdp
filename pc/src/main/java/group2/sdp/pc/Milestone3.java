@@ -42,12 +42,12 @@ public class Milestone3 implements VisionServiceCallback {
 	@Override
 	public void onPreparationReady(HSBColor[] hsbArray, PitchLinesCluster lines,
 			PitchSectionCluster sections, BallCluster ballCluster,
-			RobotBaseCluster robotCluster) {
+			RobotBaseCluster robotBaseCluster) {
 		this.pitch = new Pitch(lines, sections);
 		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
 		pitch.addBall(ball);
-		Rect blueRobotRect = robotCluster.getImportantRects().get(0);
-		Vector blueRobotDirection = robotCluster.getRobotVector(hsbArray);
+		Rect blueRobotRect = robotBaseCluster.getImportantRects().get(0);
+		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
 		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
 	}
 
