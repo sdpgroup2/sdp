@@ -215,7 +215,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             }
         }
         
-        RobotBaseCluster robotCluster = (RobotBaseCluster) visionService.getClusters()[1];
+        RobotBaseCluster robotCluster = (RobotBaseCluster) visionService.getClusters()[2];
         Vector vec = robotCluster.getRobotVector(hsbArray);
         if (vec == null) {
         	return;

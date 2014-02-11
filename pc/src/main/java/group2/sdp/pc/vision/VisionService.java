@@ -63,7 +63,7 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-//	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
 //	private DotCluster dotCluster = new DotCluster("Dot");
 //	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
@@ -72,7 +72,7 @@ public class VisionService implements CaptureCallback {
 	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-//		blueRobotCluster,
+		blueRobotCluster,
 //		blueCompoundRobot,
 //		yellowRobotCluster,
 		baseRobotCluster,
@@ -97,7 +97,6 @@ public class VisionService implements CaptureCallback {
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame) {
-		System.out.println("blablba");
 		timer.tick(25); // Prints the framerate every 25 frames
 		currentImage = frame.getBufferedImage();
 		callback.onFrameGrabbed(currentImage);

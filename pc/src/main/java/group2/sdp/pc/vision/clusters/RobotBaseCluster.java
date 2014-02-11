@@ -16,14 +16,15 @@ public class RobotBaseCluster extends HSBCluster {
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(25, 75, 25, 75, 0.5f, 1.1f);
+		return getRects(20, 60, 20, 60, 0.2f, 1.1f);
 	} 
 
 	public Vector getRobotVector(HSBColor[] hsbArray) {
 		DotCluster dotCluster = new DotCluster("Dot");
-		BlueRobotCluster robotCluster = new BlueRobotCluster("Dot");
+		YellowRobotCluster robotCluster = new YellowRobotCluster("Dot");
 		List<Rect> impRects = this.getImportantRects();
-		if (impRects.size() < 1) {
+		if (impRects == null || impRects.size() < 1) {
+			System.out.println("There are no bases.");
 			return null;
 		}
 		Rect impRect = impRects.get(0);
