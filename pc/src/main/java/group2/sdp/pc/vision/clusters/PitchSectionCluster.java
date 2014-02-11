@@ -11,7 +11,7 @@ public class PitchSectionCluster extends HSBCluster {
 
 	
 	public PitchSectionCluster(String name) {
-		super(name, ColorConfig.PITCH_2_MIN, ColorConfig.PITCH_2_MAX, Color.green);
+		super(name, ColorConfig.PITCH_1_MIN, ColorConfig.PITCH_1_MAX, Color.green);
 	}
 		
 	@Override

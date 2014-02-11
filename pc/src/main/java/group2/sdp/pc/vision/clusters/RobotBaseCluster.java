@@ -12,7 +12,7 @@ import java.util.List;
 public class RobotBaseCluster extends HSBCluster {
 
 	public RobotBaseCluster(String name) {
-		super(name, ColorConfig.BASE_2_MIN, ColorConfig.BASE_2_MAX, Color.cyan);
+		super(name, ColorConfig.BASE_1_MIN, ColorConfig.BASE_1_MAX, Color.cyan);
 	}
 
 	@Override

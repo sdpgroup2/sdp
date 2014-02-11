@@ -13,7 +13,6 @@ import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
-import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
@@ -223,8 +222,10 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
         if (vec != null) {
     		// Calculate the vector between ball and robot
     		Vector vectorToGo = pitch.getRobotBallVector();
-    		System.out.println(vectorToGo.angleDegrees(robotDirectionCounter));
-    		Debug.drawVector(image, robotBaseCluster.getImportantRects().get(0).getCenter(), vectorToGo);
+    		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
+    		if (robotImpRects != null && robotImpRects.size() > 0) {
+    			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo);
+    		}
         }
         
     	showImage(currentImage);
@@ -261,8 +262,11 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 			PitchLinesCluster lines, PitchSectionCluster sections,
 			BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
 		this.pitch = new Pitch(lines, sections);
-		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
-		pitch.addBall(ball);
+		List<Rect> ballImpRects = ballCluster.getImportantRects();
+		if (ballImpRects != null && ballImpRects.size() > 0) {
+			Ball ball = new Ball(ballImpRects.get(0));
+			pitch.addBall(ball);
+		}
 		List<Rect> blueRobotImpRects = robotBaseCluster.getImportantRects();
 		if (blueRobotImpRects == null || blueRobotImpRects.size() == 0) {
 			return;

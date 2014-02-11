@@ -3,6 +3,7 @@ package group2.sdp.pc.vision.clusters;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Shape;
 import group2.sdp.pc.geom.VecI;
+import group2.sdp.pc.vision.ColorConfig;
 import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
@@ -19,14 +20,13 @@ public class PitchLinesCluster extends HSBCluster {
 //	}
 
 	public PitchLinesCluster(String name) {
-		super(name, new HSBColor(10,0,59), new HSBColor(56,69,100), Color.white);
+		super(name, ColorConfig.LINES_1_MIN, ColorConfig.LINES_1_MAX, Color.white);
 	}
-	
 	
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(100, 640, 50, 480);
+		return getRects(400, 640, 50, 480);
 	}
 	
 	public Shape getPitchShape() {		

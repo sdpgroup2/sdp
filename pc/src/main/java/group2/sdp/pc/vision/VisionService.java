@@ -70,8 +70,8 @@ public class VisionService implements CaptureCallback {
 //		blueRobotCluster,
 //		yellowRobotCluster,
 		baseRobotCluster,
-		pitchLinesCluster,
-		pitchSectionCluster,
+//		pitchLinesCluster,
+//		pitchSectionCluster,
 		dotCluster,
 	};
 	

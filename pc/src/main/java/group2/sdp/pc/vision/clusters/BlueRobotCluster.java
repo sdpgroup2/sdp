@@ -14,6 +14,6 @@ import java.awt.Color;
 public class BlueRobotCluster extends RobotCluster {
 	
 	public BlueRobotCluster(String name) {
-		super(name, ColorConfig.BLUE_2_MIN, ColorConfig.BLUE_2_MAX, Color.blue);
+		super(name, ColorConfig.BLUE_1_MIN, ColorConfig.BLUE_1_MAX, Color.blue);
 	}
 }
