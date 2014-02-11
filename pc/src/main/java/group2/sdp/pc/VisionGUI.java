@@ -206,6 +206,9 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     @Override
     public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
     		BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
+    	
+        showImage(currentImage);
+        
         for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
                 Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
@@ -214,6 +217,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
         }
+        
         
         RobotBaseCluster robotCluster = (RobotBaseCluster) visionService.getClusters()[1];
         Vector vec = robotCluster.getRobotVector(hsbArray);
@@ -237,8 +241,6 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 //        		Debug.drawVector(image, rects.get(0).getCenter(), vec);
 //        	}
 //        }
-		
-        showImage(currentImage);
     }
 
     private void showImage(BufferedImage image) {

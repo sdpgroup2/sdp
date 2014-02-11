@@ -97,7 +97,6 @@ public class VisionService implements CaptureCallback {
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame) {
-		System.out.println("blablba");
 		timer.tick(25); // Prints the framerate every 25 frames
 		currentImage = frame.getBufferedImage();
 		callback.onFrameGrabbed(currentImage);
@@ -111,6 +110,7 @@ public class VisionService implements CaptureCallback {
 				this.prepareVision();
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
+					endPrepareVision();
 					state = VisionState.StaticDetection;
 					this.normaliseImage();
 					this.processImage(); // Process when ready so we have clusters
@@ -122,16 +122,19 @@ public class VisionService implements CaptureCallback {
 			}
 			case StaticDetection: {
 				// Find the objects that will not move and restrict processing region.
+				Debug.log("Looking for pitch...");
 				this.normaliseImage();
 				Rect pitchRect = this.findPitch();
 				if (pitchRect != null) {
 					processingRegion = pitchRect;
+					Debug.log("Found pitch");
 					// Clear image to make new region obvious
 					for (int i=0; i<hsbArray.length; i++) {
 						hsbArray[i].set(0,0,0);
 					}
 					state = VisionState.Processing;
 				}
+				break;
 			}
 			case Processing: {
 				// Process the images.
@@ -174,11 +177,12 @@ public class VisionService implements CaptureCallback {
 		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
 		meanSat += s;
 		meanBright += b;
-		this.currentFrame += 1;
-		if (currentFrame >= preparationFrames) {
-			meanSat /= preparationFrames;
-			meanBright /= preparationFrames;
-		}
+	}
+	
+	public void endPrepareVision() {
+		meanSat /= preparationFrames;
+		meanBright /= preparationFrames;
+		Debug.logf("Final mean saturation: %f, mean brightness: %f", meanSat, meanBright);
 	}
 
 	private void normaliseImage() {
