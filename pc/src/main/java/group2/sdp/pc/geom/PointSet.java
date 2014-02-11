@@ -9,8 +9,8 @@ package group2.sdp.pc.geom;
  *   - resizing (dynamic) array implementation, guaranteed O(1) amortised time.
  */
 
-import group2.sdp.util.PrettyPrint;
-import group2.sdp.util.Sort;
+import group2.sdp.pc.util.PrettyPrint;
+import group2.sdp.pc.util.Sort;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

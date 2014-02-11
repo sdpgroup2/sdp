@@ -4,6 +4,8 @@ import group2.sdp.pc.comms.Sender;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
+import group2.sdp.pc.util.Constants.PitchType;
+import group2.sdp.pc.util.Constants.TeamColor;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
@@ -12,8 +14,6 @@ import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.world.Ball;
-import group2.sdp.pc.world.Constants.PitchType;
-import group2.sdp.pc.world.Constants.TeamColor;
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
 

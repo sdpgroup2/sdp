@@ -4,8 +4,8 @@ import group2.sdp.pc.geom.MathU;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.VecI;
+import group2.sdp.pc.util.Debug;
 import group2.sdp.pc.vision.HSBColor;
-import group2.sdp.util.Debug;
 
 import java.awt.Color;
 import java.util.HashSet;

@@ -2,23 +2,15 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.util.Debug;
 import group2.sdp.pc.vision.clusters.BallCluster;
-import group2.sdp.pc.vision.clusters.BlueRobotCluster;
-import group2.sdp.pc.vision.clusters.CompoundRobotCluster;
-import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
-import group2.sdp.pc.vision.clusters.PitchSection;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
-import group2.sdp.pc.vision.clusters.YellowRobotCluster;
-import group2.sdp.pc.world.Robot;
-import group2.sdp.util.Debug;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.jcu.v4l4j.CaptureCallback;

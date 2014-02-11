@@ -3,9 +3,9 @@ package group2.sdp.pc.world;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
+import group2.sdp.pc.util.CoordinateTranslator;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
-import group2.sdp.util.CoordinateTranslator;
 
 import java.util.List;
 

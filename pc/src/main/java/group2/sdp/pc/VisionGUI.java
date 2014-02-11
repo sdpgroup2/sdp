@@ -5,6 +5,7 @@ import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.gui.ColorChecker;
 import group2.sdp.pc.gui.HSBPanel;
+import group2.sdp.pc.util.Debug;
 import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
@@ -13,7 +14,6 @@ import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
-import group2.sdp.util.Debug;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -222,18 +222,6 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     		vec.scale(10);
     		Debug.drawVector(image, rects.get(0).getCenter(), vec);
     	}
-
-//        robotCluster = (RobotCluster) visionService.getClusters()[1];
-//        vecs = robotCluster.getRobotVectors(hsbArray);
-//        if (vecs == null) {
-//        	return;
-//        }
-//        for (Vector vec : vecs) {
-//        	List<Rect> rects = robotCluster.getImportantRects();
-//        	if (rects.size() > 0) {
-//        		Debug.drawVector(image, rects.get(0).getCenter(), vec);
-//        	}
-//        }
 		
         showImage(currentImage);
     }
