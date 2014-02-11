@@ -29,7 +29,7 @@ public class Pitch extends Plane implements IPitch {
 
 	@Override
 	public void updateRobotState(byte id, Point p, double theta) {
-		// TODO Auto-generated method stub
+		//zones[id]
 		
 	}
 
