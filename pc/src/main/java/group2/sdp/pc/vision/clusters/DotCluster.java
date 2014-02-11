@@ -10,7 +10,7 @@ import java.util.List;
 public class DotCluster extends HSBCluster {
 
 	public DotCluster(String name) {
-		super(name, new HSBColor(111, 55, 27), new HSBColor(172, 100, 36), Color.ORANGE);
+		super(name, new HSBColor(60, 35, 10), new HSBColor(160, 100, 25), Color.ORANGE);
 	}
 
 	@Override
