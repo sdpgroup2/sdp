@@ -1,6 +1,5 @@
 package group2.sdp.pc.comms;
 
-import java.io.IOException;
 
 public class TestComms {
 

@@ -1,25 +1,47 @@
 package group2.sdp.pc.world;
 
+import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
 
 public class Robot extends RectangularObjectAdapter implements MovingObject {
 
-	private Vector velocity;
-
-	public Robot(Rect boundingRect) {
+	private Point previousPosition;
+	private Vector direction;
+	
+	public Robot(Rect boundingRect, Vector direction) {
 		super(boundingRect);
-		this.velocity = velocity;
+		this.direction = direction;
+		this.previousPosition = boundingRect.getCenter();
 	}
-
+	
+	public Vector getDirection() {
+		return direction;
+	}
+	
 	@Override
 	public Vector getVelocity() {
-		return this.velocity;
+		return this.position.sub(previousPosition);
 	}
 
 	@Override
 	public boolean isNearWall(PitchM pitch, double distance) {
 		return false;
+	}
+	
+	public double angleToVector(Vector destinationVector) {
+		double radians = this.direction.angle(destinationVector);
+		return Math.toDegrees(radians);
+	}
+	
+	@Override
+	public void setPosition(Point robotPosition) {
+		this.previousPosition = this.position;
+		this.position = robotPosition;
+	}
+	
+	public void setDirection(Vector direction) {
+		this.direction = direction;
 	}
 
 }

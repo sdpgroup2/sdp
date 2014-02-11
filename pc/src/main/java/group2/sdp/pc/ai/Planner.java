@@ -71,9 +71,9 @@ public class Planner {
 		
 		
 	}
-	private int[] move(int direction, int speed, int distance) {
+	/*private int[] move(int direction, int speed, int distance) {
 		return new int[] {Commands.ANGLEMOVE, direction,speed,distance};
-	}
+	}*/
 	
 	
 }
