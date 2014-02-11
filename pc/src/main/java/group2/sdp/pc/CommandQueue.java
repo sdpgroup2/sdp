@@ -1,6 +1,6 @@
 package group2.sdp.pc;
 
-import group2.sdp.pc.world.Constants;
+import group2.sdp.util.Constants;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.SynchronousQueue;

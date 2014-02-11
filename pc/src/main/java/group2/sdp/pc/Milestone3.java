@@ -13,10 +13,10 @@ import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.world.Ball;
-import group2.sdp.pc.world.Constants.PitchType;
-import group2.sdp.pc.world.Constants.TeamColor;
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
+import group2.sdp.util.Constants.PitchType;
+import group2.sdp.util.Constants.TeamColor;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
