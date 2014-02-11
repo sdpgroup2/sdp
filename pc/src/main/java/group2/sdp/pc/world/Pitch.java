@@ -1,3 +1,7 @@
+/**
+ * @author Jaroslaw Hirniak, s1143166
+ */
+
 package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.*;
@@ -78,6 +82,11 @@ public class Pitch extends Plane implements IPitch {
 	@Override
 	public Zone getZone(byte id) {
 		return zones[id];
+	}
+
+	@Override
+	public PointSet getTrajectory() {
+		return super.getTrajectory(ball.getPosition(), ball.getDirection());
 	}
 
 }

@@ -59,4 +59,6 @@ public interface IPitch
     public double getTachoToPixelRatio();
     public void setToTachoTranslation();
     public void resetToTachoTranslation();
+    
+    public PointSet getTrajectory();
 }

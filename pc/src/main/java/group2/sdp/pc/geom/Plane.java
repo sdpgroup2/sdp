@@ -106,7 +106,18 @@ public class Plane
     }
     
     /** Check if the line intersects the zone */
-    public boolean intersects(Line m)
+    public boolean isInterestedByLine(Point p0, Point p1)
+    {
+    	Line line = new Line();
+    	line.x1 = (float) p0.x;
+    	line.x2 = (float) p1.x;
+    	line.y1 = (float) p0.y;
+    	line.y2 = (float) p1.y;
+    	
+    	return isIntersectedBy(line);
+    }
+    
+    public boolean isIntersectedBy(Line m)
     {
     	for (int i = 1; i < outline.size(); i++)
     	{
