@@ -1,5 +1,6 @@
 package group2.sdp.pc.vision.clusters;
 
+import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.vision.HSBColor;
@@ -20,6 +21,7 @@ public class RobotBaseCluster extends HSBCluster {
 
 	public Vector getRobotVector(HSBColor[] hsbArray) {
 		DotCluster dotCluster = new DotCluster("Dot");
+		BlueRobotCluster robotCluster = new BlueRobotCluster("Dot");
 		List<Rect> impRects = this.getImportantRects();
 		if (impRects.size() < 1) {
 			return null;
@@ -33,14 +35,17 @@ public class RobotBaseCluster extends HSBCluster {
 				HSBColor color = hsbArray[index];
 				if (!testPixel(x, y, color)) {
 					dotCluster.testPixel(x, y, color);
+					robotCluster.testPixel(x, y, color);
 				}
 			}
 		}
-		List<Rect> boundingRects = dotCluster.getImportantRects();
-		if (boundingRects.size() > 0) {
-			System.out.println(boundingRects.get(0).getCenter());
-			System.out.println(impRect.getCenter());
-			Vector vec = boundingRects.get(0).getCenter().sub(impRect.getCenter());
+		List<Rect> dotBoundingRects = dotCluster.getImportantRects();
+		List<Rect> robotBoundingRects = robotCluster.getImportantRects();
+		if (dotBoundingRects.size() > 0 && robotBoundingRects.size() > 0) {
+			Point dotCenter = dotBoundingRects.get(0).getCenter();
+			Point robotCenter = robotBoundingRects.get(0).getCenter();
+			Vector vec = dotCenter.sub(robotCenter);
+			vec.negate();
 			return vec;
 		}
 		return null;
