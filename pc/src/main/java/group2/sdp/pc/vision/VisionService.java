@@ -2,22 +2,18 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
-import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
-import group2.sdp.pc.vision.clusters.CompoundRobotCluster;
 import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
-import group2.sdp.pc.world.Robot;
 import group2.sdp.util.Debug;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.jcu.v4l4j.CaptureCallback;
@@ -62,9 +58,7 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-	private DotCluster dotCluster = new DotCluster("Dot");
 //	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
@@ -75,19 +69,12 @@ public class VisionService implements CaptureCallback {
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
-<<<<<<< HEAD
 		//blueCompoundRobot,
 		yellowRobotCluster,
 		baseRobotCluster,
 		pitchLinesCluster,
 		pitchSectionCluster,
 		dotCluster,
-=======
-//		blueCompoundRobot,
-//		yellowRobotCluster,
-		baseRobotCluster,
-		dotCluster
->>>>>>> e569fcb509e551f51495d1f39dbb48ad5ef0ebb8
 	};
 	
 	private Rect processingRegion;
