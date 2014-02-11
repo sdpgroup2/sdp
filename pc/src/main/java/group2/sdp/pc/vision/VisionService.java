@@ -62,9 +62,9 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-//	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-//	private DotCluster dotCluster = new DotCluster("Dot");
+	private DotCluster dotCluster = new DotCluster("Dot");
 //	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
@@ -75,12 +75,19 @@ public class VisionService implements CaptureCallback {
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
+<<<<<<< HEAD
 		//blueCompoundRobot,
 		yellowRobotCluster,
 		baseRobotCluster,
 		pitchLinesCluster,
 		pitchSectionCluster,
 		dotCluster,
+=======
+//		blueCompoundRobot,
+//		yellowRobotCluster,
+		baseRobotCluster,
+		dotCluster
+>>>>>>> e569fcb509e551f51495d1f39dbb48ad5ef0ebb8
 	};
 	
 	private Rect processingRegion;
@@ -118,7 +125,7 @@ public class VisionService implements CaptureCallback {
 					state = VisionState.StaticDetection;
 					this.normaliseImage();
 					this.processImage(); // Process when ready so we have clusters
-					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster);
+					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster, blueRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
@@ -146,7 +153,7 @@ public class VisionService implements CaptureCallback {
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
+				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster, blueRobotCluster);
 				break;
 			}
 		}

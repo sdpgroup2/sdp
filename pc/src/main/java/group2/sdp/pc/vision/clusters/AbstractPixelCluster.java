@@ -81,6 +81,40 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 		}
 		return rects;
 	}
+	
+	/**
+	 * HACK function
+	 * @param minLength
+	 * @param maxLength
+	 * @param minBreadth
+	 * @param maxBreadth
+	 * @param minFill
+	 * @param maxFill
+	 * @param robotCluster
+	 * @return
+	 */
+	public List<Rect> getRects(int minLength, int maxLength, int minBreadth,
+			int maxBreadth, float minFill, float maxFill, HSBCluster robotCluster) {
+		List<Rect> rects = new ArrayList<Rect>();
+		for (Set<VecI> region: getRegions()) {
+			Rect rect = MathU.getBoundingBox(region);
+			int rectArea = (int) (rect.getWidth() * rect.getHeight());
+			double fill = (rectArea > 0) ? (region.size()) / (rect.getWidth() * rect.getHeight()) : 0f;
+			int length = (int) Math.max(rect.getWidth(), rect.getHeight());
+			int breadth = (int) Math.min(rect.getWidth(), rect.getHeight());
+			List<Rect> robotclusterImpRects = robotCluster.getImportantRects();
+			if (minLength <= length && length <= maxLength &&
+					minBreadth <= breadth && breadth <= maxBreadth &&
+					minFill <= fill && fill <= maxFill) {
+				if (robotclusterImpRects == null || robotclusterImpRects.size() > 0) {
+					if (rect.contains(robotclusterImpRects.get(0))) {
+						rects.add(rect);
+					}
+				}
+			}
+		}
+		return rects;
+	}
 
 	public List<Rect> getRects(int minLength, int maxLength, int minBreadth, int maxBreadth) {
 		return getRects(minLength, maxLength, minBreadth, maxBreadth, 0, 1);

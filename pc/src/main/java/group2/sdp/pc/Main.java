@@ -1,0 +1,44 @@
+package group2.sdp.pc;
+
+import group2.sdp.pc.ai.Planner;
+import group2.sdp.pc.comms.Sender;
+
+import java.io.IOException;
+
+public class Main {
+
+	public static final String ROBOT_2A_NAME = "SDP 2A";
+	public static final String ROBOT_2A_MAC = "00165307D55F";
+	public static final String ROBOT_2D_NAME = "SDP 2D";
+	public static final String ROBOT_2D_MAC = "0016530BBBEA";
+	private static Planner p;
+	public static void main (String[] args) {
+		
+		
+		Sender connection2A = null;
+		
+		try {
+			connection2A = new Sender(ROBOT_2A_NAME, ROBOT_2A_MAC);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+		Planner p = new Planner(connection2A);		
+		
+
+		
+//		connection = null;
+//		
+//		try {
+//			connection = new Sender(ROBOT_2D_NAME, ROBOT_2D_MAC);
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}		
+//		
+//		
+		
+		
+	}
+	
+}
