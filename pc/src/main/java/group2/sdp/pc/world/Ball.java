@@ -6,8 +6,6 @@ import group2.sdp.pc.geom.Vector;
 
 public class Ball extends CircularObjectAdapter implements MovingObject {
 
-	private Point previousPosition;
-
 	public Ball(Rect boundingRect) {
 		super(boundingRect);
 		this.previousPosition = boundingRect.getCenter();

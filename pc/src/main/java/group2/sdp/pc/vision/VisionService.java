@@ -2,14 +2,13 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.geom.VecI;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
 import group2.sdp.pc.vision.clusters.CompoundRobotCluster;
 import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.PitchLines;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
-import group2.sdp.pc.vision.clusters.PitchSection;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
@@ -63,20 +62,21 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-//	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-//	private DotCluster dotCluster = new DotCluster("Dot");
 //	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
 	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
+	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow");
+	private DotCluster dotCluster = new DotCluster("Dots");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-//		blueRobotCluster,
+		blueRobotCluster,
 //		blueCompoundRobot,
 //		yellowRobotCluster,
 		baseRobotCluster,
-//		dotCluster
+		dotCluster
 	};
 	
 	private Rect processingRegion;
@@ -114,7 +114,7 @@ public class VisionService implements CaptureCallback {
 					state = VisionState.StaticDetection;
 					this.normaliseImage();
 					this.processImage(); // Process when ready so we have clusters
-					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster);
+					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster, blueRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
@@ -142,7 +142,7 @@ public class VisionService implements CaptureCallback {
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
+				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster, blueRobotCluster);
 				break;
 			}
 		}

@@ -9,13 +9,17 @@ import group2.sdp.pc.vision.HSBColor;
 import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
 import group2.sdp.pc.vision.clusters.BallCluster;
-import group2.sdp.pc.vision.clusters.BlueRobotCluster;
+
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.RobotCluster;
-import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+
+import group2.sdp.pc.world.Ball;
+import group2.sdp.pc.world.Pitch;
+import group2.sdp.pc.world.Robot;
+
 import group2.sdp.util.Debug;
 
 import java.awt.Color;
@@ -58,6 +62,10 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private BufferedImage currentImage;
     private int[] postColorArray;
 
+    private Vector robotDirectionCounter;
+    
+    private Pitch pitch;
+
 
     public static void main(String[] args) {
     	new VisionGUI();
@@ -72,11 +80,11 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 	    final JList<HSBCluster> clusterList = new JList<HSBCluster>(clusters);
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
-	    colorChecker = new ColorChecker();;
+	    colorChecker = new ColorChecker();
 
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        windowFrame.addWindowListener(this);
+        windowFrame.addWindowListener(this); 
         windowFrame.setVisible(true);
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -205,7 +213,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 
     @Override
     public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
-    		BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
+    		BallCluster ballCluster, RobotBaseCluster robotBaseCluster, RobotCluster robotCluster) {
         
         for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
@@ -216,15 +224,25 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             }
         }        
         
-        RobotBaseCluster robotCluster = (RobotBaseCluster) visionService.getClusters()[1];
-        Vector vec = robotCluster.getRobotVector(hsbArray);
+
+        Vector vec = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
         if (vec != null) {
 	    	List<Rect> rects = robotCluster.getImportantRects();
 	    	if (rects.size() > 0) {
 	    		vec.scale(10);
-	    		Debug.drawVector(image, rects.get(0).getCenter(), vec);
+	    		if (robotDirectionCounter == null) {
+	    			robotDirectionCounter = vec;
+	    		} else {
+	    			robotDirectionCounter.averageWith(vec);
+	    		}
+	    		Debug.drawVector(image, rects.get(0).getCenter(), robotDirectionCounter);
+	    		// Calculate the vector between ball and robot
+	    		Vector vectorToGo = pitch.getRobotBallVector();
+	    		System.out.println(vectorToGo.angleDegrees(robotDirectionCounter));
+	    		Debug.drawVector(image, rects.get(0).getCenter(), vectorToGo);
 	    	}
         }
+
 
 //        robotCluster = (RobotCluster) visionService.getClusters()[1];
 //        vecs = robotCluster.getRobotVectors(hsbArray);
@@ -250,18 +268,34 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		this.visionService = new VisionService(5, this);
 		this.frameSize = visionService.getSize();
 		this.postColorArray = new int[frameSize.width * frameSize.height];
-
+		
 		// Init GUI
 		initWindow();
 		visionService.start();
+	}
+	
+	public VisionGUI(VisionService visionService) {
+		super();
+		this.visionService = visionService;
+		this.frameSize = visionService.getSize();
+		this.postColorArray = new int[frameSize.width * frameSize.height];
+
+		// Init GUI
+		initWindow();
 	}
 
 	@Override
 	public void onPreparationReady(HSBColor[] hsbArray,
 			PitchLinesCluster lines, PitchSectionCluster sections,
-			BallCluster ballCluster, RobotBaseCluster robotCluster) {
-		// TODO Auto-generated method stub
-		
+			BallCluster ballCluster, RobotBaseCluster robotBaseCluster,
+			RobotCluster robotCluster) {
+		this.pitch = new Pitch(lines, sections);
+		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
+		pitch.addBall(ball);
+		Rect blueRobotRect = robotCluster.getImportantRects().get(0);
+		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
+		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
+
 	}
 
 }
