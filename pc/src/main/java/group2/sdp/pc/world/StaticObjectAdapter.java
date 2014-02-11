@@ -5,6 +5,7 @@ import group2.sdp.pc.geom.Rect;
 
 public abstract class StaticObjectAdapter implements StaticObject {
 
+	protected Point previousPosition;
 	protected Point position;
 
 	public StaticObjectAdapter(Rect boundingBox) {
