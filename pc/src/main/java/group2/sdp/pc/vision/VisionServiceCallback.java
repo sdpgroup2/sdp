@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 public interface VisionServiceCallback {
 
-	public void onPreparationReady(HSBColor[] hsbArray, PitchLinesCluster lines, PitchSectionCluster sections, BallCluster ballCluster, RobotBaseCluster robotBaseCluster, RobotCluster robotCluster);
+	public void onPreparationReady(HSBColor[] hsbArray, PitchLinesCluster lines, PitchSectionCluster sections, BallCluster ballCluster, RobotBaseCluster robotBaseCluster);
 
     public void onFrameGrabbed(BufferedImage image);
 
@@ -18,6 +18,6 @@ public interface VisionServiceCallback {
 
     public void onPreparationFrame();
 
-	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray, BallCluster ballCluster, RobotBaseCluster robotBaseCluster, RobotCluster robotCluster);
+	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray, BallCluster ballCluster, RobotBaseCluster robotBaseCluster);
 
 }

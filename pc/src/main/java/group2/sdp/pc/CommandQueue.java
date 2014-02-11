@@ -1,9 +1,9 @@
 package group2.sdp.pc;
 
+
 import group2.sdp.util.Constants;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.SynchronousQueue;
 
 public class CommandQueue {
 	private static ConcurrentLinkedQueue<int[]> commandQueue2A = new ConcurrentLinkedQueue<int[]>();
