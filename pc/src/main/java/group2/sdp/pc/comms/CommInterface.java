@@ -10,7 +10,7 @@ public interface CommInterface {
 	 * @param speed
 	 * @param distance in mm to travel
 	 * @return 12 - sent successfully; -1 - buffer full; -2 - confirmation failed;
-	 * 		   -3 - not connected to robot
+	 * 		   -3 - not connected to robot; 7 - lock
 	 * @throws IOException
 	 */
 
@@ -21,7 +21,7 @@ public interface CommInterface {
 	 * @param angle
 	 * @param speed
 	 * @return 6 - sent successfully; -1 - buffer full; -2 - confirmation failed;
-	 * 		   -3 - not connected to robot
+	 * 		   -3 - not connected to robot; 7 - lock
 	 * @throws IOException
 	 */
 	public int rotate(int angle, int speed) throws IOException;
@@ -31,7 +31,7 @@ public interface CommInterface {
 	 * @param angle
 	 * @param speed
 	 * @return 4 - sent successfully; -1 - buffer full; -2 - confirmation failed;
-	 * 		   -3 - not connected to robot
+	 * 		   -3 - not connected to robot; 7 - lock
 	 * @throws IOException
 	 */
 	public int kick(int angle, int speed) throws IOException;
@@ -39,7 +39,7 @@ public interface CommInterface {
 	/**
 	 * 
 	 * @return 3 - sent successfully; -1 - buffer full; -2 - confirmation failed;
-	 * 		   -3 - not connected to robot
+	 * 		   -3 - not connected to robot; 7 - lock
 	 * @throws IOException
 	 */
 	public int stop();
@@ -48,7 +48,7 @@ public interface CommInterface {
 	 * 
 	 * @param turnRate
 	 * @return 36 - sent successfully; -1 - buffer full; -2 - confirmation failed;
-	 * 		   -3 - not connected to robot
+	 * 		   -3 - not connected to robot; 7 - lock
 	 * @throws IOException
 	 */
 	public int steer(int turnRate) throws IOException;

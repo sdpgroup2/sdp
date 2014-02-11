@@ -3,8 +3,6 @@
 
 package group2.sdp.pc.geom;
 
-import java.awt.geom.Rectangle2D;
-
 import lejos.geom.Rectangle;
 
 
@@ -112,11 +110,7 @@ public class Plane
     	{
     		Point p0 = outline.get(i - 1);
     		Point p1 = outline.get(i);
-    		Line wall = new Line();
-    		wall.x1 = (float) p0.x;
-    		wall.x2 = (float) p1.x;
-    		wall.y1 = (float) p0.y;
-    		wall.y2 = (float) p1.y;
+    		Line wall = new Line(p0.x, p1.x, p0.y, p1.y);
     		
     		if (intersects(m, wall))
     		{ return true; }
@@ -127,15 +121,15 @@ public class Plane
     
     public Point getIntersection(Line line, Line wall)
     {
-    	float ix, iy;
+    	double ix, iy;
     	
-	    float s1_x, s1_y, s2_x, s2_y;
+	    double s1_x, s1_y, s2_x, s2_y;
 	    s1_x = line.x2 - line.x1;
 	    s1_y = line.y2 - line.y1;
 	    s2_x = wall.x2 - wall.x1;
 	    s2_y = wall.y2 - wall.y1;
 
-	    float s, t;
+	    double s, t;
 	    s = (-s1_y * (line.x1 - wall.x1) + s1_x * (line.y1 - wall.y1)) / (-s2_x * s1_y + s1_x * s2_y);
 	    t = ( s2_x * (line.y1 - wall.y1) - s2_y * (line.x1 - wall.x1)) / (-s2_x * s1_y + s1_x * s2_y);
 
@@ -159,11 +153,7 @@ public class Plane
     		Point p0 = outline.get(i - 1);
     		Point p1 = outline.get(i);
     		
-    		Line wall = new Line();
-    		wall.x1 = (float) p0.x;
-    		wall.x2 = (float) p1.x;
-    		wall.y1 = (float) p0.y;
-    		wall.y2 = (float) p1.y;
+    		Line wall = new Line(p0.x, p1.x, p0.y, p1.y);
     		
     		intersection = getIntersection(line, wall);
     		if (intersection != null)
@@ -225,12 +215,7 @@ public class Plane
     	boundary = getBoundary();
     	double width = boundary.getWidth();
     	double height = boundary.getHeight();
-    	Line line = new Line();
-    	
-    	line.x1 = (float) origin.x;
-    	line.y1 = (float) origin.y;
-    	line.x2 = (float) (origin.x + width * Math.tan(direction));
-    	line.y2 = (float) (origin.y + height * Math.tan(direction));
+    	Line line = new Line(origin.x, origin.y, origin.x + width * Math.tan(direction), origin.y + height * Math.tan(direction));
 
     	return line;
     }

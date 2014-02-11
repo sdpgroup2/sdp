@@ -1,21 +1,25 @@
 package group2.sdp.pc.comms;
 
-import java.io.*;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import lejos.nxt.LCD;
-import lejos.pc.comm.*;
+import lejos.pc.comm.NXTComm;
+import lejos.pc.comm.NXTCommException;
+import lejos.pc.comm.NXTCommFactory;
+import lejos.pc.comm.NXTInfo;
 
 /**
  * Calling methods in this class will send messages to device through a stream received in the BTReceive class, and prompts
  * actions in the robot package
  * @author Gordon Edwards
  * @author Michael Mair
- * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843 
+ * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
  * and from SDP Group 4 2013
  */
-public class Sender implements CommInterface {   
+public class Sender implements CommInterface {
 	private OutputStream outStream;
 	private InputStream inStream;
 	private NXTComm comm;
@@ -23,7 +27,8 @@ public class Sender implements CommInterface {
 	private int buffer = 0;
 	private NXTInfo nxtInfo;
 	private boolean robotReady;
-	
+	private boolean lock;
+
 	public Sender(String robotName, String robotMacAddress) throws IOException{
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
 				robotMacAddress);
@@ -33,17 +38,17 @@ public class Sender implements CommInterface {
 	public int move(int direction, int speed, int distance) throws IOException {
 		short[] command = { Commands.ANGLEMOVE, (short) direction, (short) speed, (short) distance};
 		int confirmation = attemptConnection(command);
-		System.out.println("Move...");
+		System.out.printf("Moving in %d direction with %d speed and %d distance\n", direction, speed, distance);
 		return confirmation;
 	} 
-	
+
 	public int rotate(int angle, int speed) throws IOException {
 		short[] command = { Commands.ROTATE, (short) angle, (short) speed, 0};
 		int confirmation = attemptConnection(command);
-		System.out.println("Rotate...");
+		System.out.printf("Rotating at a %d angle\n", angle);
 		return confirmation;
 	}
-	
+
 	public int kick(int angle, int speed) throws IOException {
 		short[] command = { Commands.KICK, (short) angle, (short) speed, 0 };
 		long timeStart = System.currentTimeMillis();
@@ -51,7 +56,7 @@ public class Sender implements CommInterface {
 		long timeEnd = System.currentTimeMillis();
 		System.out.printf("Kick with angle %d and speed %d, took %dms\n", angle, speed, timeEnd-timeStart);
 		return confirmation;
-		
+
 	}
 	
 	public int steer(int turnRate) throws IOException {
@@ -59,16 +64,18 @@ public class Sender implements CommInterface {
 		int confirmation = attemptConnection(command);
 		System.out.println("Steer...");
 		return confirmation;
-		
+
 	}
-	
+
+	@Override
 	public int stop() {
 		short[] command = { Commands.STOP, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Stop");
 		return confirmation;
 	}
-	
+
+	@Override
 	public void disconnect() {
 		short[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
@@ -86,6 +93,7 @@ public class Sender implements CommInterface {
 		System.out.println("Quit... Please reconnect.");
 	}
 
+	@Override
 	public void forcequit() {
 		short[] command = { Commands.FORCEQUIT, 0, 0, 0 };
 		try {
@@ -102,9 +110,9 @@ public class Sender implements CommInterface {
 		closeBluetoothConn();
 		System.out.println("Force quit... Reset the brick.");
 	}
-	
+
 	private void openBluetoothConn(String robotName) throws IOException {
-		
+
 		comm = null;
 		try {
 			comm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
@@ -116,15 +124,15 @@ public class Sender implements CommInterface {
 
 		try {
 			comm.open(nxtInfo);
-			outStream = (OutputStream) comm.getOutputStream();
-			inStream = (InputStream) comm.getInputStream();   
+			outStream = comm.getOutputStream();
+			inStream = comm.getInputStream();
 		} catch (NXTCommException e) {
 			throw new IOException("Failed to connect " + e.toString());
-		} 
+		}
 		robotReady = true;
 		connected = true;
    }
-	
+
 	private void closeBluetoothConn() {
 		try {
 	    	inStream.close();
@@ -136,17 +144,17 @@ public class Sender implements CommInterface {
 	    	System.out.println(ioe.getMessage());
 	    }
 	}
-	
+
 	private int sendToRobot(short[] comm) throws IOException {
 		if (!connected)
 			return -3;
 		if (buffer < 2) {
 			ByteBuffer b = ByteBuffer.allocate(8);
-			
+
 			for (int i = 0; i < 4; i++) {
 				b.putShort(comm[i]);
 			}
-			
+
 			byte[] command = b.array();
 
 			outStream.write(command);
@@ -180,6 +188,7 @@ public class Sender implements CommInterface {
 		}
 
 	}
+
 	
 	private short[] receiveFromRobot() throws IOException {
 		byte[] res = new byte[8];
@@ -192,23 +201,29 @@ public class Sender implements CommInterface {
 		
 		return ret;
 	}
-	
+
 	public boolean isConnected() {
 		return connected;
 	}
-	
+
 	public boolean isRobotReady() {
 		return robotReady;
 	}
 
 	public void clearBuff() {
-		
 		buffer = 0;
 	}
 	
+	public void lock() {
+		this.lock = true;
+	}
+
 	private int attemptConnection(short[] command) {
+		if (this.lock) {
+			return 7;
+		}
 		int confirmation = 0;
-		
+
 		//for (int i = 0; i<10; i++){
 			try {
 				confirmation = sendToRobot(command);
@@ -220,7 +235,7 @@ public class Sender implements CommInterface {
 				e1.printStackTrace();
 			}
 		//}
-	
+
 		return confirmation;
 	}
 }

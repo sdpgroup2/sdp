@@ -50,7 +50,7 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 		if (splitThisFrame) {
 			return _regions;
 		} else {
-			PixelGraph graph = new PixelGraph(pixels);
+			PixelGraph graph = new PixelGraph(getPixels());
 			_regions = graph.getDisjointRegions();
 			splitThisFrame = true;
 			return _regions;

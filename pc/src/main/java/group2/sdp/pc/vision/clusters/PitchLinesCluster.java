@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
 
-public class PitchLines extends HSBCluster {
+public class PitchLinesCluster extends HSBCluster {
 	
 	enum Dir {
 		Left,
@@ -19,8 +19,8 @@ public class PitchLines extends HSBCluster {
 	}
 	
 
-	public PitchLines(String name) {
-		super(name, new HSBColor(0,0,33), new HSBColor(360,70,100), Color.white);
+	public PitchLinesCluster(String name) {
+		super(name, new HSBColor(0,0,33), new HSBColor(360,21,100), Color.white);
 	}
 	
 	@Override
