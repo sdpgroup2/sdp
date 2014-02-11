@@ -12,7 +12,6 @@ import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.world.Ball;
-import group2.sdp.pc.world.Constants;
 import group2.sdp.pc.world.Constants.PitchType;
 import group2.sdp.pc.world.Constants.TeamColor;
 import group2.sdp.pc.world.Pitch;
@@ -20,6 +19,7 @@ import group2.sdp.pc.world.Robot;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 public class Milestone3 implements VisionServiceCallback {
 	
@@ -65,23 +65,36 @@ public class Milestone3 implements VisionServiceCallback {
 
 	@Override
 	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
-			BallCluster ballCluster, RobotBaseCluster robotCluster) {
+			BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
 		
 		// Update the ball position
-		Point ballPosition = ballCluster.getImportantRects().get(0).getCenter();
+		List<Rect> ballRects = ballCluster.getImportantRects();
+		if (ballRects == null || ballRects.size() < 1) {
+			System.out.println("No ball found.");
+			return;
+		}
+		Point ballPosition = ballRects.get(0).getCenter();
 		pitch.updateBallPosition(ballPosition);
 		
 		// Update the robot position
-		Point blueRobotPosition = robotCluster.getImportantRects().get(0).getCenter();
-		Vector blueRobotDirection = robotCluster.getRobotVector(hsbArray);
+		List<Rect> robotRects = robotBaseCluster.getImportantRects();
+		if (robotRects == null || robotRects.size() < 1) {
+			System.out.println("No robot found.");
+			return;
+		}
+		Point blueRobotPosition = robotRects.get(0).getCenter();
+		
+		// Update the robot direction
+		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
+		if (blueRobotDirection == null) {
+			System.out.println("No direction for the robot.");
+			return;
+		}
+		
 		pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
 		
 		// Calculate the vector between ball and robot
 		Vector vectorToGo = pitch.getRobotBallVector();
-		
-		if (vectorToGo.length() < 10) {
-			sender.stop();
-		}
 		
 		// Calculate the angle we need to turn
 		double angleToTurn = pitch.getRobot().angleToVector(vectorToGo);
