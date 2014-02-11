@@ -6,8 +6,6 @@ package group2.sdp.pc.geom;
 
 public class Plane
 {
-	private static int BOUNCES = 10;
-	
     private String id = null;
     private PointSet outline = null;
     private double eps = 1e-9;

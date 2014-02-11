@@ -7,7 +7,7 @@ import group2.sdp.pc.strategy.Zone;
 public class Pitch extends Plane implements IPitch {
 	
 	private Zone[] zones = new Zone[4];
-	private BallM ball = new BallM();
+	private Ball ball = new Ball();
 	private boolean even;
 	
 	public Pitch()

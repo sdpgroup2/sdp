@@ -25,12 +25,19 @@ public class PointSet implements Comparable<PointSet>
     private Point[] points; // resizing array
     private int     lo, hi;
     private boolean sorted;
+    private boolean sortable = true;
 
     public PointSet()
     {
         points = new Point[8];
         lo = hi = 0;
         this.sorted = true; // empty is sorted
+    }
+    
+    public PointSet(boolean sortable)
+    {
+    	super();
+    	this.sortable = sortable;
     }
 
     public PointSet(Point[] points)

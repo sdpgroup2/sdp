@@ -1,12 +1,15 @@
 package group2.sdp.pc.world;
 
+import group2.sdp.pc.geom.Plane;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.PointSet;
 
 public class Ball {
 	
-	private PointSet history = new PointSet();
-	private static long significantTime = 1000; /** [ms] */
+	private static long SIGNIFICANT_TIME = 1000; /** [ms] */
+	private static int SIGNIFICANT_BOUNCES = 10;
+	
+	private PointSet history = new PointSet(false);
 	private boolean uptodate = true;
 	private double direction = 0.0;
 	private double speed = 0.0;
@@ -42,7 +45,7 @@ public class Ball {
 		double xsum = 0.0;
 		double ysum = 0.0;
 		int i = history.size() - 1;
-		for (; i >= 0 && history.isWithinTimestamp(i, significantTime); i++)
+		for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++)
 		{
 			xsum += history.get(i).getX();
 			ysum += history.get(i).getY();
@@ -53,6 +56,16 @@ public class Ball {
 		this.direction = Math.atan2(ysum, xsum);
 		
 		uptodate = true;
+	}
+	
+	public PointSet computeTrajectory(Plane boundary)
+	{
+		PointSet bounces = new PointSet();
+		
+		for (int i = 0; i < SIGNIFICANT_BOUNCES; i++)
+		{
+			
+		}
 	}
 	
 }
