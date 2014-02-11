@@ -25,7 +25,7 @@ public abstract class AbstractPixelCluster<T> implements PixelCluster<T> {
 	public boolean isClear() {
 		return this.pixels.isEmpty();
 	}
-
+	
 	public AbstractPixelCluster(String name) {
 		this.name = name;
 	}
