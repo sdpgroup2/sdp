@@ -6,6 +6,7 @@ package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.PointSet;
+import group2.sdp.pc.strategy.Robot;
 import group2.sdp.pc.strategy.Zone;
 
 /** Note that recommended units for the pitch are in tacho counts. Hence, we
@@ -62,4 +63,5 @@ public interface IPitch
     
     public PointSet getTrajectory();
     public Ball getBall();
+    public Robot getRobot();
 }

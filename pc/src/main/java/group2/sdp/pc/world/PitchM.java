@@ -18,10 +18,10 @@ public class PitchM {
 	private Rect leftDefenseZone;
 	private Rect rightDefenseZone;
 
-	private Robot leftDefender;
-	private Robot leftAttacker;
-	private Robot rightDefender;
-	private Robot rightAttacker;
+	private RobotM leftDefender;
+	private RobotM leftAttacker;
+	private RobotM rightDefender;
+	private RobotM rightAttacker;
 
 	private BallM ball;
 
@@ -53,11 +53,11 @@ public class PitchM {
 	 * @param blueRobots - List of rectangles of blue robots.
 	 * @param yellowRobots - List of rectangles of yellow robots.
 	 */
-	public void addRobots(List<Robot> blueRobots, List<Robot> yellowRobots) {
-		Robot firstBlueRobot = blueRobots.get(0);
-		Robot secondBlueRobot = blueRobots.get(1);
-		Robot firstYellowRobot = yellowRobots.get(0);
-		Robot secondYellowRobot = yellowRobots.get(1);
+	public void addRobots(List<RobotM> blueRobots, List<RobotM> yellowRobots) {
+		RobotM firstBlueRobot = blueRobots.get(0);
+		RobotM secondBlueRobot = blueRobots.get(1);
+		RobotM firstYellowRobot = yellowRobots.get(0);
+		RobotM secondYellowRobot = yellowRobots.get(1);
 
 		if (this.leftDefenseZone.contains(firstBlueRobot.getBoundingRect())) {
 			this.leftDefender = firstBlueRobot;

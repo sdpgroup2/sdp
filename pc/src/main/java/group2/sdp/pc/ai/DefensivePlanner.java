@@ -27,7 +27,7 @@ public class DefensivePlanner extends Planner {
 	{ 
 		super(pitch);
 		this.defenseZone = getPitch().getZone(zoneId);
-		this.defenseRobot = defenseZone.getRobot();
+		this.defenseRobot = pitch.getRobot();
 		
 		try { sender = new Sender(robotName, robotMacAddress); }
 		catch (IOException e) { e.printStackTrace(); }
@@ -41,8 +41,13 @@ public class DefensivePlanner extends Planner {
 		align();
 		Line trespass = recognizeDanger();
 		if (trespass == null) { return; }
+		else { System.out.println("Trespassing @ " + trespass.toString()); }
 		Line sidewalk = getSidewalk();
 		Point intersection = defenseZone.getIntersection(trespass, sidewalk);
+		if (intersection == null)
+		{
+			intersection = new Point(trespass.x1, trespass.y1);
+		}
 		Point robotPos = defenseRobot.getPosition();
 		int sign = robotPos.getY() < intersection.getY() ? 1 : -1;
 		int distance = sign * (int) Plane.pix2mm((int) robotPos.distance(intersection));
@@ -56,11 +61,10 @@ public class DefensivePlanner extends Planner {
 		if (isRobotAligned)
 		{ return; }
 		
-		isRobotAligned = true;
-		
-		double direction = 0.0;
+		double direction = Math.PI / 2;
 		double robotDirection = defenseRobot.getDirection();
-		double theta = Math.abs(direction - Math.abs(robotDirection)); // rotation to align
+		double theta = Math.abs(Math.abs(direction) - Math.abs(robotDirection)); // rotation to align
+		if (theta < 0.1) { isRobotAligned = true; }
 		int sign = direction > robotDirection ? 1 : -1;
 		int thetaDeg = sign * Zone.rad2deg(theta);
 		

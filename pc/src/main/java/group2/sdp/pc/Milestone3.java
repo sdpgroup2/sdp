@@ -17,7 +17,7 @@ import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Pitch;
-import group2.sdp.pc.world.Robot;
+import group2.sdp.pc.strategy.Robot;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -88,7 +88,7 @@ public class Milestone3 implements VisionServiceCallback {
 		}
 		Rect blueRobotRect = robotImpRects.get(0);
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
-		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
+		// pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
 		return true;
 	}
 

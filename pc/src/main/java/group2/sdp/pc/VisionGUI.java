@@ -14,7 +14,7 @@ import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Pitch;
-import group2.sdp.pc.world.Robot;
+import group2.sdp.pc.strategy.Robot;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -280,7 +280,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		}		
 		Rect blueRobotRect = blueRobotImpRects.get(0);
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
-		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
+		//pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
 		return true;
 	}
 

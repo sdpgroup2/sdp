@@ -4,14 +4,15 @@
 
 package group2.sdp.pc.world;
 
+import javax.vecmath.Vector2d;
+
 import group2.sdp.pc.geom.Plane;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.PointSet;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.geom.Vector;
+import group2.sdp.pc.strategy.Robot;
 import group2.sdp.pc.strategy.Zone;
-
-import java.util.List;
 
 public class Pitch extends Plane implements IPitch {
 	
@@ -21,6 +22,7 @@ public class Pitch extends Plane implements IPitch {
 	private Zone[] zones = new Zone[4];
 	private Ball ball = new Ball();
 	private boolean even;
+	private byte CUR_ZONE = 0;
 
 /*	public Rect getPitchRect() {
 		return pitchRect;
@@ -45,7 +47,7 @@ public class Pitch extends Plane implements IPitch {
 
 	// Milestone 3 - only one robot needed
 */	
-	private Robot robot;
+	private Robot robot = new Robot();
 	
 	// Points that should definitely belong to respective zones
 	private final Point LEFT_DEF_POINT = new Point(120, 240);
@@ -111,20 +113,21 @@ public class Pitch extends Plane implements IPitch {
 	@Override
 	public void updateRobotState(byte id, Point p, double theta) {
 		//zones[id]
-		
+		zones[CUR_ZONE].updateRobotState(id, p, theta);
 	}
 	
 	public void addBall(Ball ball) {
 		this.ball = ball;
 	}
 	
-	public void addRobot(Robot robot) {
-		this.robot = robot;
+	public void addRobot(Robot robot) throws Exception {
+		// this.robot = robot;
+		throw new Exception("Not to be used");
 	}
 	
 	public void updateRobotState(Point robotPosition, Vector direction) {
 		this.robot.setPosition(robotPosition);
-		this.robot.setDirection(direction);
+		this.robot.setDirection(direction.angle(new Vector2d(robotPosition.x, robotPosition.y)));
 	}
 	
 //	public Vector getRobotBallVector() {

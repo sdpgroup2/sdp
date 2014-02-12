@@ -1,6 +1,7 @@
 package group2.sdp.pc.world;
 
 import group2.sdp.pc.geom.Plane;
+import group2.sdp.pc.strategy.Robot;
 
 /** Contains representation of a state from a team point of view.
  *  Hence, the same for ally and enemy. */
