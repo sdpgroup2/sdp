@@ -13,12 +13,21 @@ import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
+import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.world.Ball;
+<<<<<<< HEAD
+=======
+import group2.sdp.pc.world.Constants.PitchType;
+import group2.sdp.pc.world.Constants.TeamColor;
+>>>>>>> milestone3
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
 
 import java.awt.image.BufferedImage;
+<<<<<<< HEAD
 import java.io.IOException;
+=======
+>>>>>>> milestone3
 import java.util.List;
 
 public class Milestone3 implements VisionServiceCallback {
@@ -28,6 +37,8 @@ public class Milestone3 implements VisionServiceCallback {
 	private Pitch pitch;
 	private VisionService visionService;
 	private Sender sender = null;
+	private Vector robotDirectionVector;
+//	private int robotDirectionCounter;
 	
 	public static void main(String[] args) {
 //		if (args.length < 2) {
@@ -42,12 +53,21 @@ public class Milestone3 implements VisionServiceCallback {
 	@Override
 	public void onPreparationReady(HSBColor[] hsbArray, PitchLinesCluster lines,
 			PitchSectionCluster sections, BallCluster ballCluster,
+<<<<<<< HEAD
 			RobotBaseCluster robotBaseCluster) {
 //		this.pitch = new Pitch(lines, sections);
 //		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
 //		pitch.addBall(ball);
 		Rect blueRobotRect = robotBaseCluster.getImportantRects().get(0);
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
+=======
+			RobotBaseCluster robotBaseCluster, RobotCluster robotCluster) {
+		this.pitch = new Pitch(lines, sections);
+		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
+		pitch.addBall(ball);
+		Rect blueRobotRect = robotBaseCluster.getImportantRects(robotCluster).get(0);
+		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
+>>>>>>> milestone3
 		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
 	}
 
@@ -65,13 +85,20 @@ public class Milestone3 implements VisionServiceCallback {
 
 	@Override
 	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
+<<<<<<< HEAD
 			BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
+=======
+			BallCluster ballCluster, RobotBaseCluster robotBaseCluster, RobotCluster robotCluster) {
+>>>>>>> milestone3
 		
 		// Update the ball position
 		List<Rect> ballRects = ballCluster.getImportantRects();
 		if (ballRects == null || ballRects.size() < 1) {
 			System.out.println("No ball found.");
+<<<<<<< HEAD
 			return;
+=======
+>>>>>>> milestone3
 		}
 		Point ballPosition = ballRects.get(0).getCenter();
 		pitch.updateBallPosition(ballPosition);
@@ -80,6 +107,7 @@ public class Milestone3 implements VisionServiceCallback {
 		List<Rect> robotRects = robotBaseCluster.getImportantRects();
 		if (robotRects == null || robotRects.size() < 1) {
 			System.out.println("No robot found.");
+<<<<<<< HEAD
 			return;
 		}
 		Point blueRobotPosition = robotRects.get(0).getCenter();
@@ -107,15 +135,48 @@ public class Milestone3 implements VisionServiceCallback {
 		} finally {
 			sender.disconnect();
 		}
+=======
+		}
+		Point blueRobotPosition = robotRects.get(0).getCenter();
+		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
+		
+		// Average out the direction vector
+		if (robotDirectionVector == null) {
+			robotDirectionVector = blueRobotDirection;
+		} else if (blueRobotDirection == null) {
+			// Do nothing use the old vector
+		} else {
+			robotDirectionVector.averageWith(blueRobotDirection);
+		}
+		System.out.println(robotDirectionVector);
+		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
+		
+		// Calculate the vector between ball and robot
+		Vector vectorToGo = pitch.getRobotBallVector();
+		
+		// Calculate the angle we need to turn
+		double angleToTurn = pitch.getRobot().angleToVector(vectorToGo);
+		System.out.println(angleToTurn);
+//		try {
+//			sender.rotate((int) -angleToTurn, 40);
+//			double distance = vectorToGo.length() * Constants.PX_TO_MM;
+//			sender.move(1, 40, (int) distance);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			sender.disconnect();
+//		}
+>>>>>>> milestone3
 	}
 
 	public Milestone3() {
-		try {
-			sender = new Sender("SDP2A","00165307D55F");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			sender = new Sender("SDP2A", "00165307D55F");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		this.visionService = new VisionService(5, this);
+//		new VisionGUI(visionService);
 		this.visionService.start();
 	}
 	

@@ -14,7 +14,11 @@ import java.util.List;
 public class BallCluster extends HSBCluster {
 	
 	public BallCluster(String name) {
+<<<<<<< HEAD
 		super(name, ColorConfig.BALL_2_MIN, ColorConfig.BALL_2_MAX, Color.red);
+=======
+		super(name, new HSBColor(343, 85, 50), new HSBColor(30, 100, 100), Color.red);
+>>>>>>> milestone3
 	}
 	
 	@Override

@@ -55,20 +55,20 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-//	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
+	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-//	private DotCluster dotCluster = new DotCluster("Dot");
+	private DotCluster dotCluster = new DotCluster("Dot");
 //	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
 	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-//		blueRobotCluster,
+		blueRobotCluster,
 //		blueCompoundRobot,
 //		yellowRobotCluster,
 		baseRobotCluster,
-//		dotCluster
+		dotCluster
 	};
 	
 	private Rect processingRegion;
@@ -102,10 +102,11 @@ public class VisionService implements CaptureCallback {
 				this.prepareVision();
 				this.currentFrame++;
 				if (currentFrame >= preparationFrames) {
+					endPrepareVision();
 					state = VisionState.StaticDetection;
 					this.normaliseImage();
 					this.processImage(); // Process when ready so we have clusters
-					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster);
+					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster, blueRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
@@ -113,23 +114,27 @@ public class VisionService implements CaptureCallback {
 			}
 			case StaticDetection: {
 				// Find the objects that will not move and restrict processing region.
+				Debug.log("Looking for pitch...");
 				this.normaliseImage();
 				Rect pitchRect = this.findPitch();
 				if (pitchRect != null) {
-					processingRegion = pitchRect;
+					processingRegion = new Rect(pitchRect.x-15, pitchRect.y-15,
+							pitchRect.width+30, pitchRect.height+30);
+					Debug.log("Found pitch");
 					// Clear image to make new region obvious
 					for (int i=0; i<hsbArray.length; i++) {
 						hsbArray[i].set(0,0,0);
 					}
 					state = VisionState.Processing;
 				}
+				break;
 			}
 			case Processing: {
 				// Process the images.
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
+				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster, blueRobotCluster);
 				break;
 			}
 		}
@@ -153,6 +158,10 @@ public class VisionService implements CaptureCallback {
 	 * @param colorArray - RGB array representing the image
 	 */
 	public void prepareVision() {
+		if (currentFrame == 0) {
+			// First frame sometimes has scanlines etc. Ignore it.
+			return;
+		}
 		double s = 0;
 		double b = 0;
 		for (int c = 0; c < colorArray.length; c++) {
@@ -165,21 +174,21 @@ public class VisionService implements CaptureCallback {
 		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
 		meanSat += s;
 		meanBright += b;
-		this.currentFrame += 1;
-		if (currentFrame >= preparationFrames) {
-			meanSat /= preparationFrames;
-			meanBright /= preparationFrames;
-		}
+	}
+	
+	public void endPrepareVision() {
+		// We ignored the first frame.
+		int frames = preparationFrames - 1;
+		meanSat /= frames;
+		meanBright /= frames;
+		Debug.logf("Final mean saturation: %f, mean brightness: %f", meanSat, meanBright);
 	}
 
 	private void normaliseImage() {
 		// Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
-		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion.getMaxX(); x++) {
-			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion.getMaxY(); y++) {
-				int index = y * this.getSize().width + x;
-				HSBColor color = hsbArray[index].set(colorArray[index]);
-				color.offset(0, color.s - meanSat, color.b - meanBright);
-			}
+		for (int i=0; i<hsbArray.length; i++) {
+			HSBColor color = hsbArray[i].set(colorArray[i]);
+			color.offset(0, color.s - meanSat, color.b - meanBright);
 		}
 	}
 
