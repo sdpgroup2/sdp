@@ -9,7 +9,7 @@ import group2.sdp.pc.geom.PointSet;
 
 public class MovableObject {
 	
-	private static long SIGNIFICANT_TIME = 1000; /** [ms] */
+	private static long SIGNIFICANT_TIME = 5000; /** [ms] */
 	
 	private PointSet history = new PointSet(false);
 	private boolean uptodate = true;
