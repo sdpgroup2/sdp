@@ -216,15 +216,18 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             for (Rect rect: cluster.getImportantRects()) {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
-        }        
+        }
         
         Vector vec = robotBaseCluster.getRobotVector(hsbArray);
+        System.out.println(vec);
         if (vec != null) {
     		// Calculate the vector between ball and robot
     		Vector vectorToGo = pitch.getRobotBallVector();
     		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
+    		System.out.println(vectorToGo);
     		if (robotImpRects != null && robotImpRects.size() > 0) {
     			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo);
+    			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec);
     		}
         }
         

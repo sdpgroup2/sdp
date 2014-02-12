@@ -14,6 +14,6 @@ import java.awt.Color;
 public class YellowRobotCluster extends RobotCluster {
 	
 	public YellowRobotCluster(String name) {
-		super(name, ColorConfig.YELLOW_1_MIN, ColorConfig.YELLOW_1_MAX, Color.yellow);
+		super(name, ColorConfig.YELLOW_2_MIN, ColorConfig.YELLOW_2_MAX, Color.yellow);
 	}
 }

@@ -12,12 +12,12 @@ import java.util.List;
 public class RobotBaseCluster extends HSBCluster {
 
 	public RobotBaseCluster(String name) {
-		super(name, ColorConfig.BASE_1_MIN, ColorConfig.BASE_1_MAX, Color.cyan);
+		super(name, ColorConfig.BASE_2_MIN, ColorConfig.BASE_2_MAX, Color.cyan);
 	}
 
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(25, 75, 25, 75, 0.5f, 1.1f);
+		return getRects(25, 75, 25, 75, 0.3f, 1.1f);
 	} 
 
 	public Vector getRobotVector(HSBColor[] hsbArray) {
@@ -25,6 +25,7 @@ public class RobotBaseCluster extends HSBCluster {
 		YellowRobotCluster robotCluster = new YellowRobotCluster("Blue robot");
 		List<Rect> impRects = this.getImportantRects();
 		if (impRects.size() < 1) {
+			System.out.println("Missing the base plates!");
 			return null;
 		}
 		Rect impRect = impRects.get(0);

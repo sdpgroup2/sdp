@@ -20,7 +20,7 @@ public class PitchLinesCluster extends HSBCluster {
 //	}
 
 	public PitchLinesCluster(String name) {
-		super(name, ColorConfig.LINES_1_MIN, ColorConfig.LINES_1_MAX, Color.white);
+		super(name, ColorConfig.LINES_2_MIN, ColorConfig.LINES_2_MAX, Color.white);
 	}
 	
 	

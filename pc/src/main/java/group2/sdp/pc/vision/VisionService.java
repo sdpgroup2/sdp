@@ -68,8 +68,8 @@ public class VisionService implements CaptureCallback {
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 //		blueRobotCluster,
-//		yellowRobotCluster,
 		baseRobotCluster,
+		yellowRobotCluster,
 //		pitchLinesCluster,
 //		pitchSectionCluster,
 		dotCluster,
