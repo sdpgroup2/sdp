@@ -11,7 +11,6 @@ import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
-import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
@@ -65,15 +64,30 @@ public class Milestone3 implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(HSBColor[] hsbArray,
-			PitchLinesCluster lines, PitchSectionCluster sections,
-			BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
-		this.pitch = new Pitch(lines, sections);
-		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
+	public boolean onPreparationReady(HSBColor[] hsbArray,
+			BallCluster ballCluster, RobotBaseCluster robotBaseCluster,
+			Rect pitchRect, Rect[] sectionRects) {
+		
+		this.pitch = new Pitch(pitchRect, sectionRects);
+		List<Rect> ballImpRects = ballCluster.getImportantRects();
+		if (ballImpRects == null || ballImpRects.size() == 0) {
+			// If we don't find the ball then loop until we do
+			System.out.println("No ball found in preparation.");
+			return false;
+		}
+		Ball ball = new Ball(ballImpRects.get(0));
 		pitch.addBall(ball);
-		Rect blueRobotRect = robotBaseCluster.getImportantRects().get(0);
+		
+		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
+		if (robotImpRects == null || robotImpRects.size() == 0) {
+			// If we don't find the robot then loop until we do
+			System.out.println("No robot found in preparation.");
+			return false;
+		}
+		Rect blueRobotRect = robotImpRects.get(0);
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
 		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
+		return true;
 	}
 
 	@Override
@@ -91,24 +105,22 @@ public class Milestone3 implements VisionServiceCallback {
 		List<Rect> robotRects = robotBaseCluster.getImportantRects();
 		if (robotRects == null || robotRects.size() < 1) {
 			System.out.println("No robot found.");
-			System.exit(1);
+			return;
 		}
 		Point blueRobotPosition = robotRects.get(0).getCenter();
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
 		if (blueRobotDirection == null) {
 			System.out.println("No direction for the robot.");
-			System.exit(1);
+			return;
 		}
 		
 		// Average out the direction vector
 		if (robotDirectionVector == null) {
 			robotDirectionVector = blueRobotDirection;
-		} else if (blueRobotDirection == null) {
-			// Do nothing use the old vector
-		} else {
+		} else if (blueRobotDirection != null) {
 			robotDirectionVector.averageWith(blueRobotDirection);
 		}
-		System.out.println(robotDirectionVector);
+		
 		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
 //			pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
 		

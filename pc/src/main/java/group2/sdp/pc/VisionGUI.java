@@ -261,22 +261,27 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(HSBColor[] hsbArray,
-			PitchLinesCluster lines, PitchSectionCluster sections,
-			BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
-		this.pitch = new Pitch(lines, sections);
+	public boolean onPreparationReady(HSBColor[] hsbArray,
+			BallCluster ballCluster, RobotBaseCluster robotBaseCluster,
+			Rect pitchRect, Rect[] sectionRects) {
+		this.pitch = new Pitch(pitchRect, sectionRects);
 		List<Rect> ballImpRects = ballCluster.getImportantRects();
-		if (ballImpRects != null && ballImpRects.size() > 0) {
-			Ball ball = new Ball(ballImpRects.get(0));
-			pitch.addBall(ball);
+		System.out.println(ballImpRects);
+		if (ballImpRects == null || ballImpRects.size() < 1) {
+			System.out.println("Ball not found in preparation.");
+			return false;
 		}
+		Ball ball = new Ball(ballImpRects.get(0));
+		pitch.addBall(ball);
 		List<Rect> blueRobotImpRects = robotBaseCluster.getImportantRects();
 		if (blueRobotImpRects == null || blueRobotImpRects.size() == 0) {
-			return;
-		}
+			System.out.println("Robot not found in preparation.");
+			return false;
+		}		
 		Rect blueRobotRect = blueRobotImpRects.get(0);
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
 		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
+		return true;
 	}
 
 }

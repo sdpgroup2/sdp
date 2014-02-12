@@ -19,7 +19,7 @@ public class BallCluster extends HSBCluster {
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(4, 24, 4, 24, 0.5f, 1.1f);
+		return getRects(8, 24, 8, 24, 0.5f, 1.1f);
 	}
 
 }
