@@ -149,6 +149,25 @@ public class Plane
 	    return null;
     }
     
+    public Point getIntersection(Line line)
+    {
+    	Point intersection = null;
+    	
+    	for (int i = 1; i < outline.size(); i++)
+    	{
+    		Point p0 = outline.get(i - 1);
+    		Point p1 = outline.get(i);
+    		
+    		Line wall = new Line(p0.x, p1.x, p0.y, p1.y);
+    		
+    		intersection = getIntersection(line, wall);
+    		if (intersection != null)
+    		{ return intersection; }
+    	}
+    	
+    	return intersection;
+    }
+    
     public BounceConclusion getBounceConclusion(Point origin, double direction)
     {
     	Line line = expand(origin, direction);
@@ -226,7 +245,10 @@ public class Plane
     	return line;
     }
     
-    public double pix2mm(int pix) {
+    public Line expand(Point p0, Point p1)
+    { return expand(p0, Math.atan2(p1.y - p0.y, p1.x - p0.x)); }
+    
+    public static double pix2mm(int pix) {
 		/* pitch dimension in pixels in room 3.11
 		2165 / 552 -> 3.922101449
 		1140 / 302 high -> 3.774834437
@@ -235,7 +257,7 @@ public class Plane
 		return (double) ((int) (pix * 3.848467943 + .5)); // round around the middle
 	}
     
-    public int rad2deg(double rad)
+    public static int rad2deg(double rad)
     { return (int) (180.0 * rad / Math.PI); }
 
 }

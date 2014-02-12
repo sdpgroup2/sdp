@@ -147,4 +147,7 @@ public class Pitch extends Plane implements IPitch {
 	public PointSet getTrajectory() {
 		return super.getTrajectory(ball.getPosition(), ball.getDirection());
 	}
+	
+	public Point getBallPosition()
+	{ return ball.getPosition(); }
 }
