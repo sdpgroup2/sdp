@@ -42,7 +42,7 @@ public class OffensivePlanner extends Planner {
 		
 		return space >= attackerRobot.getRadius() * 2; 
 	}
-	
+	 
 	public void score()
 	{
 		Point ballPosition = pitch.getBall().getPosition();

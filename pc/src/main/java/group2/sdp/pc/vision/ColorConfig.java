@@ -39,7 +39,7 @@ public class ColorConfig {
 	
 	public static HSBColor DOT_1_MIN = new HSBColor(60, 35, 10);
 	public static HSBColor DOT_1_MAX = new HSBColor(160, 100, 25);
-	public static HSBColor DOT_2_MIN = new HSBColor(57,0,18);
-	public static HSBColor DOT_2_MAX = new HSBColor(147,37,33);
+	public static HSBColor DOT_2_MIN = new HSBColor(27,0,5);
+	public static HSBColor DOT_2_MAX = new HSBColor(147,37,44);
 	
 }
