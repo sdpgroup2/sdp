@@ -15,6 +15,7 @@ public class MovableObject {
 	private boolean uptodate = true;
 	private double direction = 0.0;
 	private double speed = 0.0;
+	private static double POSITION_EPS = 5; /** [mm] */
 	
 	public Point getPosition()
 	{ return history.right(); }
@@ -49,7 +50,8 @@ public class MovableObject {
 		int i = history.size() - 1;
 		for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++)
 		{
-			xsum += history.get(i).getX();
+			xsum += history.get(i).getX();int i = history.size() - 1;
+			for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++)
 			ysum += history.get(i).getY();
 		}
 		double firstTime = history.get(i).getTimestamp();
@@ -58,6 +60,20 @@ public class MovableObject {
 		this.direction = Math.atan2(ysum, xsum);
 		
 		uptodate = true;
+	}
+	
+	public boolean isMoving()
+	{
+		int i = history.size() - 1;
+		Point last = history.right();
+		
+		for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++)
+		{
+			if (last.distance(history.get(i)) > POSITION_EPS)
+			{ return true; }
+		}
+		
+		return false;
 	}
 	
 }

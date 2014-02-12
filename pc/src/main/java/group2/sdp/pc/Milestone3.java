@@ -94,13 +94,13 @@ public class Milestone3 implements VisionServiceCallback {
 		pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
 		
 		// Calculate the vector between ball and robot
-		Vector vectorToGo = pitch.getRobotBallVector();
+		//Vector vectorToGo = pitch.getRobotBallVector();
 		
 		// Calculate the angle we need to turn
-		double angleToTurn = pitch.getRobot().angleToVector(vectorToGo);
+		//double angleToTurn = pitch.getRobot().angleToVector(vectorToGo);
 		System.out.println("Turning angles");
 		try {
-			sender.rotate((int) -angleToTurn, 40);
+		//	sender.rotate((int) -angleToTurn, 40);
 			sender.move(1, 40, 1000);
 		} catch (IOException e) {
 			e.printStackTrace();

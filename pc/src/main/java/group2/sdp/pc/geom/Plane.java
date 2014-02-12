@@ -106,12 +106,7 @@ public class Plane
     /** Check if the line intersects the zone */
     public boolean isInterestedByLine(Point p0, Point p1)
     {
-    	Line line = new Line();
-    	line.x1 = (float) p0.x;
-    	line.x2 = (float) p1.x;
-    	line.y1 = (float) p0.y;
-    	line.y2 = (float) p1.y;
-    	
+    	Line line = new Line(p0.x, p0.y, p1.x, p0.y);
     	return isIntersectedBy(line);
     }
     
@@ -230,5 +225,17 @@ public class Plane
 
     	return line;
     }
+    
+    public double pix2mm(int pix) {
+		/* pitch dimension in pixels in room 3.11
+		2165 / 552 -> 3.922101449
+		1140 / 302 high -> 3.774834437
+		average -> 3.848467943
+		*/
+		return (double) ((int) (pix * 3.848467943 + .5)); // round around the middle
+	}
+    
+    public int rad2deg(double rad)
+    { return (int) (180.0 * rad / Math.PI); }
 
 }

@@ -15,6 +15,9 @@ import java.util.List;
 
 public class Pitch extends Plane implements IPitch {
 	
+	private double WIDTH = 2165; /** [mm], from goal to goal mouth */
+	private double HEIGHT = 1150; /** [mm], from wall to wall */
+	
 	private Zone[] zones = new Zone[4];
 	private Ball ball = new Ball();
 	private boolean even;

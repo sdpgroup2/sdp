@@ -16,4 +16,10 @@ public class Zone extends Plane {
 		robot.updatePoisition(p);
 	}
 	
+	public Robot getRobot()
+	{ return robot; }
+	
+	public Point getRobotPosition()
+	{ return robot.getPosition(); }
+	
 }

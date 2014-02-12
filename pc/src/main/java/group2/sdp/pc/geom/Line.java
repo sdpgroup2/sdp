@@ -9,16 +9,13 @@ public class Line extends Line2D.Double {
 
 	private static final long serialVersionUID = 1L;
 	
-	public Line(Point p1, Point p2)
+	public Line(Point p0, Point p1)
 	{
-		super.x1 = (float) p1.x;
-		super.y1 = (float) p1.y;
-		super.x2 = (float) p2.x;
-		super.y2 = (float) p2.y;
+		super(p0.x, p0.y, p1.x, p1.y);
 	}
 
-	public Line(double x1, double x2, double y1, double y2) {
-		super(x1, x2, y1, y2);
+	public Line(double x1, double y1, double x2, double y2) {
+		super(x1, y1, x1, y2);
 	}
 
 }
