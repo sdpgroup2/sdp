@@ -68,6 +68,7 @@ public class Milestone3 implements VisionServiceCallback {
 			Rect pitchRect, Rect[] sectionRects) {
 		
 		this.pitch = new Pitch(pitchRect, sectionRects);
+		System.out.println(sectionRects[0]);
 		this.defPlanner = new DefensivePlanner(pitch, (byte) 0);
 		
 		List<Rect> ballImpRects = ballCluster.getImportantRects();

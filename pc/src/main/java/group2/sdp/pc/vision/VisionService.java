@@ -176,6 +176,7 @@ public class VisionService implements CaptureCallback {
 		if (rects.size() > 4) {
 			rects = rects.subList(0, 4);
 		}
+		Collections.sort(rects); // sort them so leftmost is byte 0
 		return (!rects.isEmpty()) ? rects.toArray(new Rect[rects.size()]) : null;
 	}
 

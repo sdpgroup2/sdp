@@ -5,6 +5,7 @@ import java.io.IOException;
 import lejos.geom.Rectangle;
 import group2.sdp.pc.comms.Sender;
 import group2.sdp.pc.geom.Line;
+import group2.sdp.pc.geom.Plane;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.PointSet;
 import group2.sdp.pc.strategy.Robot;
@@ -39,11 +40,12 @@ public class DefensivePlanner extends Planner {
 		
 		align();
 		Line trespass = recognizeDanger();
+		if (trespass == null) { return; }
 		Line sidewalk = getSidewalk();
 		Point intersection = defenseZone.getIntersection(trespass, sidewalk);
 		Point robotPos = defenseRobot.getPosition();
 		int sign = robotPos.getY() < intersection.getY() ? 1 : -1;
-		int distance = sign * (int) robotPos.distance(intersection);
+		int distance = sign * (int) Plane.pix2mm((int) robotPos.distance(intersection));
 		
 		try { sender.move(sign, SPEED, distance); }
 		catch (IOException e) { e.printStackTrace(); }
@@ -54,7 +56,9 @@ public class DefensivePlanner extends Planner {
 		if (isRobotAligned)
 		{ return; }
 		
-		double direction = Math.PI / 2;
+		isRobotAligned = true;
+		
+		double direction = 0.0;
 		double robotDirection = defenseRobot.getDirection();
 		double theta = Math.abs(direction - Math.abs(robotDirection)); // rotation to align
 		int sign = direction > robotDirection ? 1 : -1;
@@ -67,7 +71,7 @@ public class DefensivePlanner extends Planner {
 	public Line recognizeDanger()
 	{
 		PointSet trajectory = getPitch().getTrajectory();
-		for (int i = 1; i < trajectory.size(); i++)
+		for (int i = 1; i < trajectory.size() - 1; i++)
 		{
 			Point p0 = trajectory.get(i - 1);
 			Point p1 = trajectory.get(i);
@@ -89,6 +93,9 @@ public class DefensivePlanner extends Planner {
 		return new Line(p0, p1);
 	}
 	
+	public void disconnect() {
+		this.sender.disconnect();
+	}
 	public void act()
 	{ intercept(); }
 	

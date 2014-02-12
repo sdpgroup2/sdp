@@ -89,10 +89,17 @@ public class Pitch extends Plane implements IPitch {
 		// this.sections = sections;
 		byte id = 0;
 		for (Rect section : sections) {
-			zones[id].addPoint(new Point(section.x, section.y));
-			zones[id].addPoint(section.x + section.width, section.y);
-			zones[id].addPoint(section.x + section.width, section.y + section.height);
-			zones[id].addPoint(section.x, section.y + section.height);
+			if (section.contains(LEFT_DEF_POINT)) {
+				zones[0].addPoint(new Point(section.x, section.y));
+				zones[0].addPoint(section.x + section.width, section.y);
+				zones[0].addPoint(section.x + section.width, section.y + section.height);
+				zones[0].addPoint(section.x, section.y + section.height);
+			} else {
+				zones[id].addPoint(new Point(section.x, section.y));
+				zones[id].addPoint(section.x + section.width, section.y);
+				zones[id].addPoint(section.x + section.width, section.y + section.height);
+				zones[id].addPoint(section.x, section.y + section.height);
+			}
 			id++;
 		}
 	}

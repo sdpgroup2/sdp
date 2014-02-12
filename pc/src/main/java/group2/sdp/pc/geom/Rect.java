@@ -3,7 +3,7 @@ package group2.sdp.pc.geom;
 import java.awt.geom.Rectangle2D;
 
 
-public class Rect extends Rectangle2D.Double {
+public class Rect extends Rectangle2D.Double implements Comparable<Rect> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +38,17 @@ public class Rect extends Rectangle2D.Double {
 
 	public Rect(double x, double y, double width, double height) {
 		super(x, y, width, height);
+	}
+
+	@Override
+	public int compareTo(Rect o) {
+		if (this.x < o.x) {
+			return -1;
+		} else if (this.x == o.x) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 
 }

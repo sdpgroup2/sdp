@@ -65,6 +65,7 @@ public class Plane
     	for (int i = 0; i < SIGNIFICANT_BOUNCSES; i++)
     	{
     		BounceConclusion bounce = getBounceConclusion(origin, direction);
+    		if (bounce.alpha == 100) { continue; }
     		trajectory.add(bounce.intersection);
     		direction = updateDirection(direction, bounce.alpha, bounce.top);
     	}
@@ -190,7 +191,8 @@ public class Plane
     		}
     	}
     	
-    	throw new IllegalStateException("Expected closed polygon and inside point, but did not find.");
+    	// throw new IllegalStateException("Expected closed polygon and inside point, but did not find.");
+    	return new BounceConclusion(false, 100.0, new Point(0.0, 0.0));
     }
     
     private class BounceConclusion
