@@ -46,9 +46,9 @@ public class OffensivePlanner extends Planner {
 	public void score()
 	{
 		Point ballPosition = pitch.getBall().getPosition();
-		Line line2 = offensiveZone.expand(ballPosition, 0.0);
-//		Point endpoint = offensiveZone.getIntersection(arrow);
-		Line line1 = line2.getPerpendicular();
+		Line line1 = getTargetPath();
+		// project 
+		Line line0 = line1.getPerpendicular();
 	}
 	
 	public void passBack()
@@ -60,7 +60,7 @@ public class OffensivePlanner extends Planner {
 	{
 		Ball ball = pitch.getBall();
 		Point ballPosition = ball.getPosition();
-		Line arrow = offensiveZone.expand(ballPosition, 0.0);
+		Line arrow = offensiveZone.expand(GOAL, ballPosition);
 		arrow.extend(attackerRobot.getRadius() + ball.getRadius());
 		Line target = arrow.getPerpendicular();
 		return offensiveZone.expand(target);

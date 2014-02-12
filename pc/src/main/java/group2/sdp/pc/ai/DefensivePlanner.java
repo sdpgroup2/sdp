@@ -18,8 +18,8 @@ public class DefensivePlanner extends Planner {
 	private Zone defenseZone;
 	private Robot defenseRobot;
 	private boolean isRobotAligned = false;
-	String robotName = "SDP 2A";
-	String robotMacAddress = "CH:UJ";
+	String robotName = "SDP2A";
+	String robotMacAddress = "00165307D55F";
 	private Sender sender;
 	
 	public DefensivePlanner(IPitch pitch, byte zoneId)
