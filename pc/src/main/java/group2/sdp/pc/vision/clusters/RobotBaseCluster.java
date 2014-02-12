@@ -15,14 +15,13 @@ public class RobotBaseCluster extends HSBCluster {
 		super(name, ColorConfig.BASE_2_MIN, ColorConfig.BASE_2_MAX, Color.cyan);
 	}
 	
-<<<<<<< HEAD
 	@Override
 	public List<Rect> getImportantRects() {
 		return getRects(25, 75, 25, 75, 0.5f, 1.1f);
-=======
+	}
+	
 	public List<Rect> getImportantRects(RobotCluster robotCluster) {
 		return getRects(40, 75, 40, 75, 0.3f, 1.1f, robotCluster);
->>>>>>> e569fcb509e551f51495d1f39dbb48ad5ef0ebb8
 	} 
 
 	public Vector getRobotVector(HSBColor[] hsbArray, RobotCluster robotCluster) {

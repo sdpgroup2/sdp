@@ -1,6 +1,7 @@
 package group2.sdp.pc.vision.clusters;
 
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.vision.ColorConfig;
 import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
@@ -10,7 +11,7 @@ import java.util.List;
 public class DotCluster extends HSBCluster {
 
 	public DotCluster(String name) {
-		super(name, new HSBColor(60, 35, 10), new HSBColor(160, 100, 25), Color.ORANGE);
+		super(name, ColorConfig.LINES_2_MIN, ColorConfig.DOT_2_MAX, Color.ORANGE);
 	}
 
 	@Override

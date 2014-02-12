@@ -69,25 +69,16 @@ public class VisionService implements CaptureCallback {
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
 	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue");
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow");
-	private DotCluster dotCluster = new DotCluster("Dots");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
-<<<<<<< HEAD
 		//blueCompoundRobot,
 		yellowRobotCluster,
 		baseRobotCluster,
-		pitchLinesCluster,
-		pitchSectionCluster,
-		dotCluster,
-=======
-//		blueCompoundRobot,
-//		yellowRobotCluster,
-		baseRobotCluster,
+		//pitchLinesCluster,
+		//pitchSectionCluster,
 		dotCluster
->>>>>>> e569fcb509e551f51495d1f39dbb48ad5ef0ebb8
 	};
 	
 	private Rect processingRegion;
