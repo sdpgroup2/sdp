@@ -1,6 +1,7 @@
 package group2.sdp.pc.vision.clusters;
 
-import group2.sdp.pc.util.ColorConfig;
+import group2.sdp.pc.vision.ColorConfig;
+import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
 

@@ -13,7 +13,7 @@ public class Rect extends Rectangle2D.Double {
 
 	@Override
 	public String toString() {
-		return String.format("Rect((%.2f, %.2f)(%.2f, %.2f))", x, y, x + width, y + height);
+		return String.format("Rect((%.2f, %.2f)(%.2f, %.2f))", x, y, width, height);
 	}
 
 	public Rect expand(int multiplier) {

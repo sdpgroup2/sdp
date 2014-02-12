@@ -11,17 +11,10 @@ import group2.sdp.pc.vision.VisionService;
 import group2.sdp.pc.vision.VisionServiceCallback;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
-import group2.sdp.pc.vision.clusters.PitchLinesCluster;
-import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
-<<<<<<< HEAD
-=======
-import group2.sdp.pc.vision.clusters.RobotCluster;
 import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.Pitch;
 import group2.sdp.pc.world.Robot;
-import group2.sdp.util.Debug;
->>>>>>> milestone3
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -63,9 +56,8 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private BufferedImage currentImage;
     private int[] postColorArray;
     private Vector robotDirectionCounter;
-    
     private Pitch pitch;
-
+    
     public static void main(String[] args) {
     	new VisionGUI();
     }
@@ -79,7 +71,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 	    final JList<HSBCluster> clusterList = new JList<HSBCluster>(clusters);
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
-	    colorChecker = new ColorChecker();;
+	    colorChecker = new ColorChecker();
 
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -212,7 +204,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 
     @Override
     public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
-    		BallCluster ballCluster, RobotBaseCluster robotBaseCluster, RobotCluster robotCluster) {
+    		BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
         
         for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
@@ -223,47 +215,23 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             }
         }        
         
-        Vector vec = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
+        Vector vec = robotBaseCluster.getRobotVector(hsbArray);
+        System.out.println(vec);
+		
         if (vec != null) {
-	    	List<Rect> rects = robotCluster.getImportantRects();
-	    	if (rects.size() > 0) {
-	    		vec.scale(10);
-	    		if (robotDirectionCounter == null) {
-	    			robotDirectionCounter = vec;
-	    		} else {
-	    			robotDirectionCounter.averageWith(vec);
-	    		}
-	    		Debug.drawVector(image, rects.get(0).getCenter(), robotDirectionCounter);
-	    		// Calculate the vector between ball and robot
-	    		Vector vectorToGo = pitch.getRobotBallVector();
-	    		System.out.println(vectorToGo.angleDegrees(robotDirectionCounter));
-	    		Debug.drawVector(image, rects.get(0).getCenter(), vectorToGo);
-	    	}
+    		// Calculate the vector between ball and robot
+//    		Vector vectorToGo = pitch.getRobotBallVector();
+    		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
+        	Vector vectorToGo = pitch.getBall().getPosition().sub(pitch.getRobot().getPosition());
+//    		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
+    		System.out.println(vectorToGo);
+    		if (robotImpRects != null && robotImpRects.size() > 0) {
+    			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo);
+    			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec);
+    		}
         }
-<<<<<<< HEAD
-    	List<Rect> rects = robotCluster.getImportantRects();
-    	if (rects.size() > 0) {
-    		vec.scale(10);
-    		Debug.drawVector(image, rects.get(0).getCenter(), vec);
-    	}
-		
-        showImage(currentImage);
-=======
-		
-
-//        robotCluster = (RobotCluster) visionService.getClusters()[1];
-//        vecs = robotCluster.getRobotVectors(hsbArray);
-//        if (vecs == null) {
-//        	return;
-//        }
-//        for (Vector vec : vecs) {
-//        	List<Rect> rects = robotCluster.getImportantRects();
-//        	if (rects.size() > 0) {
-//        		Debug.drawVector(image, rects.get(0).getCenter(), vec);
-//        	}
-//        }
+        
     	showImage(currentImage);
->>>>>>> milestone3
     }
 
     private void showImage(BufferedImage image) {
@@ -276,7 +244,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		this.visionService = new VisionService(5, this);
 		this.frameSize = visionService.getSize();
 		this.postColorArray = new int[frameSize.width * frameSize.height];
-
+		
 		// Init GUI
 		initWindow();
 		visionService.start();
@@ -293,16 +261,27 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 	}
 
 	@Override
-	public void onPreparationReady(HSBColor[] hsbArray,
-			PitchLinesCluster lines, PitchSectionCluster sections,
+	public boolean onPreparationReady(HSBColor[] hsbArray,
 			BallCluster ballCluster, RobotBaseCluster robotBaseCluster,
-			RobotCluster robotCluster) {
-		this.pitch = new Pitch(lines, sections);
-		Ball ball = new Ball(ballCluster.getImportantRects().get(0));
+			Rect pitchRect, Rect[] sectionRects) {
+		this.pitch = new Pitch(pitchRect, sectionRects);
+		List<Rect> ballImpRects = ballCluster.getImportantRects();
+		System.out.println(ballImpRects);
+		if (ballImpRects == null || ballImpRects.size() < 1) {
+			System.out.println("Ball not found in preparation.");
+			return false;
+		}
+		Ball ball = new Ball(ballImpRects.get(0));
 		pitch.addBall(ball);
-		Rect blueRobotRect = robotCluster.getImportantRects().get(0);
-		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray, robotCluster);
+		List<Rect> blueRobotImpRects = robotBaseCluster.getImportantRects();
+		if (blueRobotImpRects == null || blueRobotImpRects.size() == 0) {
+			System.out.println("Robot not found in preparation.");
+			return false;
+		}		
+		Rect blueRobotRect = blueRobotImpRects.get(0);
+		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
 		pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
+		return true;
 	}
 
 }

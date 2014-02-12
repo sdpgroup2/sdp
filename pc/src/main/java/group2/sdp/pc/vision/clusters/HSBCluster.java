@@ -54,116 +54,85 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	 * the input x or y coordinate
 	 */
 
-	public VecI getMaxXPixel(int y) {
+	public VecI getEdgePixel(int index, Dir edge) {
 		Set<VecI> pixels = getLargestRegion();
-		VecI max = new VecI(0,0);
+		int finalX = 0;
+		int finalY = 0;
+		
+		VecI finalPoint = new VecI(0,0);
+		
+		switch(edge) {
+		case Left   : finalX = 1000; break;
+		case Up     : finalY = 1000; break;
+		}
 		
 		for(VecI pixel : pixels)
 		{
-			if(pixel.x > max.x && pixel.y == y)
-				max = pixel;
-		}
-		
-		return max;
-	}
+			switch(edge) {
+				case Left : {
+					if(pixel.x < finalX && pixel.y == index)
+						finalPoint = pixel; 
+					break;
+					}
+				case Right : {
+					if(pixel.x > finalX && pixel.y == index)
+						finalPoint = pixel; 
+					break;
+					}
+				case Up : {
+					if(pixel.y < finalY && pixel.x == index)
+						finalPoint = pixel; 
+					break;
+					}
+				case Down : {
+					if(pixel.y > finalY && pixel.x == index)
+						finalPoint = pixel; 
+					break;
+					}
+				}
+			}
 
-	public VecI getMaxYPixel(int x) {
-	    Set<VecI> pixels = getLargestRegion();
-		VecI max = new VecI(0,0);
-		
-		for(VecI pixel : pixels)
-		{
-			if(pixel.y > max.y && pixel.x == x)
-				max = pixel;
-		}
-		
-		return max;
+		return finalPoint;
 	}
-
-	public VecI getMinXPixel(int y) {
+	
+	public VecI getEdgePixel(Dir edge) {
 		Set<VecI> pixels = getLargestRegion();
-		VecI min = new VecI(1000,0);
-	
-		for(VecI pixel : pixels)
-		{
-			if(pixel.x < min.x && pixel.y == y)
-				min = pixel;
+		VecI finalPoint = new VecI(0,0);
+		
+		int finalX = 0;
+		int finalY = 0;
+		
+		switch(edge) {
+		case Left : finalX = 1000; break;
+		case Up   : finalY = 1000; break;
 		}
-	
-		return min;
-	}
-
-	public VecI getMinYPixel(int x) {
-		Set<VecI> pixels = getLargestRegion();
-		VecI min = new VecI(0,1000);
-	
-		for(VecI pixel : pixels)
-		{
-			if(pixel.x < min.x && pixel.x == x)
-				min = pixel;
-		}
-	
-		return min;
-	}
-	
-	/**
-	 * A set of functions for finding a pixel on the edge of a cluster.
-	 * 	
-	 * @return The (left/right/upper/bottom)most pixel in the largest cluster.
-	 */
-	
-	public VecI getMaxXPixel() {
-		Set<VecI> pixels = getLargestRegion();
-		VecI max = new VecI(0,0);
 		
 		for(VecI pixel : pixels)
 		{
-			if(pixel.x > max.x)
-				max = pixel;
-		}
-		
-		return max;
+			switch(edge) {
+				case Left : {
+					if(pixel.x < finalX)
+						finalPoint = pixel; 
+					break;
+					}
+				case Right : {
+					if(pixel.x > finalX)
+						finalPoint = pixel; 
+					break;
+					}
+				case Up : {
+					if(pixel.y < finalY)
+						finalPoint = pixel; 
+					break;
+					}
+				case Down : {
+					if(pixel.y > finalY)
+						finalPoint = pixel; 
+					break;
+					}
+				}
+			}
+		return finalPoint;
 	}
-
-	public VecI getMaxYPixel() {
-	    Set<VecI> pixels = getLargestRegion();
-		VecI max = new VecI(0,0);
-		
-		for(VecI pixel : pixels)
-		{
-			if(pixel.y > max.y)
-				max = pixel;
-		}
-		
-		return max;
-	}
-
-	public VecI getMinXPixel() {
-		Set<VecI> pixels = getLargestRegion();
-		VecI min = new VecI(1000,0);
-		
-		for(VecI pixel : pixels)
-		{
-			System.out.println(pixel.x);
-			if(pixel.x < min.x)
-				min = pixel;
-		}
-	
-		return min;
-	}
-
-	public VecI getMinYPixel() {
-		Set<VecI> pixels = getLargestRegion();
-		VecI min = new VecI(0,1000);
-	
-		for(VecI pixel : pixels)
-		{
-			if(pixel.x < min.x)
-				min = pixel;
-		}
-	
-		return min;
-	}
-
 
 }

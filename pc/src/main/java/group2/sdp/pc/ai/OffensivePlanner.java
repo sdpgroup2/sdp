@@ -47,7 +47,7 @@ public class OffensivePlanner extends Planner {
 	{
 		Point ballPosition = pitch.getBall().getPosition();
 		Line line2 = offensiveZone.expand(ballPosition, 0.0);
-		Point endpoint = offensiveZone.getIntersection(arrow);
+//		Point endpoint = offensiveZone.getIntersection(arrow);
 		Line line1 = line2.getPerpendicular();
 	}
 	

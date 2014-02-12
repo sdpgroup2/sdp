@@ -14,16 +14,9 @@ public class Vector extends Vector2d {
 		this.x = (this.x + other.x) / 2;
 		this.y = (this.y + other.y) / 2;
 	}
-<<<<<<< HEAD
-
-	public double angleDegrees(Vector other) {
-		return Math.toDegrees(this.angle(other));
-
-=======
 	
 	public double angleDegrees(Vector other) {
 		return Math.toDegrees(this.angle(other));
->>>>>>> milestone3
 	}
 
 	@Override

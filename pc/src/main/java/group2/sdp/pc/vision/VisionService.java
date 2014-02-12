@@ -4,10 +4,12 @@ import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.util.Debug;
 import group2.sdp.pc.vision.clusters.BallCluster;
+import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
 import group2.sdp.pc.vision.clusters.RobotBaseCluster;
+import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -55,20 +57,21 @@ public class VisionService implements CaptureCallback {
 
 	// Clusters
 	private BallCluster ballCluster = new BallCluster("Ball");
-	private BlueRobotCluster blueRobotCluster = new BlueRobotCluster("Blue robots");
 //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
-	private DotCluster dotCluster = new DotCluster("Dot");
 //	private CompoundRobotCluster blueCompoundRobot = new CompoundRobotCluster();
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
 	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
+	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow");
+	private DotCluster dotCluster = new DotCluster("Dots");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-		blueRobotCluster,
-//		blueCompoundRobot,
-//		yellowRobotCluster,
+//		blueRobotCluster,
 		baseRobotCluster,
-		dotCluster
+		yellowRobotCluster,
+//		pitchLinesCluster,
+//		pitchSectionCluster,
+		dotCluster,
 	};
 	
 	private Rect processingRegion;
@@ -106,7 +109,6 @@ public class VisionService implements CaptureCallback {
 					state = VisionState.StaticDetection;
 					this.normaliseImage();
 					this.processImage(); // Process when ready so we have clusters
-					this.callback.onPreparationReady(hsbArray, pitchLinesCluster, pitchSectionCluster, ballCluster, baseRobotCluster, blueRobotCluster);
 				} else {
 					this.callback.onPreparationFrame();
 				}
@@ -116,8 +118,13 @@ public class VisionService implements CaptureCallback {
 				// Find the objects that will not move and restrict processing region.
 				Debug.log("Looking for pitch...");
 				this.normaliseImage();
+				this.processImage();
 				Rect pitchRect = this.findPitch();
-				if (pitchRect != null) {
+				Rect[] sectionRects = this.findSections();
+				System.out.println("Ready");
+				boolean ready = this.callback.onPreparationReady(hsbArray, ballCluster, baseRobotCluster, pitchRect, sectionRects);
+				System.out.println(ready);
+				if (pitchRect != null && sectionRects != null && ready) {
 					processingRegion = new Rect(pitchRect.x-15, pitchRect.y-15,
 							pitchRect.width+30, pitchRect.height+30);
 					Debug.log("Found pitch");
@@ -134,7 +141,7 @@ public class VisionService implements CaptureCallback {
 			    this.normaliseImage();
 			    this.callback.onImageFiltered(hsbArray);
 				this.processImage();
-				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster, blueRobotCluster);
+				this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
 				break;
 			}
 		}
@@ -151,6 +158,21 @@ public class VisionService implements CaptureCallback {
 		}
 		List<Rect> rects = pitchLinesCluster.getImportantRects();
 		return (!rects.isEmpty()) ? rects.get(0) : null;
+	}
+	
+	private Rect[] findSections() {
+		for (int x=0; x<getSize().width; x++) {
+			for (int y=0; y<getSize().height; y++) {
+				int index = y * getSize().width + x;
+				HSBColor color = hsbArray[index];
+				pitchSectionCluster.testPixel(x, y, color);
+			}
+		}
+		List<Rect> rects = pitchSectionCluster.getImportantRects();
+		if (rects.size() > 4) {
+			rects = rects.subList(0, 4);
+		}
+		return (!rects.isEmpty()) ? rects.toArray(new Rect[rects.size()]) : null;
 	}
 
 	/**

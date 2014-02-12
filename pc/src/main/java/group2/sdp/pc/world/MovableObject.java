@@ -50,7 +50,7 @@ public class MovableObject {
 		int i = history.size() - 1;
 		for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++)
 		{
-			xsum += history.get(i).getX();int i = history.size() - 1;
+			xsum += history.get(i).getX();
 			for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++)
 			ysum += history.get(i).getY();
 		}

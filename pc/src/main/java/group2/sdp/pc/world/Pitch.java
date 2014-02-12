@@ -21,6 +21,30 @@ public class Pitch extends Plane implements IPitch {
 	private Zone[] zones = new Zone[4];
 	private Ball ball = new Ball();
 	private boolean even;
+
+/*	public Rect getPitchRect() {
+		return pitchRect;
+	}
+
+	public void setPitchRect(Rect pitchRect) {
+		this.pitchRect = pitchRect;
+	}
+
+	private Rect pitchRect;
+	private Rect[] sections;
+
+	private Rect leftAttackZone;
+	private Rect rightAttackZone;
+	private Rect leftDefenseZone;
+	private Rect rightDefenseZone;
+
+//	private Robot leftDefender;
+//	private Robot leftAttacker;
+//	private Robot rightDefender;
+//	private Robot rightAttacker;
+
+	// Milestone 3 - only one robot needed
+*/	
 	private Robot robot;
 	
 	// Points that should definitely belong to respective zones
@@ -48,6 +72,27 @@ public class Pitch extends Plane implements IPitch {
 	public void setAlly(boolean even)
 	{ this.even = even; }
 
+	public Pitch(Rect pitchRect, Rect[] sections) {
+		super("Pitch");
+		
+		// TODO : parse
+		// this.pitchRect = pitchRect;
+		addPoint(new Point(pitchRect.x, pitchRect.y));
+		addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y));
+		addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y + pitchRect.height));
+		addPoint(new Point(pitchRect.x, pitchRect.y + pitchRect.height));
+		
+		// this.sections = sections;
+		byte id = 0;
+		for (Rect section : sections) {
+			zones[id].addPoint(new Point(section.x, section.y));
+			zones[id].addPoint(new Point(section.x + section.width, section.y));
+			zones[id].addPoint(new Point(section.x + section.width, section.y + section.height));
+			zones[id].addPoint(new Point(section.x, section.y + section.height));
+			id++;
+		}
+	}
+
 	@Override
 	public void updateBallPosition(Point p)
 	{ ball.updatePoisition(p); }
@@ -74,17 +119,6 @@ public class Pitch extends Plane implements IPitch {
 //	public Vector getRobotBallVector() {
 //		return this.ball.getPosition().sub(this.robot.getPosition());
 //	}
-	
-//	public Rect getPitchRect(Point rectMember) {
-//	       Rect result = new Rect(0.0, 1.0, 0.0, 1.0);
-//	       List<Rect> rects = sections.getImportantRects();
-//	       for (Rect rect : rects) {
-//	    	   if (rect.contains(rectMember)) {
-//	    		   result = rect;
-//	    	   }
-//	        }
-//	       return result;
-//		}
 	
 	public Robot getRobot() { 
 		return this.robot;
