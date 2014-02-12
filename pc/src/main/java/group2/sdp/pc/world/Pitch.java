@@ -66,14 +66,18 @@ public class Pitch extends Plane implements IPitch {
 //	}
 	
 	public Pitch()
-	{ super("Pitch"); }
+	{ 
+		super("Pitch");
+		for (byte i = 0; i < zones.length; i++)
+		{ zones[i] = new Zone(i); }
+	}
 
 	@Override
 	public void setAlly(boolean even)
 	{ this.even = even; }
 
 	public Pitch(Rect pitchRect, Rect[] sections) {
-		super("Pitch");
+		this();
 		
 		// TODO : parse
 		// this.pitchRect = pitchRect;
@@ -86,9 +90,9 @@ public class Pitch extends Plane implements IPitch {
 		byte id = 0;
 		for (Rect section : sections) {
 			zones[id].addPoint(new Point(section.x, section.y));
-			zones[id].addPoint(new Point(section.x + section.width, section.y));
-			zones[id].addPoint(new Point(section.x + section.width, section.y + section.height));
-			zones[id].addPoint(new Point(section.x, section.y + section.height));
+			zones[id].addPoint(section.x + section.width, section.y);
+			zones[id].addPoint(section.x + section.width, section.y + section.height);
+			zones[id].addPoint(section.x, section.y + section.height);
 			id++;
 		}
 	}

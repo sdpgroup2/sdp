@@ -121,18 +121,19 @@ public class VisionService implements CaptureCallback {
 				this.processImage();
 				Rect pitchRect = this.findPitch();
 				Rect[] sectionRects = this.findSections();
-				System.out.println("Ready");
-				boolean ready = this.callback.onPreparationReady(hsbArray, ballCluster, baseRobotCluster, pitchRect, sectionRects);
-				System.out.println(ready);
-				if (pitchRect != null && sectionRects != null && ready) {
-					processingRegion = new Rect(pitchRect.x-15, pitchRect.y-15,
-							pitchRect.width+30, pitchRect.height+30);
-					Debug.log("Found pitch");
-					// Clear image to make new region obvious
-					for (int i=0; i<hsbArray.length; i++) {
-						hsbArray[i].set(0,0,0);
+				if (pitchRect != null && sectionRects != null) {
+					boolean ready = this.callback.onPreparationReady(hsbArray, ballCluster, baseRobotCluster, pitchRect, sectionRects);
+					if (ready) {
+						System.out.printf("Ready: %b\n", ready);
+						processingRegion = new Rect(pitchRect.x-15, pitchRect.y-15,
+								pitchRect.width+30, pitchRect.height+30);
+						Debug.log("Found pitch");
+						// Clear image to make new region obvious
+						for (int i=0; i<hsbArray.length; i++) {
+							hsbArray[i].set(0,0,0);
+						}
+						state = VisionState.Processing;
 					}
-					state = VisionState.Processing;
 				}
 				break;
 			}
@@ -223,6 +224,8 @@ public class VisionService implements CaptureCallback {
 		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion.getMaxX(); x++) {
 			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion.getMaxY(); y++) {
 				int index = y * getSize().width + x;
+				index = Math.max(0, index);
+				index = Math.min(index, getSize().width * getSize().height - 1);
 				HSBColor color = hsbArray[index];
 				// Test the pixel for each of the clusters
 				for (HSBCluster cluster : clusters) {

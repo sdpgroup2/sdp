@@ -1,5 +1,6 @@
 package group2.sdp.pc;
 
+import group2.sdp.pc.ai.DefensivePlanner;
 import group2.sdp.pc.comms.Sender;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.geom.Rect;
@@ -29,7 +30,9 @@ public class Milestone3 implements VisionServiceCallback {
 	private VisionService visionService;
 	private Sender sender = null;
 	private Vector robotDirectionVector;
+	private DefensivePlanner defPlanner;
 //	private int robotDirectionCounter;
+	
 	
 	public static void main(String[] args) {
 //		if (args.length < 2) {
@@ -39,6 +42,12 @@ public class Milestone3 implements VisionServiceCallback {
 //		ourTeam = Integer.parseInt(args[0]) == Constants.YELLOW_TEAM ? TeamColor.YELLOW : TeamColor.BLUE;
 //		pitchPlayed = Integer.parseInt(args[1]) == Constants.MAIN_PITCH ? PitchType.MAIN : PitchType.SIDE;
 		new Milestone3();
+		
+	}
+	
+	public Milestone3() {
+		this.visionService = new VisionService(5, this);
+		this.visionService.start();
 	}
 
 	@Override
@@ -53,23 +62,14 @@ public class Milestone3 implements VisionServiceCallback {
 	public void onPreparationFrame() {
 	}
 
-	public Milestone3() {
-//		try {
-//			sender = new Sender("SDP2A", "00165307D55F");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		this.visionService = new VisionService(5, this);
-//		new VisionGUI(visionService);
-		this.visionService.start();
-	}
-
 	@Override
 	public boolean onPreparationReady(HSBColor[] hsbArray,
 			BallCluster ballCluster, RobotBaseCluster robotBaseCluster,
 			Rect pitchRect, Rect[] sectionRects) {
 		
 		this.pitch = new Pitch(pitchRect, sectionRects);
+		this.defPlanner = new DefensivePlanner(pitch, (byte) 0);
+		
 		List<Rect> ballImpRects = ballCluster.getImportantRects();
 		if (ballImpRects == null || ballImpRects.size() == 0) {
 			// If we don't find the ball then loop until we do
@@ -125,6 +125,10 @@ public class Milestone3 implements VisionServiceCallback {
 		}
 		
 		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
+		
+		this.defPlanner.act();
+		
+		
 //			pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
 		
 		// Calculate the vector between ball and robot

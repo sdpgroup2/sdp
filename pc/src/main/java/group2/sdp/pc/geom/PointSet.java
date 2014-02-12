@@ -36,7 +36,7 @@ public class PointSet implements Comparable<PointSet>
     
     public PointSet(boolean sortable)
     {
-    	super();
+    	this();
     	this.sortable = sortable;
     }
 
