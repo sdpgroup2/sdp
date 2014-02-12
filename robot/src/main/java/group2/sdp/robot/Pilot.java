@@ -54,7 +54,9 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	}
 
 	public void lightMeasured(int lightVal, MyLightSensor sensor) {
-		
+		if (lightVal >= WHITE_THRESHOLD) {
+			this.stop();
+		}
 	}
 
 }
