@@ -17,7 +17,7 @@ public class ColorConfig {
 	
 	public static HSBColor BALL_1_MIN = new HSBColor(343, 85, 50);
 	public static HSBColor BALL_1_MAX = new HSBColor(30, 100, 100);
-	public static HSBColor BALL_2_MIN = new HSBColor(343,51,50);
+	public static HSBColor BALL_2_MIN = new HSBColor(343,80,80);
 	public static HSBColor BALL_2_MAX = new HSBColor(30,100,100);
 	
 	
@@ -41,8 +41,8 @@ public class ColorConfig {
 	
 	public static HSBColor DOT_1_MIN = new HSBColor(60, 35, 10);
 	public static HSBColor DOT_1_MAX = new HSBColor(160, 100, 25);
-	public static HSBColor DOT_2_MIN = new HSBColor(40,5,35);
-	public static HSBColor DOT_2_MAX = new HSBColor(110,54,58);
+	public static HSBColor DOT_2_MIN = new HSBColor(42,9,12);
+	public static HSBColor DOT_2_MAX = new HSBColor(98,50,44);
 	
 	
 	

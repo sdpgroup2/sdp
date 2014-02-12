@@ -17,17 +17,15 @@ public class RobotBaseCluster extends HSBCluster {
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(25, 75, 25, 75, 0.5f, 1.1f);
-	}
-	
-	public List<Rect> getImportantRects(RobotCluster robotCluster) {
-		return getRects(40, 75, 40, 75, 0.3f, 1.1f, robotCluster);
+		return getRects(25, 75, 25, 75, 0.3f, 1.1f);
 	} 
 
-	public Vector getRobotVector(HSBColor[] hsbArray, RobotCluster robotCluster) {
+	public Vector getRobotVector(HSBColor[] hsbArray) {
 		DotCluster dotCluster = new DotCluster("Dot");
-		List<Rect> impRects = this.getImportantRects(robotCluster);
+		YellowRobotCluster robotCluster = new YellowRobotCluster("Blue robot");
+		List<Rect> impRects = this.getImportantRects();
 		if (impRects.size() < 1) {
+			System.out.println("Missing the base plates!");
 			return null;
 		}
 		Rect impRect = impRects.get(0);

@@ -19,10 +19,9 @@ public class Pitch {
 		this.pitchRect = pitchRect;
 	}
 
-	private PitchLinesCluster lines;
-	private PitchSectionCluster sections;
-
 	private Rect pitchRect;
+	private Rect[] sections;
+
 	private Rect leftAttackZone;
 	private Rect rightAttackZone;
 	private Rect leftDefenseZone;
@@ -43,8 +42,8 @@ public class Pitch {
 	private final Point RIGHT_DEF_POINT = new Point(370, 240);
 	private final Point RIGHT_ATT_POINT = new Point(410, 240);
 
-	public Pitch(PitchLinesCluster lines, PitchSectionCluster sections) {
-		this.lines = lines;
+	public Pitch(Rect pitchRect, Rect[] sections) {
+		this.pitchRect = pitchRect;
 		this.sections = sections;
 
 //		pitchRect = lines.getImportantRects().get(0);
@@ -114,26 +113,10 @@ public class Pitch {
 		this.robot.setPosition(robotPosition);
 		this.robot.setDirection(direction);
 	}
-
-	public void translate(StaticObject object) {
-		Point translatedPt = CoordinateTranslator.fromVisionToPitch(object.getPosition(), this);
-		object.setPosition(translatedPt);
-	}
 	
 	public Vector getRobotBallVector() {
 		return this.ball.getPosition().sub(this.robot.getPosition());
 	}
-	
-	public Rect getPitchRect(Point rectMember) {
-	       Rect result = new Rect(0.0, 1.0, 0.0, 1.0);
-	       List<Rect> rects = sections.getImportantRects();
-	       for (Rect rect : rects) {
-	    	   if (rect.contains(rectMember)) {
-	    		   result = rect;
-	    	   }
-	        }
-	       return result;
-		}
 	
 	public Robot getRobot() { 
 		return this.robot;

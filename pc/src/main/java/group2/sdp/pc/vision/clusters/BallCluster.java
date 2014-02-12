@@ -2,7 +2,6 @@ package group2.sdp.pc.vision.clusters;
 
 import group2.sdp.pc.geom.Rect;
 import group2.sdp.pc.vision.ColorConfig;
-import group2.sdp.pc.vision.HSBColor;
 
 import java.awt.Color;
 import java.util.List;
@@ -20,7 +19,7 @@ public class BallCluster extends HSBCluster {
 	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(4, 24, 4, 24, 0.5f, 1.1f);
+		return getRects(8, 24, 8, 24, 0.5f, 1.1f);
 	}
 
 }

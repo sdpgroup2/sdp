@@ -36,8 +36,9 @@ public class Sender implements CommInterface {
 	}
 
 	public int move(int direction, int speed, int distance) throws IOException {
+		int confirmation =0;
 		short[] command = { Commands.ANGLEMOVE, (short) direction, (short) speed, (short) distance};
-		int confirmation = attemptConnection(command);
+		confirmation = attemptConnection(command);
 		System.out.printf("Moving in %d direction with %d speed and %d distance\n", direction, speed, distance);
 		return confirmation;
 	} 
@@ -67,7 +68,6 @@ public class Sender implements CommInterface {
 
 	}
 
-	@Override
 	public int stop() {
 		short[] command = { Commands.STOP, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
@@ -227,9 +227,7 @@ public class Sender implements CommInterface {
 		//for (int i = 0; i<10; i++){
 			try {
 				confirmation = sendToRobot(command);
-				if (confirmation != -1 && confirmation != -2) {
-					//break;
-				}
+				
 			} catch (IOException e1) {
 				System.out.println("Could not send command");
 				e1.printStackTrace();

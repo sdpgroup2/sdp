@@ -24,10 +24,9 @@ public class PitchLinesCluster extends HSBCluster {
 	}
 	
 	
-	
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(100, 640, 50, 480);
+		return getRects(400, 640, 50, 480);
 	}
 	
 	public Shape getPitchShape() {		
