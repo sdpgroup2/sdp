@@ -248,6 +248,9 @@ public class Plane
     public Line expand(Point p0, Point p1)
     { return expand(p0, Math.atan2(p1.y - p0.y, p1.x - p0.x)); }
     
+    public Line expand(Line line)
+    { return expand(new Point(line.x1, line.y1), new Point(line.x2, line.y2)); }
+    
     public static double pix2mm(int pix) {
 		/* pitch dimension in pixels in room 3.11
 		2165 / 552 -> 3.922101449

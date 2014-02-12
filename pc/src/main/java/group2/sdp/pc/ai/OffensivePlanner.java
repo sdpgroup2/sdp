@@ -8,6 +8,7 @@ import group2.sdp.pc.geom.Plane;
 import group2.sdp.pc.geom.Point;
 import group2.sdp.pc.strategy.Robot;
 import group2.sdp.pc.strategy.Zone;
+import group2.sdp.pc.world.Ball;
 import group2.sdp.pc.world.IPitch;
 
 public class OffensivePlanner extends Planner {
@@ -39,6 +40,35 @@ public class OffensivePlanner extends Planner {
 		double space = Math.abs(endpoint.distance(endpoint));
 		
 		return space >= attackerRobot.getRadius() * 2; 
+	}
+	
+	public void score()
+	{
+		
+	}
+	
+	public void passBack()
+	{
+		
+	}
+	
+	public Line getTargetPath()
+	{
+		Ball ball = pitch.getBall();
+		Point ballPosition = ball.getPosition();
+		Line arrow = offensiveZone.expand(ballPosition, 0.0);
+		arrow.extend(attackerRobot.getRadius() + ball.getRadius());
+		Line target = arrow.getPerpendicular();
+		return offensiveZone.expand(target);
+	}
+	
+	public void act()
+	{
+		if (attackerRobot.isMoving()) { return; }
+		if (isAbleToScore())
+		{ score(); }
+		else
+		{ passBack(); }
 	}
 	
 }

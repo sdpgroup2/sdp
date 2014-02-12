@@ -61,5 +61,5 @@ public interface IPitch
     public void resetToTachoTranslation();
     
     public PointSet getTrajectory();
-    public Point getBallPosition();
+    public Ball getBall();
 }

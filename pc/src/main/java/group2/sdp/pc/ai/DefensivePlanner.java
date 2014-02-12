@@ -86,4 +86,7 @@ public class DefensivePlanner extends Planner {
 		return new Line(p0, p1);
 	}
 	
+	public void act()
+	{ intercept(); }
+	
 }
