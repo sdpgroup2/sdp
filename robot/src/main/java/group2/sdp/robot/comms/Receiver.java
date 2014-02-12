@@ -24,9 +24,10 @@ public class Receiver {
 	private static OutputStream outStream;
 	private static boolean forceQuit;
 	private static Pilot pilot;
+	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		 pilot = new Pilot();
-		
+		System.out.println("Waiting for connection...");
 		while (!forceQuit) {
 			try {
 

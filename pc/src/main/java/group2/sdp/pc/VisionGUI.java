@@ -284,4 +284,8 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		return true;
 	}
 
+	@Override
+	public void onExceptionThrown(Exception e) {
+	}
+
 }

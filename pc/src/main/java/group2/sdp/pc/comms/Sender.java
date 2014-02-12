@@ -223,7 +223,7 @@ public class Sender implements CommInterface {
 			return 7;
 		}
 		int confirmation = 0;
-
+		System.out.println("Command: " + command[0]);
 		//for (int i = 0; i<10; i++){
 			try {
 				confirmation = sendToRobot(command);
@@ -233,7 +233,7 @@ public class Sender implements CommInterface {
 				e1.printStackTrace();
 			}
 		//}
-
+		System.out.println("Confirmation: " + confirmation);
 		return confirmation;
 	}
 }

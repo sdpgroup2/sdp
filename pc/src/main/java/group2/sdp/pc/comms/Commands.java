@@ -72,5 +72,9 @@ public class Commands{
 		return new int[] {STEER,turnRate,0,0};
 	}
 	
+	public int[] disconnect() {
+		return new int[] {DISCONNECT};
+	}
+	
 	
 }

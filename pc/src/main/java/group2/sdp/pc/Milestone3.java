@@ -126,10 +126,11 @@ public class Milestone3 implements VisionServiceCallback {
 		
 		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
 		
+		System.out.println("Acted!");
+		
 		this.defPlanner.act();
 		
-		
-//			pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
+//		pitch.updateRobotState(blueRobotPosition, blueRobotDirection);
 		
 		// Calculate the vector between ball and robot
 		// Vector vectorToGo = pitch.getRobotBallVector();
@@ -146,6 +147,11 @@ public class Milestone3 implements VisionServiceCallback {
 //			} finally {
 //				sender.disconnect();
 //			}
+	}
+
+	@Override
+	public void onExceptionThrown(Exception e) {
+		this.defPlanner.disconnect();
 	}
 	
 }

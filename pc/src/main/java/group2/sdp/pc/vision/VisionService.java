@@ -13,6 +13,9 @@ import group2.sdp.pc.vision.clusters.YellowRobotCluster;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import au.edu.jcu.v4l4j.CaptureCallback;
@@ -295,6 +298,7 @@ public class VisionService implements CaptureCallback {
 	@Override
 	public void exceptionReceived(V4L4JException e) {
 		this.stopVision();
+		this.callback.onExceptionThrown(e);
 		e.printStackTrace();
 	}
 

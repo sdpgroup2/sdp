@@ -18,4 +18,6 @@ public interface VisionServiceCallback {
 
 	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray, BallCluster ballCluster, RobotBaseCluster robotBaseCluster);
 
+	public void onExceptionThrown(Exception e);
+	
 }
