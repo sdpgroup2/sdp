@@ -222,12 +222,14 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     		// Calculate the vector between ball and robot
 //    		Vector vectorToGo = pitch.getRobotBallVector();
     		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
-        	Vector vectorToGo = pitch.getBall().getPosition().sub(pitch.getRobot().getPosition());
-//    		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
-    		System.out.println(vectorToGo);
-    		if (robotImpRects != null && robotImpRects.size() > 0) {
-    			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo);
-    			Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec);
+    		if (pitch.getRobot().getPosition() != null) {
+    			Vector vectorToGo = pitch.getBall().getPosition().sub(pitch.getRobot().getPosition());
+//    			List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
+    			System.out.println(vectorToGo);
+    			if (robotImpRects != null && robotImpRects.size() > 0) {
+    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo);
+    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec);
+    			}
     		}
         }
         

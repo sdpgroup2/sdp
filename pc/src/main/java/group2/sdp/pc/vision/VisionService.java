@@ -69,11 +69,11 @@ public class VisionService implements CaptureCallback {
 	private DotCluster dotCluster = new DotCluster("Dots");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
-//		blueRobotCluster,
+		//blueRobotCluster,
 		baseRobotCluster,
 		yellowRobotCluster,
-//		pitchLinesCluster,
-//		pitchSectionCluster,
+		//pitchLinesCluster,
+		//pitchSectionCluster,
 		dotCluster,
 	};
 	

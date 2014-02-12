@@ -15,7 +15,7 @@ public class DotCluster extends HSBCluster {
 
 	@Override
 	public List<Rect> getImportantRects() {
-		return getRects(3, 10, 3, 10, 0.5f, 1.1f);
+		return getRects(6, 11, 6, 11, 0.5f, 1.1f);
 	}
 	
 }
