@@ -54,8 +54,11 @@ public class DefensivePlanner extends Planner {
 		if (isRobotAligned)
 		{ return; }
 		
-		double theta = Math.abs(Math.PI / 2 - Math.abs(defenseRobot.getDirection())); // rotation to align
-		int thetaDeg = defenseZone.rad2deg(theta);
+		double direction = Math.PI / 2;
+		double robotDirection = defenseRobot.getDirection();
+		double theta = Math.abs(direction - Math.abs(robotDirection)); // rotation to align
+		int sign = direction > robotDirection ? 1 : -1;
+		int thetaDeg = sign * Zone.rad2deg(theta);
 		
 		try { sender.rotate(thetaDeg, SPEED); }
 		catch (IOException e) { e.printStackTrace(); }

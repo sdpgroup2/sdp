@@ -57,5 +57,8 @@ public class Line extends Line2D.Double {
 	{
 		return true; // TODO: implement
 	}
+	
+	public double getDirection()
+	{ return Math.atan2(y2 - y1, x2 - x1); }
 
 }
