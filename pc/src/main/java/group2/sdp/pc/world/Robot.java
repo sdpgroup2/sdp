@@ -7,10 +7,20 @@ import group2.sdp.pc.geom.Vector;
 public class Robot extends RectangularObjectAdapter implements MovingObject {
 
 	private Point previousPosition;
-
-	public Robot(Rect boundingRect) {
+	private Rect color;
+	
+	public Robot(Rect color, Rect boundingRect) {
 		super(boundingRect);
 		this.previousPosition = boundingRect.getCenter();
+		this.color = color;
+	}
+	
+	public Vector getDirection() {
+		return super.getBoundingRect().getCenter().sub(color.getCenter());
+	}
+	
+	public Point getColorCenter() {
+		return color.getCenter();
 	}
 
 	@Override

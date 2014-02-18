@@ -2,18 +2,21 @@ package group2.sdp.pc.vision;
 
 import group2.sdp.pc.Timer;
 import group2.sdp.pc.geom.Rect;
+import group2.sdp.pc.geom.Vector;
 import group2.sdp.pc.vision.clusters.BallCluster;
 import group2.sdp.pc.vision.clusters.BlueRobotCluster;
-import group2.sdp.pc.vision.clusters.DotCluster;
 import group2.sdp.pc.vision.clusters.HSBCluster;
 import group2.sdp.pc.vision.clusters.PitchLinesCluster;
 import group2.sdp.pc.vision.clusters.PitchSectionCluster;
+import group2.sdp.pc.vision.clusters.RobotBaseCluster;
 import group2.sdp.pc.vision.clusters.YellowRobotCluster;
+import group2.sdp.pc.world.Robot;
 import group2.sdp.util.Debug;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.ArrayList;
 
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
@@ -61,11 +64,12 @@ public class VisionService implements CaptureCallback {
 	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
 	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster("Pitch sections");
 	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster("Pitch lines");
-	private DotCluster dotCluster = new DotCluster("Dot");
+	private RobotBaseCluster baseCluster = new RobotBaseCluster("Bases");
 	private HSBCluster[] clusters = new HSBCluster[] {
 		ballCluster,
 		blueRobotCluster,
 		yellowRobotCluster,
+		baseCluster,
 	};
 	
 	private Rect processingRegion;
@@ -216,6 +220,8 @@ public class VisionService implements CaptureCallback {
 	    return clusters;
     }
 
+	// these should be changed to get[Yellow/Blue]RobotRects() as they
+	// return rects and not robot objects
 	public List<Rect> getYellowRobots() {
 		return yellowRobotCluster.getImportantRects();
 	}
@@ -223,9 +229,28 @@ public class VisionService implements CaptureCallback {
 	public List<Rect> getBlueRobots() {
 		return blueRobotCluster.getImportantRects();
 	}
+	
+	public List<Rect> getRobotBases() {
+		return baseCluster.getImportantRects();
+	}
 
 	public HSBColor[] getHSBArray() {
 		return hsbArray;
+	}
+	
+	//Should be changed to getYellowRobots()
+	public List<Robot> getYellowRobotObjects() {		
+		ArrayList<Robot> robots = new ArrayList<Robot>();
+		List<Rect> colorRects = getYellowRobots();
+		for(Rect colorRect : colorRects) {
+			for(Rect base : getRobotBases()) {
+				if (base.contains(colorRect)) {
+					Robot robot = new Robot(colorRect, base);
+					robots.add(robot);
+				}
+			}
+		}
+		return robots;
 	}
 
 	/**

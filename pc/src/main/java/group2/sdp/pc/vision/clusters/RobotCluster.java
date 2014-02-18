@@ -17,6 +17,7 @@ import java.util.Set;
  * @author Paul Harris
  *
  */
+
 public class RobotCluster extends HSBCluster {
 
 	public RobotCluster(String name, HSBColor minColor, HSBColor maxColor, Color debugColor) {
