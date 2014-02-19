@@ -9,3 +9,5 @@
 *.sublime-workspace
 */.settings/*
 *.externalToolBuilders
+*.iml
+*.idea*
