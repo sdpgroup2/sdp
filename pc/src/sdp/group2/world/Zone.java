@@ -1,6 +1,8 @@
-package sdp.group2.strategy;
+package sdp.group2.world;
 
 import sdp.group2.geometry.*;
+import sdp.group2.world.Robot;
+
 
 public class Zone extends Plane {
 
