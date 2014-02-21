@@ -8,11 +8,9 @@ import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
-import sdp.group2.geometry.Rect;
 import sdp.group2.strategy.Robot;
 import sdp.group2.strategy.Zone;
 import sdp.group2.world.IPitch;
-import sdp.group2.world.Pitch;
 
 public class DefensivePlanner extends Planner {
 

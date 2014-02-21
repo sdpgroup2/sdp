@@ -11,6 +11,8 @@ import sdp.group2.strategy.Zone;
 import sdp.group2.world.Ball;
 import sdp.group2.world.IPitch;
 
+
+
 public class OffensivePlanner extends Planner {
 
 	private static final Point GOAL = new Point(0, Plane.pix2mm(70));

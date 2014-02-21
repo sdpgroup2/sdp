@@ -14,7 +14,6 @@ import sdp.group2.vision.clusters.HSBCluster;
 import sdp.group2.vision.clusters.RobotBaseCluster;
 import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
-import sdp.group2.strategy.Robot;
 
 import java.awt.Color;
 import java.awt.Dimension;

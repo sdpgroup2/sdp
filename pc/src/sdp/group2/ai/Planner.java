@@ -1,10 +1,12 @@
 package sdp.group2.ai;
 
+import sdp.group2.world.IPitch;
+
 /**
  * @author Jaroslaw Hirniak 
  * */
 
-import sdp.group2.world.IPitch;
+
 
 public class Planner
 {

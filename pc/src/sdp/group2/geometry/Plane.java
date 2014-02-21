@@ -5,7 +5,6 @@ package sdp.group2.geometry;
 
 import lejos.geom.Rectangle;
 
-
 public class Plane
 {
     private String id = null;

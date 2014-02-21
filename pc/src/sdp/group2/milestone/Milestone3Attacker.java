@@ -1,4 +1,4 @@
-package sdp.group2.milestone;
+package milestone;
 
 import sdp.group2.ai.DefensivePlanner;
 import sdp.group2.ai.OffensivePlanner;

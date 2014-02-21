@@ -9,8 +9,8 @@
     <path id="build.classpath">
         <pathelement location="${lib.dir}"/>
         <fileset dir="${lib.dir}">
-            <include name="**/*.jar"/>
-        	<include name="**/*.so"/>
+            <include name="**/*.jar" />
+        	<include name="**/*.so" />
         </fileset>
         <pathelement location="${build.dir}"/>
         <pathelement location="${build.tests.dir}"/>
@@ -32,12 +32,12 @@
     </target>
 
 	<target name="run-bt" depends="compile">
-		<java dir="." classpathref="build.classpath" classname="group2.sdp.pc.comms.TestComms">
+		<java dir="." classpathref="build.classpath" classname="sdp.group2.comms.TestComms">
 		</java>
 	</target>
 
     <target name="run-vision" depends="compile">
-        <java dir="." fork="true" classpathref="build.classpath" classname="group2.sdp.pc.VisionGUI">
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.VisionGUI">
             <sysproperty key="java.library.path" path="${lib.dir}"/>
 	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
