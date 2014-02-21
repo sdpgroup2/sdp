@@ -23,29 +23,27 @@ public class VisionDisplay extends WindowAdapter {
     private static final Color DIRECTION_COLOR = Color.CYAN;
     private static final Color CONNECT_COLOR = Color.MAGENTA;
 
-    private JFrame windowFrame;
-    private Dimension frameSize;
     private JLabel imageLabel = new JLabel();
 
 
     /**
      * Initialise a window frame. PLEASE EXCUSE THIS AWFUL FUNCTION. I'll clean it up later.
      */
-    public void initWindow() {
-        JPanel contentPanel;
+    public void initWindow(Dimension frameSize) {
+        JPanel contentPanel = new JPanel();
+        JFrame  windowFrame = new JFrame("Vision");
 
-        windowFrame = new JFrame("Vision");
+        // Window container
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        // Main container
-        contentPanel = new JPanel();
+        // Main content container
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));
 
-        // Image
+        // Image display
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
@@ -76,9 +74,8 @@ public class VisionDisplay extends WindowAdapter {
 
     public VisionDisplay(Dimension frameSize) {
         super();
-        this.frameSize = frameSize;
         // Init GUI
-        initWindow();
+        initWindow(frameSize);
     }
 
 }
