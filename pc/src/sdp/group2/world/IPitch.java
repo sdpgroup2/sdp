@@ -27,8 +27,8 @@ public interface IPitch
     public Zone getZone(byte id);
     
     /** From the origin, is ally on even or odd number fields
-     *  @param boolean even - is on even fields? */
-    public void setAlly(boolean even);
+     *  @param even - is on even fields? */
+    //public void setAlly(boolean even);
     
     /** Note that you don't need to pass ball's velocity as it will be inferred
      *  inside Pitch class by storing ball movement history. Note, that for the
@@ -42,25 +42,25 @@ public interface IPitch
     public void updateRobotState(byte id, Point p, double theta);
     
     /** Gets singleton instance of the pitch. */
-    public IPitch getInstance();
+    //public IPitch getInstance();
     
     /** Returns zone in which the ball is. */
     public byte getBallZone();
     
     // TODO: Add methods useful for AI
     
-    public boolean isAllyEven();
+    //public boolean isAllyEven();
     
     /** Does the obvious thing, sets the ratio and by default translate pixel
      *  values to tacho counts. But, if for some reason it is passed already as
      *  tacho count then it can be switched of with reset.
      */
-    public void setTachoToPixelValue(double ratio);
-    public double getTachoToPixelRatio();
-    public void setToTachoTranslation();
-    public void resetToTachoTranslation();
+    //public void setTachoToPixelValue(double ratio);
+    //public double getTachoToPixelRatio();
+    //public void setToTachoTranslation();
+    //public void resetToTachoTranslation();
     
     public PointSet getTrajectory();
     public Ball getBall();
-    public Robot getRobot();
+    //public Robot getRobot();
 }

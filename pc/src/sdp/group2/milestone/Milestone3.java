@@ -121,7 +121,7 @@ public class Milestone3 implements VisionServiceCallback {
 			robotDirectionVector.averageWith(blueRobotDirection);
 		}
 		
-		pitch.updateRobotState(blueRobotPosition, robotDirectionVector);
+		pitch.updateRobotStates(blueRobotPosition, robotDirectionVector);
 		
 		System.out.println("Acted!");
 		
