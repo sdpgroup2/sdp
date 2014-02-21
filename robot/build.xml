@@ -21,7 +21,7 @@
 			<include name="**/*.jar" />
 		</fileset>
         <fileset dir="/group/teaching/sdp/sdp2/lib/">
-            <include name="*.jar" />
+            <include name="**/*.jar" />
 		</fileset>
 	</path>
 

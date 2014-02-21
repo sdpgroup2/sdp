@@ -12,6 +12,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry excluding="main/java/|test/java/" kind="src" path="src"/>
+	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.lejos.nxt.ldt.LEJOS_LIBRARY_CONTAINER/nxt"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
