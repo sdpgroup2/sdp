@@ -6,8 +6,7 @@ package sdp.group2.world;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
-import sdp.group2.strategy.Robot;
-import sdp.group2.strategy.Zone;
+
 
 /** Note that recommended units for the pitch are in tacho counts. Hence, we
  *  should measure how many pixels are how many tachos and work with those

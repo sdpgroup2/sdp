@@ -11,13 +11,9 @@ import sdp.group2.vision.HSBColor;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.vision.clusters.BallCluster;
-import sdp.group2.vision.clusters.PitchLinesCluster;
-import sdp.group2.vision.clusters.PitchSectionCluster;
 import sdp.group2.vision.clusters.RobotBaseCluster;
-import sdp.group2.vision.clusters.RobotCluster;
 import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
-import sdp.group2.strategy.Robot;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

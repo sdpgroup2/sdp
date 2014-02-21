@@ -56,7 +56,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private int[] postColorArray;
     private Vector robotDirectionCounter;
     private Pitch pitch;
-    
+
     public static void main(String[] args) {
     	new VisionGUI();
     }
@@ -74,7 +74,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        windowFrame.addWindowListener(this); 
+        windowFrame.addWindowListener(this);
         windowFrame.setVisible(true);
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -204,7 +204,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     @Override
     public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
     		BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
-        
+
         for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
                 Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
@@ -212,11 +212,11 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             for (Rect rect: cluster.getImportantRects()) {
                 Debug.drawRect(currentImage, rect, cluster.debugColor);
             }
-        }        
-        
+        }
+
         Vector vec = robotBaseCluster.getRobotVector(hsbArray);
         System.out.println(vec);
-		
+
         if (vec != null) {
     		// Calculate the vector between ball and robot
 //    		Vector vectorToGo = pitch.getRobotBallVector();
@@ -226,12 +226,12 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 //    			List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
     			System.out.println(vectorToGo);
     			if (robotImpRects != null && robotImpRects.size() > 0) {
-    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo);
-    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec);
+    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo, Color.MAGENTA);
+    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec, Color.MAGENTA);
     			}
     		}
         }
-        
+
     	showImage(currentImage);
     }
 
@@ -245,12 +245,12 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		this.visionService = new VisionService(5, this);
 		this.frameSize = visionService.getSize();
 		this.postColorArray = new int[frameSize.width * frameSize.height];
-		
+
 		// Init GUI
 		initWindow();
 		visionService.start();
 	}
-	
+
 	public VisionGUI(VisionService visionService) {
 		super();
 		this.visionService = visionService;
@@ -278,7 +278,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		if (blueRobotImpRects == null || blueRobotImpRects.size() == 0) {
 			System.out.println("Robot not found in preparation.");
 			return false;
-		}		
+		}
 		Rect blueRobotRect = blueRobotImpRects.get(0);
 		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
 		//pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));

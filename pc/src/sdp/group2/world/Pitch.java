@@ -11,8 +11,7 @@ import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.Vector;
-import sdp.group2.strategy.Robot;
-import sdp.group2.strategy.Zone;
+
 
 public class Pitch extends Plane implements IPitch {
 	

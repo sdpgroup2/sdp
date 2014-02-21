@@ -6,8 +6,8 @@ import sdp.group2.comms.Sender;
 import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
-import sdp.group2.strategy.Robot;
-import sdp.group2.strategy.Zone;
+import sdp.group2.world.Robot;
+import sdp.group2.world.Zone;
 import sdp.group2.world.Ball;
 import sdp.group2.world.IPitch;
 
