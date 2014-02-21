@@ -29,7 +29,7 @@ public class MovableObject {
 		}
 	}
 	
-	public void updatePoisition(Point position)
+	public void updatePosition(Point position)
 	{ 
 		history.add(position);
 		uptodate = false;

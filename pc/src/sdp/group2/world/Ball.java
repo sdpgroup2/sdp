@@ -12,7 +12,7 @@ public class Ball extends MovableObject {
 	
 	public Ball(Rect boundingRect) {
 		super();
-		updatePoisition(boundingRect.getCenter());
+		updatePosition(boundingRect.getCenter());
 	}
 	
 	public double getRadius()

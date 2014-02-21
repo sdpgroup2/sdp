@@ -108,7 +108,7 @@ public class Pitch extends Plane implements IPitch {
 
 	@Override
 	public void updateBallPosition(Point p)
-	{ ball.updatePoisition(p); }
+	{ ball.updatePosition(p); }
 
 	@Override
 	public void updateRobotState(byte id, Point p, double theta) {

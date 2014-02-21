@@ -39,6 +39,7 @@ public class VisionService implements CaptureCallback {
 	public static final String DEFAULT_DEVICE = "/dev/video0";
 	public static final String requiredInputName = "S-Video";
 	public static final int requiredStandard = V4L4JConstants.STANDARD_PAL;
+    public static boolean ENABLE_GUI = true;
 
 	private VideoDevice device;
 	private JPEGFrameGrabber frameGrabber;
