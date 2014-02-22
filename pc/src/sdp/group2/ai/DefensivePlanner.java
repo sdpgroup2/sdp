@@ -3,11 +3,13 @@ package sdp.group2.ai;
 import java.io.IOException;
 
 import lejos.geom.Rectangle;
+import sdp.group2.comms.Commands;
 import sdp.group2.comms.Sender;
 import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
+import sdp.group2.pc.CommandQueue;
 import sdp.group2.world.Robot;
 import sdp.group2.world.Zone;
 import sdp.group2.world.IPitch;
@@ -15,119 +17,137 @@ import sdp.group2.world.IPitch;
 public class DefensivePlanner extends Planner {
 
 	private static final int SPEED = 40;
-	
-	private Zone defenseZone;
-	private Robot defenseRobot;
+
+	private Zone defenceZone;
+	private Robot defenceRobot;
 	private boolean isRobotAligned = false;
-	String robotName = "SDP2A";
-	String robotMacAddress = "00165307D55F";
+	String robotName = "SDP2D";
 	private Sender sender;
 	private long lastRotation = System.currentTimeMillis();
 	private static final Point GOAL = new Point(0, Plane.pix2mm(150));
-	
-	public DefensivePlanner(IPitch pitch, byte zoneId)
-	{ 
+
+	// Still to implement:
+	// Pass;
+	// AbleToPass;
+	// Track x Coordinate of Ball;
+
+	public DefensivePlanner(IPitch pitch, byte zoneId) {
 		super(pitch);
-		this.defenseZone = getPitch().getZone(zoneId);
-		this.defenseRobot = pitch.getRobot();
+		this.defenceZone = getPitch().getZone(zoneId);
+		this.defenceRobot = pitch.getRobot();
 		
-		try { sender = new Sender(robotName, robotMacAddress); }
-		catch (IOException e) { e.printStackTrace(); }
 	}
 
-	public void interceptSimple()
-	{
-		if (defenseRobot.isMoving()) { return; }
+	public void interceptSimple() {
+		if (defenceRobot.isMoving()) {
+			return;
+		}
 		double yBall = pitch.getBall().getPosition().getY();
-		double yRobot = defenseRobot.getPosition().getY();
-//		int distance = (int) Plane.pix2mm((int) (xBall - xRobot));
+		double yRobot = defenceRobot.getPosition().getY();
+		// int distance = (int) Plane.pix2mm((int) (xBall - xRobot));
 		int distance = (int) Plane.pix2mm((int) (yBall - yRobot));
 		int sign = distance < 0 ? -1 : 1;
 		distance = Math.abs(distance);
-		try { sender.move(sign, SPEED, distance); }
-		catch (IOException e) { e.printStackTrace(); }
-	}
-	
-	public void intercept()
-	{
-		if (defenseRobot.isMoving())
-		{ return; }
 		
-		// align();
-		Line trespass = recognizeDangerSimple();
-		if (trespass == null) { return; }
-		Line sidewalk = getSidewalk();
-		Point intersection = defenseZone.getIntersection(trespass, sidewalk);
-		if (intersection == null)
-		{ return; }
-		Point robotPos = defenseRobot.getPosition();
-		int sign = robotPos.getY() < intersection.getY() ? 1 : -1;
-		int distance = sign * (int) Plane.pix2mm((int) robotPos.distance(intersection));
-		{ System.out.println("Trespassing @ " + intersection.toString()); }
-		try { sender.move(sign, SPEED, distance); }
-		catch (IOException e) { e.printStackTrace(); }
-	}
-	
-	public void align()
-	{
-		if (lastRotation + 3000 > System.currentTimeMillis())
-		{ return; }
-		else
-		{ lastRotation = System.currentTimeMillis(); }
+		CommandQueue.add(Commands.move(sign, SPEED, distance), robotName);
 		
-		double direction = Math.PI / 2;
-		double robotDirection = defenseRobot.getDirection();
-		double theta = Math.abs(Math.abs(direction) - Math.abs(robotDirection)); // rotation to align
-		if (Math.abs(theta) < 0.3) { return; }
-		int sign = direction > robotDirection ? 1 : -1;
-		int thetaDeg = sign * Zone.rad2deg(theta);
-		
-		try { sender.rotate(thetaDeg, SPEED); }
-		catch (IOException e) { e.printStackTrace(); }
 	}
 
-	public Line recognizeDangerSimple()
-	{
+	public void intercept() {
+		if (defenceRobot.isMoving()) {
+			return;
+		}
+
+		// align();
+		Line trespass = recognizeDangerSimple();
+		if (trespass == null) {
+			return;
+		}
+		Line sidewalk = getSidewalk();
+		Point intersection = defenceZone.getIntersection(trespass, sidewalk);
+		if (intersection == null) {
+			return;
+		}
+		Point robotPos = defenceRobot.getPosition();
+		int sign = robotPos.getY() < intersection.getY() ? 1 : -1;
+		int distance = sign
+				* (int) Plane.pix2mm((int) robotPos.distance(intersection));
+		{
+			System.out.println("Trespassing @ " + intersection.toString());
+		}
+		try {
+			sender.move(sign, SPEED, distance);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void align() {
+		if (lastRotation + 3000 > System.currentTimeMillis()) {
+			return;
+		} else {
+			lastRotation = System.currentTimeMillis();
+		}
+
+		double direction = Math.PI / 2;
+		double robotDirection = defenceRobot.getDirection();
+		double theta = Math.abs(Math.abs(direction) - Math.abs(robotDirection)); // rotation
+																					// to
+																					// align
+		if (Math.abs(theta) < 0.3) {
+			return;
+		}
+		int sign = direction > robotDirection ? 1 : -1;
+		int thetaDeg = sign * Zone.rad2deg(theta);
+
+		try {
+			sender.rotate(thetaDeg, SPEED);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Line recognizeDangerSimple() {
 		return new Line(GOAL, pitch.getBall().getPosition());
 	}
-	
-	public Line recognizeDanger()
-	{
+
+	public Line recognizeDanger() {
 		PointSet trajectory = getPitch().getTrajectory();
-		for (int i = 1; i < trajectory.size() - 1; i++)
-		{
+		for (int i = 1; i < trajectory.size() - 1; i++) {
 			Point p0 = trajectory.get(i - 1);
 			Point p1 = trajectory.get(i);
-			if (defenseZone.isInterestedByLine(p0, p1))
-			{ return new Line(p0, p1); }
+			if (defenceZone.isInterestedByLine(p0, p1)) {
+				return new Line(p0, p1);
+			}
 		}
-		
+
 		Point p1 = trajectory.left();
 		Point p0 = new Point(p1.x, 0.0);
 		return new Line(p0, p1);
-		
+
 		// return null;
 	}
-	
+
 	/** Returns the walk path for the robot */
-	public Line getSidewalk()
-	{
-		Rectangle boundary = defenseZone.getBoundary();
-		
-//		Point p0 = new Point(defenseRobot.getPosition().x, boundary.y);
-//		Point p1 = new Point(defenseRobot.getPosition().y, boundary.width);
-		
+	public Line getSidewalk() {
+		Rectangle boundary = defenceZone.getBoundary();
+
+		// Point p0 = new Point(defenceRobot.getPosition().x, boundary.y);
+		// Point p1 = new Point(defenceRobot.getPosition().y, boundary.width);
+
 		double x = (boundary.x + boundary.width) / 2.0;
 		Point p0 = new Point(x, boundary.y);
 		Point p1 = new Point(x, boundary.y + boundary.width);
-		
+
 		return new Line(p0, p1);
 	}
-	
+
 	public void disconnect() {
 		this.sender.disconnect();
 	}
-	public void act()
-	{ interceptSimple(); }
-	
+
+	public void act() {
+		interceptSimple();
+	}
+
 }

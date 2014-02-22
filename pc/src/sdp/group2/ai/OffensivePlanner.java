@@ -2,10 +2,13 @@ package sdp.group2.ai;
 
 import java.io.IOException;
 
+import sdp.group2.comms.Commands;
 import sdp.group2.comms.Sender;
 import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
+import sdp.group2.pc.CommandQueue;
+import sdp.group2.world.Constants;
 import sdp.group2.world.Robot;
 import sdp.group2.world.Zone;
 import sdp.group2.world.Ball;
@@ -19,8 +22,7 @@ public class OffensivePlanner extends Planner {
 	private Zone offensiveZone;
 	private Robot attackerRobot;
 	private boolean isRobotAligned = false;
-	String robotName = "SDP 2A";
-	String robotMacAddress = "CH:UJ";
+	String robotName = Constants.ROBOT_2A_NAME;
 	private Sender sender;
 
 	public OffensivePlanner(IPitch pitch, byte zoneId) {
@@ -28,11 +30,6 @@ public class OffensivePlanner extends Planner {
 		this.offensiveZone = getPitch().getZone(zoneId);
 		this.attackerRobot = offensiveZone.getRobot();
 
-		try {
-			sender = new Sender(robotName, robotMacAddress);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public boolean isAbleToScore() {
@@ -49,11 +46,13 @@ public class OffensivePlanner extends Planner {
 		Line line1 = getTargetPath();
 		// project
 		Line line0 = line1.getPerpendicular();
+		CommandQueue.add(Commands.kick(Constants.ATK_KICK_ANGLE, Constants.ATK_KICK_POWER), robotName);
 	}
 
-	public void passBack() {
-
-	}
+	//Probably not required
+//	public void passBack() {
+//
+//	}
 
 	public Line getTargetPath() {
 		Ball ball = pitch.getBall();
@@ -86,7 +85,8 @@ public class OffensivePlanner extends Planner {
 		if (isAbleToScore()) {
 			score();
 		} else {
-			passBack();
+//			passBack();
+			//Do nothing for now
 		}
 	}
 
