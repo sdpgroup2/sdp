@@ -104,7 +104,7 @@ public class VisionService implements CaptureCallback {
      * Starts the vision service.
      */
     public void start() {
-        Debug.log("Vision started.");
+        Debug.log("Vision started.");newIma
         try {
             this.frameGrabber.startCapture();
         } catch (V4L4JException e) {
