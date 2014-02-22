@@ -217,4 +217,20 @@ public class Pitch extends Plane implements IPitch {
 			return (getBallZone() == getBlueDefendZone());
 		}
 	}
+	
+	public boolean ourAttackerHasBall(){
+		if (ourTeam == TeamColour.YELLOW){
+			return (getBallZone() == getYellowAttackZone());
+		} else {
+			return (getBallZone() == getBlueAttackZone());
+		}
+	}
+	
+	public boolean ourDefenderHasBall(){
+		if (ourTeam == TeamColour.YELLOW){
+			return (getBallZone() == getYellowDefendZone());
+		} else {
+			return (getBallZone() == getBlueDefendZone());
+		}
+	}
 }
