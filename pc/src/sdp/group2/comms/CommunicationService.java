@@ -23,6 +23,7 @@ private Sender sender;
 			} else if(robotName.equals(Constants.ROBOT_2D_NAME)) {
 				sender = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
 			}
+			startRunningFromQueue();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,7 +58,30 @@ private Sender sender;
 						} catch(IOException e) {
 							e.printStackTrace();
 						}
-					}	
+					}
+					if (!CommandQueue.isEmpty(Constants.ROBOT_2D_NAME)) {
+						int[] commands = CommandQueue.poll(Constants.ROBOT_2D_NAME);
+						try {
+							switch(commands[0]) {
+							case Commands.ANGLEMOVE:
+								sender.move(commands[1],commands[2],commands[3]);
+								break;
+							case Commands.ROTATE:
+								sender.rotate(commands[1],commands[2]);
+								break;
+							case Commands.KICK:
+								sender.kick(commands[1],commands[2]);
+								break;
+							case Commands.STEER:
+								sender.steer(commands[1]);
+								break;
+							default:
+								
+							}
+						} catch(IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}	
 			}
 			
