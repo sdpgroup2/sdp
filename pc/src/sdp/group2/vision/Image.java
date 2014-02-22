@@ -1,6 +1,7 @@
 package sdp.group2.vision;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Iterator;
 
 
@@ -31,6 +32,28 @@ public class Image {
     }
 
     /**
+     * Returns the color at indices x and y as an int
+     *
+     * @param index index of the int array
+     * @return RGB color as an int
+     */
+    public int getRGB(int index) {
+        return rgbArray[index];
+    }
+
+    /**
+     * Returns the color at indices x and y as an int
+     *
+     * @param x index along x axis
+     * @param y index along y axis
+     * @return RGB color as an int
+     */
+    public int getRGB(int x, int y) {
+        int index = y * getSize().width + x;
+        return getRGB(index);
+    }
+
+    /**
      * Returns the color at indices x and y wrapped in HSBColor class.
      *
      * @param index index of the int array
@@ -49,7 +72,7 @@ public class Image {
      */
     public Color getColor(int x, int y) {
         int index = y * getSize().width + x;
-        return new Color(rgbArray[index]);
+        return getColor(index);
     }
 
     /**
@@ -128,6 +151,14 @@ public class Image {
             color.offset(0, color.s - meanSat, color.b - meanBright);
             setHSBColor(i, color);
         }
+    }
+
+    public BufferedImage getBufferedImage() {
+        int width = getSize().width;
+        int height = getSize().height;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        image.setRGB(0, 0, width, height, rgbArray, 0, width);
+        return image;
     }
 
     /**
