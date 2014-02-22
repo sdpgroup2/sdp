@@ -110,6 +110,10 @@ public class Pitch extends Plane implements IPitch {
 //		return this.ball.getPosition().sub(this.robot.getPosition());
 //	}
 
+    public Robot getRobot() {
+        throw new UnsupportedOperationException("This shouldn't be implemented.");
+    }
+
 	@Override
 	public Zone getZone(byte id) {
 		return zones[id];

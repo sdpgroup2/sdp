@@ -62,5 +62,5 @@ public interface IPitch
     
     public PointSet getTrajectory();
     public Ball getBall();
-    //public Robot getRobot();
+    public Robot getRobot();
 }
