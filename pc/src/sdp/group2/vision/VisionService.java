@@ -125,6 +125,10 @@ public class VisionService implements CaptureCallback {
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
 
+        ImageProcessor processor = new ImageProcessor(frame.getBufferedImage());
+        processor.undistort();
+        
+        
         // Read image into array colorArray and add it to the image
         colorArray = frame.getBufferedImage().getRGB(0, 0, getSize().width, getSize().height,
                 null, 0, getSize().width);

@@ -29,6 +29,8 @@ public class PitchLinesCluster extends HSBCluster {
 		return getRects(400, 640, 50, 480);
 	}
 	
+	/*
+	
 	public Shape getPitchShape() {		
 		ArrayList<VecI> corners = new ArrayList<VecI>();
 		
@@ -54,6 +56,7 @@ public class PitchLinesCluster extends HSBCluster {
 	 * @return The vector corresponding to the desired corner of the pitch
 	 * 
 	 */
+	/*
 	
 	public VecI getCorner(Dir edge, Dir corner) {
 		
@@ -150,4 +153,5 @@ public class PitchLinesCluster extends HSBCluster {
 		 return finalCorner;
 	}
 		 
+		 */
 }
