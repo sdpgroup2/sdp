@@ -1,7 +1,6 @@
 package sdp.group2.vision;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 import java.util.Iterator;
 
 
@@ -23,7 +22,27 @@ public class Image {
     }
 
     /**
-     * Returns the color at indices x and y wrapper in Color class.
+     * Clears the image - sets everything to black.
+     */
+    public void clear() {
+        for (int i = 0; i < rgbArray.length; i++) {
+            setColor(i, Color.BLACK);
+        }
+    }
+
+    /**
+     * Returns the color at indices x and y wrapped in HSBColor class.
+     *
+     * @param index index of the int array
+     * @return color wrapped in HSBColor class
+     */
+    public Color getColor(int index) {
+        return new Color(rgbArray[index]);
+    }
+
+    /**
+     * Returns the color at indices x and y wrapped in Color class.
+     *
      * @param x index along x axis
      * @param y index along y axis
      * @return color wrapped in Color class
@@ -34,18 +53,30 @@ public class Image {
     }
 
     /**
-     * Returns the color at indices x and y wrapper in HSBColor class.
+     * Returns the color at indices x and y wrapped in HSBColor class.
+     *
+     * @param index index of the int array
+     * @return color wrapped in HSBColor class
+     */
+    public HSBColor getHSBColor(int index) {
+        return new HSBColor(rgbArray[index]);
+    }
+
+    /**
+     * Returns the color at indices x and y wrapped in HSBColor class.
+     *
      * @param x index along x axis
      * @param y index along y axis
      * @return color wrapped in HSBColor class
      */
     public HSBColor getHSBColor(int x, int y) {
         int index = y * getSize().width + x;
-        return new HSBColor(rgbArray[index]);
+        return getHSBColor(index);
     }
 
     /**
      * Sets the color at the specified index.
+     *
      * @param index index of the int array
      * @param color color to be set
      */
@@ -55,8 +86,9 @@ public class Image {
 
     /**
      * Sets the color at the specified index.
-     * @param x index along x axis
-     * @param y index along y axis
+     *
+     * @param x     index along x axis
+     * @param y     index along y axis
      * @param color color to be set
      */
     public void setColor(int x, int y, Color color) {
@@ -66,6 +98,7 @@ public class Image {
 
     /**
      * Sets the color at the specified index.
+     *
      * @param index index of the int array
      * @param color color to be set
      */
@@ -75,8 +108,9 @@ public class Image {
 
     /**
      * Sets the color at the specified index.
-     * @param x index along x axis
-     * @param y index along y axis
+     *
+     * @param x     index along x axis
+     * @param y     index along y axis
      * @param color color to be set
      */
     public void setHSBColor(int x, int y, HSBColor color) {
@@ -85,7 +119,20 @@ public class Image {
     }
 
     /**
+     * Normalises the image so that it's not affected by lighting conditions.
+     */
+    public void normaliseImage(float meanBright, float meanSat) {
+        // Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
+        for (int i = 0; i < rgbArray.length; i++) {
+            HSBColor color = getHSBColor(i);
+            color.offset(0, color.s - meanSat, color.b - meanBright);
+            setHSBColor(i, color);
+        }
+    }
+
+    /**
      * Returns the size of the image as a Dimension.
+     *
      * @return dimension of the image
      */
     public Dimension getSize() {
@@ -99,6 +146,7 @@ public class Image {
     /**
      * Returns an iterator that iterates through the pixels in an x-first
      * y-second order.
+     *
      * @return iterator
      */
     public PixelIterator<HSBColor> getHSBColorPixelIterator() {
@@ -124,6 +172,7 @@ public class Image {
     /**
      * Returns an iterator that iterates through the pixels in an x-first
      * y-second order.
+     *
      * @return iterator
      */
     public PixelIterator<Color> getColorPixelIterator() {

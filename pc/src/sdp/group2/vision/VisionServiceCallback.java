@@ -8,16 +8,16 @@ import java.awt.image.BufferedImage;
 
 public interface VisionServiceCallback {
 
-	public boolean onPreparationReady(HSBColor[] hsbArray, BallCluster ballCluster, RobotBaseCluster robotBaseCluster, Rect pitchRect, Rect[] sectionRects);
+	public boolean onPreparationReady(Image currentImage, BallCluster ballCluster, RobotBaseCluster robotBaseCluster, Rect pitchRect, Rect[] sectionRects);
 
-    public void onFrameGrabbed(BufferedImage image);
+    public void onFrameGrabbed(Image currentImage);
 
-    public void onImageFiltered(HSBColor[] hsbArray);
+    public void onImageFiltered(Image currentImage);
 
     public void onPreparationFrame();
 
-	public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray, BallCluster ballCluster, RobotBaseCluster robotBaseCluster);
+	public void onImageProcessed(Image currentImage, BallCluster ballCluster, RobotBaseCluster robotBaseCluster);
 
 	public void onExceptionThrown(Exception e);
-	
+
 }

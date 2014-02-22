@@ -10,7 +10,6 @@ import sdp.group2.vision.clusters.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,10 +37,8 @@ public class VisionService implements CaptureCallback {
 
     private Timer timer = new Timer(10);
 
-    // Stores colors for the current frame
-    private BufferedImage currentImage;
     private int[] colorArray;
-    private HSBColor[] hsbArray;
+    private Image currentImage = new Image();
 
     private float meanSat = 0;
     private float meanBright = 0;
@@ -100,7 +97,7 @@ public class VisionService implements CaptureCallback {
             e.printStackTrace();
         }
         frameGrabber.setCaptureCallback(this);
-        this.initColorArrays();
+        currentImage.setSize(getSize());
         this.processingRegion = new Rect(0, 0, getSize().width, getSize().height);
     }
 
@@ -134,11 +131,13 @@ public class VisionService implements CaptureCallback {
     @Override
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
-        currentImage = frame.getBufferedImage();
-        callback.onFrameGrabbed(currentImage);
 
-        // Read image into array colorArray
-        currentImage.getRGB(0, 0, this.frameGrabber.getWidth(), this.frameGrabber.getHeight(), colorArray, 0, this.frameGrabber.getWidth());
+        // Read image into array colorArray and add it to the image
+        colorArray = frame.getBufferedImage().getRGB(0, 0, getSize().width, getSize().height,
+                null, 0, getSize().width);
+        currentImage.setRgbArray(colorArray);
+
+        callback.onFrameGrabbed(currentImage);
 
         switch (state) {
             case Preparation: {
@@ -148,31 +147,31 @@ public class VisionService implements CaptureCallback {
                 if (currentFrame >= preparationFrames) {
                     endPrepareVision();
                     state = VisionState.StaticDetection;
-                    this.normaliseImage();
-                    this.processImage(); // Process when ready so we have clusters
+                    currentImage.normaliseImage(meanBright, meanSat);
+                    processImage(); // Process once when ready so we have clusters
                 } else {
-                    this.callback.onPreparationFrame();
+                    callback.onPreparationFrame();
                 }
                 break;
             }
             case StaticDetection: {
                 // Find the objects that will not move and restrict processing region.
+                // Only change state from StaticDetection when we have pitch and sections.
                 Debug.log("Looking for pitch...");
-                this.normaliseImage();
-                this.processImage();
-                Rect pitchRect = this.findPitch();
-                Rect[] sectionRects = this.findSections();
+                currentImage.normaliseImage(meanBright, meanSat);
+                processImage();
+                Rect pitchRect = findPitch();
+                Rect[] sectionRects = findSections();
                 if (pitchRect != null && sectionRects != null) {
-                    boolean ready = this.callback.onPreparationReady(hsbArray, ballCluster, baseRobotCluster, pitchRect, sectionRects);
+                    boolean ready = callback.onPreparationReady(currentImage, ballCluster, baseRobotCluster, pitchRect, sectionRects);
                     if (ready) {
                         System.out.printf("Ready: %b\n", ready);
                         processingRegion = new Rect(pitchRect.x - 15, pitchRect.y - 15,
                                 pitchRect.width + 30, pitchRect.height + 30);
                         Debug.log("Found pitch");
+
                         // Clear image to make new region obvious
-                        for (int i = 0; i < hsbArray.length; i++) {
-                            hsbArray[i].set(0, 0, 0);
-                        }
+                        currentImage.clear();
                         state = VisionState.Processing;
                     }
                 }
@@ -180,10 +179,10 @@ public class VisionService implements CaptureCallback {
             }
             case Processing: {
                 // Process the images.
-                this.normaliseImage();
-                this.callback.onImageFiltered(hsbArray);
-                this.processImage();
-                this.callback.onImageProcessed(currentImage, hsbArray, ballCluster, baseRobotCluster);
+                currentImage.normaliseImage(meanBright, meanSat);
+                callback.onImageFiltered(currentImage);
+                processImage();
+                callback.onImageProcessed(currentImage, ballCluster, baseRobotCluster);
                 break;
             }
         }
@@ -196,7 +195,7 @@ public class VisionService implements CaptureCallback {
 
             @Override
             protected Void doInBackground() throws Exception {
-                // visionDisplay.redraw(currentImage, ball, robots);
+                //visionDisplay.redraw(currentImage, ball, robots);
                 return null;
             }
         };
@@ -210,8 +209,7 @@ public class VisionService implements CaptureCallback {
     private Rect findPitch() {
         for (int x = 0; x < getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
-                int index = y * getSize().width + x;
-                HSBColor color = hsbArray[index];
+                HSBColor color = currentImage.getHSBColor(x, y);
                 pitchLinesCluster.testPixel(x, y, color);
             }
         }
@@ -227,8 +225,7 @@ public class VisionService implements CaptureCallback {
     private Rect[] findSections() {
         for (int x = 0; x < getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
-                int index = y * getSize().width + x;
-                HSBColor color = hsbArray[index];
+                HSBColor color = currentImage.getHSBColor(x, y);
                 pitchSectionCluster.testPixel(x, y, color);
             }
         }
@@ -236,12 +233,13 @@ public class VisionService implements CaptureCallback {
         if (rects.size() > 4) {
             rects = rects.subList(0, 4);
         }
-        Collections.sort(rects); // sort them so leftmost is byte 0
+        Collections.sort(rects); // sort them so leftmost is byte 0 and so on
         return (!rects.isEmpty()) ? rects.toArray(new Rect[rects.size()]) : null;
     }
 
     /**
-     * This is ran in the preparation stage of the vision service.
+     * This is ran in the preparation stage of the vision service. It measures
+     * the average brightness and saturation for normalisation.
      */
     public void prepareVision() {
         if (currentFrame == 0) {
@@ -250,8 +248,7 @@ public class VisionService implements CaptureCallback {
         }
         double s = 0;
         double b = 0;
-        for (int c = 0; c < colorArray.length; c++) {
-            HSBColor color = hsbArray[c].set(colorArray[c]);
+        for (HSBColor color : currentImage.getHSBColorPixelIterator()) {
             s += color.s;
             b += color.b;
         }
@@ -274,18 +271,8 @@ public class VisionService implements CaptureCallback {
     }
 
     /**
-     * Normalises the image so that it's not affected by lighting conditions.
-     */
-    private void normaliseImage() {
-        // Colours work on PC4 where meanSat = 0.11869 and meanBright = 0.15539
-        for (int i = 0; i < hsbArray.length; i++) {
-            HSBColor color = hsbArray[i].set(colorArray[i]);
-            color.offset(0, color.s - meanSat, color.b - meanBright);
-        }
-    }
-
-    /**
      * Runs every frame from the video feed.
+     * TODO: This function is overflowing in the iteration phase
      */
     public void processImage() {
         // Clear all clusters.
@@ -298,7 +285,7 @@ public class VisionService implements CaptureCallback {
                 int index = y * getSize().width + x;
                 index = Math.max(0, index);
                 index = Math.min(index, getSize().width * getSize().height - 1);
-                HSBColor color = hsbArray[index];
+                HSBColor color = currentImage.getHSBColor(index);
                 // Test the pixel for each of the clusters
                 for (HSBCluster cluster : clusters) {
                     cluster.testPixel(x, y, color);
@@ -314,6 +301,7 @@ public class VisionService implements CaptureCallback {
     public void stopVision() {
         Debug.log("Vision stopped.");
         this.frameGrabber.stopCapture();
+        release();
     }
 
     /**
@@ -332,14 +320,6 @@ public class VisionService implements CaptureCallback {
      */
     public Dimension getSize() {
         return new Dimension(frameGrabber.getWidth(), frameGrabber.getHeight());
-    }
-
-    public HSBCluster[] getClusters() {
-        return clusters;
-    }
-
-    public HSBColor[] getHSBArray() {
-        return hsbArray;
     }
 
     // these should be changed to get[Yellow/Blue]RobotRects() as they
@@ -383,15 +363,5 @@ public class VisionService implements CaptureCallback {
         e.printStackTrace();
     }
 
-    /**
-     * Initialises the color arrays.
-     */
-    private void initColorArrays() {
-        this.colorArray = new int[FRAME_WIDTH * FRAME_HEIGHT];
-        this.hsbArray = new HSBColor[FRAME_WIDTH * FRAME_HEIGHT];
-        for (int i = 0; i < this.hsbArray.length; i++) {
-            this.hsbArray[i] = new HSBColor();
-        }
-    }
 
 }

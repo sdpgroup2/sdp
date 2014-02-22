@@ -14,7 +14,6 @@ public class HSBColor {
 	public float h;
 	public float s;
 	public float b;
-	float[] innerArray = new float[3];
 	
 	
 	public static boolean inRange(HSBColor color, HSBColor minColor, HSBColor maxColor) {
@@ -52,7 +51,7 @@ public class HSBColor {
 	
 	public HSBColor set(int rgbColor) {
 //		rgbColor = normalizeRGB(rgbColor);
-		Color.RGBtoHSB((rgbColor & REDMASK) >> 16, (rgbColor & GREENMASK) >> 8, (rgbColor & BLUEMASK), innerArray);
+        float[] innerArray = Color.RGBtoHSB((rgbColor & REDMASK) >> 16, (rgbColor & GREENMASK) >> 8, (rgbColor & BLUEMASK), null);
 		this.h = innerArray[0];
 		this.s = innerArray[1];
 		this.b = innerArray[2];
@@ -99,9 +98,10 @@ public class HSBColor {
 		return (int)(b*100);
 	}
 	
-	private int normalizeRGB(int rgb)
-	{
-		if (!normalizeRGB) { return rgb; }
+	private int normalizeRGB(int rgb) {
+		if (!normalizeRGB) {
+            return rgb;
+        }
 		
 		int r = (rgb & REDMASK) >> 16;
 		int g = (rgb & GREENMASK) >> 8;

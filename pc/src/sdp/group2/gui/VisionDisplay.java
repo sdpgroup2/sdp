@@ -58,7 +58,7 @@ public class VisionDisplay extends WindowAdapter {
      * @param ball   ball on the pitch
      * @param robots robots on the pitch
      */
-    public void redraw(BufferedImage image, Ball ball, List<Robot> robots) {
+    public synchronized void redraw(BufferedImage image, Ball ball, List<Robot> robots) {
         for (Robot robot : robots) {
             // Bounding rect
             Debug.drawRect(image, robot.getBoundingRect(), RECT_COLOR);
