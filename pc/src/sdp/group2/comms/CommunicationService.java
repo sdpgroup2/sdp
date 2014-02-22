@@ -6,6 +6,7 @@ package sdp.group2.comms;
 
 
 import java.io.IOException;
+import java.util.HashSet;
 
 
 import sdp.group2.pc.CommandQueue;
@@ -88,6 +89,17 @@ private Sender sender;
 		});
 		
 		popThread.start();
+		while(true) {
+			if (CommandQueue.containsCommand(Commands.CLEAR, Constants.ROBOT_2A_NAME)) {
+				sender.stop();
+				sender.clearBuff();
+				CommandQueue.clear(Constants.ROBOT_2A_NAME);
+			} else if (CommandQueue.containsCommand(Commands.CLEAR, Constants.ROBOT_2D_NAME)) {
+				sender.stop();
+				sender.clearBuff();
+				CommandQueue.clear(Constants.ROBOT_2D_NAME);
+			}		
+		}
 	}
 	
 }
