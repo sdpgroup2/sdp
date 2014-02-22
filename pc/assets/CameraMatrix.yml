@@ -1,3 +1,4 @@
+%YAML:1.0
 Camera_Matrix: !!opencv-matrix
    rows: 3
    cols: 3
