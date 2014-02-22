@@ -7,6 +7,7 @@ import sdp.group2.gui.ColorChecker;
 import sdp.group2.gui.HSBPanel;
 import sdp.group2.util.Debug;
 import sdp.group2.vision.HSBColor;
+import sdp.group2.vision.Image;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.vision.clusters.BallCluster;
@@ -52,9 +53,10 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private JLabel imageLabel = new JLabel();
     private ColorChecker colorChecker;
 
-    private BufferedImage currentImage;
+    private Image currentImage;
+    private BufferedImage bufImage;
+    private int[] preColorArray;
     private int[] postColorArray;
-    private Vector robotDirectionCounter;
     private Pitch pitch;
 
     public static void main(String[] args) {
@@ -171,23 +173,22 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     }
 
     @Override
-    public void onFrameGrabbed(BufferedImage image) {
-        currentImage = image;
+    public void onFrameGrabbed(Image currentImage) {
+        bufImage = currentImage.getBufferedImage();
     }
 
     @Override
     public void onPreparationFrame() {
-        showImage(currentImage);
+        showImage(bufImage);
     }
 
     @Override
-    public void onImageFiltered(HSBColor[] hsbArray) {
+    public void onImageFiltered(Image currentImage) {
         if (Debug.VISION_NORMALIZE_IMAGE) {
-            for (int i=0; i<hsbArray.length; i++) {
-                postColorArray[i] = hsbArray[i].getRGB();
+            for (int i=0; i < preColorArray.length; i++) {
+                postColorArray[i] = currentImage.getRGB(i);
             }
-            currentImage.setRGB(0, 0, frameSize.width, frameSize.height,
-                postColorArray, 0, frameSize.width);
+            currentImage.setRgbArray(postColorArray);
         }
         Point mouse = windowFrame.getMousePosition();
         if (mouse != null) {
@@ -196,43 +197,26 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
             if (0 <= imgX && imgX < frameSize.width &&
                 0 <= imgY && imgY < frameSize.height) {
                     colorChecker.updateColor(currentImage.getRGB(imgX, imgY));
-                    currentImage.setRGB(imgX, imgY, Color.white.getRGB());
+                    currentImage.setColor(imgX, imgY, Color.WHITE);
             }
         }
     }
 
     @Override
-    public void onImageProcessed(BufferedImage image, HSBColor[] hsbArray,
-    		BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
+    public void onImageProcessed(Image currentImage, BallCluster ballCluster,
+                                 RobotBaseCluster robotBaseCluster) {
+        bufImage = currentImage.getBufferedImage();
 
         for (HSBCluster cluster: visionService.getClusters()) {
             for (VecI pixel: cluster.getPixels()) {
-                Debug.drawPixel(currentImage, pixel.x, pixel.y, cluster.debugColor);
+                Debug.drawPixel(bufImage, pixel.x, pixel.y, cluster.debugColor);
             }
             for (Rect rect: cluster.getImportantRects()) {
-                Debug.drawRect(currentImage, rect, cluster.debugColor);
+                Debug.drawRect(bufImage, rect, cluster.debugColor);
             }
         }
 
-        Vector vec = robotBaseCluster.getRobotVector(hsbArray);
-        System.out.println(vec);
-
-        if (vec != null) {
-    		// Calculate the vector between ball and robot
-//    		Vector vectorToGo = pitch.getRobotBallVector();
-    		List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
-    		if (pitch.getRobot().getPosition() != null) {
-    			Vector vectorToGo = pitch.getBall().getPosition().sub(pitch.getRobot().getPosition());
-//    			List<Rect> robotImpRects = robotBaseCluster.getImportantRects();
-    			System.out.println(vectorToGo);
-    			if (robotImpRects != null && robotImpRects.size() > 0) {
-    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vectorToGo, Color.MAGENTA);
-    				Debug.drawVector(image, robotImpRects.get(0).getCenter(), vec, Color.MAGENTA);
-    			}
-    		}
-        }
-
-    	showImage(currentImage);
+    	showImage(bufImage);
     }
 
     private void showImage(BufferedImage image) {
@@ -251,37 +235,10 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 		visionService.start();
 	}
 
-	public VisionGUI(VisionService visionService) {
-		super();
-		this.visionService = visionService;
-		this.frameSize = visionService.getSize();
-		this.postColorArray = new int[frameSize.width * frameSize.height];
-
-		// Init GUI
-		initWindow();
-	}
-
 	@Override
-	public boolean onPreparationReady(HSBColor[] hsbArray,
+	public boolean onPreparationReady(Image image,
 			BallCluster ballCluster, RobotBaseCluster robotBaseCluster,
 			Rect pitchRect, Rect[] sectionRects) {
-		this.pitch = new Pitch(pitchRect, sectionRects);
-		List<Rect> ballImpRects = ballCluster.getImportantRects();
-		System.out.println(ballImpRects);
-		if (ballImpRects == null || ballImpRects.size() < 1) {
-			System.out.println("Ball not found in preparation.");
-			return false;
-		}
-		Ball ball = new Ball(ballImpRects.get(0));
-		pitch.addBall(ball);
-		List<Rect> blueRobotImpRects = robotBaseCluster.getImportantRects();
-		if (blueRobotImpRects == null || blueRobotImpRects.size() == 0) {
-			System.out.println("Robot not found in preparation.");
-			return false;
-		}
-		Rect blueRobotRect = blueRobotImpRects.get(0);
-		Vector blueRobotDirection = robotBaseCluster.getRobotVector(hsbArray);
-		//pitch.addRobot(new Robot(blueRobotRect, blueRobotDirection));
 		return true;
 	}
 

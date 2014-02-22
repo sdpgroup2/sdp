@@ -16,35 +16,24 @@ import java.util.List;
 
 public class VisionService implements CaptureCallback {
 
-    private enum VisionState {
-        Preparation, StaticDetection, Processing
-    }
-
     public static final int FRAME_WIDTH = 640;
     public static final int FRAME_HEIGHT = 480;
     public static final String DEFAULT_DEVICE = "/dev/video0";
     public static final String requiredInputName = "S-Video";
     public static final int requiredStandard = V4L4JConstants.STANDARD_PAL;
     public static boolean ENABLE_GUI = true;
-
     private VideoDevice device;
     private JPEGFrameGrabber frameGrabber;
-
     private VisionServiceCallback callback;
-    private VisionState state = VisionState.Preparation;
     private int currentFrame = 0;
     private int preparationFrames;
-
+    private VisionState state = VisionState.Preparation;
     private Timer timer = new Timer(10);
-
     private int[] colorArray;
     private Image currentImage = new Image();
-
     private float meanSat = 0;
     private float meanBright = 0;
-
     private VisionDisplay visionDisplay;
-
     // Clusters
     private BallCluster ballCluster = new BallCluster("Ball");
     //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
@@ -54,7 +43,6 @@ public class VisionService implements CaptureCallback {
     private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
     private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow");
     private DotCluster dotCluster = new DotCluster("Dots");
-    private Rect processingRegion;
     private HSBCluster[] clusters = new HSBCluster[]{
             ballCluster,
             //blueRobotCluster,
@@ -64,6 +52,7 @@ public class VisionService implements CaptureCallback {
             //pitchSectionCluster,
             dotCluster,
     };
+    private Rect processingRegion;
 
     /**
      * Initialises a new vision service with a certain device name,
@@ -121,6 +110,10 @@ public class VisionService implements CaptureCallback {
         } catch (V4L4JException e) {
             e.printStackTrace();
         }
+    }
+
+    public HSBCluster[] getClusters() {
+        return clusters;
     }
 
     /**
@@ -188,6 +181,18 @@ public class VisionService implements CaptureCallback {
         }
         updateGUI();
         frame.recycle();
+    }
+
+    /**
+     * Called if there is an exception raised by the listener.
+     *
+     * @param e - The exception raised.
+     */
+    @Override
+    public void exceptionReceived(V4L4JException e) {
+        this.stopVision();
+        this.callback.onExceptionThrown(e);
+        e.printStackTrace();
     }
 
     private void updateGUI() {
@@ -322,6 +327,10 @@ public class VisionService implements CaptureCallback {
         return new Dimension(frameGrabber.getWidth(), frameGrabber.getHeight());
     }
 
+    private enum VisionState {
+        Preparation, StaticDetection, Processing
+    }
+
     // these should be changed to get[Yellow/Blue]RobotRects() as they
     // return rects and not robot objects
 //	public List<Rect> getYellowRobots() {
@@ -350,18 +359,6 @@ public class VisionService implements CaptureCallback {
 //		}
 //		return robots;
 //	}
-
-    /**
-     * Called if there is an exception raised by the listener.
-     *
-     * @param e - The exception raised.
-     */
-    @Override
-    public void exceptionReceived(V4L4JException e) {
-        this.stopVision();
-        this.callback.onExceptionThrown(e);
-        e.printStackTrace();
-    }
 
 
 }
