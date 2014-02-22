@@ -7,12 +7,14 @@ public class Ball extends MovableObject {
 
 	private static final double RADIUS = 25; /** [mm] */
 
-	public Ball()
-	{ }
+	public Ball() {
+        super();
+    }
 	
 	public Ball(Rect boundingRect) {
-		super();
-		updatePoisition(boundingRect.getCenter());
+		this();
+        setBoundingRect(boundingRect);
+		updatePosition(boundingRect.getCenter());
 	}
 	
 	public double getRadius()

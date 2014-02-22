@@ -4,44 +4,68 @@ import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.Vector;
 
-public class Robot extends RectangularObjectAdapter implements MovingObject {
 
-	private Point previousPosition;
-	private Vector direction;
-	
-	public Robot(Rect boundingRect, Vector direction) {
-		super(boundingRect);
-		this.direction = direction;
-		this.previousPosition = boundingRect.getCenter();
-	}
-	
-	public Vector getDirection() {
-		return direction;
-	}
-	
-	@Override
-	public Vector getVelocity() {
-		return this.position.sub(previousPosition);
-	}
+/**
+ * Robot is an object representing a robot on the pitch. It has the following main properties:
+ * - position - its position on the pitch
+ * - direction - its direction on the pitch
+ * - facingVector - the vector from the middle of the dot through the body of i
+ */
+public class Robot extends MovableObject {
 
-	@Override
-	public boolean isNearWall(PitchM pitch, double distance) {
-		return false;
-	}
-	
-	public double angleToVector(Vector destinationVector) {
-		double radians = this.direction.angle(destinationVector);
-		return Math.toDegrees(radians);
-	}
-	
-	@Override
-	public void setPosition(Point robotPosition) {
-		this.previousPosition = this.position;
-		this.position = robotPosition;
-	}
-	
-	public void setDirection(Vector direction) {
-		this.direction = direction;
-	}
+    private static final double RADIUS = 60.0;
+    /**
+     * [mm], measured as robot width from kicker to the back through its centre divided by 2
+     */
+    private double direction = 0.0;
+    private Vector facingVector;
+    private Point position = null;
+
+    public Robot() {
+        super();
+    }
+
+    public Robot(Rect boundingRect, Vector facingVector) {
+        this();
+        setBoundingRect(boundingRect);
+        updatePosition(boundingRect.getCenter());
+        setFacingVector(facingVector);
+    }
+
+    public double getRadius() {
+        return RADIUS;
+    }
+
+    public void setDirection(double direction) {
+        this.direction = direction;
+    }
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point p) {
+        this.position = p;
+    }
+
+    public Vector getFacingVector() {
+        return facingVector;
+    }
+
+    public void setFacingVector(Vector facingVector) {
+        this.facingVector = facingVector;
+    }
+
+    public double angleToVector(Vector destinationVector) {
+        return this.facingVector.angleDegrees(destinationVector);
+    }
+
+    public Vector vectorTo(MovableObject object) {
+        return object.getPosition().sub(getPosition());
+    }
 
 }

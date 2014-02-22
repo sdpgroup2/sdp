@@ -53,10 +53,10 @@ public class Debug {
 		g.drawLine((int) line.x1, (int) line.x2, (int) line.y1, (int) line.y2);
 	}
 	
-	public static void drawVector(BufferedImage dest, Point pos, Vector vec) {
+	public static void drawVector(BufferedImage dest, Point pos, Vector vec, Color color) {
 		if (VISION_DRAW_BOUNDS && pos != null && vec != null) {
 			Graphics g = dest.getGraphics();
-			g.setColor(Color.magenta);
+			g.setColor(color);
 			g.drawOval((int) pos.x -2 , (int) pos.y - 2, 4, 4);
 			g.drawLine((int) pos.x, (int) pos.y, (int) (pos.x + vec.x), (int) (pos.y + vec.y));
 		}
