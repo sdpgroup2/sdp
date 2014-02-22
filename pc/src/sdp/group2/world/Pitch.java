@@ -132,6 +132,10 @@ public class Pitch extends Plane implements IPitch {
 		}
 		return -1;
 	}
+	
+//	public void setTeamSide(){
+//		if (ourTeam == TeamColour.YELLOW &&)
+//	}
 
 	@Override
 	public PointSet getTrajectory() {
