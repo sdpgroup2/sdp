@@ -1,11 +1,9 @@
 package sdp.group2.vision.clusters;
 
-import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.VecI;
 import sdp.group2.vision.HSBColor;
 
 import java.awt.Color;
-import java.util.List;
 import java.util.Set;
 
 
@@ -135,12 +133,6 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 				}
 			}
 		return finalPoint;
-	}
-
-	@Override
-	public List<Rect> getImportantRects() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
