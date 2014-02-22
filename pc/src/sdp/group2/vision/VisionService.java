@@ -126,7 +126,7 @@ public class VisionService implements CaptureCallback {
         timer.tick(25); // Prints the framerate every 25 frames
 
         ImageProcessor processor = new ImageProcessor(frame.getBufferedImage());
-        processor.undistort(frame.getSequenceNumber());
+        processor.undistortAlt();
         frame.recycle();
         return;
         
