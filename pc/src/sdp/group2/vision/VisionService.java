@@ -125,62 +125,67 @@ public class VisionService implements CaptureCallback {
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
 
-        // Read image into array colorArray and add it to the image
-        colorArray = frame.getBufferedImage().getRGB(0, 0, getSize().width, getSize().height,
-                null, 0, getSize().width);
-        currentImage.setRgbArray(colorArray);
-
-        callback.onFrameGrabbed(currentImage);
-
-        switch (state) {
-            case Preparation: {
-                // Prepare the vision: get parameters for normalisation.
-                this.prepareVision();
-                this.currentFrame++;
-                if (currentFrame >= preparationFrames) {
-                    endPrepareVision();
-                    state = VisionState.StaticDetection;
-                    currentImage.normaliseImage(meanBright, meanSat);
-                    processImage(); // Process once when ready so we have clusters
-                } else {
-                    callback.onPreparationFrame();
-                }
-                break;
-            }
-            case StaticDetection: {
-                // Find the objects that will not move and restrict processing region.
-                // Only change state from StaticDetection when we have pitch and sections.
-                Debug.log("Looking for pitch...");
-                currentImage.normaliseImage(meanBright, meanSat);
-                processImage();
-                Rect pitchRect = findPitch();
-                Rect[] sectionRects = findSections();
-                if (pitchRect != null && sectionRects != null) {
-                    boolean ready = callback.onPreparationReady(currentImage, ballCluster, baseRobotCluster, pitchRect, sectionRects);
-                    if (ready) {
-                        System.out.printf("Ready: %b\n", ready);
-                        processingRegion = new Rect(pitchRect.x - 15, pitchRect.y - 15,
-                                pitchRect.width + 30, pitchRect.height + 30);
-                        Debug.log("Found pitch");
-
-                        // Clear image to make new region obvious
-                        currentImage.clear();
-                        state = VisionState.Processing;
-                    }
-                }
-                break;
-            }
-            case Processing: {
-                // Process the images.
-                currentImage.normaliseImage(meanBright, meanSat);
-                callback.onImageFiltered(currentImage);
-                processImage();
-                callback.onImageProcessed(currentImage, ballCluster, baseRobotCluster);
-                break;
-            }
-        }
-        updateGUI();
+        ImageProcessor processor = new ImageProcessor(frame.getBufferedImage());
+        processor.undistort(frame.getSequenceNumber());
         frame.recycle();
+        return;
+        
+//        // Read image into array colorArray and add it to the image
+//        colorArray = frame.getBufferedImage().getRGB(0, 0, getSize().width, getSize().height,
+//                null, 0, getSize().width);
+//        currentImage.setRgbArray(colorArray);
+//
+//        callback.onFrameGrabbed(currentImage);
+//
+//        switch (state) {
+//            case Preparation: {
+//                // Prepare the vision: get parameters for normalisation.
+//                this.prepareVision();
+//                this.currentFrame++;
+//                if (currentFrame >= preparationFrames) {
+//                    endPrepareVision();
+//                    state = VisionState.StaticDetection;
+//                    currentImage.normaliseImage(meanBright, meanSat);
+//                    processImage(); // Process once when ready so we have clusters
+//                } else {
+//                    callback.onPreparationFrame();
+//                }
+//                break;
+//            }
+//            case StaticDetection: {
+//                // Find the objects that will not move and restrict processing region.
+//                // Only change state from StaticDetection when we have pitch and sections.
+//                Debug.log("Looking for pitch...");
+//                currentImage.normaliseImage(meanBright, meanSat);
+//                processImage();
+//                Rect pitchRect = findPitch();
+//                Rect[] sectionRects = findSections();
+//                if (pitchRect != null && sectionRects != null) {
+//                    boolean ready = callback.onPreparationReady(currentImage, ballCluster, baseRobotCluster, pitchRect, sectionRects);
+//                    if (ready) {
+//                        System.out.printf("Ready: %b\n", ready);
+//                        processingRegion = new Rect(pitchRect.x - 15, pitchRect.y - 15,
+//                                pitchRect.width + 30, pitchRect.height + 30);
+//                        Debug.log("Found pitch");
+//
+//                        // Clear image to make new region obvious
+//                        currentImage.clear();
+//                        state = VisionState.Processing;
+//                    }
+//                }
+//                break;
+//            }
+//            case Processing: {
+//                // Process the images.
+//                currentImage.normaliseImage(meanBright, meanSat);
+//                callback.onImageFiltered(currentImage);
+//                processImage();
+//                callback.onImageProcessed(currentImage, ballCluster, baseRobotCluster);
+//                break;
+//            }
+//        }
+//        updateGUI();
+        //frame.recycle();
     }
 
     /**

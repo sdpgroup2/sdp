@@ -54,6 +54,8 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 	 * the input x or y coordinate
 	 */
 
+	/*
+	
 	public VecI getEdgePixel(int index, Dir edge) {
 		Set<VecI> pixels = getLargestRegion();
 		int finalX = 0;
@@ -134,5 +136,7 @@ public class HSBCluster extends AbstractPixelCluster<HSBColor> {
 			}
 		return finalPoint;
 	}
+
+*/
 
 }
