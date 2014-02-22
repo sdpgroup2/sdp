@@ -45,7 +45,7 @@ public interface IPitch
     //public IPitch getInstance();
     
     /** Returns zone in which the ball is. */
-    public byte getBallZone();
+    public int getBallZone();
     
     // TODO: Add methods useful for AI
     

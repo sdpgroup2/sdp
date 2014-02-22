@@ -16,7 +16,7 @@ public class Constants {
 	public static final double PX_TO_MM = 4.56310;
 	public static final double MM_TO_PX = 0.2191;
 
-	public enum TeamColor {
+	public enum TeamColour {
 		YELLOW,
 		BLUE
 	}
@@ -24,6 +24,11 @@ public class Constants {
 	public enum PitchType {
 		MAIN,
 		SIDE
+	}
+	
+	public enum TeamSide {
+		LEFT,
+		RIGHT
 	}
 
 }
