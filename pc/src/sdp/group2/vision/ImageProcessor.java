@@ -23,11 +23,11 @@ public class ImageProcessor {
 	private static String assetsFolder = dirRoot + "/assets";
 		
 	public ImageProcessor(BufferedImage inputImage) {
-		
+
 		image = IplImage.createFrom(inputImage);
 	}
 
-	public void undistort() {
+	public void undistort(long seq) {
 	    
 		IplImage mapx, mapy = null;
 		CvMat intrinsics = new CvMat(cvLoad(assetsFolder + "/Intrinsics.yml"));
@@ -48,8 +48,8 @@ public class ImageProcessor {
 	            cvRemap( temp, image, mapx, mapy, CV_INTER_LINEAR | CV_WARP_FILL_OUTLIERS, cvScalarAll(0) );
 	    	}
 	    }
-	    
-	    cvSaveImage(assetsFolder + "/UndistortedImage.jpg",image);
+	     
+	    cvSaveImage(assetsFolder + "/images/IMG" + seq + ".jpg",image);
 	}
 	
     private static IplImage newImage( IplImage img, int channels ) {
