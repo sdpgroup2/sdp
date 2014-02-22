@@ -1,6 +1,7 @@
 package sdp.group2.gui;
 
 import sdp.group2.util.Debug;
+import sdp.group2.vision.Image;
 import sdp.group2.world.Ball;
 import sdp.group2.world.Robot;
 
@@ -21,7 +22,28 @@ public class VisionDisplay extends WindowAdapter {
     private static final Color CONNECT_COLOR = Color.MAGENTA;
 
     private JLabel imageLabel = new JLabel();
+    private BufferedImage image;
 
+
+    /**
+     * Initialises new VisionDisplay
+     *
+     * @param frameSize size of the video feed frames.
+     */
+    public VisionDisplay(Dimension frameSize) {
+        super();
+        initWindow(frameSize);
+    }
+
+    /**
+     * Initialises new VisionDisplay
+     *
+     * @param width  width of the frame
+     * @param height height of the frame
+     */
+    public VisionDisplay(int width, int height) {
+        this(new Dimension(width, height));
+    }
 
     /**
      * Initialise a window frame. PLEASE EXCUSE THIS AWFUL FUNCTION. I'll clean it up later.
@@ -54,11 +76,12 @@ public class VisionDisplay extends WindowAdapter {
     /**
      * Updates the image and redraws it.
      *
-     * @param image  image to be drawn
-     * @param ball   ball on the pitch
-     * @param robots robots on the pitch
+     * @param currentImage image to be drawn
+     * @param ball         ball on the pitch
+     * @param robots       robots on the pitch
      */
-    public synchronized void redraw(BufferedImage image, Ball ball, List<Robot> robots) {
+    public synchronized void redraw(Image currentImage, Ball ball, List<Robot> robots) {
+        image = currentImage.getBufferedImage();
         for (Robot robot : robots) {
             // Bounding rect
             Debug.drawRect(image, robot.getBoundingRect(), RECT_COLOR);
@@ -73,26 +96,6 @@ public class VisionDisplay extends WindowAdapter {
 
         // Update the label with the new image
         imageLabel.setIcon(new ImageIcon(image));
-    }
-
-    /**
-     * Initialises new VisionDisplay
-     *
-     * @param frameSize size of the video feed frames.
-     */
-    public VisionDisplay(Dimension frameSize) {
-        super();
-        initWindow(frameSize);
-    }
-
-    /**
-     * Initialises new VisionDisplay
-     *
-     * @param width width of the frame
-     * @param height height of the frame
-     */
-    public VisionDisplay(int width, int height) {
-        this(new Dimension(width, height));
     }
 
 }
