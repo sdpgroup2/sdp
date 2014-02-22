@@ -11,3 +11,4 @@
 *.externalToolBuilders
 *.iml
 *.idea*
+.classpath
