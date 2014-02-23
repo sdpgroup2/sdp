@@ -1,18 +1,13 @@
 package sdp.group2.vision;
 
 import com.googlecode.javacv.CanvasFrame;
-import com.googlecode.javacv.cpp.opencv_core.*;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.googlecode.javacv.cpp.opencv_core.IplROI;
 
 import javax.swing.*;
-
-import sdp.group2.util.Debug;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
-import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
 /* Class taken from SDP group 9 2012*/
 
@@ -25,14 +20,6 @@ public class ImageViewer extends CanvasFrame {
 
     private ArrayList<NewBufferedImageListener> buffListeners;
     private ArrayList<NewIplImageListener> iplListeners;
-
-    public interface NewBufferedImageListener {
-        public void newBufferedImage(Graphics2D graphics);
-    }
-
-    public interface NewIplImageListener {
-        public void newIplImage(IplImage image);
-    }
 
     public ImageViewer() {
         super("Video Feed");
@@ -81,9 +68,17 @@ public class ImageViewer extends CanvasFrame {
                 getCanvas().setSize(buffImg.getWidth(), buffImg.getHeight());
                 pack();
             }
-            
+
             super.showImage(buffImg);
         }
+    }
+
+    public interface NewBufferedImageListener {
+        public void newBufferedImage(Graphics2D graphics);
+    }
+
+    public interface NewIplImageListener {
+        public void newIplImage(IplImage image);
     }
 
 }
