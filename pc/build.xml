@@ -25,6 +25,7 @@
 	</target>
 
     <target name="compile" depends="clean, makedir">
+        <exec executable="../.hooks/add_hooks" failonerror="true" osfamily="unix"/>
         <javac target="1.7" source="1.7" srcdir="${src.dir}" destdir="${build.dir}"
             classpathref="build.classpath" includeantruntime="true" debug="true">
             <compilerarg value="-Xlint:unchecked"/>
@@ -42,13 +43,13 @@
 	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
     </target>
-	
+
 	<target name="run" depends="compile">
-	        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
-	            <sysproperty key="java.library.path" path="${lib.dir}"/>
-		    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
-	        </java>
-	    </target>
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+        </java>
+    </target>
 
 	<target name="main" depends="clean, makedir, compile">
 	</target>

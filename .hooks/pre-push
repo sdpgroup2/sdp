@@ -1,0 +1,5 @@
+#!/bin/sh
+# Checks whether the code compiles
+
+ant -f pc/build.xml compile
+exit $?
