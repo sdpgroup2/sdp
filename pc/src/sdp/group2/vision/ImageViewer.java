@@ -57,25 +57,27 @@ public class ImageViewer extends CanvasFrame {
 
     public void showImage(IplImage iplImage) {
         if (iplImage != null) {
-            for (NewIplImageListener l : iplListeners)
-                l.newIplImage(iplImage);
-
             IplROI imageROI = iplImage.roi();
+            BufferedImage buffImg;
 
-            BufferedImage buffImg = new BufferedImage(imageROI.width(), imageROI.height(), BufferedImage.TYPE_INT_RGB);
-            iplImage.copyTo(buffImg, 0, new Rectangle(imageROI.xOffset(), imageROI.yOffset(), imageROI.width(), imageROI.height()));
+            //for (NewIplImageListener l : iplListeners)
+            //    l.newIplImage(iplImage);
 
-            //BufferedImage buffImg = iplImage.getBufferedImage();
-            Graphics2D g = buffImg.createGraphics();
+            if (imageROI != null) {
+                buffImg = new BufferedImage(imageROI.width(), imageROI.height(), BufferedImage.TYPE_INT_RGB);
+            } else {
+                buffImg = new BufferedImage(iplImage.width(), iplImage.height(), BufferedImage.TYPE_INT_RGB);
+            }
+            iplImage.copyTo(buffImg);
 
-            for (NewBufferedImageListener l : buffListeners)
-                l.newBufferedImage(g);
+            //Graphics2D g = buffImg.createGraphics();
+            //for (NewBufferedImageListener l : buffListeners)
+            //    l.newBufferedImage(g);
 
             if (buffImg.getWidth() != getCanvas().getWidth() || buffImg.getHeight() != getCanvas().getHeight()) {
                 getCanvas().setSize(buffImg.getWidth(), buffImg.getHeight());
                 pack();
             }
-
             super.showImage(buffImg);
         }
     }
