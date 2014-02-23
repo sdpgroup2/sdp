@@ -23,8 +23,10 @@ public class ImageProcessor {
     private static IplImage temp; // Temporary image used for processing
     private static IplImage[] hsvImages = new IplImage[3]; // each hsv channel stored
     private static IplImage image;
+	private static Entity[] entities = new Entity[1];
 
     public ImageProcessor() {
+    	entities[0] = new Entity(new int[] {256,51,50}, new int[] {30,100,110});
         cropRect = cvRect(30, 80, 589, 315);    
     }
 
@@ -101,11 +103,18 @@ public class ImageProcessor {
      * @param temp  temporary image
      */
     private static void detect(IplImage image, IplImage temp) {
+    	IplImage channel = null;
+    	cvSetImageROI(temp, cropRect);
         cvCvtColor(image, temp, CV_BGR2HSV);
         for (int i = 0; i < 3; ++i) {
             hsvImages[i] = newImage(image, 1);
         }
-        cvSplit(image, hsvImages[0], hsvImages[1], hsvImages[2], null);
+        cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
+        for (Entity ent : entities) {
+        	channel = ent.threshold(hsvImages, temp, cropRect);
+        }      
+        
+        imageViewer.showImage(channel);
     }
 
     /**
@@ -115,7 +124,7 @@ public class ImageProcessor {
      * @param channels number of channels
      * @return newly created image
      */
-    private static IplImage newImage(IplImage img, int channels) {
+    public static IplImage newImage(IplImage img, int channels) {
         return IplImage.create(cvGetSize(img), img.depth(), channels);
     }
 
@@ -130,7 +139,8 @@ public class ImageProcessor {
         crop(image, cropRect);        
         //normalize(image);
         filter(image);
-        imageViewer.showImage(image);
+        detect(image,temp);
+        //imageViewer.showImage(image);
     }
 
 }
