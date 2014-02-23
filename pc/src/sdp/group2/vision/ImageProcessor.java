@@ -25,7 +25,7 @@ public class ImageProcessor {
     private static IplImage image;
 
     public ImageProcessor() {
-        cropRect = cvRect(30, 80, 589, 310);    
+        cropRect = cvRect(30, 80, 589, 315);    
     }
 
     /**
