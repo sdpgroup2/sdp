@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class Commands{
 	
-	public final static short DO_NOTHING = 0;
+	public final static short CLEAR = 0;
 	public final static short FORWARDS = 1;
 	public final static short BACKWARDS = 2;
 	public final static short STOP = 3;
@@ -33,7 +33,6 @@ public class Commands{
 	public final static short BEEP = 42;
 	public final static short ARC = 37;
 	public final static short STEER = 36;
-
 	/**
 	 * 
 	 * @param direction = 1 clockwise, -1 anti-clockwise
@@ -62,6 +61,8 @@ public class Commands{
 		return new int[] {KICK,angle,speed,0};
 		
 	}
+	
+	
 	
 	/**
 	 * 

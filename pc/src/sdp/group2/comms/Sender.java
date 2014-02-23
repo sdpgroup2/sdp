@@ -35,7 +35,7 @@ public class Sender implements CommInterface {
 		openBluetoothConn(robotName);
 	}
 
-	public int move(int direction, int speed, int distance) throws IOException {
+	public synchronized int move(int direction, int speed, int distance) throws IOException {
 		int confirmation =0;
 		short[] command = { Commands.ANGLEMOVE, (short) direction, (short) speed, (short) distance};
 		confirmation = attemptConnection(command);
@@ -43,14 +43,14 @@ public class Sender implements CommInterface {
 		return confirmation;
 	} 
 
-	public int rotate(int angle, int speed) throws IOException {
+	public synchronized int rotate(int angle, int speed) throws IOException {
 		short[] command = { Commands.ROTATE, (short) angle, (short) speed, 0};
 		int confirmation = attemptConnection(command);
 		System.out.printf("Rotating at a %d angle\n", angle);
 		return confirmation;
 	}
 
-	public int kick(int angle, int speed) throws IOException {
+	public synchronized int kick(int angle, int speed) throws IOException {
 		short[] command = { Commands.KICK, (short) angle, (short) speed, 0 };
 		long timeStart = System.currentTimeMillis();
 		int confirmation = attemptConnection(command);
@@ -60,7 +60,7 @@ public class Sender implements CommInterface {
 
 	}
 	
-	public int steer(int turnRate) throws IOException {
+	public synchronized int steer(int turnRate) throws IOException {
 		short[] command = { Commands.STEER, (short) turnRate, 0, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Steer...");
@@ -68,7 +68,7 @@ public class Sender implements CommInterface {
 
 	}
 
-	public int stop() {
+	public synchronized int stop() {
 		short[] command = { Commands.STOP, 0, 0, 0 };
 		int confirmation = attemptConnection(command);
 		System.out.println("Stop");
@@ -76,7 +76,7 @@ public class Sender implements CommInterface {
 	}
 
 	@Override
-	public void disconnect() {
+	public synchronized void disconnect() {
 		short[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
@@ -94,7 +94,7 @@ public class Sender implements CommInterface {
 	}
 
 	@Override
-	public void forcequit() {
+	public synchronized void forcequit() {
 		short[] command = { Commands.FORCEQUIT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
