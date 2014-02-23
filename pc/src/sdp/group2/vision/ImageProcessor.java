@@ -128,7 +128,7 @@ public class ImageProcessor {
      * @param inputImage image to be processed
      */
     public void process(BufferedImage inputImage) {
-        image = IplImage.createFrom(inputImage);
+        image = IplImage.createFrom(inputImage);.
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
         imageViewer.showImage(image);
