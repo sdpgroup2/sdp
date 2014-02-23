@@ -35,15 +35,15 @@ public class CommandQueue {
 		}
 	}
 	
-	public static void clear(String robotName) {
+	public static void clear(String robotName){
 		if (robotName.equals(Constants.ROBOT_2A_NAME)){
-			commandQueue2A.add();
+			commandQueue2A.clear();
 		} else if(robotName.equals(Constants.ROBOT_2D_NAME)) {
 			commandQueue2D.clear();
-		}
+		} 
 	}
 	
-	public static boolean containsCommand(short command, String robotName) {
+	public static boolean containsCommand(int[] command, String robotName) {
 		if (robotName.equals(Constants.ROBOT_2A_NAME)){
 			return commandQueue2A.contains(command);
 		} else if(robotName.equals(Constants.ROBOT_2D_NAME)) {

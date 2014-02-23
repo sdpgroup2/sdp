@@ -24,16 +24,16 @@ private Sender sender;
 			} else if(robotName.equals(Constants.ROBOT_2D_NAME)) {
 				sender = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
 			}
-			startRunningFromQueue();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
 	public void startRunningFromQueue() {
-		
+		System.out.println("popping from 2D queue");
 		Thread popThread = new Thread(new Runnable() {
-
+			
 			@Override
 			public void run() {
 				while(true) {
@@ -61,6 +61,7 @@ private Sender sender;
 						}
 					}
 					if (!CommandQueue.isEmpty(Constants.ROBOT_2D_NAME)) {
+						
 						int[] commands = CommandQueue.poll(Constants.ROBOT_2D_NAME);
 						try {
 							switch(commands[0]) {
@@ -89,17 +90,27 @@ private Sender sender;
 		});
 		
 		popThread.start();
-		while(true) {
-			if (CommandQueue.containsCommand(Commands.CLEAR, Constants.ROBOT_2A_NAME)) {
-				sender.stop();
-				sender.clearBuff();
-				CommandQueue.clear(Constants.ROBOT_2A_NAME);
-			} else if (CommandQueue.containsCommand(Commands.CLEAR, Constants.ROBOT_2D_NAME)) {
-				sender.stop();
-				sender.clearBuff();
-				CommandQueue.clear(Constants.ROBOT_2D_NAME);
-			}		
-		}
+		Thread attemptClear = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while(true) {
+					if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2A_NAME)) {
+						sender.stop();
+						sender.clearBuff();
+						CommandQueue.clear(Constants.ROBOT_2A_NAME);
+					} else if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2D_NAME)) {
+						sender.stop();
+						sender.clearBuff();
+						CommandQueue.clear(Constants.ROBOT_2D_NAME);
+					}		
+				}
+				
+			}
+
+		});
+		attemptClear.start();
+
 	}
 	
 }

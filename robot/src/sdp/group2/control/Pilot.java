@@ -17,7 +17,6 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public void move(int direction, int speed, int distance) {
 		LCD.drawString("moving forward!", 10, 10);
 		super.travel(direction * distance);
-//		super.stop();
 		super.setTravelSpeed(speed);
 	} 
 
@@ -39,6 +38,7 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	}
 
 	public void stop() {
+		LCD.drawString("stopped!", 10, 10);
 		super.stop();
 	}
 	public void steer(double turnRatio) {

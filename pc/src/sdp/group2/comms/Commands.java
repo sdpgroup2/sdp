@@ -62,19 +62,21 @@ public class Commands{
 		
 	}
 	
-	
-	
 	/**
 	 * 
 	 * @param turnRate
 	 *
 	 */
-	public int[] steer(int turnRate){
+	public static int[] steer(int turnRate){
 		return new int[] {STEER,turnRate,0,0};
 	}
 	
-	public int[] disconnect() {
+	public static int[] disconnect() {
 		return new int[] {DISCONNECT};
+	}
+	
+	public static int[] clear() {
+		return new int[] {Commands.CLEAR, 0,0,0};
 	}
 	
 	

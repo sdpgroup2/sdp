@@ -146,6 +146,7 @@ public class Sender implements CommInterface {
 	}
 
 	private int sendToRobot(short[] comm) throws IOException {
+		clearBuff();
 		if (!connected)
 			return -3;
 		if (buffer < 2) {
