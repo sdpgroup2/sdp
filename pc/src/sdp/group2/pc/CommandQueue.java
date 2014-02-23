@@ -1,12 +1,13 @@
 package sdp.group2.pc;
 
 
-import sdp.group2.comms.Commands;
 import sdp.group2.util.Constants;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
 public class CommandQueue {
+
 	private static ConcurrentLinkedQueue<int[]> commandQueue2A = new ConcurrentLinkedQueue<int[]>();
 	private static ConcurrentLinkedQueue<int[]> commandQueue2D = new ConcurrentLinkedQueue<int[]>();
 	
@@ -52,4 +53,6 @@ public class CommandQueue {
 			return false;
 		}
 	}
+
+
 }

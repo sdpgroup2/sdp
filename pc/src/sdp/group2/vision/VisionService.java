@@ -3,7 +3,6 @@ package sdp.group2.vision;
 import au.edu.jcu.v4l4j.*;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 import sdp.group2.geometry.Rect;
-import sdp.group2.gui.VisionDisplay;
 import sdp.group2.pc.Timer;
 import sdp.group2.util.Debug;
 import sdp.group2.vision.clusters.*;
@@ -27,13 +26,13 @@ public class VisionService implements CaptureCallback {
     private VisionServiceCallback callback;
     private int currentFrame = 0;
     private int preparationFrames;
-    private VisionState state = VisionState.Preparation;
     private Timer timer = new Timer(10);
+    private VisionState state = VisionState.Preparation;
     private int[] colorArray;
     private Image currentImage = new Image();
     private float meanSat = 0;
     private float meanBright = 0;
-    private VisionDisplay visionDisplay;
+    private ImageProcessor imageProcessor = new ImageProcessor();
     // Clusters
     private BallCluster ballCluster = new BallCluster("Ball");
     //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
@@ -65,9 +64,6 @@ public class VisionService implements CaptureCallback {
     public VisionService(String deviceName, int preparationFrames, VisionServiceCallback callback) {
         this.callback = callback;
         this.preparationFrames = preparationFrames;
-        if (ENABLE_GUI) {
-            this.visionDisplay = new VisionDisplay(FRAME_WIDTH, FRAME_HEIGHT);
-        }
         try {
             this.device = new VideoDevice(deviceName);
             DeviceInfo deviceInfo = device.getDeviceInfo();
@@ -125,11 +121,10 @@ public class VisionService implements CaptureCallback {
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
 
-        ImageProcessor processor = new ImageProcessor(frame.getBufferedImage());
-        processor.undistortAlt();
+        imageProcessor.process(frame.getBufferedImage());
         frame.recycle();
         return;
-        
+
 //        // Read image into array colorArray and add it to the image
 //        colorArray = frame.getBufferedImage().getRGB(0, 0, getSize().width, getSize().height,
 //                null, 0, getSize().width);
@@ -335,6 +330,7 @@ public class VisionService implements CaptureCallback {
     private enum VisionState {
         Preparation, StaticDetection, Processing
     }
+
 
     // these should be changed to get[Yellow/Blue]RobotRects() as they
     // return rects and not robot objects
