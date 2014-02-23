@@ -94,7 +94,8 @@ public class ImageProcessor {
      * @param temp  temporary image
      */
     private static void filter(IplImage image, IplImage temp) {
-        medianBlur(image, temp, MEDIAN_FILTER_SIZE);
+        cvCopy(image, temp);
+        medianBlur(temp, image, MEDIAN_FILTER_SIZE);
     }
 
     /**
@@ -131,6 +132,8 @@ public class ImageProcessor {
         image = IplImage.createFrom(inputImage);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
+        normalize(image, temp);
+        filter(image, temp);
         imageViewer.showImage(image);
     }
 
