@@ -20,7 +20,6 @@ public class ImageProcessor {
     private static ImageViewer imageViewer = new ImageViewer();
 
     private static CvRect cropRect; // Cropping rectangle
-    private static IplImage temp; // Temporary image used for processing
     private static IplImage[] hsvImages = new IplImage[3]; // each hsv channel stored
     private static IplImage image;
 
@@ -33,11 +32,11 @@ public class ImageProcessor {
      * Un-distorts the image.
      *
      * @param image        image to be un-distorted
-     * @param temp         temporary image
      * @param cameraMatrix camera matrix input from calibration
      * @param distCoeffs   distortion coefficients input from calibration
      */
-    public static void undistort(IplImage image, IplImage temp, CvMat cameraMatrix, CvMat distCoeffs) {
+    public static void undistort(IplImage image, CvMat cameraMatrix, CvMat distCoeffs) {
+        IplImage temp; // Temporary image used for processing
         if (cameraMatrix == null || distCoeffs == null) {
             System.err.println("Can't open distortion info.");
         } else {
@@ -48,7 +47,8 @@ public class ImageProcessor {
             cvInitUndistortMap(cameraMatrix, distCoeffs, remapX, remapY);
 
             if (remapX != null && remapY != null) {
-                cvCopy(image, temp);
+                temp = newImage(image, 3);
+                //cvCopy(image, temp);
                 // Apply the undistortion map
                 cvRemap(temp, image, remapX, remapY, CV_INTER_LINEAR | CV_WARP_FILL_OUTLIERS, cvScalarAll(0));
             }
@@ -78,7 +78,6 @@ public class ImageProcessor {
      * Normalises the image.
      *
      * @param image image to be normalised
-     * @param temp  temporary image
      */
     private static void normalize(IplImage image) {
         cvNormalize(image, image);
@@ -89,7 +88,6 @@ public class ImageProcessor {
      * Filters the image with the median blur. This should remove noise
      *
      * @param image image to be filtered
-     * @param temp  temporary image
      */
     private static void filter(IplImage image) {
         medianBlur(image, image, MEDIAN_FILTER_SIZE);
@@ -127,8 +125,7 @@ public class ImageProcessor {
      */
     public void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
-        temp = newImage(image, 3);
-        undistort(image, temp, cameraMatrix, distCoeffs);     
+        undistort(image, cameraMatrix, distCoeffs);
         crop(image, cropRect);        
         //normalize(image);
         filter(image);
