@@ -28,7 +28,9 @@ public class ImageProcessor {
 
     public ImageProcessor() {
     	// Ball
-    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 255, 255});
+//    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 256, 256});
+    	//Robot's green plate
+    	entities[0]= new Entity(new int[] {-20, 75, 114}, new int[] {100, 114, 140});
         cropRect = cvRect(30, 80, 590, 315);    
     }
 
@@ -135,6 +137,7 @@ public class ImageProcessor {
      * Processes the image.
      * @param inputImage image to be processed
      */
+
     public void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
