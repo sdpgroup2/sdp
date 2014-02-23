@@ -64,9 +64,9 @@ public class ImageViewer extends CanvasFrame {
             //    l.newIplImage(iplImage);
 
             if (imageROI != null) {
-                buffImg = new BufferedImage(imageROI.width(), imageROI.height(), BufferedImage.TYPE_INT_RGB);
+                buffImg = new BufferedImage(imageROI.width(), imageROI.height(), BufferedImage.TYPE_4BYTE_ABGR);
             } else {
-                buffImg = new BufferedImage(iplImage.width(), iplImage.height(), BufferedImage.TYPE_INT_RGB);
+                buffImg = new BufferedImage(iplImage.width(), iplImage.height(), BufferedImage.TYPE_4BYTE_ABGR);
             }
             iplImage.copyTo(buffImg);
 

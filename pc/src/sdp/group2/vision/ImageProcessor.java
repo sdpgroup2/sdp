@@ -25,8 +25,7 @@ public class ImageProcessor {
     private static IplImage image;
 
     public ImageProcessor() {
-        cropRect = cvRect(30, 105, 640, 360);
-        temp = newImage(image, 3);
+        cropRect = cvRect(30, 80, 589, 310);    
     }
 
     /**
@@ -65,12 +64,12 @@ public class ImageProcessor {
      */
     private static void crop(IplImage image, CvRect cropRect) {
         // TODO: do we need these checks? cropRect is final and size of image doesn't change
-        if (cropRect.width() + cropRect.x() > image.width()) {
-            cropRect.width(image.width() - cropRect.x());
-        }
-        if (cropRect.height() + cropRect.y() > image.height()) {
-            cropRect.height(image.height() - cropRect.y());
-        }
+//        if (cropRect.width() + cropRect.x() > image.width()) {
+//            cropRect.width(image.width() - cropRect.x());
+//        }
+//        if (cropRect.height() + cropRect.y() > image.height()) {
+//            cropRect.height(image.height() - cropRect.y());
+//        }
         cvSetImageROI(image, cropRect);
     }
 
@@ -81,9 +80,8 @@ public class ImageProcessor {
      * @param image image to be normalised
      * @param temp  temporary image
      */
-    private static void normalize(IplImage image, IplImage temp) {
-        cvCopy(image, temp);
-        cvNormalize(temp, image);
+    private static void normalize(IplImage image) {
+        cvNormalize(image, image);
     }
 
     /**
@@ -93,9 +91,8 @@ public class ImageProcessor {
      * @param image image to be filtered
      * @param temp  temporary image
      */
-    private static void filter(IplImage image, IplImage temp) {
-        cvCopy(image, temp);
-        medianBlur(temp, image, MEDIAN_FILTER_SIZE);
+    private static void filter(IplImage image) {
+        medianBlur(image, image, MEDIAN_FILTER_SIZE);
     }
 
     /**
@@ -130,10 +127,11 @@ public class ImageProcessor {
      */
     public void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
-        undistort(image, temp, cameraMatrix, distCoeffs);
-        crop(image, cropRect);
-        normalize(image, temp);
-        filter(image, temp);
+        temp = newImage(image, 3);
+        undistort(image, temp, cameraMatrix, distCoeffs);     
+        crop(image, cropRect);        
+        //normalize(image);
+        filter(image);
         imageViewer.showImage(image);
     }
 

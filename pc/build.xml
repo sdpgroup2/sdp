@@ -42,6 +42,13 @@
 	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
     </target>
+	
+	<target name="run" depends="compile">
+	        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
+	            <sysproperty key="java.library.path" path="${lib.dir}"/>
+		    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+	        </java>
+	    </target>
 
 	<target name="main" depends="clean, makedir, compile">
 	</target>
