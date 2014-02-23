@@ -34,6 +34,7 @@ public class VisionService implements CaptureCallback {
     private float meanSat = 0;
     private float meanBright = 0;
     private VisionDisplay visionDisplay;
+    private ImageProcessor imageProcessor = new ImageProcessor();
     // Clusters
     private BallCluster ballCluster = new BallCluster("Ball");
     //	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster("Yellow robots");
@@ -125,8 +126,7 @@ public class VisionService implements CaptureCallback {
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
 
-        ImageProcessor processor = new ImageProcessor(frame.getBufferedImage());
-        processor.undistortAlt();
+        imageProcessor.process(frame.getBufferedImage());
         frame.recycle();
         return;
         
