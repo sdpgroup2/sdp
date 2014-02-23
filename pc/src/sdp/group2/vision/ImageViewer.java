@@ -5,6 +5,9 @@ import com.googlecode.javacv.cpp.opencv_core.*;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 import javax.swing.*;
+
+import sdp.group2.util.Debug;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -55,7 +58,7 @@ public class ImageViewer extends CanvasFrame {
         iplListeners.remove(newIplImageListener);
     }
 
-    public void showImage(IplImage iplImage) {
+    public void showImage(IplImage iplImage, int imageType) {
         if (iplImage != null) {
             IplROI imageROI = iplImage.roi();
             BufferedImage buffImg;
@@ -64,9 +67,9 @@ public class ImageViewer extends CanvasFrame {
             //    l.newIplImage(iplImage);
 
             if (imageROI != null) {
-                buffImg = new BufferedImage(imageROI.width(), imageROI.height(), BufferedImage.TYPE_BYTE_INDEXED);
+                buffImg = new BufferedImage(imageROI.width(), imageROI.height(), imageType);
             } else {
-                buffImg = new BufferedImage(iplImage.width(), iplImage.height(), BufferedImage.TYPE_BYTE_INDEXED);
+                buffImg = new BufferedImage(iplImage.width(), iplImage.height(), imageType);
             }
             iplImage.copyTo(buffImg);
 
@@ -78,6 +81,7 @@ public class ImageViewer extends CanvasFrame {
                 getCanvas().setSize(buffImg.getWidth(), buffImg.getHeight());
                 pack();
             }
+            
             super.showImage(buffImg);
         }
     }

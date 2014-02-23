@@ -18,6 +18,7 @@ public class ImageProcessor {
     CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
 
     private static ImageViewer imageViewer = new ImageViewer();
+    private static ImageViewer imageViewer2 = new ImageViewer();
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
@@ -26,8 +27,9 @@ public class ImageProcessor {
 	private static Entity[] entities = new Entity[1];
 
     public ImageProcessor() {
-    	entities[0] = new Entity(new int[] {0,127,127}, new int[] {30,100,110});
-        cropRect = cvRect(30, 80, 589, 315);    
+    	// Ball
+    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 255, 255});
+        cropRect = cvRect(30, 80, 590, 315);    
     }
 
     /**
@@ -73,6 +75,8 @@ public class ImageProcessor {
 //            cropRect.height(image.height() - cropRect.y());
 //        }
         cvSetImageROI(image, cropRect);
+        // needs to be set on temp as well for future filters and stuff
+        cvSetImageROI(temp, cropRect);
     }
 
     /**
@@ -104,17 +108,16 @@ public class ImageProcessor {
      */
     private static void detect(IplImage image, IplImage temp) {
     	IplImage channel = null;
-    	cvSetImageROI(temp, cropRect);
         cvCvtColor(image, temp, CV_BGR2HSV);
         for (int i = 0; i < 3; ++i) {
-            hsvImages[i] = newImage(image, 1);
+            hsvImages[i] = newImage(temp, 1);
         }
         cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
         for (Entity ent : entities) {
         	channel = ent.threshold(hsvImages, temp, cropRect);
         }      
         
-        imageViewer.showImage(channel);
+        imageViewer.showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
     }
 
     /**
@@ -140,7 +143,7 @@ public class ImageProcessor {
         //normalize(image);
         filter(image);
         detect(image,temp);
-        //imageViewer.showImage(image);
+        imageViewer2.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
     }
 
 }
