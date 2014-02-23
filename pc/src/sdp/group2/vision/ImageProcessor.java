@@ -26,7 +26,7 @@ public class ImageProcessor {
 	private static Entity[] entities = new Entity[1];
 
     public ImageProcessor() {
-    	entities[0] = new Entity(new int[] {256,51,50}, new int[] {30,100,110});
+    	entities[0] = new Entity(new int[] {0,127,127}, new int[] {30,100,110});
         cropRect = cvRect(30, 80, 589, 315);    
     }
 
