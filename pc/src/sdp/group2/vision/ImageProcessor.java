@@ -1,5 +1,7 @@
 package sdp.group2.vision;
 
+import com.googlecode.javacv.cpp.opencv_core.CvArr;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import com.googlecode.javacv.cpp.opencv_core.*;
 import com.googlecode.javacv.cpp.opencv_imgproc.*;
 
@@ -79,8 +81,21 @@ public class ImageProcessor {
      * Normalises the image.
      *
      * @param image image to be normalised
+     * @return 
      */
+   
     private static void normalize(IplImage image) {
+    	cvCvtColor(image, image, CV_BGR2HSV);
+    	IplImage[] channels = new IplImage[3];
+    	for (int i = 1; i < channels.length; i++) {
+			channels[i] = newImage(image, 1);
+		}
+    	cvSplit(image, channels[0], channels[1], channels[2], null);
+    	for (int i = 1; i < channels.length; i++) {
+    		cvEqualizeHist(channels[i], channels[i]);
+		}
+    	cvMerge(channels[0], channels[1], channels[2], null, image);
+    	cvCvtColor(image, image, CV_HSV2BGR);
 //        cvNormalize(image, image);
     }
 
@@ -139,7 +154,7 @@ public class ImageProcessor {
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
-        normalize(image);
+//        normalize(image);
         filter(image);
 //        detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
