@@ -49,10 +49,6 @@ public class OffensivePlanner extends Planner {
 		CommandQueue.add(Commands.kick(Constants.ATK_KICK_ANGLE, Constants.ATK_KICK_POWER), robotName);
 	}
 
-	//Probably not required
-//	public void passBack() {
-//
-//	}
 
 	public Line getTargetPath() {
 		Ball ball = pitch.getBall();
@@ -85,8 +81,7 @@ public class OffensivePlanner extends Planner {
 		if (isAbleToScore()) {
 			score();
 		} else {
-//			passBack();
-			//Do nothing for now
+			//Move to position in which isAbleToScore();
 		}
 	}
 

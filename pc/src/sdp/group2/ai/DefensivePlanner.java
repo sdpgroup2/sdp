@@ -25,11 +25,15 @@ public class DefensivePlanner extends Planner {
 	private Sender sender;
 	private long lastRotation = System.currentTimeMillis();
 	private static final Point GOAL = new Point(0, Plane.pix2mm(150));
+	
+	private Point ourGoal;
+	private Point enemyGoal;
 
 	// Still to implement:
-	// Pass;
-	// AbleToPass;
+	// Pass();
+	// AbleToPass();
 	// Track x Coordinate of Ball;
+	// returnToGoal();
 
 	public DefensivePlanner(IPitch pitch, byte zoneId) {
 		super(pitch);
@@ -146,8 +150,16 @@ public class DefensivePlanner extends Planner {
 		this.sender.disconnect();
 	}
 
+	
 	public void act() {
 		interceptSimple();
+	}
+	
+	//Unfinished
+	public void returnToGoal(){
+		
+		//Return back to the centre of the goal if ball is either
+		//in our attacking zone or enemies defending zone
 	}
 
 }
