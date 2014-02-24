@@ -37,37 +37,29 @@ public class Entity {
     	this.maxs = maxs;
     }
     
-    public Point threshold(IplImage[] images, IplImage image, CvRect cropRect) {
-        // For each pixel property (hue, saturation or value), find the pixels that lie
-        // between the entity limits for that property.
+    public IplImage threshold(IplImage[] images, IplImage image, CvRect cropRect) {
         IplImage channel = ImageProcessor.newImage(image, 1);
         IplImage temp1 = ImageProcessor.newImage(image, 1);
         
-        for (int i = 0; i < 3 ; ++i) {
-//            cvSetImageROI(images[i], cropRect);
-//            cvSetImageROI(channel, cropRect);
-//            cvSetImageROI(temp1, cropRect);
-                
-			IplImage hsvi = images[i];
-			
+        for (int i = 0; i < 3 ; ++i) {		
 			int min = mins[i];
 			int max = maxs[i];
 			
 			// TODO: maybe use inRange here
 			if (i == 0) {
-			    cvThreshold(hsvi, channel, min, 255.0, CV_THRESH_BINARY);
+				cvInRangeS(images[i], cvScalar(min, 0, 0, 0), cvScalar(max, 0, 0, 0), channel);
 			} else {
-				cvThreshold(hsvi, temp1, min, 255.0, CV_THRESH_BINARY);
+				cvInRangeS(images[i], cvScalar(min, 0, 0, 0), cvScalar(max, 0, 0, 0), temp1);
 			    cvAnd(channel, temp1, channel, null);
 			}
-			
-			cvThreshold(hsvi, temp1, max, 255.0, CV_THRESH_BINARY_INV);
-			cvAnd(channel, temp1, channel, null);
         }
         
         // Erode here to remove all the small white pixel chunks
         cvErode(channel, channel, null, 1);
-        
+        return channel;
+    }
+    
+    public Point segment(IplImage channel) {
         CvSeq contours = new CvSeq(null);
 //        cvCanny(channel, channel, 100, 100, 3);
         cvFindContours(channel, storage, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
@@ -78,7 +70,6 @@ public class Entity {
         CvMoments moments = new CvMoments();
         cvMoments(firstContour, moments, 0);
         Point point = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-        System.out.println(point);
         return point;
     }
 

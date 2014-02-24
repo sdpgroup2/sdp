@@ -31,8 +31,8 @@ public class ImageProcessor {
 
     public ImageProcessor() {
         // Ball
-    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 256, 256});
-//        entities[1]= new Entity(new int[] {45, 75, 102}, new int[] {100, 114, 140});
+//    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 256, 256});
+        entities[0]= new Entity(new int[] {45, 75, 102}, new int[] {100, 114, 140});
         entityViewers[0] = new ImageViewer();
 //        entityViewers[1] = new ImageViewer();
         cropRect = cvRect(30, 80, 590, 315);    
@@ -116,18 +116,16 @@ public class ImageProcessor {
      * @param temp  temporary image
      */
     private static void detect(IplImage image, IplImage temp) {
-//        IplImage channel = null;
-    	Point point = null;
+        IplImage channel = null;
         cvCvtColor(image, temp, CV_BGR2HSV);
         for (int i = 0; i < 3; ++i) {
             hsvImages[i] = newImage(temp, 1);
         }
         cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
         for (int i = 0; i < entities.length; i++) {
-            point = entities[i].threshold(hsvImages, temp, cropRect);
-            if (point != null) {
-            	cvRectangle(image, cvPoint((int) point.x - 10, (int) point.y - 10), cvPoint((int) point.x + 10, (int) point.y + 10), cvScalar(0, 0, 255, 0), 1, 8, 0);
-            	entityViewers[i].showImage(image, BufferedImage.TYPE_3BYTE_BGR);
+            channel = entities[i].threshold(hsvImages, temp, cropRect);
+            if (channel != null) {
+            	entityViewers[i].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
             }
 		}
     }
@@ -156,7 +154,7 @@ public class ImageProcessor {
         crop(image, cropRect);
 //        normalize(image);
         filter(image);
-//        detect(image, temp);
+        detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
     }
 
