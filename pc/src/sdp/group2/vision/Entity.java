@@ -56,6 +56,16 @@ public class Entity {
         
         // Erode here to remove all the small white pixel chunks
         cvErode(channel, channel, null, 1);
+
+        Blobs regions = new Blobs();
+        regions.BlobAnalysis(
+                channel,                    // image
+                -1, -1,                     // ROI start col, row
+                -1, -1,                     // ROI cols, rows
+                1,                          // border (0 = black; 1 = white)
+                0);                         // minarea
+        regions.PrintRegionData();
+
         return channel;
     }
     
