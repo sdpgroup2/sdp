@@ -1,8 +1,11 @@
 package sdp.group2.vision;
 
 import com.googlecode.javacv.cpp.opencv_core.*;
+import com.googlecode.javacv.cpp.opencv_imgproc.*;
 
 import java.awt.image.BufferedImage;
+
+import sdp.group2.geometry.Point;
 
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
@@ -16,7 +19,7 @@ public class ImageProcessor {
     // Matrices used for remapping
     CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
     private static ImageViewer imageViewer = new ImageViewer();
-    private static ImageViewer imageViewer2 = new ImageViewer();
+    private static ImageViewer[] entityViewers = new ImageViewer[1];
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
@@ -26,8 +29,10 @@ public class ImageProcessor {
 
     public ImageProcessor() {
         // Ball
-//    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 256, 256});
-        entities[0]= new Entity(new int[] {-20, 75, 114}, new int[] {100, 114, 140});
+    	entities[0] = new Entity(new int[] {-10, 92, 140}, new int[] {10, 256, 256});
+//        entities[1]= new Entity(new int[] {45, 75, 102}, new int[] {100, 114, 140});
+        entityViewers[0] = new ImageViewer();
+//        entityViewers[1] = new ImageViewer();
         cropRect = cvRect(30, 80, 590, 315);    
     }
 
@@ -76,7 +81,7 @@ public class ImageProcessor {
      * @param image image to be normalised
      */
     private static void normalize(IplImage image) {
-        cvNormalize(image, image);
+//        cvNormalize(image, image);
     }
 
     /**
@@ -96,17 +101,20 @@ public class ImageProcessor {
      * @param temp  temporary image
      */
     private static void detect(IplImage image, IplImage temp) {
-        IplImage channel = null;
+//        IplImage channel = null;
+    	Point point = null;
         cvCvtColor(image, temp, CV_BGR2HSV);
         for (int i = 0; i < 3; ++i) {
             hsvImages[i] = newImage(temp, 1);
         }
         cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
-        for (Entity ent : entities) {
-            channel = ent.threshold(hsvImages, temp, cropRect);
-        }
-
-        imageViewer.showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
+        for (int i = 0; i < entities.length; i++) {
+            point = entities[i].threshold(hsvImages, temp, cropRect);
+            if (point != null) {
+            	cvRectangle(image, cvPoint((int) point.x - 10, (int) point.y - 10), cvPoint((int) point.x + 10, (int) point.y + 10), cvScalar(0, 0, 255, 0), 1, 8, 0);
+            	entityViewers[i].showImage(image, BufferedImage.TYPE_3BYTE_BGR);
+            }
+		}
     }
 
     /**
@@ -131,10 +139,10 @@ public class ImageProcessor {
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
-        //normalize(image);
+        normalize(image);
         filter(image);
-        detect(image, temp);
-        imageViewer2.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
+//        detect(image, temp);
+        imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
     }
 
 }

@@ -9,6 +9,8 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvFindContours;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvMoments;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvThreshold;
+import static com.googlecode.javacv.cpp.opencv_imgproc.*;
+import static com.googlecode.javacv.cpp.opencv_core.*;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -35,7 +37,7 @@ public class Entity {
     	this.maxs = maxs;
     }
     
-    public IplImage threshold(IplImage[] images, IplImage image, CvRect cropRect) {
+    public Point threshold(IplImage[] images, IplImage image, CvRect cropRect) {
         // For each pixel property (hue, saturation or value), find the pixels that lie
         // between the entity limits for that property.
         IplImage channel = ImageProcessor.newImage(image, 1);
@@ -51,6 +53,7 @@ public class Entity {
 			int min = mins[i];
 			int max = maxs[i];
 			
+			// TODO: maybe use inRange here
 			if (i == 0) {
 			    cvThreshold(hsvi, channel, min, 255.0, CV_THRESH_BINARY);
 			} else {
@@ -65,17 +68,18 @@ public class Entity {
         // Erode here to remove all the small white pixel chunks
         cvErode(channel, channel, null, 1);
         
-        
-//        CvSeq contours = new CvSeq(null);
-//        cvFindContours(channel, storage, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-////        for (CvSeq c = contours; c != null && !c.isNull(); c = c.h_next()) {
-////        	
-////        }
-//        CvSeq firstContour = contours.h_next();
-//        CvMoments moments = new CvMoments();
-//        cvMoments(firstContour, moments, 0);
-//        Point point = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-        return channel;
+        CvSeq contours = new CvSeq(null);
+//        cvCanny(channel, channel, 100, 100, 3);
+        cvFindContours(channel, storage, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+        if (contours.isNull() || contours.total() == 0) {
+        	return null;
+        }
+        CvSeq firstContour = contours.h_next();
+        CvMoments moments = new CvMoments();
+        cvMoments(firstContour, moments, 0);
+        Point point = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
+        System.out.println(point);
+        return point;
     }
 
 }
