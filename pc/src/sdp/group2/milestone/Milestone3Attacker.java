@@ -1,6 +1,6 @@
 //package milestone;
 //
-//import sdp.group2.ai.OffensivePlanner;
+//import sdp.group2.strategy.OffensivePlanner;
 //import sdp.group2.comms.Sender;
 //import sdp.group2.geometry.Point;
 //import sdp.group2.geometry.Rect;

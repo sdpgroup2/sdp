@@ -1,4 +1,4 @@
-package sdp.group2.ai;
+package sdp.group2.strategy;
 
 import sdp.group2.world.IPitch;
 

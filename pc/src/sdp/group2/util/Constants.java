@@ -1,8 +1,5 @@
 package sdp.group2.util;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
-
 public class Constants {
 
     public static final String ROBOT_2A_NAME = "SDP2A";
@@ -24,7 +21,7 @@ public class Constants {
         YELLOW,
         BLUE;
 
-        public static TeamColour valueOf(int teamColour) throws InvalidArgumentException {
+        public static TeamColour valueOf(int teamColour) throws IllegalArgumentException {
             switch (teamColour) {
                 case 0: {
                     return YELLOW;
@@ -33,7 +30,7 @@ public class Constants {
                     return BLUE;
                 }
                 default: {
-                    throw new InvalidArgumentException(new String[] {"TeamColour can be 0 or 1."});
+                    throw new IllegalArgumentException("TeamColour can be 0 or 1.");
                 }
             }
         }
@@ -43,7 +40,7 @@ public class Constants {
         MAIN,
         SIDE;
 
-        public static PitchType valueOf(int pitchType) throws InvalidArgumentException {
+        public static PitchType valueOf(int pitchType) throws IllegalArgumentException {
             switch (pitchType) {
                 case 0: {
                     return MAIN;
@@ -52,7 +49,7 @@ public class Constants {
                     return SIDE;
                 }
                 default: {
-                    throw new InvalidArgumentException(new String[] {"PitchType can be 0 or 1."});
+                    throw new IllegalArgumentException("PitchType can be 0 or 1.");
                 }
             }
         }

@@ -1,10 +1,8 @@
 package sdp.group2.pc;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import sdp.group2.ai.DefensivePlanner;
-import sdp.group2.ai.OffensivePlanner;
+import sdp.group2.strategy.DefensivePlanner;
+import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.geometry.Rect;
-import sdp.group2.util.Constants;
 import sdp.group2.vision.Image;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
@@ -32,6 +30,7 @@ public class MasterController implements VisionServiceCallback {
     /**
      * Main method of the project. Arguments passed in should be:
      * TEAM_COLOUR PITCH_TYPE
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -42,7 +41,7 @@ public class MasterController implements VisionServiceCallback {
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
             pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
-        } catch (InvalidArgumentException e) {
+        } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
         MasterController mc = new MasterController();
