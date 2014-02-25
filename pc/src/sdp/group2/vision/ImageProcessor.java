@@ -23,7 +23,7 @@ public class ImageProcessor {
     private static IplImage temp; // Temporary image used for processing
     private static IplImage[] hsvImages = new IplImage[3]; // each hsv channel stored
     private static IplImage image;
-    private static Detectable[] entities = new Detectable[1];
+    private static Detectable[] entities = new Detectable[2];
 
     public ImageProcessor() {
         // Ball

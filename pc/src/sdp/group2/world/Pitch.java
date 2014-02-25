@@ -71,6 +71,18 @@ public class Pitch extends Plane implements IPitch {
             zoneId++;
         }
     }
+    
+    public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls, boolean isOnEvenField) {
+    	this();
+    	
+    	setOutline(pitchConvexHull);
+    	
+    	for (int i = 0; i < zones.length; i++) {
+    		zones[i].setOutline(zoneConvexHulls[i]);
+    	}
+    	
+    	even = isOnEvenField;
+    }
 
     public void addBall(Ball ball) {
         this.ball = ball;

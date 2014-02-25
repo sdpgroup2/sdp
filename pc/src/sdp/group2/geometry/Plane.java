@@ -27,6 +27,10 @@ public class Plane {
 	public void addPoint(double x, double y) {
 		outline.add(new Point(x, y));
 	}
+	
+	public void setOutline(PointSet outline) {
+		this.outline = outline;
+	}
 
 	public boolean isWellFormed() {
 		return outline.size() > 2;
