@@ -1,6 +1,9 @@
 package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.IplImage;
+
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
+
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Rect;
 
@@ -28,6 +31,8 @@ public interface Detectable {
 
     IplImage threshold(IplImage[] hsvImages, IplImage image);
 
+    void drawBlobs(IplImage binaryImage, IplImage outputImage, int numOfBlobs);
+    
     //IplImage findCentroid(IplImage binaryImage);
 
     //IplImage findBoundingBox(IplImage binaryImage);

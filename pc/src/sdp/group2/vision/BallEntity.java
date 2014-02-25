@@ -4,6 +4,7 @@ import com.googlecode.javacpp.Loader;
 import com.googlecode.javacv.cpp.opencv_highgui.CvTrackbarCallback;
 import com.googlecode.javacv.cpp.opencv_core.*;
 import com.googlecode.javacv.cpp.opencv_imgproc.*;
+
 import sdp.group2.geometry.Point;
 
 
@@ -49,7 +50,7 @@ public class BallEntity implements Detectable {
         }
 
         // Erode here to remove all the small white pixel chunks
-        cvErode(channel, channel, null, 1);
+        cvErode(channel, channel, null, 3);
         cvDilate(channel, channel, null, 1);
         return channel;
     }
@@ -90,5 +91,27 @@ public class BallEntity implements Detectable {
     	}
     	Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
     	return pt;
+    }
+    
+    @Override
+    public void drawBlobs(IplImage binaryImage, IplImage outputImage, int numOfBlobs) {
+    	CvSeq seq = new CvSeq();
+    	cvCanny(binaryImage, binaryImage, 100, 300, 3);
+    	cvFindContours(binaryImage, storage, seq, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+    	if (seq.isNull() || seq.total() == 0) {
+    		return;
+    	}
+    	int count = 0;
+    	for (CvSeq c = seq ; c != null && !c.isNull() ; c = c.h_next()) {
+    		count++;
+			CvMoments moments = new CvMoments();
+			cvMoments(c, moments, 0);
+			if (moments.isNull()) {
+				continue;
+			}
+			Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
+			cvRectangle(outputImage, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
+    	}
+    	System.out.println(count);
     }
 }

@@ -146,13 +146,14 @@ public class ImageProcessor {
         cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
         for (int i = 0; i < entities.length; i++) {
             channel = entities[i].threshold(hsvImages, temp);
-            Point pt = entities[i].findBlobs(channel, 1);
-            if (pt != null) {
-            	System.out.println("Got the ball!");
-            	cvRectangle(image, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
-            } else {
-            	System.out.println("No ball!");
-            }
+            entities[i].drawBlobs(channel, image, 0);
+//            Point pt = entities[i].findBlobs(channel, 1);
+//            if (pt != null) {
+////            	System.out.println("Got the ball!");
+//            	cvRectangle(image, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
+//            } else {
+////            	System.out.println("No ball!");
+//            }
             if (channel != null) {
             	entityViewers[i].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
             }
