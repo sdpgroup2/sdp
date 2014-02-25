@@ -1,5 +1,8 @@
 package sdp.group2.util;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+
+
 public class Constants {
 
     public static final String ROBOT_2A_NAME = "SDP2A";
@@ -16,14 +19,43 @@ public class Constants {
     public static final double PX_TO_MM = 4.56310;
     public static final double MM_TO_PX = 0.2191;
 
+    // Ello Gov'nor
     public enum TeamColour {
         YELLOW,
-        BLUE
+        BLUE;
+
+        public static TeamColour valueOf(int teamColour) throws InvalidArgumentException {
+            switch (teamColour) {
+                case 0: {
+                    return YELLOW;
+                }
+                case 1: {
+                    return BLUE;
+                }
+                default: {
+                    throw new InvalidArgumentException(new String[] {"TeamColour can be 0 or 1."});
+                }
+            }
+        }
     }
 
     public enum PitchType {
         MAIN,
-        SIDE
+        SIDE;
+
+        public static PitchType valueOf(int pitchType) throws InvalidArgumentException {
+            switch (pitchType) {
+                case 0: {
+                    return MAIN;
+                }
+                case 1: {
+                    return SIDE;
+                }
+                default: {
+                    throw new InvalidArgumentException(new String[] {"PitchType can be 0 or 1."});
+                }
+            }
+        }
     }
 
     public enum TeamSide {

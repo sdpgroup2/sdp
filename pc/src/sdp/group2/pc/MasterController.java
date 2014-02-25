@@ -1,24 +1,52 @@
 package sdp.group2.pc;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import sdp.group2.ai.DefensivePlanner;
+import sdp.group2.ai.OffensivePlanner;
 import sdp.group2.geometry.Rect;
+import sdp.group2.util.Constants;
 import sdp.group2.vision.Image;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.vision.clusters.BallCluster;
 import sdp.group2.vision.clusters.RobotBaseCluster;
 
+import static sdp.group2.util.Constants.PitchType;
+import static sdp.group2.util.Constants.TeamColour;
+
 
 public class MasterController implements VisionServiceCallback {
 
-    //public static TeamColor ourTeam;
-    //public static PitchType pitchPlayed;
     //private Pitch pitch;
+    public static TeamColour ourTeam;
+    public static PitchType pitchPlayed;
+    private DefensivePlanner defPlanner;
+    private OffensivePlanner offPlanner;
     private VisionService visionService;
 
     public MasterController() {
         // Start the vision system
         this.visionService = new VisionService(5, this);
-        visionService.start();
+    }
+
+    /**
+     * Main method of the project. Arguments passed in should be:
+     * TEAM_COLOUR PITCH_TYPE
+     * @param args
+     */
+    public static void main(String[] args) {
+        if (args.length < 2) {
+            System.err.println("Not specified which team we are and what pitch we're playing");
+            System.exit(1);
+        }
+        try {
+            ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
+            pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
+        } catch (InvalidArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+        MasterController mc = new MasterController();
+        mc.start();
     }
 
     //public void onPreparationReady(PitchLinesCluster lines, PitchSectionCluster sections,
@@ -37,15 +65,8 @@ public class MasterController implements VisionServiceCallback {
     //pitch.addRobots(blueRobots, yellowRobots, ourTeam);
     //}
 
-    public static void main(String[] args) {
-        new MasterController();
-        //if (args.length < 2) {
-        //	System.out.println("Not specified which team we are and what pitch we're playing");
-        //	System.exit(0);
-        //}
-        //ourTeam = Integer.parseInt(args[0]) == Constants.YELLOW_TEAM ? TeamColor.YELLOW : TeamColor.BLUE;
-        //pitchPlayed = Integer.parseInt(args[1]) == Constants.MAIN_PITCH ? PitchType.MAIN : PitchType.SIDE;
-        //MasterController mc = new MasterController();
+    public void start() {
+        visionService.start();
     }
 
     @Override
