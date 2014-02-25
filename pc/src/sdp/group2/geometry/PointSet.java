@@ -122,6 +122,10 @@ public class PointSet implements Comparable<PointSet> {
 			addUnsafe(p);
 		}
 	}
+	
+	public void add(double x, double y) {
+		add(new Point(x, y));
+	}
 
 	/**
 	 * Unsafe because as the result duplicates can be added. Used only when
