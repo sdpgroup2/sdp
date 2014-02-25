@@ -25,6 +25,7 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.medianBlur;
 import java.awt.image.BufferedImage;
 
 import sdp.group2.geometry.Point;
+import sdp.group2.util.Constants.PitchType;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvPoint;
@@ -41,18 +42,19 @@ public class ImageProcessor {
     // Matrices used for remapping
     CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
     private static ImageViewer imageViewer = new ImageViewer();
-    private static ImageViewer[] entityViewers = new ImageViewer[2];
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
     private static IplImage[] hsvImages = new IplImage[3]; // each hsv channel stored
     private static IplImage image;
-    private static Detectable[] entities = new Detectable[2];
+//    private static Detectable[] entities = new Detectable[2];
+    private static BallEntity ballEntity;
+    private static RobotEntity robotEntity;
+    private static ImageViewer[] entityViewers = new ImageViewer[2];
 
     public ImageProcessor() {
-        // Ball
-        entities[0] = new BallEntity(null);
-        entities[1] = new RobotEntity(null);
+        ballEntity = new BallEntity();
+        robotEntity = new RobotEntity();
         entityViewers[0] = new ImageViewer();
         entityViewers[1] = new ImageViewer();
         cropRect = cvRect(30, 80, 590, 315);    
@@ -136,7 +138,7 @@ public class ImageProcessor {
      * @param temp  temporary image
      */
     private static void detect(IplImage image, IplImage temp) {
-        IplImage channel;
+        IplImage channel = null;
         // Convert from BGR to HSV
         cvCvtColor(image, temp, CV_BGR2HSV);
         for (int i = 0; i < 3; ++i) {
@@ -144,20 +146,17 @@ public class ImageProcessor {
         }
         // Split 3-channel image into 3 1-channel images
         cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
-        for (int i = 0; i < entities.length; i++) {
-            channel = entities[i].threshold(hsvImages, temp);
-            entities[i].drawBlobs(channel, image, 0);
-//            Point pt = entities[i].findBlobs(channel, 1);
-//            if (pt != null) {
-////            	System.out.println("Got the ball!");
-//            	cvRectangle(image, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
-//            } else {
-////            	System.out.println("No ball!");
-//            }
-            if (channel != null) {
-            	entityViewers[i].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
-            }
-		}
+        channel = ballEntity.threshold(hsvImages, temp);
+        ballEntity.drawBlobs(channel, image);
+        if (channel != null) {
+        	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
+        }
+        
+        channel = robotEntity.threshold(hsvImages, temp);
+        robotEntity.drawBlobs(channel, image);
+        if (channel != null) {
+        	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
+        }
     }
 
     /**

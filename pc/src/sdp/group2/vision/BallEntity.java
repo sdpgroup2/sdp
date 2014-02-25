@@ -1,30 +1,27 @@
 package sdp.group2.vision;
 
-import com.googlecode.javacpp.Loader;
-import com.googlecode.javacv.cpp.opencv_highgui.CvTrackbarCallback;
-import com.googlecode.javacv.cpp.opencv_core.*;
-import com.googlecode.javacv.cpp.opencv_imgproc.*;
-
-import sdp.group2.geometry.Point;
-
-
-import static com.googlecode.javacv.cpp.opencv_core.*;
-import static com.googlecode.javacv.cpp.opencv_imgproc.*;
-import static sdp.group2.util.Constants.PitchType;
+import static com.googlecode.javacv.cpp.opencv_core.cvAnd;
+import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
+import static com.googlecode.javacv.cpp.opencv_core.cvOr;
+import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_imgproc.CV_THRESH_BINARY;
+import static com.googlecode.javacv.cpp.opencv_imgproc.CV_THRESH_BINARY_INV;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvThreshold;
 import static sdp.group2.vision.ImageProcessor.newImage;
 
+import com.googlecode.javacv.cpp.opencv_core.CvMemStorage;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
-public class BallEntity implements Detectable {
+
+public class BallEntity extends Entity {
 
     private int[] mins = new int[]{-10, 92, 140};
     private int[] maxs = new int[]{10, 256, 256};
 
-    private PitchType pitchType;
     private CvMemStorage storage = CvMemStorage.create();
 
-    public BallEntity(PitchType pitchType) {
-        this.pitchType = pitchType;
-    }
 
     public IplImage threshold(IplImage[] images, IplImage image) {
         IplImage channel = newImage(image, 1);
@@ -55,63 +52,10 @@ public class BallEntity implements Detectable {
         return channel;
     }
 
-    public Point segment(IplImage channel) {
-        CvSeq contours = new CvSeq(null);
-//        cvCanny(channel, channel, 100, 100, 3);
-        cvFindContours(channel, storage, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-        if (contours.isNull() || contours.total() == 0) {
-            return null;
-        }
-        CvSeq firstContour = contours.h_next();
-        CvMoments moments = new CvMoments();
-        cvMoments(firstContour, moments, 0);
-        Point point = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-        return point;
-    }
 
-    @Override
-    public IplImage detect(IplImage[] hsvImages) {
-        //IplImage binImage = threshold(hsvImages);
-        //findBlobs(binImage, 1);
-        return null;
-    }
-
-    @Override
-    public Point findBlobs(IplImage binaryImage, int numOfBlobs) {
-    	CvSeq seq = new CvSeq();
-    	cvCanny(binaryImage, binaryImage, 100, 300, 3);
-    	cvFindContours(binaryImage, storage, seq, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-    	if (seq.isNull() || seq.total() == 0) {
-    		return null;
-    	}
-    	CvMoments moments = new CvMoments();
-    	cvMoments(seq, moments, 0);
-    	if (moments.isNull()) {
-    		return null;
-    	}
-    	Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-    	return pt;
-    }
-    
-    @Override
-    public void drawBlobs(IplImage binaryImage, IplImage outputImage, int numOfBlobs) {
-    	CvSeq seq = new CvSeq();
-    	cvCanny(binaryImage, binaryImage, 100, 300, 3);
-    	cvFindContours(binaryImage, storage, seq, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-    	if (seq.isNull() || seq.total() == 0) {
-    		return;
-    	}
-    	int count = 0;
-    	for (CvSeq c = seq ; c != null && !c.isNull() ; c = c.h_next()) {
-    		count++;
-			CvMoments moments = new CvMoments();
-			cvMoments(c, moments, 0);
-			if (moments.isNull()) {
-				continue;
-			}
-			Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-			cvRectangle(outputImage, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
-    	}
-    	System.out.println(count);
-    }
+	@Override
+	public IplImage detect(IplImage[] hsvImages) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
