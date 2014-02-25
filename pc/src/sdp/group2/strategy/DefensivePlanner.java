@@ -21,7 +21,9 @@ public class DefensivePlanner extends Planner {
     private static final int SPEED = 40;
     private static final String robotName = Constants.ROBOT_2D_NAME;
     private static final Point GOAL = new Point(0, Plane.pix2mm(150));
+    private Zone offenceZone;
     private Zone defenceZone;
+    private Robot offenceRobot;
     private Robot defenceRobot;
     private boolean isRobotAligned = false;
     private Sender sender;

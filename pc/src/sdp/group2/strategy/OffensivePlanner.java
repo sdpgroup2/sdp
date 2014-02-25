@@ -18,10 +18,15 @@ public class OffensivePlanner extends Planner {
     private static final int SPEED = 100;
     private static final String robotName = Constants.ROBOT_2A_NAME;
     private Zone offensiveZone;
+    private Zone defensiveZone;
     private Robot attackerRobot;
+    private Robot defenceRobot;
     private boolean isRobotAligned = false;
     private Sender sender;
 
+    //Still to implemenent:
+    //Receive pass;
+    
     public OffensivePlanner(IPitch pitch, byte zoneId) {
         super(pitch);
         this.offensiveZone = getPitch().getZone(zoneId);
@@ -68,6 +73,11 @@ public class OffensivePlanner extends Planner {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    //Unfinished
+    public void receivePass(){
+    	//Prepare to receive ball from the Defender
     }
 
     public void act() {
