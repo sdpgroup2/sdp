@@ -20,14 +20,14 @@ public class RobotEntity implements Detectable {
     private CvMemStorage storage = CvMemStorage.create();
 
     int[][] mins = new int[][] {
-            new int[] {47, 70, 130}, // base plate min
+            new int[] {47, 60, 130}, // base plate min
 //            new int[] {19, 107, 155}, // yellow min
 //            new int[] {135, 20, 34}, // blue min
             new int[] {24, 70, 61}, // dot min
     };
 
     int[][] maxs = new int[][] {
-            new int[] {60, 115, 190}, // base plate max
+            new int[] {60, 115, 255}, // base plate max
 //            new int[] {36, 155, 255}, // yellow max
 //            new int[] {200, 50, 70}, // blue max
             new int[] {53, 125, 111}, // dot max
@@ -87,7 +87,7 @@ public class RobotEntity implements Detectable {
     @Override
     public void drawBlobs(IplImage binaryImage, IplImage outputImage, int numOfBlobs) {
     	CvSeq seq = new CvSeq();
-    	cvCanny(binaryImage, binaryImage, 100, 300, 3);
+    	cvCanny(binaryImage, binaryImage, 300, 300, 3);
     	cvFindContours(binaryImage, storage, seq, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
     	if (seq.isNull() || seq.total() == 0) {
     		return;
