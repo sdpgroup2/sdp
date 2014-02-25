@@ -110,9 +110,7 @@ public class DefensivePlanner extends Planner {
 
         double direction = Math.PI / 2;
         double robotDirection = defenceRobot.getDirection();
-        double theta = Math.abs(Math.abs(direction) - Math.abs(robotDirection)); // rotation
-        // to
-        // align
+        double theta = Math.abs(Math.abs(direction) - Math.abs(robotDirection)); // rotation to align
         if (Math.abs(theta) < 0.3) {
             return;
         }
@@ -124,6 +122,11 @@ public class DefensivePlanner extends Planner {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    //Unfinished
+    public void pass(){
+    	//Pass from defender to attacker
     }
 
     public Line recognizeDangerSimple() {
@@ -170,8 +173,15 @@ public class DefensivePlanner extends Planner {
     }
 
 
+    //What shal be running when the robot starts
     public void act() {
-        interceptSimple();
+    	//If the ball is in our defending zone, pass;
+    	//Else stay at GOAL.x, Ball.y 
+    	if (pitch.getBallZone() == pitch.getOurDefendZone()){
+    		pass();
+    	} else {
+    		interceptSimple();
+    	}
     }
 
     //Unfinished

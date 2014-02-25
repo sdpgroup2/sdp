@@ -71,5 +71,8 @@ public interface IPitch
     public Robot getFoeDefender();
 
     public Robot getFoeAttacker();
+    
+    public int getOurDefendZone();
 
+    public int getOurAttackZone();
 }
