@@ -1,10 +1,17 @@
 package sdp.group2.vision;
 
 
+import static com.googlecode.javacv.cpp.opencv_core.cvAnd;
+import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
+import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_imgproc.CV_THRESH_BINARY;
+import static com.googlecode.javacv.cpp.opencv_imgproc.CV_THRESH_BINARY_INV;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvThreshold;
+import sdp.group2.geometry.Point;
 import sdp.group2.util.Constants;
 
-import static com.googlecode.javacv.cpp.opencv_core.*;
-import static com.googlecode.javacv.cpp.opencv_imgproc.*;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
 public class RobotEntity implements Detectable {
@@ -66,7 +73,7 @@ public class RobotEntity implements Detectable {
     }
 
     @Override
-    public IplImage findBlobs(IplImage binaryImage, int numOfBlobs) {
+    public Point findBlobs(IplImage binaryImage, int numOfBlobs) {
         return null;
     }
 }

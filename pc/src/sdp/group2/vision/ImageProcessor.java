@@ -5,7 +5,10 @@ import static com.googlecode.javacv.cpp.opencv_core.cvCopy;
 import static com.googlecode.javacv.cpp.opencv_core.cvGetSize;
 import static com.googlecode.javacv.cpp.opencv_core.cvLoad;
 import static com.googlecode.javacv.cpp.opencv_core.cvMerge;
+import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
+import static com.googlecode.javacv.cpp.opencv_core.cvRectangle;
+import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalarAll;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvSplit;
@@ -21,8 +24,12 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.medianBlur;
 
 import java.awt.image.BufferedImage;
 
+import sdp.group2.geometry.Point;
+
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
+import com.googlecode.javacv.cpp.opencv_core.CvPoint;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
+import com.googlecode.javacv.cpp.opencv_core.CvScalar;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
@@ -139,6 +146,13 @@ public class ImageProcessor {
         cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
         for (int i = 0; i < entities.length; i++) {
             channel = entities[i].threshold(hsvImages, temp);
+            Point pt = entities[i].findBlobs(channel, 1);
+            if (pt != null) {
+            	System.out.println("Got the ball!");
+            	cvRectangle(image, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
+            } else {
+            	System.out.println("No ball!");
+            }
             if (channel != null) {
             	entityViewers[i].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
             }
@@ -182,7 +196,7 @@ public class ImageProcessor {
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
 //        normalize(image);
-//        filter(image);
+        filter(image);
         detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
     }

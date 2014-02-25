@@ -1,16 +1,15 @@
 package sdp.group2.pc;
 
+import sdp.group2.geometry.Rect;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
-import sdp.group2.geometry.Rect;
+import sdp.group2.util.Constants.PitchType;
+import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.vision.Image;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.vision.clusters.BallCluster;
 import sdp.group2.vision.clusters.RobotBaseCluster;
-
-import static sdp.group2.util.Constants.PitchType;
-import static sdp.group2.util.Constants.TeamColour;
 
 
 public class MasterController implements VisionServiceCallback {
