@@ -34,6 +34,7 @@ public interface IPitch
      *  inside Pitch class by storing ball movement history. Note, that for the
      *  best results FPS ratio from the camera should be known and constant. */
     public void updateBallPosition(Point p);
+    public void updateBallPosition(double x, double y);
     
     /** @param id - should be the same as zone id, counted from 0 from
      *              the origin 
@@ -75,4 +76,7 @@ public interface IPitch
     public int getOurDefendZone();
 
     public int getOurAttackZone();
+    
+    public PointSet getOutline();
+    public Zone[] getAllZoneOutline();
 }

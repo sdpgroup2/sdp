@@ -23,7 +23,7 @@ public class PointSet implements Comparable<PointSet> {
 	private Point[] points; // resizing array
 	private int lo, hi;
 	private boolean sorted;
-	private boolean sortable = true;
+	private boolean sortable = false;
 
 	public PointSet() {
 		points = new Point[8];
@@ -106,10 +106,9 @@ public class PointSet implements Comparable<PointSet> {
 		int hi = this.lo + right;
 
 		if (this.lo > lo || this.hi < hi) {
-			String message = String
-					.format("Expected subset, namely set[%d:%d),"
-							+ " to be within the set bounds, i.e. [%d, %d), but was"
-							+ " not.", lo, hi, this.lo, this.hi);
+			String message = "Expected subset, namely set[" + lo + ":" + hi + "),"
+							+ " to be within the set bounds, i.e. [" + this.lo + ", " + this.hi + "), but was"
+							+ " not.";
 			throw new ArrayIndexOutOfBoundsException(message);
 		}
 
@@ -221,7 +220,7 @@ public class PointSet implements Comparable<PointSet> {
 	}
 
 	public void sort() {
-		if (!sorted) {
+		if (sortable && !sorted) {
 			Sort.sort(points, size());
 			sorted = true;
 		}

@@ -122,6 +122,10 @@ public class Pitch extends Plane implements IPitch {
     public void updateBallPosition(Point p) {
         ball.updatePosition(p);
     }
+    
+    public void updateBallPosition(double x, double y) {
+    	updateBallPosition(new Point(x, y));
+    }
 
     @Override
     public void updateRobotState(byte id, Point p, double theta) {
@@ -319,5 +323,10 @@ public class Pitch extends Plane implements IPitch {
 	public void setZone(byte id, PointSet ps) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Zone[] getAllZoneOutline() {
+		return zones;
 	}
 }

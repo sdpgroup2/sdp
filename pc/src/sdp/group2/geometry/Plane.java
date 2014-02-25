@@ -28,6 +28,10 @@ public class Plane {
 		outline.add(new Point(x, y));
 	}
 	
+	public PointSet getOutline() {
+		return outline;
+	}
+	
 	public void setOutline(PointSet outline) {
 		this.outline = outline;
 	}

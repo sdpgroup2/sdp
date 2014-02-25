@@ -1,5 +1,7 @@
 package sdp.group2.simulator;
 
+import java.util.Random;
+
 import sdp.group2.world.IPitch;
 
 public class Simulator implements Runnable {
@@ -16,6 +18,13 @@ public class Simulator implements Runnable {
 		if (visualize) {
 			new Visualizator(pitch);
 		}
+	}
+	
+	public void start() {
+		// check if ball in the goal
+		Random rand = new Random();
+		double direction = rand.nextDouble() < 0.5 ? -1.0 : 1.0;
+		Constants.initializeBall(pitch, direction);
 	}
 	
 	public void iterate() {

@@ -1,17 +1,21 @@
 package sdp.group2.simulator;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.event.WindowAdapter;
-import java.awt.image.BufferedImage;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
+import sdp.group2.geometry.Milimeter;
+import sdp.group2.geometry.PointSet;
+import sdp.group2.world.Ball;
 import sdp.group2.world.IPitch;
+import sdp.group2.world.Zone;
+import sdp.group2.geometry.Point;
 
 /** TODO: draw pitch and zones
  * 	TODO: highlight active zone
@@ -21,53 +25,105 @@ import sdp.group2.world.IPitch;
  *  TODO: add pause/resume
  */
 
-public class Visualizator extends WindowAdapter {
+public class Visualizator extends JFrame {
 	
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
     
+    private static final Color COLOR_BACKGROUND = new Color(0, 0, 0);
+    private static final Color COLOR_BOUNDARY = new Color(255, 255, 255);
+    private static final Color COLOR_PITCH = new Color(0, 100, 0);
+    
     private IPitch pitch;
     
-    private JFrame windowFrame;
-    private Dimension frameSize;
-    private JLabel imageLabel = new JLabel();
-
-    private Image currentImage;
-    private BufferedImage bufImage;
-
+    private JPanel frame;
+	private JPanel panel;
+    
     public Visualizator(IPitch pitch) {
     	super();
     	this.pitch = pitch;
-		initWindow();
+    	initializeComponent();
+    	this.setVisible(true);
     }
     
-    public void initWindow() {
-	    JPanel contentPanel;
+    public void initializeComponent() {
+		frame = (JPanel)this.getContentPane();
+		panel = new JPanel();
 
-        windowFrame = new JFrame("Match Simulator");
-        windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        windowFrame.addWindowListener(this);
-        windowFrame.setVisible(true);
-        windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        // Main container
-        contentPanel = new JPanel();
-        contentPanel.setBorder(new EmptyBorder(10,10,10,10));
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));
-
-        // Image
-        imageLabel.setMinimumSize(frameSize);
-        imageLabel.setPreferredSize(frameSize);
-        imageLabel.setMaximumSize(frameSize);
-        contentPanel.add(imageLabel);
-
-        // Sidebar
-        JPanel controlPanel = new JPanel();
-        controlPanel.setBorder(new EmptyBorder(10,10,10,10));
-        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
-        contentPanel.add(controlPanel);
-
-        windowFrame.setContentPane(contentPanel);
+		frame.setLayout(null);
+		frame.setBackground(COLOR_BACKGROUND);
+		frame.setForeground(COLOR_BOUNDARY);
+		
+		addComponent(frame, panel, 10, 10, 640, 480);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.setBackground(COLOR_PITCH);
+		panel.add(new DrawPitch());
+		
+		this.setTitle("Match Simulator");
+		this.setLocation(new java.awt.Point(10, 10));
+		this.setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void drawOutline() {
+    	
+    }
+    
+    private void addComponent(Container container, Component c, int x, int y, int width, int height) {
+		c.setBounds(x,y,width,height);
+		container.add(c);
+	}
+    
+    private class DrawPitch extends JPanel {
+    	
+    	public Dimension getPreferredSize() {
+    		return new Dimension(640, 480);
+    	}
+    	
+    	protected void paintComponent(Graphics g) {
+     
+    		g.setColor(COLOR_BOUNDARY);
+    		PointSet pitchOutline = pitch.getOutline();
+    		int N = pitchOutline.size();
+    		for (int i = 1; i < N + 1; i++) {
+    			Point p0 = pitchOutline.get((i - 1) % N);
+    			Point p1 = pitchOutline.get(i % N);
+    			g.drawLine (Milimeter.mm2pix(p0.x), 
+    					Milimeter.mm2pix(p0.y),
+    					Milimeter.mm2pix(p1.x),
+    					Milimeter.mm2pix(p1.y));
+    		}
+    		
+    		g.setColor(new Color(255, 255, 0));
+    		
+    		for(Zone zone : pitch.getAllZoneOutline()) {
+    			PointSet outline = zone.getOutline();
+    			N = outline.size();
+    			for (int i = 1; i < N + 1; i++) {
+        			Point p0 = outline.get((i - 1) % N);
+        			Point p1 = outline.get(i % N);
+        			g.drawLine (Milimeter.mm2pix(p0.x), 
+        					Milimeter.mm2pix(p0.y),
+        					Milimeter.mm2pix(p1.x),
+        					Milimeter.mm2pix(p1.y));
+        		}
+    			
+//    			g.setColor(new Color(0, 0, 100));
+//    			int x = Milimeter.mm2pix(zone.getRobotPosition().x);
+//    			int y = Milimeter.mm2pix(zone.getRobotPosition().y);
+//    			g.fillRect(x, y, 50, 50);
+    		}
+    		
+    		g.setColor(new Color(255, 0, 0));
+    		
+    		Ball ball = pitch.getBall();
+    		int r = Milimeter.mm2pix(ball.getRadius());
+    		int x = Milimeter.mm2pix(ball.getPosition().x - r);
+    		int y = Milimeter.mm2pix(ball.getPosition().y - r);
+    		g.fillOval(x, y, 2 * r, 2 * r);
+     
+    	}
     }
 
 }
