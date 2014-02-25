@@ -34,16 +34,16 @@ public class MasterController implements VisionServiceCallback {
      * @param args
      */
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.err.println("Not specified which team we are and what pitch we're playing");
-            System.exit(1);
-        }
-        try {
-            ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
-            pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
+//        if (args.length < 2) {
+//            System.err.println("Not specified which team we are and what pitch we're playing");
+//            System.exit(1);
+        //}
+//        try {
+//            ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
+//            pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
+//        } catch (IllegalArgumentException e) {
+//            System.err.println(e.getMessage());
+//        }
         MasterController mc = new MasterController();
         mc.start();
     }
