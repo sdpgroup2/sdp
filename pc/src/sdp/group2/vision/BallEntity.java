@@ -14,7 +14,6 @@ import static sdp.group2.vision.ImageProcessor.newImage;
 public class BallEntity implements Detectable {
 
     private int[] mins = new int[]{-10, 92, 140};
-
     private int[] maxs = new int[]{10, 256, 256};
 
 
