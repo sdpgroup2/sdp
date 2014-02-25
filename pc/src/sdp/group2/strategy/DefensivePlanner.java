@@ -7,6 +7,7 @@ import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
+import sdp.group2.geometry.Vector;
 import sdp.group2.pc.CommandQueue;
 import sdp.group2.util.Constants;
 import sdp.group2.world.IPitch;
@@ -28,7 +29,6 @@ public class DefensivePlanner extends Planner {
     private boolean isRobotAligned = false;
     private Sender sender;
     private long lastRotation = System.currentTimeMillis();
-    private Point ourGoal;
     private Point enemyGoal;
 
     // Still to implement:
@@ -60,11 +60,16 @@ public class DefensivePlanner extends Planner {
         double yBall = pitch.getBall().getPosition().getY();
         double yRobot = defenceRobot.getPosition().getY();
         // int distance = (int) Plane.pix2mm((int) (xBall - xRobot));
-        int distance = (int) Plane.pix2mm((int) (yBall - yRobot));
+//        int distance = (int) Plane.pix2mm((int) (yBall - yRobot));
+        int distance = (int)GOAL.sub(defenceRobot.getPosition()).length();
         int sign = distance < 0 ? -1 : 1;
         distance = Math.abs(distance);
+        
+        //ERROR
+        double angle = defenceRobot.angleToPoint(new Point (GOAL.x, pitch.getBall().getPosition().y));
 
-        CommandQueue.add(Commands.move(sign, SPEED, distance), robotName);
+        CommandQueue.add(Commands.rotate(((int)Math.floor(angle)), Constants.DEF_MOVE_SPEED), robotName);
+        CommandQueue.add(Commands.move(sign, Constants.DEF_MOVE_SPEED, distance), robotName);
     }
 
     public void intercept() {
