@@ -26,7 +26,6 @@ public class Pitch extends Plane implements IPitch {
 
     private Zone[] zones = new Zone[4];
     private Ball ball = new Ball();
-    private boolean even;
     //Specify what Colour and Side of the pitch we are on;
     private TeamColour ourTeam;
     private TeamSide ourSide;
@@ -74,7 +73,7 @@ public class Pitch extends Plane implements IPitch {
         }
     }
     
-    public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls, boolean isOnEvenField) {
+    public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls) {
     	this();
     	
     	setOutline(pitchConvexHull);
@@ -82,8 +81,7 @@ public class Pitch extends Plane implements IPitch {
     	for (int i = 0; i < zones.length; i++) {
     		zones[i].setOutline(zoneConvexHulls[i]);
     	}
-    	
-    	even = isOnEvenField;
+    
     }
 
     public void addBall(Ball ball) {

@@ -1,8 +1,7 @@
 package sdp.group2.vision;
 
-import static com.googlecode.javacv.cpp.opencv_core.IplImage;
-import sdp.group2.geometry.Point;
-import sdp.group2.geometry.Rect;
+import com.googlecode.javacv.cpp.opencv_core.CvSeq;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
 public interface Detectable {
@@ -24,10 +23,10 @@ public interface Detectable {
      * @param numOfBlobs  number of blobs to look for
      * @return
      */
-    Point findBlobs(IplImage binaryImage, int numOfBlobs);
+    CvSeq findContours(IplImage binaryImage);
 
-    IplImage threshold(IplImage[] hsvImages, IplImage image);
-
+    void drawContours(IplImage binaryImage, IplImage outputImage);
+    
     //IplImage findCentroid(IplImage binaryImage);
 
     //IplImage findBoundingBox(IplImage binaryImage);
