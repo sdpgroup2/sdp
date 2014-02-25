@@ -1,9 +1,11 @@
 package sdp.group2.vision;
 
 import com.googlecode.javacpp.Loader;
+import com.googlecode.javacv.cpp.opencv_highgui.CvTrackbarCallback;
 import com.googlecode.javacv.cpp.opencv_core.*;
 import com.googlecode.javacv.cpp.opencv_imgproc.*;
 import sdp.group2.geometry.Point;
+
 
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
@@ -14,10 +16,7 @@ import static sdp.group2.vision.ImageProcessor.newImage;
 public class BallEntity implements Detectable {
 
     private int[] mins = new int[]{-10, 92, 140};
-
     private int[] maxs = new int[]{10, 256, 256};
-
-
 
     private PitchType pitchType;
     private CvMemStorage storage = CvMemStorage.create();
@@ -26,7 +25,6 @@ public class BallEntity implements Detectable {
         this.pitchType = pitchType;
     }
 
-    // TODO: do we need image here?
     public IplImage threshold(IplImage[] images, IplImage image) {
         IplImage channel = newImage(image, 1);
         IplImage temp1 = newImage(image, 1);
@@ -51,7 +49,7 @@ public class BallEntity implements Detectable {
         }
 
         // Erode here to remove all the small white pixel chunks
-        cvErode(channel, channel, null, 3);
+        cvErode(channel, channel, null, 1);
         cvDilate(channel, channel, null, 1);
         return channel;
     }
@@ -78,15 +76,19 @@ public class BallEntity implements Detectable {
     }
 
     @Override
-    public IplImage findBlobs(IplImage binaryImage, int numOfBlobs) {
-        Blobs regions = new Blobs();
-        regions.BlobAnalysis(
-                binaryImage,                // image
-                -1, -1,                     // ROI start col, row
-                -1, -1,                     // ROI cols, rows
-                1,                          // border (0 = black; 1 = white)
-                0);                         // minarea
-        regions.PrintRegionData();
-        return null;
+    public Point findBlobs(IplImage binaryImage, int numOfBlobs) {
+    	CvSeq seq = new CvSeq();
+    	cvCanny(binaryImage, binaryImage, 100, 300, 3);
+    	cvFindContours(binaryImage, storage, seq, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+    	if (seq.isNull() || seq.total() == 0) {
+    		return null;
+    	}
+    	CvMoments moments = new CvMoments();
+    	cvMoments(seq, moments, 0);
+    	if (moments.isNull()) {
+    		return null;
+    	}
+    	Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
+    	return pt;
     }
 }
