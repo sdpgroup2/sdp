@@ -22,7 +22,7 @@ public abstract class Entity implements Detectable {
 	private CvMemStorage storage = CvMemStorage.create();
 
     @Override
-    public CvSeq findBlobs(IplImage binaryImage) {
+    public CvSeq findContours(IplImage binaryImage) {
     	CvSeq seq = new CvSeq();
     	cvCanny(binaryImage, binaryImage, 100, 300, 3);
     	cvFindContours(binaryImage, storage, seq, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
@@ -33,8 +33,8 @@ public abstract class Entity implements Detectable {
     }
     
     @Override
-    public void drawBlobs(IplImage binaryImage, IplImage outputImage) {
-    	CvSeq seq = findBlobs(binaryImage);
+    public void drawContours(IplImage binaryImage, IplImage outputImage) {
+    	CvSeq seq = findContours(binaryImage);
     	for (CvSeq c = seq ; c != null && !c.isNull() ; c = c.h_next()) {
 			CvMoments moments = new CvMoments();
 			cvMoments(c, moments, 0);
@@ -48,8 +48,5 @@ public abstract class Entity implements Detectable {
 
 	@Override
 	public abstract IplImage detect(IplImage[] hsvImages);
-
-	@Override
-	public abstract IplImage threshold(IplImage[] hsvImages, IplImage image);
 
 }

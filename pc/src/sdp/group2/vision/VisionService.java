@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import sdp.group2.geometry.PointSet;
 import sdp.group2.geometry.Point;
+import sdp.group2.geometry.PointSet;
 import sdp.group2.geometry.Rect;
 import sdp.group2.pc.Timer;
 import sdp.group2.util.Debug;
@@ -18,6 +18,7 @@ import sdp.group2.vision.clusters.PitchLinesCluster;
 import sdp.group2.vision.clusters.PitchSectionCluster;
 import sdp.group2.vision.clusters.RobotBaseCluster;
 import sdp.group2.vision.clusters.YellowRobotCluster;
+import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
@@ -148,45 +149,49 @@ public class VisionService implements CaptureCallback {
 	@Override
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
-        boolean ready = false;
-        PointSet pitchPoints = new PointSet();
-        pitchPoints.add(new Point(101, 94));
-        pitchPoints.add(new Point(66, 164));
-        pitchPoints.add(new Point(67, 311));
-        pitchPoints.add(new Point(100, 377));
-        pitchPoints.add(new Point(546, 382));
-        pitchPoints.add(new Point(584, 315));
-        pitchPoints.add(new Point(588, 170));
-        pitchPoints.add(new Point(554, 100));
-        PointSet[] zonePoints = new PointSet[4];
-        for (int i = 0; i < zonePoints.length; i++) {
-			zonePoints[i] = new PointSet();
-		}
-        zonePoints[0].add(new Point(157,89));
-        zonePoints[0].add(new Point(101,94));
-        zonePoints[0].add(new Point(66,164));
-        zonePoints[0].add(new Point(67,311));
-        zonePoints[0].add(new Point(100,377));
-        zonePoints[0].add(new Point(155,382));
-        
-        zonePoints[1].add(new Point(206,88));
-        zonePoints[1].add(new Point(306,88));
-        zonePoints[1].add(new Point(204,383));
-        zonePoints[1].add(new Point(301,385));
-        
-        zonePoints[2].add(new Point(356,90));
-        zonePoints[2].add(new Point(453,94));
-        zonePoints[2].add(new Point(350,385));
-        zonePoints[2].add(new Point(447,385));
-        
-        zonePoints[3].add(new Point(502,95));
-        zonePoints[3].add(new Point(554,100));
-        zonePoints[3].add(new Point(588,170));
-        zonePoints[3].add(new Point(584,315));
-        zonePoints[3].add(new Point(546,382));
-        zonePoints[3].add(new Point(495,384));
-        
-        Pitch pitch = new Pitch(pitchPoints, zonePoints);
+//        boolean ready = false;
+//        PointSet pitchPoints = new PointSet();
+//        pitchPoints.add(new Point(101, 94));
+//        pitchPoints.add(new Point(66, 164));
+//        pitchPoints.add(new Point(67, 311));
+//        pitchPoints.add(new Point(100, 377));
+//        pitchPoints.add(new Point(546, 382));
+//        pitchPoints.add(new Point(584, 315));
+//        pitchPoints.add(new Point(588, 170));
+//        pitchPoints.add(new Point(554, 100));
+//        PointSet[] zonePoints = new PointSet[4];
+//        for (int i = 0; i < zonePoints.length; i++) {
+//			zonePoints[i] = new PointSet();
+//		}
+//        zonePoints[0].add(new Point(157,89));
+//        zonePoints[0].add(new Point(101,94));
+//        zonePoints[0].add(new Point(66,164));
+//        zonePoints[0].add(new Point(67,311));
+//        zonePoints[0].add(new Point(100,377));
+//        zonePoints[0].add(new Point(155,382));
+//        
+//        zonePoints[1].add(new Point(206,88));
+//        zonePoints[1].add(new Point(306,88));
+//        zonePoints[1].add(new Point(204,383));
+//        zonePoints[1].add(new Point(301,385));
+//        
+//        zonePoints[2].add(new Point(356,90));
+//        zonePoints[2].add(new Point(453,94));
+//        zonePoints[2].add(new Point(350,385));
+//        zonePoints[2].add(new Point(447,385));
+//        
+//        zonePoints[3].add(new Point(502,95));
+//        zonePoints[3].add(new Point(554,100));
+//        zonePoints[3].add(new Point(588,170));
+//        zonePoints[3].add(new Point(584,315));
+//        zonePoints[3].add(new Point(546,382));
+//        zonePoints[3].add(new Point(495,384));
+//        
+//        Pitch pitch = new Pitch(pitchPoints, zonePoints);
+//        imageProcessor.process(frame.getBufferedImage());
+//        Ball ball = new Ball();
+//        pitch.updateBallPosition(imageProcessor.getBallPoint());
+//        pitch.updateRobotState(id, p, theta)
         imageProcessor.process(frame.getBufferedImage());
         frame.recycle();
         return;

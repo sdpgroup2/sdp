@@ -37,7 +37,7 @@ public class RobotEntity extends Entity {
      * @param image just for size
      * @return the resulting image
      */
-    public IplImage threshold(IplImage[] images, IplImage image) {
+    public IplImage threshold(IplImage image) {
         IplImage result = newImage(image, 1);
         IplImage temp = newImage(image, 1);
 
@@ -49,7 +49,7 @@ public class RobotEntity extends Entity {
 //        cvInRangeS(image, cvScalar(mins[3][0], mins[3][1], mins[3][2], 0), cvScalar(maxs[3][0], maxs[3][1], maxs[3][2], 0), temp);
 //        cvOr(result, temp, result, null);
         cvErode(result, result, null, 1);
-        cvDilate(result, result, null, 11);
+        cvDilate(result, result, null, 9);
         return result;
     }
 

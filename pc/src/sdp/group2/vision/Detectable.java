@@ -23,11 +23,9 @@ public interface Detectable {
      * @param numOfBlobs  number of blobs to look for
      * @return
      */
-    CvSeq findBlobs(IplImage binaryImage);
+    CvSeq findContours(IplImage binaryImage);
 
-    IplImage threshold(IplImage[] hsvImages, IplImage image);
-
-    void drawBlobs(IplImage binaryImage, IplImage outputImage);
+    void drawContours(IplImage binaryImage, IplImage outputImage);
     
     //IplImage findCentroid(IplImage binaryImage);
 

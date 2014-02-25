@@ -45,7 +45,6 @@ public class ImageProcessor {
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
-    private static IplImage[] hsvImages = new IplImage[3]; // each hsv channel stored
     private static IplImage image;
 //    private static Detectable[] entities = new Detectable[2];
     private static BallEntity ballEntity;
@@ -108,11 +107,11 @@ public class ImageProcessor {
     private static void normalize(IplImage image) {
     	cvCvtColor(image, image, CV_BGR2HSV);
     	IplImage[] channels = new IplImage[3];
-    	for (int i = 0; i < channels.length; i++) {
+    	for (int i = 0; i < 1; i++) {
 			channels[i] = newImage(image, 1);
 		}
     	cvSplit(image, channels[0], channels[1], channels[2], null);
-    	for (int i = 0; i < channels.length; i++) {
+    	for (int i = 0; i < 1; i++) {
     		cvEqualizeHist(channels[i], channels[i]);
 		}
     	cvMerge(channels[0], channels[1], channels[2], null, image);
@@ -141,19 +140,15 @@ public class ImageProcessor {
         IplImage channel = null;
         // Convert from BGR to HSV
         cvCvtColor(image, temp, CV_BGR2HSV);
-        for (int i = 0; i < 3; ++i) {
-            hsvImages[i] = newImage(temp, 1);
-        }
-        // Split 3-channel image into 3 1-channel images
-        cvSplit(temp, hsvImages[0], hsvImages[1], hsvImages[2], null);
-        channel = ballEntity.threshold(hsvImages, temp);
-        ballEntity.drawBlobs(channel, image);
+        
+        channel = ballEntity.threshold(temp);
+        ballEntity.drawContours(channel, image);
         if (channel != null) {
         	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
         
-        channel = robotEntity.threshold(hsvImages, temp);
-        robotEntity.drawBlobs(channel, image);
+        channel = robotEntity.threshold(temp);
+        robotEntity.drawContours(channel, image);
         if (channel != null) {
         	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
@@ -194,8 +189,7 @@ public class ImageProcessor {
         image = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
-//        crop(image, cropRect);
-//        normalize(image);
+        crop(image, cropRect);
         filter(image);
         detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
