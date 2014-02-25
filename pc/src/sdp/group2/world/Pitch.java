@@ -12,6 +12,8 @@ import sdp.group2.util.Constants.TeamSide;
 
 public class Pitch extends Plane implements IPitch {
 
+	private static Pitch instance = null;
+	
     private static final int CUR_ZONE = 0;
     private double WIDTH = 2165;
     /**
@@ -71,6 +73,18 @@ public class Pitch extends Plane implements IPitch {
             zoneId++;
         }
     }
+    
+    public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls, boolean isOnEvenField) {
+    	this();
+    	
+    	setOutline(pitchConvexHull);
+    	
+    	for (int i = 0; i < zones.length; i++) {
+    		zones[i].setOutline(zoneConvexHulls[i]);
+    	}
+    	
+    	even = isOnEvenField;
+    }
 
     public void addBall(Ball ball) {
         this.ball = ball;
@@ -81,10 +95,18 @@ public class Pitch extends Plane implements IPitch {
         //this.robot.setDirection(direction.angle(new Vector2d(robotPosition.x, robotPosition.y)));
     }
 
-    @Override
-    public void setZone(byte id, PointSet ps) {
-        // TODO Auto-generated method stub
-
+    public void setZoneOutline(byte id, PointSet ps) {
+        zones[id].setOutline(ps);
+    }
+    
+    public void setAllZonesOutlines(PointSet[] outlines) {
+    	if (outlines.length != zones.length) {
+    		throw new IllegalArgumentException("Expected the number of outlines (" + outlines.length + 
+    				") to be equal to the number of zones (" + zones.length  + "), but was not.");
+    	}
+    	for (int i = 0; i < zones.length; i++) {
+    		zones[i].setOutline(outlines[i]);
+    	}
     }
 
 //	public Vector getRobotBallVector() {
@@ -292,4 +314,10 @@ public class Pitch extends Plane implements IPitch {
     		return 1;
     	}
     }
+
+	@Override
+	public void setZone(byte id, PointSet ps) {
+		// TODO Auto-generated method stub
+		
+	}
 }
