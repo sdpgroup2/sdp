@@ -314,4 +314,10 @@ public class Pitch extends Plane implements IPitch {
     		return 1;
     	}
     }
+
+	@Override
+	public void setZone(byte id, PointSet ps) {
+		// TODO Auto-generated method stub
+		
+	}
 }

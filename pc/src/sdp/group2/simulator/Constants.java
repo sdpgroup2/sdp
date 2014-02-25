@@ -1,6 +1,7 @@
 package sdp.group2.simulator;
 
 import sdp.group2.geometry.PointSet;
+import sdp.group2.world.Pitch;
 
 public class Constants {
 
@@ -51,6 +52,15 @@ public class Constants {
 		zones[3].add(1735, 1100);
 		
 		return zones;
+	}
+	
+	public static Pitch getDefaultPitch() {
+		Pitch pitch = new Pitch();
+		
+		pitch.setOutline(Constants.getDefaultPitchOutline());
+		pitch.setAllZonesOutlines(Constants.getDefaultZoneOutlines());
+		
+		return pitch;
 	}
 	
 }

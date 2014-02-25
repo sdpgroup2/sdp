@@ -1,34 +1,28 @@
 package sdp.group2.simulator;
 
-import sdp.group2.world.Pitch;
+import sdp.group2.world.IPitch;
 
-public class Simulator extends Pitch implements Runnable {
+public class Simulator implements Runnable {
 
 	private static final long ITERATION_MS = 250L;
-	private static Simulator instance = null;
-	private final boolean running = true;
+	private static final boolean visualize = true;
+	private boolean running = true;
+	private IPitch pitch;
+	private Visualizator screen = null;
 	
-	private Simulator() {
-		initialize();
-	}
 	
-	public void initialize() {
-		setOutline(Constants.getDefaultPitchOutline());
-		setAllZonesOutlines(Constants.getDefaultZoneOutlines());
-	}
-	
-	public Simulator getInstance() {
-		if (instance == null) {
-			instance = new Simulator();
+	public Simulator(IPitch pitch) {
+		this.pitch = pitch;
+		if (visualize) {
+			new Visualizator(pitch);
 		}
-		
-		return instance;
 	}
 	
 	public void iterate() {
 		// if in the enemy offensive zone kick the ball to score
 		// if in the enemy defence zone kick to pass to the attacker
 		// iterate the state
+		running = false;
 	}
 	
 	public void run() {
