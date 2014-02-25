@@ -63,9 +63,32 @@ public class Robot extends MovableObject {
     public double angleToVector(Vector destinationVector) {
         return this.facingVector.angleDegrees(destinationVector);
     }
+    
+    /**
+     * Returns the angle from the robot to the ball
+     * @param ball
+     * @return
+     */
+    public double angleToBall(Ball ball){
+    	return this.angleToVector(vectorTo(ball));
+    }
+    
+    /**
+     * Returns the angle from the robot to a point;
+     */
+    public double angleToPoint(Point point){
+    	return this.angleToVector(vectorTo(point));
+    }
 
     public Vector vectorTo(MovableObject object) {
         return object.getPosition().sub(getPosition());
     }
+    
+    //!
+    public Vector vectorTo(Point p){
+    	return p.sub(getPosition());
+    }
+    
+
 
 }

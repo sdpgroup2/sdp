@@ -13,6 +13,8 @@ public class Constants {
     public static final int DEF_KICK_ANGLE = 45;
     public static final int ATK_KICK_POWER = Integer.MAX_VALUE;
     public static final int DEF_KICK_POWER = 200;
+    public static final int ATK_MOVE_SPEED = 1000;
+    public static final int DEF_MOVE_SPEED = 1000;
 
     public static final double PX_TO_MM = 4.56310;
     public static final double MM_TO_PX = 0.2191;

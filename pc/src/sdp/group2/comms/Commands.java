@@ -48,7 +48,7 @@ public class Commands{
 	 * @param speed
 	 *
 	 */
-	public static int[] rotate(int direction, int speed) {
+	public static int[] rotate (int direction, int speed) {
 		return new int[] {ROTATE,direction,speed};
 	}
 	/**
