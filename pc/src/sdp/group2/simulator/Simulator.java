@@ -10,8 +10,6 @@ public class Simulator implements Runnable {
 	private static final boolean visualize = true;
 	private boolean running = true;
 	private IPitch pitch;
-	private Visualizator screen = null;
-	
 	
 	public Simulator(IPitch pitch) {
 		this.pitch = pitch;

@@ -27,7 +27,8 @@ import sdp.group2.geometry.Point;
 
 public class Visualizator extends JFrame {
 	
-    private static final int WINDOW_WIDTH = 1024;
+	private static final long serialVersionUID = -666L;
+	private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
     
     private static final Color COLOR_BACKGROUND = new Color(0, 0, 0);
@@ -95,9 +96,8 @@ public class Visualizator extends JFrame {
     					Milimeter.mm2pix(p1.y));
     		}
     		
-    		g.setColor(new Color(255, 255, 0));
-    		
     		for(Zone zone : pitch.getAllZoneOutline()) {
+    			g.setColor(new Color(255, 255, 0));
     			PointSet outline = zone.getOutline();
     			N = outline.size();
     			for (int i = 1; i < N + 1; i++) {
@@ -109,10 +109,10 @@ public class Visualizator extends JFrame {
         					Milimeter.mm2pix(p1.y));
         		}
     			
-//    			g.setColor(new Color(0, 0, 100));
-//    			int x = Milimeter.mm2pix(zone.getRobotPosition().x);
-//    			int y = Milimeter.mm2pix(zone.getRobotPosition().y);
-//    			g.fillRect(x, y, 50, 50);
+    			g.setColor(new Color(0, 0, 100));
+    			int x = Milimeter.mm2pix(zone.getRobotPosition().x);
+    			int y = Milimeter.mm2pix(zone.getRobotPosition().y);
+    			g.fillRect(x, y, 50, 50);
     		}
     		
     		g.setColor(new Color(255, 0, 0));
