@@ -61,6 +61,15 @@ public interface IPitch
     //public void resetToTachoTranslation();
     
     public PointSet getTrajectory();
+
     public Ball getBall();
-    public Robot getRobot();
+
+    public Robot getOurDefender();
+
+    public Robot getOurAttacker();
+
+    public Robot getFoeDefender();
+
+    public Robot getFoeAttacker();
+
 }

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import sdp.group2.pc.CommandQueue;
 import sdp.group2.ai.Planner;
-import sdp.group2.world.Constants;
+import sdp.group2.util.Constants;
 
 
 public class TestComms {

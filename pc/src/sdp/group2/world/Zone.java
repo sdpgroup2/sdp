@@ -8,8 +8,7 @@ public class Zone extends Plane {
 
 	Robot robot;
 	
-	public Zone(byte id)
-	{ 
+	public Zone(byte id) {
 		super(Byte.toString(id));
 		robot = new Robot();
 	}
@@ -18,10 +17,12 @@ public class Zone extends Plane {
 		robot.updatePosition(p);
 	}
 	
-	public Robot getRobot()
-	{ return robot; }
+	public Robot getRobot() {
+        return robot;
+    }
 	
-	public Point getRobotPosition()
-	{ return robot.getPosition(); }
+	public Point getRobotPosition() {
+        return robot.getPosition();
+    }
 	
 }

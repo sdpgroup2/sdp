@@ -61,7 +61,8 @@ public class MovableObject {
     public Vector vectorTo(MovableObject other) {
         return this.getPosition().sub(other.getPosition());
     }
-	
+
+
 	public void update() {
 		if (uptodate || history.size() < 2) {
             return;
@@ -83,7 +84,11 @@ public class MovableObject {
 		
 		uptodate = true;
 	}
-	
+
+    /**
+     * Returns true if the object is moving
+     * @return whether the object is moving
+     */
 	public boolean isMoving() {
 		int i = history.size() - 1;
 		
@@ -92,7 +97,6 @@ public class MovableObject {
         }
 		
 		Point last = history.right();
-		
 		for (; i >= 0 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i++) {
 			if (last.distance(history.get(i)) > POSITION_EPS) {
                 return true;

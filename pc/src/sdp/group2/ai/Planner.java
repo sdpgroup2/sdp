@@ -6,7 +6,7 @@ import sdp.group2.world.IPitch;
  * @author Jaroslaw Hirniak
  * */
 
-public class Planner {
+public abstract class Planner {
 	protected IPitch pitch;
 
 	public Planner(IPitch pitch) {
