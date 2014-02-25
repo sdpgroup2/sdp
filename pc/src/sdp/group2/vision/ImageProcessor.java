@@ -194,7 +194,7 @@ public class ImageProcessor {
         image = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
-        crop(image, cropRect);
+//        crop(image, cropRect);
 //        normalize(image);
         filter(image);
         detect(image, temp);
