@@ -182,7 +182,7 @@ public class ImageProcessor {
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
 //        normalize(image);
-        filter(image);
+//        filter(image);
         detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
     }

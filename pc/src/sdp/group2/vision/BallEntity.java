@@ -14,7 +14,9 @@ import static sdp.group2.vision.ImageProcessor.newImage;
 public class BallEntity implements Detectable {
 
     private int[] mins = new int[]{-10, 92, 140};
+
     private int[] maxs = new int[]{10, 256, 256};
+
 
 
     private PitchType pitchType;
@@ -33,12 +35,12 @@ public class BallEntity implements Detectable {
             int min = mins[i];
             int max = maxs[i];
 
-            // TODO: maybe use inRange here
             if (i == 0) {
                 if (min < 0) {
                     // This is a workaround for hue because it's circular
                     cvThreshold(images[i], channel, 180 + min, 255.0, CV_THRESH_BINARY);
-                    cvThreshold(images[i], channel, max, 255.0, CV_THRESH_BINARY_INV);
+                    cvThreshold(images[i], temp1, max, 255.0, CV_THRESH_BINARY_INV);
+                    cvOr(temp1, channel, channel, null);
                 } else {
                     cvInRangeS(images[i], cvScalar(min, 0, 0, 0), cvScalar(max, 0, 0, 0), channel);
                 }
@@ -49,7 +51,8 @@ public class BallEntity implements Detectable {
         }
 
         // Erode here to remove all the small white pixel chunks
-        cvErode(channel, channel, null, 1);
+        cvErode(channel, channel, null, 3);
+        cvDilate(channel, channel, null, 1);
         return channel;
     }
 
