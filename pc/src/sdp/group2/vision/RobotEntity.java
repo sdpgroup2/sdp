@@ -4,11 +4,13 @@ import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvOr;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvMoments;
 import static sdp.group2.vision.ImageProcessor.newImage;
 import sdp.group2.geometry.Point;
+import sdp.group2.geometry.Vector;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMemStorage;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
@@ -19,6 +21,7 @@ import com.googlecode.javacv.cpp.opencv_imgproc.CvMoments;
 
 public class RobotEntity extends Entity {
     private CvMemStorage storage = CvMemStorage.create();
+    private static DotEntity dotEntity;
 
     int[][] mins = new int[][] {
             new int[] {47, 60, 130}, // base plate min
@@ -79,6 +82,37 @@ public class RobotEntity extends Entity {
     	}
     	return rects;
     }
+    
+    
+    /**
+     * 
+     * @param The array of robots rects
+     * @param An HSV image
+     * @return The array of direction vectors for the robots
+     */
+    public Vector[] getVectors(CvRect[] rects, IplImage image) {
+    	Vector[] vects = new Vector[4];
+    	Point centroid = new Point(0, 0);
+    	for(int i=0; i<rects.length; i++) {
+    		IplImage binaryImage = dotEntity.threshold(image);
+    		cvSetImageROI(binaryImage, rects[i]);
+    		CvSeq seq = findContours(binaryImage);
+        	for (CvSeq c = seq ; c != null && !c.isNull() ; c = c.h_next()) {
+    			CvMoments moments = new CvMoments();
+    			cvMoments(c, moments, 0);
+    			if (moments.isNull()) {
+    				continue;
+    			}
+    			centroid = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
+        	}
+        	Point rectCenter = new Point(rects[i].x() + (rects[i].width()/2.0), rects[i].x() + (rects[i].height()/2.0));
+        	Vector vector = rectCenter.sub(centroid);
+        	vects[i] = vector;
+    	}
+    	
+    	return vects;
+    }
+    
 
     @Override
     public IplImage detect(IplImage[] hsvImages) {
