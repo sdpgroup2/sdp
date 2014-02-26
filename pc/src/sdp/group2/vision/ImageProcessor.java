@@ -42,6 +42,10 @@ public class ImageProcessor {
     // Matrices used for remapping
     CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
     private static ImageViewer imageViewer = new ImageViewer();
+    
+    private static ImageViewer rectView = new ImageViewer();
+    private static IplImage rectImage;
+    private static CvRect[] rects = new CvRect[4];
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
@@ -56,7 +60,7 @@ public class ImageProcessor {
         robotEntity = new RobotEntity();
         entityViewers[0] = new ImageViewer();
         entityViewers[1] = new ImageViewer();
-        cropRect = cvRect(30, 80, 590, 315);    
+        cropRect = cvRect(30, 80, 590, 315);
     }
 
     /**
@@ -142,16 +146,25 @@ public class ImageProcessor {
         cvCvtColor(image, temp, CV_BGR2HSV);
         
         channel = ballEntity.threshold(temp);
-        ballEntity.drawContours(channel, image);
+        ballEntity.drawContours(channel, image, 10);
         if (channel != null) {
         	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
         
         channel = robotEntity.threshold(temp);
-        robotEntity.drawContours(channel, image);
+        robotEntity.drawContours(channel, image, 20);
         if (channel != null) {
         	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
+        
+//        For testing:
+        
+//        rects = robotEntity.getImportantRects(channel);
+//        if(rects[0] != null) {        	
+//        	cvSetImageROI(rectImage, rects[0]);
+//        }
+//        rectView.showImage(rectImage, BufferedImage.TYPE_3BYTE_BGR);
+        
     }
 
     /**
@@ -187,6 +200,7 @@ public class ImageProcessor {
 
     public void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
+    	rectImage = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);

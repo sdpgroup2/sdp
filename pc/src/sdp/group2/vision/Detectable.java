@@ -25,7 +25,7 @@ public interface Detectable {
      */
     CvSeq findContours(IplImage binaryImage);
 
-    void drawContours(IplImage binaryImage, IplImage outputImage);
+    void drawContours(IplImage binaryImage, IplImage outputImage, int rectSize);
     
     //IplImage findCentroid(IplImage binaryImage);
 

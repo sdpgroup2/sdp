@@ -2,13 +2,19 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvOr;
+import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvMoments;
 import static sdp.group2.vision.ImageProcessor.newImage;
+import sdp.group2.geometry.Point;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMemStorage;
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
+import com.googlecode.javacv.cpp.opencv_core.CvSeq;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.googlecode.javacv.cpp.opencv_imgproc.CvMoments;
 
 
 public class RobotEntity extends Entity {
@@ -51,6 +57,27 @@ public class RobotEntity extends Entity {
         cvErode(result, result, null, 1);
         cvDilate(result, result, null, 9);
         return result;
+    }
+    
+    /**
+     * Couldn't say goodbye to this baby.
+     */
+    public CvRect[] getImportantRects(IplImage binaryImage) {
+    	CvRect[] rects = new CvRect[4];
+    	CvSeq seq = findContours(binaryImage);
+    	int i = 0;
+    	for (CvSeq c = seq ; c != null && !c.isNull() && i < 4; c = c.h_next()) {
+			CvMoments moments = new CvMoments();
+			cvMoments(c, moments, 0);
+			if (moments.isNull()) {
+				continue;
+			}
+			Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
+			// System.out.println("Rect point: " + pt);
+			rects[i] = cvRect((int) pt.x, (int) pt.y, 40, 40);
+			i++;
+    	}
+    	return rects;
     }
 
     @Override

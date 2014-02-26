@@ -33,7 +33,7 @@ public abstract class Entity implements Detectable {
     }
     
     @Override
-    public void drawContours(IplImage binaryImage, IplImage outputImage) {
+    public void drawContours(IplImage binaryImage, IplImage outputImage, int rectSize) {
     	CvSeq seq = findContours(binaryImage);
     	for (CvSeq c = seq ; c != null && !c.isNull() ; c = c.h_next()) {
 			CvMoments moments = new CvMoments();
@@ -42,7 +42,8 @@ public abstract class Entity implements Detectable {
 				continue;
 			}
 			Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-			cvRectangle(outputImage, cvPoint((int) pt.x - 10, (int) pt.y - 10), cvPoint( (int) pt.x + 10, (int) pt.y + 10), cvScalar(255, 0, 0, 0), 1, 1, 0);
+			// System.out.println("Object point: " + pt);
+			cvRectangle(outputImage, cvPoint((int) pt.x - rectSize, (int) pt.y - rectSize), cvPoint( (int) pt.x + rectSize, (int) pt.y + rectSize), cvScalar(255, 0, 0, 0), 1, 1, 0);
     	}
     }
 
