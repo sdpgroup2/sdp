@@ -1,5 +1,6 @@
 package sdp.group2.simulator;
 
+import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.world.IPitch;
 import sdp.group2.world.Pitch;
@@ -60,7 +61,10 @@ public class Constants {
 		
 		pitch.setOutline(Constants.getDefaultPitchOutline());
 		pitch.setAllZonesOutlines(Constants.getDefaultZoneOutlines());
-		//pitch.updateRobotState(id, p, theta)
+		pitch.updateRobotState((byte) 0, new Point(230.0, 575.0), 0.0);
+		pitch.updateRobotState((byte) 1, new Point(720.0, 575.0), 0.0);
+		pitch.updateRobotState((byte) 2, new Point(1323.0, 575.0), 0.0);
+		pitch.updateRobotState((byte) 3, new Point(1900.0, 575.0), 0.0);
 		initializeBall(pitch, -1);
 		return pitch;
 	}

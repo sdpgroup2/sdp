@@ -13,7 +13,7 @@ public class Zone extends Plane {
 		robot = new Robot();
 	}
 	
-	public void updateRobotState(byte id, Point p, double theta) {
+	public void updateRobotState(Point p, double theta) {
 		robot.updatePosition(p);
 	}
 	
