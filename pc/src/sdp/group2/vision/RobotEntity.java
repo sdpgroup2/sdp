@@ -77,7 +77,7 @@ public class RobotEntity extends Entity {
 			}
 			Point pt = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
 			// System.out.println("Rect point: " + pt);
-			rects[i] = cvRect((int) pt.x, (int) pt.y, 40, 40);
+			rects[i] = cvRect((int) pt.x - 20, (int) pt.y - 20, 40, 40);
 			i++;
     	}
     	return rects;
