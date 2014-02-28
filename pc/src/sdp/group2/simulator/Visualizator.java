@@ -110,9 +110,10 @@ public class Visualizator extends JFrame {
         		}
     			
     			g.setColor(new Color(0, 0, 100));
-    			int x = Milimeter.mm2pix(zone.getRobotPosition().x);
-    			int y = Milimeter.mm2pix(zone.getRobotPosition().y);
-    			g.fillRect(x, y, 50, 50);
+// Robot position is null    			
+//    			int x = Milimeter.mm2pix(zone.getRobotPosition().x);
+//    			int y = Milimeter.mm2pix(zone.getRobotPosition().y);
+//    			g.fillRect(x, y, 50, 50);
     		}
     		
     		g.setColor(new Color(255, 0, 0));

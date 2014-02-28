@@ -24,4 +24,16 @@ public class Milimeter {
 		return (int) (mm * 0.259843661 + 0.5);
 	}
 	
+	public static void pix2mmInPlace(Point p) {
+		p.x = pix2mm((int) p.x);
+		p.y = pix2mm((int) p.y);
+	}
+	
+	public static void pix2mmInPlace(PointSet ps) {
+		for (Point p : ps.getPoints()) {
+			pix2mmInPlace(p);
+		}
+	}
+	
 }
+
