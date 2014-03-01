@@ -19,7 +19,7 @@ import com.googlecode.javacv.cpp.opencv_imgproc.CvMoments;
 
 public abstract class Entity implements Detectable {
 	
-	private CvMemStorage storage = CvMemStorage.create();
+	protected CvMemStorage storage = CvMemStorage.create();
 
     @Override
     public CvSeq findContours(IplImage binaryImage) {

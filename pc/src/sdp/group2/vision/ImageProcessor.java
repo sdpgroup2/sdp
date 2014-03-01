@@ -22,7 +22,11 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvInitUndistortMap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvRemap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.medianBlur;
 
+import static com.googlecode.javacv.cpp.opencv_core.*;
+import static com.googlecode.javacv.cpp.opencv_imgproc.*;
+
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.util.Constants.PitchType;
@@ -38,14 +42,10 @@ public class ImageProcessor {
 
     private static final int MEDIAN_FILTER_SIZE = 3; // must be odd and > 1
     private static final String ASSETS_FOLDER = "./assets";
-    CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
     // Matrices used for remapping
+    CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
     CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
     private static ImageViewer imageViewer = new ImageViewer();
-    
-    private static ImageViewer rectView = new ImageViewer();
-    private static IplImage rectImage;
-    private static CvRect[] rects = new CvRect[4];
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
@@ -95,9 +95,15 @@ public class ImageProcessor {
      * @param cropRect region of interest
      */
     private static void crop(IplImage image, CvRect cropRect) {
-        cvSetImageROI(image, cropRect);
+    	cvSetImageROI(image, cropRect);
+    	IplImage cropped = newImage(image, 3);
+    	IplImage cropped2 = newImage(image, 3);
+    	//Copy original image (only ROI) to the cropped image
+    	image = cropped;
+    	temp = cropped2;
+//        cvSetImageROI(image, cropRect);
         // needs to be set on temp as well for future filters and stuff
-        cvSetImageROI(temp, cropRect);
+//        cvSetImageROI(temp, cropRect);
     }
 
     /**
@@ -139,29 +145,22 @@ public class ImageProcessor {
      * @param temp  temporary image
      */
     private static void detect(IplImage image, IplImage temp) {
-        IplImage channel = null;
+        IplImage channel = newImage(image, 1);
         // Convert from BGR to HSV
         cvCvtColor(image, temp, CV_BGR2HSV);
         
         channel = ballEntity.threshold(temp);
-//        ballEntity.drawContours(channel, image, 10);
+        ballEntity.drawContours(channel, image, 10);
         if (channel != null) {
         	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
         
         channel = robotEntity.threshold(temp);
-//        robotEntity.drawContours(channel, image, 20);
+        List<CvRect> rects = robotEntity.boundingBoxes(channel);
+        robotEntity.facingVectors(rects, temp, channel);
         if (channel != null) {
         	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
-        
-//        For testing:
-        
-//        rects = robotEntity.getImportantRects(channel);
-//        if(rects[0] != null) {        	
-//        	cvSetImageROI(rectImage, rects[0]);
-//        }
-//        rectView.showImage(rectImage, BufferedImage.TYPE_3BYTE_BGR);
         
     }
 
@@ -198,10 +197,10 @@ public class ImageProcessor {
 
     public void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
-    	rectImage = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
+        cvConvertScale(image, image, 2, 0);
         filter(image);
         detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
