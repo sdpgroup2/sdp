@@ -12,6 +12,8 @@ import sdp.group2.util.Constants.TeamSide;
 
 public class Pitch extends Plane implements IPitch {
 
+	private static Pitch instance = null;
+	
     private static final int CUR_ZONE = 0;
     private double WIDTH = 2165;
     /**
@@ -24,7 +26,6 @@ public class Pitch extends Plane implements IPitch {
 
     private Zone[] zones = new Zone[4];
     private Ball ball = new Ball();
-    private boolean even;
     //Specify what Colour and Side of the pitch we are on;
     private TeamColour ourTeam;
     private TeamSide ourSide;
@@ -71,6 +72,17 @@ public class Pitch extends Plane implements IPitch {
             zoneId++;
         }
     }
+    
+    public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls) {
+    	this();
+    	
+    	setOutline(pitchConvexHull);
+    	
+    	for (int i = 0; i < zones.length; i++) {
+    		zones[i].setOutline(zoneConvexHulls[i]);
+    	}
+    
+    }
 
     public void addBall(Ball ball) {
         this.ball = ball;
@@ -81,10 +93,18 @@ public class Pitch extends Plane implements IPitch {
         //this.robot.setDirection(direction.angle(new Vector2d(robotPosition.x, robotPosition.y)));
     }
 
-    @Override
-    public void setZone(byte id, PointSet ps) {
-        // TODO Auto-generated method stub
-
+    public void setZoneOutline(byte id, PointSet ps) {
+        zones[id].setOutline(ps);
+    }
+    
+    public void setAllZonesOutlines(PointSet[] outlines) {
+    	if (outlines.length != zones.length) {
+    		throw new IllegalArgumentException("Expected the number of outlines (" + outlines.length + 
+    				") to be equal to the number of zones (" + zones.length  + "), but was not.");
+    	}
+    	for (int i = 0; i < zones.length; i++) {
+    		zones[i].setOutline(outlines[i]);
+    	}
     }
 
 //	public Vector getRobotBallVector() {
@@ -100,11 +120,14 @@ public class Pitch extends Plane implements IPitch {
     public void updateBallPosition(Point p) {
         ball.updatePosition(p);
     }
+    
+    public void updateBallPosition(double x, double y) {
+    	updateBallPosition(new Point(x, y));
+    }
 
     @Override
     public void updateRobotState(byte id, Point p, double theta) {
-        //zones[id]
-        zones[CUR_ZONE].updateRobotState(id, p, theta);
+        zones[id].updateRobotState(p, theta);
     }
 
     @Override
@@ -276,4 +299,31 @@ public class Pitch extends Plane implements IPitch {
             return (getBallZone() == getBlueDefendZone());
         }
     }
+    
+    public int getOurDefendZone(){
+    	if (ourSide == TeamSide.LEFT){
+    		return 0;
+    	} else {
+    		return 3;
+    	}
+    }
+    
+    public int getOurAttackZone(){
+    	if (ourSide == TeamSide.LEFT){
+    		return 2;
+    	} else {
+    		return 1;
+    	}
+    }
+
+	@Override
+	public void setZone(byte id, PointSet ps) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Zone[] getAllZoneOutline() {
+		return zones;
+	}
 }
