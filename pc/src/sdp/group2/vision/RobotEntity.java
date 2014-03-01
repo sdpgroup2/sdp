@@ -20,7 +20,7 @@ import com.googlecode.javacv.cpp.opencv_imgproc.CvMoments;
 
 
 public class RobotEntity extends Entity {
-    private CvMemStorage storage = CvMemStorage.create();
+	
     private static DotEntity dotEntity;
 
     int[][] mins = new int[][] {
@@ -31,7 +31,7 @@ public class RobotEntity extends Entity {
     };
 
     int[][] maxs = new int[][] {
-            new int[] {60, 115, 255}, // base plate max
+            new int[] {70, 115, 255}, // base plate max
 //            new int[] {36, 155, 255}, // yellow max
 //            new int[] {200, 50, 70}, // blue max
             new int[] {53, 125, 111}, // dot max
@@ -51,14 +51,14 @@ public class RobotEntity extends Entity {
         IplImage temp = newImage(image, 1);
 
         cvInRangeS(image, cvScalar(mins[0][0], mins[0][1], mins[0][2], 0), cvScalar(maxs[0][0], maxs[0][1], maxs[0][2], 0), result);
-        cvInRangeS(image, cvScalar(mins[1][0], mins[1][1], mins[1][2], 0), cvScalar(maxs[1][0], maxs[1][1], maxs[1][2], 0), temp);
-        cvOr(result, temp, result, null);
+//        cvInRangeS(image, cvScalar(mins[1][0], mins[1][1], mins[1][2], 0), cvScalar(maxs[1][0], maxs[1][1], maxs[1][2], 0), temp);
+//        cvOr(result, temp, result, null);
 //        cvInRangeS(image, cvScalar(mins[2][0], mins[2][1], mins[2][2], 0), cvScalar(maxs[2][0], maxs[2][1], maxs[2][2], 0), temp);
 //        cvOr(result, temp, result, null);
 //        cvInRangeS(image, cvScalar(mins[3][0], mins[3][1], mins[3][2], 0), cvScalar(maxs[3][0], maxs[3][1], maxs[3][2], 0), temp);
 //        cvOr(result, temp, result, null);
-        cvErode(result, result, null, 1);
-        cvDilate(result, result, null, 9);
+//        cvErode(result, result, null, 1);
+//        cvDilate(result, result, null, 9);
         return result;
     }
     

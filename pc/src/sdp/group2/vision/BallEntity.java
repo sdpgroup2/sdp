@@ -22,8 +22,6 @@ public class BallEntity extends Entity {
     private int[] maxs = new int[]{10, 256, 256};
     private static IplImage[] hsvImages = new IplImage[3];
 
-    private CvMemStorage storage = CvMemStorage.create();
-
 
     public IplImage threshold(IplImage image) {
         for (int i = 0; i < 3; ++i) {
