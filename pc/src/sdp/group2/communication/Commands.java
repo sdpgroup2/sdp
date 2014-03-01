@@ -1,4 +1,4 @@
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 import java.io.IOException;
 
@@ -33,6 +33,7 @@ public class Commands{
 	public final static short BEEP = 42;
 	public final static short ARC = 37;
 	public final static short STEER = 36;
+
 	/**
 	 * 
 	 * @param direction = 1 clockwise, -1 anti-clockwise

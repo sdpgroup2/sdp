@@ -93,13 +93,12 @@ public class Receiver {
 							break;
 							
 						case Commands.DISCONNECT: 
-							
 							break;
-	
-						case Commands.FORCEQUIT:
 							
+						case Commands.FORCEQUIT:							
 							forceQuit = true;
 							break;
+							
 						default:
 							// Ignore it
 					}

@@ -2,7 +2,7 @@
  * @author Place your name here 
  * */
 
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 
 import java.io.IOException;
