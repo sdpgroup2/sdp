@@ -1,8 +1,7 @@
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 import java.io.IOException;
 
-import sdp.group2.pc.CommandQueue;
 import sdp.group2.util.Constants;
 
 

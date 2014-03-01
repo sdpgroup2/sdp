@@ -1,25 +1,12 @@
 package sdp.group2.vision;
 
 import java.awt.Dimension;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import sdp.group2.geometry.Point;
-import sdp.group2.geometry.PointSet;
 import sdp.group2.geometry.Rect;
 import sdp.group2.pc.Timer;
 import sdp.group2.util.Debug;
-import sdp.group2.vision.clusters.BallCluster;
-import sdp.group2.vision.clusters.DotCluster;
-import sdp.group2.vision.clusters.HSBCluster;
-import sdp.group2.vision.clusters.PitchLinesCluster;
-import sdp.group2.vision.clusters.PitchSectionCluster;
-import sdp.group2.vision.clusters.RobotBaseCluster;
-import sdp.group2.vision.clusters.YellowRobotCluster;
-import sdp.group2.world.Ball;
-import sdp.group2.world.Pitch;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.InputInfo;
@@ -40,36 +27,10 @@ public class VisionService implements CaptureCallback {
 	private VideoDevice device;
 	private JPEGFrameGrabber frameGrabber;
 	private VisionServiceCallback callback;
-	private int currentFrame = 0;
-	private int preparationFrames;
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
-	private int[] colorArray;
-	private Image currentImage = new Image();
-	private float meanSat = 0;
-	private float meanBright = 0;
 	private ImageProcessor imageProcessor = new ImageProcessor();
-	// Clusters
-	private BallCluster ballCluster = new BallCluster("Ball");
-	// private YellowRobotCluster yellowRobotCluster = new
-	// YellowRobotCluster("Yellow robots");
-	// private CompoundRobotCluster blueCompoundRobot = new
-	// CompoundRobotCluster();
-	private PitchSectionCluster pitchSectionCluster = new PitchSectionCluster(
-			"Pitch sections");
-	private PitchLinesCluster pitchLinesCluster = new PitchLinesCluster(
-			"Pitch lines");
-	private RobotBaseCluster baseRobotCluster = new RobotBaseCluster("Bases");
-	private YellowRobotCluster yellowRobotCluster = new YellowRobotCluster(
-			"Yellow");
-	private DotCluster dotCluster = new DotCluster("Dots");
-	private HSBCluster[] clusters = new HSBCluster[] { ballCluster,
-			// blueRobotCluster,
-			baseRobotCluster, yellowRobotCluster,
-			// pitchLinesCluster,
-			// pitchSectionCluster,
-			dotCluster, };
-	private Rect processingRegion;
+	private int preparationFrames;
 
 	/**
 	 * Initialises a new vision service with a certain device name, number of
@@ -107,9 +68,6 @@ public class VisionService implements CaptureCallback {
 			e.printStackTrace();
 		}
 		frameGrabber.setCaptureCallback(this);
-		currentImage.setSize(getSize());
-		this.processingRegion = new Rect(0, 0, getSize().width,
-				getSize().height);
 	}
 
 	/**
@@ -134,10 +92,6 @@ public class VisionService implements CaptureCallback {
 		} catch (V4L4JException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public HSBCluster[] getClusters() {
-		return clusters;
 	}
 
 	/**
@@ -260,6 +214,7 @@ public class VisionService implements CaptureCallback {
 	 * @param e
 	 *            - The exception raised.
 	 */
+	
 	@Override
 	public void exceptionReceived(V4L4JException e) {
 		this.stopVision();
@@ -276,104 +231,6 @@ public class VisionService implements CaptureCallback {
 				return null;
 			}
 		};
-	}
-
-	/**
-	 * Find the bounding rectangle of the pitch.
-	 * 
-	 * @return bounding rectangle
-	 */
-	private Rect findPitch() {
-		for (int x = 0; x < getSize().width; x++) {
-			for (int y = 0; y < getSize().height; y++) {
-				HSBColor color = currentImage.getHSBColor(x, y);
-				pitchLinesCluster.testPixel(x, y, color);
-			}
-		}
-		List<Rect> rects = pitchLinesCluster.getImportantRects();
-		return (!rects.isEmpty()) ? rects.get(0) : null;
-	}
-
-	/**
-	 * Find the bounding rectangles of the pitch sections.
-	 * 
-	 * @return bounding rectangles
-	 */
-	private Rect[] findSections() {
-		for (int x = 0; x < getSize().width; x++) {
-			for (int y = 0; y < getSize().height; y++) {
-				HSBColor color = currentImage.getHSBColor(x, y);
-				pitchSectionCluster.testPixel(x, y, color);
-			}
-		}
-		List<Rect> rects = pitchSectionCluster.getImportantRects();
-		if (rects.size() > 4) {
-			rects = rects.subList(0, 4);
-		}
-		Collections.sort(rects); // sort them so leftmost is byte 0 and so on
-		return (!rects.isEmpty()) ? rects.toArray(new Rect[rects.size()])
-				: null;
-	}
-
-	/**
-	 * This is ran in the preparation stage of the vision service. It measures
-	 * the average brightness and saturation for normalisation.
-	 */
-	public void prepareVision() {
-		if (currentFrame == 0) {
-			// First frame sometimes has scanlines etc. Ignore it.
-			return;
-		}
-		double s = 0;
-		double b = 0;
-		for (HSBColor color : currentImage.getHSBColorPixelIterator()) {
-			s += color.s;
-			b += color.b;
-		}
-		s /= colorArray.length;
-		b /= colorArray.length;
-		Debug.logf("Mean saturation: %f, Mean brightness: %f", s, b);
-		meanSat += s;
-		meanBright += b;
-	}
-
-	/**
-	 * Runs after the preparation stage is over.
-	 */
-	public void endPrepareVision() {
-		// We ignored the first frame.
-		int frames = preparationFrames - 1;
-		meanSat /= frames;
-		meanBright /= frames;
-		Debug.logf("Final mean saturation: %f, mean brightness: %f", meanSat,
-				meanBright);
-	}
-
-	/**
-	 * Runs every frame from the video feed. TODO: This function is overflowing
-	 * in the iteration phase
-	 */
-	public void processImage() {
-		// Clear all clusters.
-		for (HSBCluster cluster : clusters) {
-			cluster.clear();
-		}
-		// Loop through pixels.
-		for (int x = (int) processingRegion.getMinX(); x < (int) processingRegion
-				.getMaxX(); x++) {
-			for (int y = (int) processingRegion.getMinY(); y < (int) processingRegion
-					.getMaxY(); y++) {
-				int index = y * getSize().width + x;
-				index = Math.max(0, index);
-				index = Math.min(index, getSize().width * getSize().height - 1);
-				HSBColor color = currentImage.getHSBColor(index);
-				// Test the pixel for each of the clusters
-				for (HSBCluster cluster : clusters) {
-					cluster.testPixel(x, y, color);
-				}
-			}
-		}
-
 	}
 
 	/**
@@ -406,34 +263,5 @@ public class VisionService implements CaptureCallback {
 	private enum VisionState {
 		Preparation, StaticDetection, Processing
 	}
-
-	// these should be changed to get[Yellow/Blue]RobotRects() as they
-	// return rects and not robot objects
-	// public List<Rect> getYellowRobots() {
-	// return yellowRobotCluster.getImportantRects();
-	// }
-	//
-	// public List<Rect> getBlueRobots() {
-	// return blueRobotCluster.getImportantRects();
-	// }
-	//
-	// public List<Rect> getRobotBases() {
-	// return baseCluster.getImportantRects();
-	// }
-
-	// //Should be changed to getYellowRobots()
-	// public List<Robot> getYellowRobotObjects() {
-	// ArrayList<Robot> robots = new ArrayList<Robot>();
-	// List<Rect> colorRects = getYellowRobots();
-	// for(Rect colorRect : colorRects) {
-	// for(Rect base : getRobotBases()) {
-	// if (base.contains(colorRect)) {
-	// Robot robot = new Robot(colorRect, base);
-	// robots.add(robot);
-	// }
-	// }
-	// }
-	// return robots;
-	// }
 
 }

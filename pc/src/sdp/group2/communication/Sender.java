@@ -1,4 +1,4 @@
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 import java.io.IOException;
 import java.io.InputStream;

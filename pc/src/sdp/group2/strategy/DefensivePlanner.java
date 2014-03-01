@@ -3,13 +3,13 @@ package sdp.group2.strategy;
 import java.io.IOException;
 
 import lejos.geom.Rectangle;
-import sdp.group2.comms.Commands;
-import sdp.group2.comms.Sender;
+import sdp.group2.communication.CommandQueue;
+import sdp.group2.communication.Commands;
+import sdp.group2.communication.Sender;
 import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
-import sdp.group2.pc.CommandQueue;
 import sdp.group2.util.Constants;
 import sdp.group2.world.IPitch;
 import sdp.group2.world.Robot;

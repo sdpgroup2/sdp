@@ -1,15 +1,11 @@
 package sdp.group2.pc;
 
-import sdp.group2.geometry.Rect;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
-import sdp.group2.vision.Image;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
-import sdp.group2.vision.clusters.BallCluster;
-import sdp.group2.vision.clusters.RobotBaseCluster;
 
 
 public class MasterController implements VisionServiceCallback {
@@ -68,27 +64,7 @@ public class MasterController implements VisionServiceCallback {
     }
 
     @Override
-    public boolean onPreparationReady(Image currentImage, BallCluster ballCluster, RobotBaseCluster robotBaseCluster, Rect pitchRect, Rect[] sectionRects) {
-        return false;
-    }
-
-    @Override
-    public void onFrameGrabbed(Image currentImage) {
-
-    }
-
-    @Override
-    public void onImageFiltered(Image currentImage) {
-
-    }
-
-    @Override
     public void onPreparationFrame() {
-
-    }
-
-    @Override
-    public void onImageProcessed(Image currentImage, BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
 
     }
 

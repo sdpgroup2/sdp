@@ -2,14 +2,13 @@
  * @author Place your name here 
  * */
 
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 
 import java.io.IOException;
 import java.util.HashSet;
 
 
-import sdp.group2.pc.CommandQueue;
 import sdp.group2.util.Constants;
 
 
