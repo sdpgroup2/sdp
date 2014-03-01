@@ -50,7 +50,6 @@ public class ImageProcessor {
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
     private static IplImage image;
-//    private static Detectable[] entities = new Detectable[2];
     private static BallEntity ballEntity;
     private static RobotEntity robotEntity;
     private static ImageViewer[] entityViewers = new ImageViewer[2];
@@ -134,7 +133,6 @@ public class ImageProcessor {
     }
 
     /**
-     * TODO: Try doing this in-place
      * Detects the objects on the image
      *
      * @param image image to be inspected
@@ -146,13 +144,13 @@ public class ImageProcessor {
         cvCvtColor(image, temp, CV_BGR2HSV);
         
         channel = ballEntity.threshold(temp);
-        ballEntity.drawContours(channel, image, 10);
+//        ballEntity.drawContours(channel, image, 10);
         if (channel != null) {
         	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
         
         channel = robotEntity.threshold(temp);
-        robotEntity.drawContours(channel, image, 20);
+//        robotEntity.drawContours(channel, image, 20);
         if (channel != null) {
         	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
