@@ -12,7 +12,6 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvThreshold;
 import static sdp.group2.vision.ImageProcessor.newImage;
 
-import com.googlecode.javacv.cpp.opencv_core.CvMemStorage;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
@@ -23,6 +22,7 @@ public class BallEntity extends Entity {
     private static IplImage[] hsvImages = new IplImage[3];
 
 
+    @Override
     public IplImage threshold(IplImage image) {
         for (int i = 0; i < 3; ++i) {
             hsvImages[i] = newImage(image, 1);
@@ -50,17 +50,10 @@ public class BallEntity extends Entity {
                 cvAnd(channel, temp1, channel, null);
             }
         }
-
         // Erode here to remove all the small white pixel chunks
         cvErode(channel, channel, null, 3);
         cvDilate(channel, channel, null, 1);
         return channel;
     }
-
-
-	@Override
-	public IplImage detect(IplImage[] hsvImages) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    
 }

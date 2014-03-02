@@ -1,14 +1,12 @@
 package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.IPL_DEPTH_32F;
+import static com.googlecode.javacv.cpp.opencv_core.cvConvertScale;
 import static com.googlecode.javacv.cpp.opencv_core.cvCopy;
 import static com.googlecode.javacv.cpp.opencv_core.cvGetSize;
 import static com.googlecode.javacv.cpp.opencv_core.cvLoad;
 import static com.googlecode.javacv.cpp.opencv_core.cvMerge;
-import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
-import static com.googlecode.javacv.cpp.opencv_core.cvRectangle;
-import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalarAll;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvSplit;
@@ -22,19 +20,15 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvInitUndistortMap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvRemap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.medianBlur;
 
-import static com.googlecode.javacv.cpp.opencv_core.*;
-import static com.googlecode.javacv.cpp.opencv_imgproc.*;
-
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
-import sdp.group2.geometry.Point;
-import sdp.group2.util.Constants.PitchType;
+import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvPoint;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
-import com.googlecode.javacv.cpp.opencv_core.CvScalar;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
@@ -42,17 +36,22 @@ public class ImageProcessor {
 
     private static final int MEDIAN_FILTER_SIZE = 3; // must be odd and > 1
     private static final String ASSETS_FOLDER = "./assets";
+    
     // Matrices used for remapping
     CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
     CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
+    
     private static ImageViewer imageViewer = new ImageViewer();
+    private static ImageViewer[] entityViewers = new ImageViewer[2];
 
     private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
-    private static IplImage image;
-    private static BallEntity ballEntity;
-    private static RobotEntity robotEntity;
-    private static ImageViewer[] entityViewers = new ImageViewer[2];
+    private static IplImage image; // Processing image
+    private static BallEntity ballEntity; // Ball thresholding
+    private static RobotEntity robotEntity; // Robot thresholding
+    
+    CvPoint ballCentroid;
+    List<Tuple<CvRect, CvPoint>> robotTuples = new ArrayList<Tuple<CvRect, CvPoint>>();
 
     public ImageProcessor() {
         ballEntity = new BallEntity();
@@ -107,6 +106,7 @@ public class ImageProcessor {
     }
 
     /**
+     * DON'T USE THIS
      * Normalises the image.
      *
      * @param image image to be normalised
@@ -126,6 +126,7 @@ public class ImageProcessor {
     	cvMerge(channels[0], channels[1], channels[2], null, image);
     	cvCvtColor(image, image, CV_HSV2BGR);
 //        cvNormalize(image, image);
+//        cvNormalize(image, image, 0, 255, CV_MINMAX, null);
     		
 	}
 
@@ -144,20 +145,20 @@ public class ImageProcessor {
      * @param image image to be inspected
      * @param temp  temporary image
      */
-    private static void detect(IplImage image, IplImage temp) {
+    private void detect(IplImage image, IplImage temp) {
         IplImage channel = newImage(image, 1);
         // Convert from BGR to HSV
         cvCvtColor(image, temp, CV_BGR2HSV);
         
         channel = ballEntity.threshold(temp);
-        ballEntity.drawContours(channel, image, 10);
+//        ballEntity.drawContours(channel, image, 10);
+        ballCentroid = ballEntity.findCentroid(channel);
         if (channel != null) {
         	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
         
         channel = robotEntity.threshold(temp);
-        List<CvRect> rects = robotEntity.boundingBoxes(channel);
-        robotEntity.facingVectors(rects, temp, channel);
+        robotTuples = robotEntity.detectRobots(channel);
         if (channel != null) {
         	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
         }
@@ -200,6 +201,7 @@ public class ImageProcessor {
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
+//        normalize(image);
         cvConvertScale(image, image, 2, 0);
         filter(image);
         detect(image, temp);
