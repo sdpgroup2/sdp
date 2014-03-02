@@ -29,7 +29,6 @@ public class VisionService implements CaptureCallback {
 	private VisionServiceCallback callback;
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
-	private ImageProcessor imageProcessor = new ImageProcessor();
 	private int preparationFrames;
 
 	/**
@@ -146,7 +145,9 @@ public class VisionService implements CaptureCallback {
 //        Ball ball = new Ball();
 //        pitch.updateBallPosition(imageProcessor.getBallPoint());
 //        pitch.updateRobotState(id, p, theta)
-        imageProcessor.process(frame.getBufferedImage());
+        ImageProcessor.process(frame.getBufferedImage());
+        // Now the objects should be set
+        callback.update(ImageProcessor.ballCentroid(), ImageProcessor.yellowRobots(), ImageProcessor.blueRobots());
         frame.recycle();
         return;
 

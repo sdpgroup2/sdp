@@ -12,6 +12,7 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvContourArea;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvFindContours;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvMoments;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +68,7 @@ public abstract class Entity {
     public List<CvRect> boundingBoxes(IplImage binaryImage) {
     	List<CvRect> rects = new ArrayList<CvRect>();
     	CvSeq seq = findContours(binaryImage);
+    	
     	// At most 4 rects will be returned
     	int count = 0;
     	for (CvSeq c = seq; c != null && !c.isNull() && count < 4; c = c.h_next()) {
@@ -76,8 +78,7 @@ public abstract class Entity {
     		}
     		rects.add(cvBoundingRect(c, 0));
     		count++;
-    	}
-    	
+    	}	
     	return rects;
     }
     
@@ -87,8 +88,8 @@ public abstract class Entity {
      * @param binaryImage image to be searched
      * @return the centroid point
      */
-    public CvPoint findCentroid(IplImage binaryImage) {
-    	List<CvPoint> possibleCentroids = new ArrayList<CvPoint>();
+    public Point findCentroid(IplImage binaryImage) {
+    	List<Point> possibleCentroids = new ArrayList<Point>();
     	CvSeq seq = findContours(binaryImage);
     	for (CvSeq c = seq; c != null && !c.isNull(); c = c.h_next()) {
     		// Only take it if area is positive - because it works
@@ -100,7 +101,7 @@ public abstract class Entity {
 			if (moments.isNull()) {
 				continue;
 			}
-			CvPoint centroid = cvPoint((int) (moments.m10() / moments.m00()), (int) (moments.m01() / moments.m00()));
+			Point centroid = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
 			possibleCentroids.add(centroid);
     	}
     	if (possibleCentroids.size() == 0) {

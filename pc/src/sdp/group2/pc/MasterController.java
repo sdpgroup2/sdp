@@ -1,9 +1,13 @@
 package sdp.group2.pc;
 
+import java.util.List;
+
+import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
+import sdp.group2.util.Tuple;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 
@@ -43,22 +47,6 @@ public class MasterController implements VisionServiceCallback {
         mc.start();
     }
 
-    //public void onPreparationReady(PitchLinesCluster lines, PitchSectionCluster sections,
-    //		BallCluster ballCluster, YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
-    //this.pitch = new Pitch(lines, sections);
-    //Ball ball = new Ball(ballCluster.getImportantRects().get(0));
-    //pitch.addBall(ball);
-    //List<Robot> blueRobots = new ArrayList<Robot>();
-    //List<Robot> yellowRobots = new ArrayList<Robot>();
-    //for (Rect rect : blueCluster.getImportantRects().subList(0, 2)) {
-    //	blueRobots.add(new Robot(rect));
-    //}
-    //for (Rect rect : yellowCluster.getImportantRects().subList(0, 2)) {
-    //	yellowRobots.add(new Robot(rect));
-    //}
-    //pitch.addRobots(blueRobots, yellowRobots, ourTeam);
-    //}
-
     public void start() {
         visionService.start();
     }
@@ -72,4 +60,12 @@ public class MasterController implements VisionServiceCallback {
     public void onExceptionThrown(Exception e) {
 
     }
+
+	@Override
+	public void update(Point ballCentroid,
+			List<Tuple<Point, Point>> yellowRobots,
+			List<Tuple<Point, Point>> blueRobots) {
+		// TODO Auto-generated method stub
+		
+	}
 }

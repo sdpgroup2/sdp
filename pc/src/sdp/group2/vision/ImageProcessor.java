@@ -21,13 +21,12 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvRemap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.medianBlur;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
+import sdp.group2.geometry.Point;
 import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
-import com.googlecode.javacv.cpp.opencv_core.CvPoint;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
@@ -38,27 +37,25 @@ public class ImageProcessor {
     private static final String ASSETS_FOLDER = "./assets";
     
     // Matrices used for remapping
-    CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
-    CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
+    private static final CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
+    private static final CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
+    private static final CvRect cropRect;
     
     private static ImageViewer imageViewer = new ImageViewer();
     private static ImageViewer[] entityViewers = new ImageViewer[2];
 
-    private static CvRect cropRect; // Cropping rectangle
     private static IplImage temp; // Temporary image used for processing
     private static IplImage image; // Processing image
-    private static BallEntity ballEntity; // Ball thresholding
-    private static RobotEntity robotEntity; // Robot thresholding
+    private static IplImage binaryImage; // Temporary binary image for processing
+    private static BallEntity ballEntity = new BallEntity(); // Ball thresholding
+    private static RobotEntity robotEntity = new RobotEntity();; // Robot thresholding
     
-    CvPoint ballCentroid;
-    List<Tuple<CvRect, CvPoint>> robotTuples = new ArrayList<Tuple<CvRect, CvPoint>>();
-
-    public ImageProcessor() {
-        ballEntity = new BallEntity();
-        robotEntity = new RobotEntity();
+    private static Point ballCentroid;
+    
+    static {
+    	cropRect = cvRect(30, 80, 590, 315);
         entityViewers[0] = new ImageViewer();
         entityViewers[1] = new ImageViewer();
-        cropRect = cvRect(30, 80, 590, 315);
     }
 
     /**
@@ -145,27 +142,32 @@ public class ImageProcessor {
      * @param image image to be inspected
      * @param temp  temporary image
      */
-    private void detect(IplImage image, IplImage temp) {
-        IplImage channel = newImage(image, 1);
+    private static void detect(IplImage image, IplImage temp) {
         // Convert from BGR to HSV
         cvCvtColor(image, temp, CV_BGR2HSV);
         
-        channel = ballEntity.threshold(temp);
-//        ballEntity.drawContours(channel, image, 10);
-        ballCentroid = ballEntity.findCentroid(channel);
-        if (channel != null) {
-        	entityViewers[0].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
-        }
+        binaryImage = ballEntity.threshold(temp);
+        ballCentroid = ballEntity.findCentroid(binaryImage);
+        entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
         
-        channel = robotEntity.threshold(temp);
-        robotTuples = robotEntity.detectRobots(channel);
-        if (channel != null) {
-        	entityViewers[1].showImage(channel, BufferedImage.TYPE_BYTE_INDEXED);
-        }
-        
+        binaryImage = robotEntity.threshold(temp);
+        robotEntity.detectRobots(temp, binaryImage);
+        entityViewers[1].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
     }
 
-    /**
+    public static Point ballCentroid() {
+		return ballCentroid;
+	}
+
+	public static List<Tuple<Point, Point>> yellowRobots() {
+		return RobotEntity.yellowRobots();
+	}
+
+	public static List<Tuple<Point, Point>> blueRobots() {
+		return RobotEntity.blueRobots();
+	}
+
+	/**
      * Creates a new IplImage same size as the source image.
      *
      * @param img      source image
@@ -177,32 +179,17 @@ public class ImageProcessor {
     }
 
     /**
-     * Creates a new IplImage same size as the source image with a given ROI
-     *
-     * @param img      source image
-     * @param roiRect ROI rectangle
-     * @param channels number of channels
-     * @return newly created image
-     */
-    public static IplImage newImage(IplImage img, CvRect roiRect, int channels) {
-        IplImage image = newImage(img, channels);
-        cvSetImageROI(image, roiRect);
-        return image;
-    }
-
-    /**
      * Processes the image.
      *
      * @param inputImage image to be processed
      */
 
-    public void process(BufferedImage inputImage) {
+    public static void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRect);
-//        normalize(image);
-        cvConvertScale(image, image, 2, 0);
+        cvConvertScale(image, image, 2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);
         imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);

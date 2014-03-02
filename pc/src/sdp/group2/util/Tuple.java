@@ -1,5 +1,6 @@
 package sdp.group2.util;
 
+
 public class Tuple<K, V> {
 
 	private K k;
@@ -17,5 +18,14 @@ public class Tuple<K, V> {
 	public V getSecond() {
 		return v;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("(%s, %s)",
+				k != null ? k.toString() : "null",
+				v != null ? v.toString() : "null");
+	}
+	
+	
 	
 }
