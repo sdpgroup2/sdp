@@ -5,6 +5,7 @@ import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_core.cvLine;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static sdp.group2.vision.ImageProcessor.newImage;
@@ -79,7 +80,10 @@ public class RobotEntity extends Entity {
     		// we still add it though
     		Point dotCentroid = dotEntity.findCentroid(binaryTemp);
     		Point rectCentroid = new Point(rect.x() + (rect.width() / 2), rect.y() + (rect.height() / 2));
-    		
+    		if (dotCentroid != null) {
+    			dotCentroid.offset(rect.x(), rect.y());
+    			cvLine(binaryImage, cvPoint((int) dotCentroid.x, (int) dotCentroid.y), cvPoint((int) rectCentroid.x, (int) rectCentroid.y), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    		}
     		// We check each robot if yellow or blue
     		if (isYellowRobot(hsvImage)) {
     			yellowRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
@@ -96,7 +100,7 @@ public class RobotEntity extends Entity {
     	cvInRangeS(hsvImage, cvScalar(20, 100, 100, 0), cvScalar(30, 255, 255, 0), channel);
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
-    	System.out.println(nonZero);
+//    	System.out.println(nonZero);
     	return nonZero > 50 ? true : false;
     }
     

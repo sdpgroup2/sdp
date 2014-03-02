@@ -32,6 +32,16 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 
         return dtheta;
     }
+	
+	public void offset(Point other) {
+		this.x += other.x;
+		this.y += other.y;
+	}
+	
+	public void offset(double x, double y) {
+		this.x += x;
+		this.y += y;
+	}
 
     public boolean less(Point other) {
     	return this.compareTo(other) == -1;
