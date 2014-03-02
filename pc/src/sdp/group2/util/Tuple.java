@@ -3,8 +3,8 @@ package sdp.group2.util;
 
 public class Tuple<K extends Comparable<K>, V extends Comparable<V>> implements Comparable<Tuple<K, V>> {
 
-	private K k;
-	private V v;
+	private final K k;
+	private final V v;
 	
 	public Tuple(K k, V v) {
 		this.k = k;

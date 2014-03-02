@@ -36,10 +36,10 @@ public class Pitch extends Plane implements IPitch {
 
     private Robot[] robots;
 
-    private Robot blueDefender;
-    private Robot blueAttacker;
-    private Robot yellowDefender;
-    private Robot yellowAttacker;
+    private Robot blueDefender = new Robot();
+    private Robot blueAttacker = new Robot();
+    private Robot yellowDefender = new Robot();
+    private Robot yellowAttacker = new Robot();
 
 
     /**
@@ -122,9 +122,7 @@ public class Pitch extends Plane implements IPitch {
 
     @Override
     public void updateBallPosition(Point p) {
-    	if (p != null) {
-    		ball.updatePosition(p);
-    	}
+    	ball.updatePosition(p);
     }
     
     public void updateBallPosition(double x, double y) {
@@ -164,13 +162,30 @@ public class Pitch extends Plane implements IPitch {
     	// Sort them so defender first
     	if (robots.size() > 2) {
     		Collections.sort(robots);
+    		Robot defender;
+    		Robot attacker;
+    		
     		if (colour == TeamColour.YELLOW) {
-    			yellowDefender.update(robots.get(0));
-    			yellowAttacker.update(robots.get(1));
+    			defender = yellowDefender;
+    			attacker = yellowAttacker;
     		} else {
-    			blueDefender.update(robots.get(0));
-    			blueAttacker.update(robots.get(1));
+    			defender = blueDefender;
+    			attacker = blueAttacker;
     		}
+    		
+    		Tuple<Point, Point> tuple = robots.get(0);
+			defender.updatePosition(tuple.getFirst());
+    		Point dotCenter = tuple.getSecond();
+			if (dotCenter == null) {
+				defender.updateFacing(dotCenter);
+			}
+			
+			tuple = robots.get(1);
+			attacker.updatePosition(tuple.getFirst());
+			dotCenter = tuple.getSecond();
+			if (dotCenter == null) {
+				attacker.updateFacing(dotCenter);
+			}
     	}
     }
 

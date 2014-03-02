@@ -45,9 +45,7 @@ public class Robot extends MovableObject {
         return direction;
     }
     
-    public void update(Tuple<Point, Point> tuple) {
-    	this.position = tuple.getFirst().toMillis();
-    	Point dotPosition = tuple.getSecond();
+    public void updateFacing(Point dotPosition) {
     	if (dotPosition != null) {
     		this.facingVector = position.sub(dotPosition.toMillis());
     	}

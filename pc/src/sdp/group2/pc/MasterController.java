@@ -15,7 +15,7 @@ import sdp.group2.world.Pitch;
 
 public class MasterController implements VisionServiceCallback {
 
-	public static boolean ENABLE_GUI = false;
+	public static boolean ENABLE_GUI = true;
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch = new Pitch();
@@ -66,8 +66,12 @@ public class MasterController implements VisionServiceCallback {
 	@Override
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
-		pitch.updateBallPosition(ballCentroid.toMillis());
+		if (ballCentroid != null) {
+			pitch.updateBallPosition(ballCentroid.toMillis());
+		}
+		System.out.println(yellowRobots);
+		System.out.println(blueRobots);
 		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
-		pitch.updateRobots(yellowRobots, TeamColour.BLUE);
+		pitch.updateRobots(blueRobots, TeamColour.BLUE);
 	}
 }
