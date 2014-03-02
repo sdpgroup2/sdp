@@ -122,7 +122,9 @@ public class Pitch extends Plane implements IPitch {
 
     @Override
     public void updateBallPosition(Point p) {
-        ball.updatePosition(p);
+    	if (p != null) {
+    		ball.updatePosition(p);
+    	}
     }
     
     public void updateBallPosition(double x, double y) {

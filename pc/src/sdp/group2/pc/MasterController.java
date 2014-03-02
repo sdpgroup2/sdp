@@ -2,7 +2,6 @@ package sdp.group2.pc;
 
 import java.util.List;
 
-import sdp.group2.geometry.Milimeter;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
@@ -16,7 +15,7 @@ import sdp.group2.world.Pitch;
 
 public class MasterController implements VisionServiceCallback {
 
-    //private Pitch pitch;
+	public static boolean ENABLE_GUI = false;
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch = new Pitch();

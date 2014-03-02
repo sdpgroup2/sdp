@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import sdp.group2.geometry.Point;
+import sdp.group2.pc.MasterController;
 import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
@@ -41,8 +42,8 @@ public class ImageProcessor {
     private static final CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
     private static final CvRect cropRect;
     
-    private static ImageViewer imageViewer = new ImageViewer();
-    private static ImageViewer[] entityViewers = new ImageViewer[2];
+    private static ImageViewer imageViewer;
+    private static ImageViewer[] entityViewers;
 
     private static IplImage temp; // Temporary image used for processing
     private static IplImage image; // Processing image
@@ -54,8 +55,12 @@ public class ImageProcessor {
     
     static {
     	cropRect = cvRect(30, 80, 590, 315);
-        entityViewers[0] = new ImageViewer();
-        entityViewers[1] = new ImageViewer();
+        if (MasterController.ENABLE_GUI) {
+        	imageViewer = new ImageViewer();
+        	entityViewers = new ImageViewer[2];
+            entityViewers[0] = new ImageViewer();
+            entityViewers[1] = new ImageViewer();
+        }
     }
 
     /**
@@ -148,11 +153,15 @@ public class ImageProcessor {
         
         binaryImage = ballEntity.threshold(temp);
         ballCentroid = ballEntity.findCentroid(binaryImage);
-        entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        if (MasterController.ENABLE_GUI) {
+        	entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        }
         
         binaryImage = robotEntity.threshold(temp);
         robotEntity.detectRobots(temp, binaryImage);
-        entityViewers[1].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        if (MasterController.ENABLE_GUI) {
+        	entityViewers[1].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        }
     }
 
     public static Point ballCentroid() {
@@ -192,7 +201,9 @@ public class ImageProcessor {
         cvConvertScale(image, image, 2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);
-        imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
+        if (MasterController.ENABLE_GUI) {
+        	imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
+        }
     }
 
 }
