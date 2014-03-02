@@ -14,6 +14,11 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 
 	private static final long serialVersionUID = 13L;
 	private long timestamp;
+	
+    public Point(double x, double y) {
+    	super(x, y);
+    	this.timestamp = System.currentTimeMillis();
+    }
 
 	public double getAngle(Point other) {
         double dtheta, theta1, theta2;
@@ -41,6 +46,10 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     public String toString() {
     	return "(" + x + ", " + y + ")";
     }
+    
+    public Point toMillis() {
+    	return new Point(Milimeter.pix2mm(x), Milimeter.pix2mm(y));
+    }
 
     @Override
     public int compareTo(Point other) {
@@ -54,17 +63,6 @@ public class Point extends Point2D.Double implements Comparable<Point> {
         	return 1;
         }
     }
-
-    public Point(double x, double y) {
-    	super(x, y);
-    	this.timestamp = System.currentTimeMillis();
-    }
-
-    public double getX()
-    { return x; }
-    
-    public double getY()
-    { return y; }
     
     public void setX(double x) {
     	this.x = x;
@@ -74,15 +72,12 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.y = y;
     }
     
-    public long getTimestamp()
-    { return timestamp; }
+    public long getTimestamp() {
+    	return timestamp;
+    }
 
     public Vector sub(Point other) {
     	return new Vector(this.x - other.x, this.y - other.y);
-    }
-
-    public Point sub(Vector other) {
-    	return new Point(this.x - other.x, this.y - other.y);
     }
 
 }

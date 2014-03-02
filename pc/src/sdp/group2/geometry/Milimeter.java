@@ -16,7 +16,7 @@ public class Milimeter {
 		value = pix2mm(pix);
 	}
 	
-	public static double pix2mm(int pix) {
+	public static double pix2mm(double pix) {
 		return 0.259843661 * pix;
 	}
 	
@@ -25,8 +25,8 @@ public class Milimeter {
 	}
 	
 	public static void pix2mmInPlace(Point p) {
-		p.x = pix2mm((int) p.x);
-		p.y = pix2mm((int) p.y);
+		p.x = pix2mm(p.x);
+		p.y = pix2mm(p.y);
 	}
 	
 	public static void pix2mmInPlace(PointSet ps) {

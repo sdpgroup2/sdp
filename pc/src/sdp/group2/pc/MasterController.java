@@ -2,6 +2,7 @@ package sdp.group2.pc;
 
 import java.util.List;
 
+import sdp.group2.geometry.Milimeter;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
@@ -10,6 +11,7 @@ import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
+import sdp.group2.world.Pitch;
 
 
 public class MasterController implements VisionServiceCallback {
@@ -17,6 +19,7 @@ public class MasterController implements VisionServiceCallback {
     //private Pitch pitch;
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
+    private Pitch pitch = new Pitch();
     private DefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
     private VisionService visionService;
@@ -62,10 +65,10 @@ public class MasterController implements VisionServiceCallback {
     }
 
 	@Override
-	public void update(Point ballCentroid,
-			List<Tuple<Point, Point>> yellowRobots,
+	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
-		// TODO Auto-generated method stub
-		
+		pitch.updateBallPosition(ballCentroid.toMillis());
+		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
+		pitch.updateRobots(yellowRobots, TeamColour.BLUE);
 	}
 }

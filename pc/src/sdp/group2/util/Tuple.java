@@ -1,7 +1,7 @@
 package sdp.group2.util;
 
 
-public class Tuple<K, V> {
+public class Tuple<K extends Comparable<K>, V extends Comparable<V>> implements Comparable<Tuple<K, V>> {
 
 	private K k;
 	private V v;
@@ -25,7 +25,14 @@ public class Tuple<K, V> {
 				k != null ? k.toString() : "null",
 				v != null ? v.toString() : "null");
 	}
-	
-	
+
+	@Override
+	public int compareTo(Tuple<K, V> o) {
+		int firstCompare = getFirst().compareTo(o.getFirst());
+		if (firstCompare == 0) {
+			return getSecond().compareTo(o.getSecond());
+		}
+		return firstCompare;
+	}
 	
 }

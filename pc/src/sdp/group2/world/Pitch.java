@@ -5,9 +5,13 @@
 
 package sdp.group2.world;
 
+import java.util.Collections;
+import java.util.List;
+
 import sdp.group2.geometry.*;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Constants.TeamSide;
+import sdp.group2.util.Tuple;
 
 
 public class Pitch extends Plane implements IPitch {
@@ -152,6 +156,20 @@ public class Pitch extends Plane implements IPitch {
     @Override
     public Ball getBall() {
         return ball;
+    }
+    
+    public void updateRobots(List<Tuple<Point, Point>> robots, TeamColour colour) {
+    	// Sort them so defender first
+    	if (robots.size() > 2) {
+    		Collections.sort(robots);
+    		if (colour == TeamColour.YELLOW) {
+    			yellowDefender.update(robots.get(0));
+    			yellowAttacker.update(robots.get(1));
+    		} else {
+    			blueDefender.update(robots.get(0));
+    			blueAttacker.update(robots.get(1));
+    		}
+    	}
     }
 
     /**
