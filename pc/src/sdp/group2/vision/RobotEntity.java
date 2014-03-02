@@ -24,6 +24,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 public class RobotEntity extends Entity {
 	
     private static DotEntity dotEntity = new DotEntity();
+    private ImageViewer iv = new ImageViewer();
     private static List<Tuple<Point, Point>> yellowRobots = new ArrayList<Tuple<Point, Point>>();
     private static List<Tuple<Point, Point>> blueRobots = new ArrayList<Tuple<Point, Point>>();
 
@@ -75,10 +76,13 @@ public class RobotEntity extends Entity {
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);
+    		cvResetImageROI(binaryTemp);
+    		iv.showImage(binaryTemp);
+    		cvSetImageROI(binaryTemp, rect);
     		
     		// beware the method below could return null
     		// we still add it though
-    		Point dotCentroid = dotEntity.findCentroid(binaryTemp);
+    		Point dotCentroid = dotEntity.findCentroid(binaryTemp, 100);
     		Point rectCentroid = new Point(rect.x() + (rect.width() / 2), rect.y() + (rect.height() / 2));
     		if (dotCentroid != null) {
     			dotCentroid.offset(rect.x(), rect.y());
@@ -90,9 +94,8 @@ public class RobotEntity extends Entity {
     		} else {
     			blueRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
     		}
+    		cvResetImageROI(hsvImage);
     	}
-		cvResetImageROI(hsvImage);
-		cvResetImageROI(binaryTemp);
     }
     
     private boolean isYellowRobot(IplImage hsvImage) {

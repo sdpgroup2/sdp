@@ -88,12 +88,12 @@ public abstract class Entity {
      * @param binaryImage image to be searched
      * @return the centroid point
      */
-    public Point findCentroid(IplImage binaryImage) {
+    public Point findCentroid(IplImage binaryImage, int areaMin) {
     	List<Point> possibleCentroids = new ArrayList<Point>();
     	CvSeq seq = findContours(binaryImage);
     	for (CvSeq c = seq; c != null && !c.isNull(); c = c.h_next()) {
     		// Only take it if area is positive - because it works
-    		if (cvContourArea(c, CV_WHOLE_SEQ, 1) < 0) {
+    		if (cvContourArea(c, CV_WHOLE_SEQ, 1) < areaMin) {
     			continue;
     		}
 			CvMoments moments = new CvMoments();
@@ -110,6 +110,16 @@ public abstract class Entity {
     		// Maybe do some filtering - for now just return first
     		return possibleCentroids.get(0);
     	}
+    }
+    
+    /**
+     * Finds a centroid (only one) for a blob in a binary image.
+     * Used for the ball and the robot dot.
+     * @param binaryImage image to be searched
+     * @return the centroid point
+     */
+    public Point findCentroid(IplImage binaryImage) {
+    	return findCentroid(binaryImage, 0);
     }
     
     public abstract IplImage threshold(IplImage image);

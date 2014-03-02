@@ -69,8 +69,8 @@ public class MasterController implements VisionServiceCallback {
 		if (ballCentroid != null) {
 			pitch.updateBallPosition(ballCentroid.toMillis());
 		}
-		System.out.println(yellowRobots);
-		System.out.println(blueRobots);
+//		System.out.println(yellowRobots);
+//		System.out.println(blueRobots);
 		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
 		pitch.updateRobots(blueRobots, TeamColour.BLUE);
 	}

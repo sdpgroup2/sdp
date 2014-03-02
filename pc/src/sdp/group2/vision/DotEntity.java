@@ -11,8 +11,8 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class DotEntity extends Entity {
 
-    private int[] mins = new int[] {30, 51, 50};
-    private int[] maxs = new int[] {45, 130, 140}; 
+    private int[] mins = new int[] {30, 22, 50};
+    private int[] maxs = new int[] {80, 130, 140};
 
     @Override
     public IplImage threshold(IplImage hsvImage) {
