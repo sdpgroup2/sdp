@@ -28,20 +28,31 @@ public class RobotEntity extends Entity {
     private static List<Tuple<Point, Point>> yellowRobots = new ArrayList<Tuple<Point, Point>>();
     private static List<Tuple<Point, Point>> blueRobots = new ArrayList<Tuple<Point, Point>>();
 
+    // MAIN PITCH
     int[][] mins = new int[][] {
-            new int[] {40, 100, 200}, // base plate min
-//            new int[] {19, 107, 155}, // yellow min
-//            new int[] {135, 20, 34}, // blue min
-//            new int[] {20, 49, 120}, // dot min
+            new int[] {65, 153, 175}, // base plate min
     };
-
+    
     int[][] maxs = new int[][] {
-            new int[] {80, 150, 255}, // base plate max
-//            new int[] {36, 155, 255}, // yellow max
-//            new int[] {200, 50, 70}, // blue max
-//            new int[] {57, 89, 160}, // dot max
-
+            new int[] {80, 204, 250}, // base plate max
     };
+    
+    
+    // SIDE PITCH
+//    int[][] mins = new int[][] {
+//            new int[] {40, 100, 200}, // base plate min
+////            new int[] {19, 107, 155}, // yellow min
+////            new int[] {135, 20, 34}, // blue min
+////            new int[] {20, 49, 120}, // dot min
+//    };
+
+//    int[][] maxs = new int[][] {
+//            new int[] {80, 150, 255}, // base plate max
+////            new int[] {36, 155, 255}, // yellow max
+////            new int[] {200, 50, 70}, // blue max
+////            new int[] {57, 89, 160}, // dot max
+//
+//    };
     
     public static List<Tuple<Point, Point>> yellowRobots() {
 		return yellowRobots;
@@ -103,7 +114,7 @@ public class RobotEntity extends Entity {
     	cvInRangeS(hsvImage, cvScalar(20, 100, 100, 0), cvScalar(30, 255, 255, 0), channel);
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
-//    	System.out.println(nonZero);
+    	System.out.println(nonZero);
     	return nonZero > 50 ? true : false;
     }
     

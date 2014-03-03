@@ -48,7 +48,7 @@ public class MasterController implements VisionServiceCallback {
         MasterController mc = new MasterController();
         mc.start();
     }
-
+    
     public void start() {
         visionService.start();
     }

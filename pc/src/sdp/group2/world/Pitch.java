@@ -159,8 +159,10 @@ public class Pitch extends Plane implements IPitch {
     }
     
     public void updateRobots(List<Tuple<Point, Point>> robots, TeamColour colour) {
-    	// Sort them so defender first
-    	if (robots.size() > 2) {
+    	// Only take more than 1 robot because otherwise
+    	// we don't know if defender or attacker
+    	if (robots.size() > 1) {
+    		// Needs to be sorted by defender first and attacker next or something
     		Collections.sort(robots);
     		Robot defender;
     		Robot attacker;
@@ -174,14 +176,14 @@ public class Pitch extends Plane implements IPitch {
     		}
     		
     		Tuple<Point, Point> tuple = robots.get(0);
-			defender.updatePosition(tuple.getFirst());
+			defender.updatePosition(tuple.getFirst().toMillis());
     		Point dotCenter = tuple.getSecond();
 			if (dotCenter == null) {
 				defender.updateFacing(dotCenter);
 			}
 			
 			tuple = robots.get(1);
-			attacker.updatePosition(tuple.getFirst());
+			attacker.updatePosition(tuple.getFirst().toMillis());
 			dotCenter = tuple.getSecond();
 			if (dotCenter == null) {
 				attacker.updateFacing(dotCenter);
