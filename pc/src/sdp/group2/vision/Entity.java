@@ -4,9 +4,11 @@ import static com.googlecode.javacv.cpp.opencv_core.CV_WHOLE_SEQ;
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvRectangle;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_core.cvGetSeqElem;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_CHAIN_APPROX_SIMPLE;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_RETR_LIST;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvBoundingRect;
+import static com.googlecode.javacv.cpp.opencv_core.cvGetImageROI;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvCanny;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvContourArea;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvFindContours;
@@ -66,6 +68,10 @@ public abstract class Entity {
     }
     
     public List<CvRect> boundingBoxes(IplImage binaryImage) {
+    	return boundingBoxes(binaryImage, 0, Integer.MAX_VALUE);
+    }
+    
+    public List<CvRect> boundingBoxes(IplImage binaryImage, int minArea, int maxArea) {
     	List<CvRect> rects = new ArrayList<CvRect>();
     	CvSeq seq = findContours(binaryImage);
     	
@@ -73,7 +79,9 @@ public abstract class Entity {
     	int count = 0;
     	for (CvSeq c = seq; c != null && !c.isNull() && count < 4; c = c.h_next()) {
     		// Only take it if area is positive - because it works
-    		if (cvContourArea(c, CV_WHOLE_SEQ, 1) < 0) {
+    		double area = cvContourArea(c, CV_WHOLE_SEQ, 1);
+//    		System.out.println(area);
+    		if (area < minArea || area > maxArea) {
     			continue;
     		}
     		rects.add(cvBoundingRect(c, 0));
@@ -88,28 +96,46 @@ public abstract class Entity {
      * @param binaryImage image to be searched
      * @return the centroid point
      */
-    public Point findCentroid(IplImage binaryImage, int areaMin) {
-    	List<Point> possibleCentroids = new ArrayList<Point>();
-    	CvSeq seq = findContours(binaryImage);
-    	for (CvSeq c = seq; c != null && !c.isNull(); c = c.h_next()) {
-    		// Only take it if area is positive - because it works
-    		if (cvContourArea(c, CV_WHOLE_SEQ, 1) < areaMin) {
-    			continue;
-    		}
-			CvMoments moments = new CvMoments();
-			cvMoments(c, moments, 0);
-			if (moments.isNull()) {
-				continue;
-			}
-			Point centroid = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
-			possibleCentroids.add(centroid);
-    	}
+    public Point findCentroid(IplImage binaryImage, int areaMin, int areaMax) {
+    	List<Point> possibleCentroids = findPossibleCentroids(binaryImage, areaMin, areaMax, Integer.MAX_VALUE);
     	if (possibleCentroids.size() == 0) {
     		return null;
     	} else {
     		// Maybe do some filtering - for now just return first
     		return possibleCentroids.get(0);
     	}
+    }
+    
+    public List<Point> findPossibleCentroids(IplImage binaryImage, int areaMin, int areaMax, int maxCount) {
+    	List<Point> possibleCentroids = new ArrayList<Point>();
+    	// Get the roi rect to offset the points
+		CvMoments moments = new CvMoments();
+    	CvRect roiRect = cvGetImageROI(binaryImage);
+    	CvSeq seq = findContours(binaryImage);
+//    	System.out.println("----------------------");
+    	for (CvSeq c = seq; c != null && possibleCentroids.size() < maxCount; c = c.h_next()) {
+    		// Only take it if area is positive - because it works
+    		double area = cvContourArea(c, CV_WHOLE_SEQ, 1);
+//    		System.out.println(area);
+    		if (area < areaMin || area > areaMax) {
+    			continue;
+    		}
+			cvMoments(c, moments, 0);
+			if (moments.isNull()) {
+				continue;
+			}
+			// This would result in a NaN bread
+			if (moments.m10() == 0 || moments.m00() == 0 || moments.m01() == 0) {
+				continue;
+			}
+			Point centroid = new Point(moments.m10() / moments.m00(), moments.m01() / moments.m00());
+			// Offset the point so it's relative to the origin
+			// and not the ROI
+			centroid.offset(roiRect.x(), roiRect.y());
+			possibleCentroids.add(centroid);
+    	}
+//    	System.out.println("----------------------");
+    	return possibleCentroids; 
     }
     
     /**
@@ -119,7 +145,7 @@ public abstract class Entity {
      * @return the centroid point
      */
     public Point findCentroid(IplImage binaryImage) {
-    	return findCentroid(binaryImage, 0);
+    	return findCentroid(binaryImage, 0, Integer.MAX_VALUE);
     }
     
     public abstract IplImage threshold(IplImage image);
