@@ -19,9 +19,10 @@ public class MasterController implements VisionServiceCallback {
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch = new Pitch();
-    private DefensivePlanner defPlanner;
+    private DefensivePlanner defPlanner = new DefensivePlanner(pitch);
     private OffensivePlanner offPlanner;
     private VisionService visionService;
+    private boolean ready = false; // true when we find all the objects
 
     public MasterController() {
         // Start the vision system
@@ -47,31 +48,78 @@ public class MasterController implements VisionServiceCallback {
         }
         MasterController mc = new MasterController();
         mc.start();
+        while (!mc.ready) {
+        	
+        }
+        mc.startPlanning();
     }
     
     public void start() {
         visionService.start();
     }
+    
+    public void startPlanning() {
+		Thread planning = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while(true) {
+					defPlanner.act();
+				}
+			}
+		});
+		
+		planning.start();
+    }
 
     @Override
     public void onPreparationFrame() {
-
     }
 
     @Override
     public void onExceptionThrown(Exception e) {
-
+    	e.printStackTrace();
     }
 
 	@Override
-	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+	public synchronized void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
+		boolean maybeReady = false;
+		
+		// If we don't have the ball then we're not ready
 		if (ballCentroid != null) {
 			pitch.updateBallPosition(ballCentroid.toMillis());
+			maybeReady = true;
 		}
 //		System.out.println(yellowRobots);
 //		System.out.println(blueRobots);
-		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
-		pitch.updateRobots(blueRobots, TeamColour.BLUE);
+		
+		// If we don't have all 4 robots, we're not ready
+		if (yellowRobots.size() != 2 || blueRobots.size() != 2) {
+			maybeReady = false;
+		}
+
+		// If one of the direction vectors is null we're not ready
+		// Position (first of tuple) is never null
+		for (Tuple<Point, Point> tuple : blueRobots) {
+			if (tuple.getSecond() == null) {
+				maybeReady = false;
+			}
+		}
+		
+		// If one of the direction vectors is null we're not ready
+		// Position (first of tuple) is never null
+		for (Tuple<Point, Point> tuple : yellowRobots) {
+			if (tuple.getSecond() == null) {
+				maybeReady = false;
+			}
+		}
+		
+		// By now we should be ready if maybe ready
+		if (maybeReady) {
+			pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
+			pitch.updateRobots(blueRobots, TeamColour.BLUE);
+		}
+		ready = maybeReady;
 	}
 }

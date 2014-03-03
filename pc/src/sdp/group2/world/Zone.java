@@ -5,12 +5,13 @@ import sdp.group2.world.Robot;
 
 
 public class Zone extends Plane {
-
-	Robot robot;
+	private int id;
+	private Robot robot;
 	
-	public Zone(byte id) {
-		super(Byte.toString(id));
+	public Zone(int id) {
+		super(Integer.toString(id));
 		robot = new Robot();
+		this.id = id;
 	}
 	
 	public void updateRobotState(Point p, double theta) {
@@ -24,5 +25,9 @@ public class Zone extends Plane {
 	public Point getRobotPosition() {
         return robot.getPosition();
     }
+	
+	public int getID() {
+		return id;
+	}
 	
 }

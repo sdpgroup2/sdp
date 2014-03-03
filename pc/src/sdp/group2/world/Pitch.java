@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import sdp.group2.geometry.*;
+import sdp.group2.world.Zone;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Tuple;
@@ -47,7 +48,7 @@ public class Pitch extends Plane implements IPitch {
      */
     public Pitch() {
         super("Pitch");
-        for (byte i = 0; i < zones.length; i++) {
+        for (int i = 0; i < zones.length; i++) {
             zones[i] = new Zone(i);
         }
     }
@@ -67,7 +68,7 @@ public class Pitch extends Plane implements IPitch {
         addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y + pitchRect.height));
         addPoint(new Point(pitchRect.x, pitchRect.y + pitchRect.height));
 
-        byte zoneId = 0;
+        int zoneId = 0;
         for (Rect section : sections) {
             zones[zoneId].addPoint(new Point(section.x, section.y));
             zones[zoneId].addPoint(section.x + section.width, section.y);
@@ -97,7 +98,7 @@ public class Pitch extends Plane implements IPitch {
         //this.robot.setDirection(direction.angle(new Vector2d(robotPosition.x, robotPosition.y)));
     }
 
-    public void setZoneOutline(byte id, PointSet ps) {
+    public void setZoneOutline(int id, PointSet ps) {
         zones[id].setOutline(ps);
     }
     
@@ -116,7 +117,7 @@ public class Pitch extends Plane implements IPitch {
 //	}
 
     @Override
-    public Zone getZone(byte id) {
+    public Zone getZone(int id) {
         return zones[id];
     }
 
@@ -130,18 +131,18 @@ public class Pitch extends Plane implements IPitch {
     }
 
     @Override
-    public void updateRobotState(byte id, Point p, double theta) {
+    public void updateRobotState(int id, Point p, double theta) {
         zones[id].updateRobotState(p, theta);
     }
 
     @Override
-    public int getBallZone() {
+    public Zone getBallZone() {
         for (int i = 0; i < zones.length; i++) {
             if (zones[i].contains(getBall().getPosition())) {
-                return i;
+                return new Zone((int) i);
             }
         }
-        return -1;
+        return new Zone((int) -1);
     }
 
 //	public void setTeamSide(){
@@ -195,7 +196,7 @@ public class Pitch extends Plane implements IPitch {
      * Returns the defender of our team.
      * @return our defender Robot
      */
-    public Robot getOurDefender() {
+    public Robot getOurDefenderRobot() {
         if (ourTeam == TeamColour.YELLOW) {
             return yellowDefender;
         } else {
@@ -304,57 +305,57 @@ public class Pitch extends Plane implements IPitch {
     // Any returns of -1 is not found
     public boolean foeAttackerHasBall() {
         if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone() == getBlueAttackZone());
+            return (getBallZone().getID() == getBlueAttackZone());
         } else {
-            return (getBallZone() == getYellowAttackZone());
+            return (getBallZone().getID() == getYellowAttackZone());
         }
     }
 
     // Any returns of -1 is not found
     public boolean foeDefenderHasBall() {
         if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone() == getYellowDefendZone());
+            return (getBallZone().getID() == getYellowDefendZone());
         } else {
-            return (getBallZone() == getBlueDefendZone());
+            return (getBallZone().getID() == getBlueDefendZone());
         }
     }
 
     // Any returns of -1 is not found
     public boolean ourAttackerHasBall() {
         if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone() == getYellowAttackZone());
+            return (getBallZone().getID() == getYellowAttackZone());
         } else {
-            return (getBallZone() == getBlueAttackZone());
+            return (getBallZone().getID() == getBlueAttackZone());
         }
     }
 
     // Any returns of -1 is not found
     public boolean ourDefenderHasBall() {
         if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone() == getYellowDefendZone());
+            return (getBallZone().getID() == getYellowDefendZone());
         } else {
-            return (getBallZone() == getBlueDefendZone());
+            return (getBallZone().getID() == getBlueDefendZone());
         }
     }
     
-    public int getOurDefendZone(){
+    public Zone getOurDefendZone(){
     	if (ourSide == TeamSide.LEFT){
-    		return 0;
+    		return new Zone(0);
     	} else {
-    		return 3;
+    		return new Zone(3);
     	}
     }
     
-    public int getOurAttackZone(){
+    public Zone getOurAttackZone(){
     	if (ourSide == TeamSide.LEFT){
-    		return 2;
+    		return new Zone(2);
     	} else {
-    		return 1;
+    		return new Zone(1);
     	}
     }
 
 	@Override
-	public void setZone(byte id, PointSet ps) {
+	public void setZone(int id, PointSet ps) {
 		// TODO Auto-generated method stub
 		
 	}
