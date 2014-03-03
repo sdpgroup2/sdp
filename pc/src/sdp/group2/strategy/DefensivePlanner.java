@@ -180,7 +180,6 @@ public class DefensivePlanner extends Planner {
     	//If the ball is in our defending zone, pass;
     	//Else stay at GOAL.x, Ball.y 
     	if (pitch.getBallZone().getID() == defenceZone.getID()){
-    		System.out.println("got here");
     		pass();
     	} else {
     		interceptSimple();

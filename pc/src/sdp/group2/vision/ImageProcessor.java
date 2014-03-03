@@ -198,8 +198,8 @@ public class ImageProcessor {
     public static void process(BufferedImage inputImage) {
         image = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
-//        undistort(image, temp, cameraMatrix, distCoeffs);
-        crop(image, cropRectMain);
+        undistort(image, temp, cameraMatrix, distCoeffs);
+        crop(image, cropRectSide);
         cvConvertScale(image, image, 2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);

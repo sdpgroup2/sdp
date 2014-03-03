@@ -49,8 +49,8 @@ public class MasterController implements VisionServiceCallback {
             System.err.println(e.getMessage());
         }
         
-        CommunicationService commService = new CommunicationService(Constants.ROBOT_2D_NAME);
-        commService.startRunningFromQueue();
+//        CommunicationService commService = new CommunicationService(Constants.ROBOT_2D_NAME);
+//        commService.startRunningFromQueue();
         final MasterController controller = new MasterController();    
         controller.start();
   
@@ -72,7 +72,7 @@ public class MasterController implements VisionServiceCallback {
     }
 
 	@Override
-	public synchronized void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
 		boolean maybeReady = false;
 		
@@ -115,6 +115,9 @@ public class MasterController implements VisionServiceCallback {
 			pitch.updateRobots(blueRobots, TeamColour.BLUE);
 		}
 		ready = maybeReady;
-		defPlanner.act();
+		
+//		if(ready) {
+			defPlanner.act();
+//		}
 	}
 }
