@@ -88,11 +88,11 @@ public class MasterController implements VisionServiceCallback {
 		
 		// If we don't have the ball then we're not ready
 		if (ballCentroid != null) {
+			
 			pitch.updateBallPosition(ballCentroid.toMillis());
+			System.out.printf("Ball position: %s\n", ballCentroid);
 			maybeReady = true;
 		}
-//		System.out.println(yellowRobots);
-//		System.out.println(blueRobots);
 		
 		// If we don't have all 4 robots, we're not ready
 		if (yellowRobots.size() != 2 || blueRobots.size() != 2) {
@@ -102,6 +102,8 @@ public class MasterController implements VisionServiceCallback {
 		// If one of the direction vectors is null we're not ready
 		// Position (first of tuple) is never null
 		for (Tuple<Point, Point> tuple : blueRobots) {
+			System.out.printf("Blue Robot position %s\n", tuple.getFirst());
+			System.out.printf("Blue Robot dot position %s\n", tuple.getSecond());
 			if (tuple.getSecond() == null) {
 				maybeReady = false;
 			}
@@ -110,6 +112,8 @@ public class MasterController implements VisionServiceCallback {
 		// If one of the direction vectors is null we're not ready
 		// Position (first of tuple) is never null
 		for (Tuple<Point, Point> tuple : yellowRobots) {
+			System.out.printf("Yellow Robot position %s\n", tuple.getFirst());
+			System.out.printf("Yellow Robot dot position %s\n", tuple.getSecond());
 			if (tuple.getSecond() == null) {
 				maybeReady = false;
 			}

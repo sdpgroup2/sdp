@@ -112,11 +112,11 @@ public abstract class Entity {
 		CvMoments moments = new CvMoments();
     	CvRect roiRect = cvGetImageROI(binaryImage);
     	CvSeq seq = findContours(binaryImage);
-    	System.out.println("----------------------");
+//    	System.out.println("----------------------");
     	for (CvSeq c = seq; c != null && possibleCentroids.size() < maxCount; c = c.h_next()) {
     		// Only take it if area is positive - because it works
     		double area = cvContourArea(c, CV_WHOLE_SEQ, 1);
-    		System.out.println(area);
+//    		System.out.println(area);
     		if (area < areaMin || area > areaMax) {
     			continue;
     		}
@@ -134,7 +134,7 @@ public abstract class Entity {
 			centroid.offset(roiRect.x(), roiRect.y());
 			possibleCentroids.add(centroid);
     	}
-    	System.out.println("----------------------");
+//    	System.out.println("----------------------");
     	return possibleCentroids; 
     }
     

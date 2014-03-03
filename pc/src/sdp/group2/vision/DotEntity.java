@@ -44,25 +44,25 @@ public class DotEntity extends Entity {
      */
     public Point findClosestCentroid(IplImage binaryImage, int areaMin, int areaMax, Point origPoint) {
     	List<Point> possibleCentroids = findPossibleCentroids(binaryImage, areaMin, areaMax, Integer.MAX_VALUE);
-    	System.out.println(possibleCentroids);
+//    	System.out.println(possibleCentroids);
     	if (possibleCentroids.size() == 0) {
     		return null;
     	}
 		// Maybe do some filtering - for now just return first
 		Point minPoint = null;
 		double minDist = Integer.MAX_VALUE;
-		System.out.println("------------------------");
+//		System.out.println("------------------------");
 		for (int i = 0; i < possibleCentroids.size(); i++) {
 			Point centroid = possibleCentroids.get(i);
 			double dist = centroid.distance(origPoint);
-			System.out.println(dist);
+//			System.out.println(dist);
 			if (dist < minDist) {
 				minPoint = centroid;
 				minDist = dist; 
 			}
 		}
-		System.out.println(minDist);
-		System.out.println("------------------------");
+//		System.out.println(minDist);
+//		System.out.println("------------------------");
 //		System.out.println(origPoint);
 //		System.out.println(minPoint);
 		return minPoint;
