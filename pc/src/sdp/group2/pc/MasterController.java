@@ -2,9 +2,11 @@ package sdp.group2.pc;
 
 import java.util.List;
 
+import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
+import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
@@ -46,31 +48,19 @@ public class MasterController implements VisionServiceCallback {
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
-        MasterController mc = new MasterController();
-        mc.start();
-        while (!mc.ready) {
-        	
-        }
-        mc.startPlanning();
+        
+        CommunicationService commService = new CommunicationService(Constants.ROBOT_2D_NAME);
+        commService.startRunningFromQueue();
+        final MasterController controller = new MasterController();    
+        controller.start();
+  
     }
     
     public void start() {
         visionService.start();
     }
     
-    public void startPlanning() {
-		Thread planning = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while(true) {
-					defPlanner.act();
-				}
-			}
-		});
-		
-		planning.start();
-    }
+    
 
     @Override
     public void onPreparationFrame() {
@@ -121,5 +111,6 @@ public class MasterController implements VisionServiceCallback {
 			pitch.updateRobots(blueRobots, TeamColour.BLUE);
 		}
 		ready = maybeReady;
+		defPlanner.act();
 	}
 }
