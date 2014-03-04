@@ -52,31 +52,6 @@ public class Pitch extends Plane implements IPitch {
             zones[i] = new Zone(i);
         }
     }
-
-    /**
-     * Initialises the pitch with a given bounding rectangle of the pitch
-     * and the sections.
-     *
-     * @param pitchRect bounding rectangle of the pitch
-     * @param sections  bounding rectangles of the sections
-     */
-    public Pitch(Rect pitchRect, Rect[] sections, TeamColour ourTeam) {
-        this();
-        this.ourTeam = ourTeam;
-        addPoint(new Point(pitchRect.x, pitchRect.y));
-        addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y));
-        addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y + pitchRect.height));
-        addPoint(new Point(pitchRect.x, pitchRect.y + pitchRect.height));
-
-        int zoneId = 0;
-        for (Rect section : sections) {
-            zones[zoneId].addPoint(new Point(section.x, section.y));
-            zones[zoneId].addPoint(section.x + section.width, section.y);
-            zones[zoneId].addPoint(section.x + section.width, section.y + section.height);
-            zones[zoneId].addPoint(section.x, section.y + section.height);
-            zoneId++;
-        }
-    }
     
     public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls) {
     	this();
