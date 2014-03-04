@@ -110,8 +110,9 @@ public class VisionService implements CaptureCallback {
 		List<Tuple<Point, Point>> blueRobots = ImageProcessor.blueRobots();
         switch (state) {
 		case Preparation:
-    		boolean prepared = false;
-    		
+			System.out.println("Not prepared.");
+			boolean prepared = false;
+
     		// If we don't have the ball then we're not ready
     		if (ballCentroid != null) {
     			System.out.printf("Ball position: %s\n", ballCentroid);
@@ -149,6 +150,7 @@ public class VisionService implements CaptureCallback {
 			break;
 
 		case Processing:
+			System.out.println("Prepared!");
 	        // Now the objects should be set
 	        callback.update(ballCentroid, yellowRobots, blueRobots);
 	        break;

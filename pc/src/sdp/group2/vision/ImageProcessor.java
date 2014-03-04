@@ -153,11 +153,11 @@ public class ImageProcessor {
         // Convert from BGR to HSV
         cvCvtColor(image, temp, CV_BGR2HSV);
         
-//        binaryImage = ballEntity.threshold(temp);
-//        ballCentroid = ballEntity.findCentroid(binaryImage);
-//        if (MasterController.ENABLE_GUI) {
-//        	entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
-//        }
+        binaryImage = ballEntity.threshold(temp);
+        ballCentroid = ballEntity.findCentroid(binaryImage);
+        if (MasterController.ENABLE_GUI) {
+        	entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        }
         
         binaryImage = robotEntity.threshold(temp);
         robotEntity.detectRobots(temp, binaryImage);
@@ -200,7 +200,7 @@ public class ImageProcessor {
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRectSide);
-        cvConvertScale(image, image, 2, 0); // increase contrast or whatever
+//        cvConvertScale(image, image, 1.2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);
         if (MasterController.ENABLE_GUI) {
