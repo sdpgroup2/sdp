@@ -24,7 +24,6 @@ public class MasterController implements VisionServiceCallback {
     private DefensivePlanner defPlanner = new DefensivePlanner(pitch);
     private OffensivePlanner offPlanner;
     private VisionService visionService;
-    private boolean ready = false; // true when we find all the objects
 
     public MasterController() {
         // Start the vision system
@@ -74,50 +73,10 @@ public class MasterController implements VisionServiceCallback {
 	@Override
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
-		boolean maybeReady = false;
+		pitch.updateBallPosition(ballCentroid.toMillis());
+		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
+		pitch.updateRobots(blueRobots, TeamColour.BLUE);
 		
-		// If we don't have the ball then we're not ready
-		if (ballCentroid != null) {
-			
-			pitch.updateBallPosition(ballCentroid.toMillis());
-			System.out.printf("Ball position: %s\n", ballCentroid);
-			maybeReady = true;
-		}
-		
-		// If we don't have all 4 robots, we're not ready
-		if (yellowRobots.size() != 2 || blueRobots.size() != 2) {
-			maybeReady = false;
-		}
-
-		// If one of the direction vectors is null we're not ready
-		// Position (first of tuple) is never null
-		for (Tuple<Point, Point> tuple : blueRobots) {
-			System.out.printf("Blue Robot position %s\n", tuple.getFirst());
-			System.out.printf("Blue Robot dot position %s\n", tuple.getSecond());
-			if (tuple.getSecond() == null) {
-				maybeReady = false;
-			}
-		}
-		
-		// If one of the direction vectors is null we're not ready
-		// Position (first of tuple) is never null
-		for (Tuple<Point, Point> tuple : yellowRobots) {
-			System.out.printf("Yellow Robot position %s\n", tuple.getFirst());
-			System.out.printf("Yellow Robot dot position %s\n", tuple.getSecond());
-			if (tuple.getSecond() == null) {
-				maybeReady = false;
-			}
-		}
-		
-		// By now we should be ready if maybe ready
-		if (maybeReady) {
-			pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
-			pitch.updateRobots(blueRobots, TeamColour.BLUE);
-		}
-		ready = maybeReady;
-		
-//		if(ready) {
-			defPlanner.act();
-//		}
+		defPlanner.act();
 	}
 }

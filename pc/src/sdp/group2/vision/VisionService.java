@@ -1,12 +1,15 @@
 package sdp.group2.vision;
 
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.SwingWorker;
 
+import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Rect;
 import sdp.group2.pc.Timer;
 import sdp.group2.util.Debug;
+import sdp.group2.util.Tuple;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.DeviceInfo;
 import au.edu.jcu.v4l4j.InputInfo;
@@ -29,7 +32,6 @@ public class VisionService implements CaptureCallback {
 	private VisionServiceCallback callback;
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
-	private int preparationFrames;
 
 	/**
 	 * Initialises a new vision service with a certain device name, number of
@@ -45,7 +47,6 @@ public class VisionService implements CaptureCallback {
 	public VisionService(String deviceName, int preparationFrames,
 			VisionServiceCallback callback) {
 		this.callback = callback;
-		this.preparationFrames = preparationFrames;
 		try {
 			this.device = new VideoDevice(deviceName);
 			DeviceInfo deviceInfo = device.getDeviceInfo();
@@ -102,52 +103,60 @@ public class VisionService implements CaptureCallback {
 	@Override
     public void nextFrame(VideoFrame frame) {
         timer.tick(25); // Prints the framerate every 25 frames
-//        boolean ready = false;
-//        PointSet pitchPoints = new PointSet();
-//        pitchPoints.add(new Point(101, 94));
-//        pitchPoints.add(new Point(66, 164));
-//        pitchPoints.add(new Point(67, 311));
-//        pitchPoints.add(new Point(100, 377));
-//        pitchPoints.add(new Point(546, 382));
-//        pitchPoints.add(new Point(584, 315));
-//        pitchPoints.add(new Point(588, 170));
-//        pitchPoints.add(new Point(554, 100));
-//        PointSet[] zonePoints = new PointSet[4];
-//        for (int i = 0; i < zonePoints.length; i++) {
-//			zonePoints[i] = new PointSet();
-//		}
-//        zonePoints[0].add(new Point(157,89));
-//        zonePoints[0].add(new Point(101,94));
-//        zonePoints[0].add(new Point(66,164));
-//        zonePoints[0].add(new Point(67,311));
-//        zonePoints[0].add(new Point(100,377));
-//        zonePoints[0].add(new Point(155,382));
-//        
-//        zonePoints[1].add(new Point(206,88));
-//        zonePoints[1].add(new Point(306,88));
-//        zonePoints[1].add(new Point(204,383));
-//        zonePoints[1].add(new Point(301,385));
-//        
-//        zonePoints[2].add(new Point(356,90));
-//        zonePoints[2].add(new Point(453,94));
-//        zonePoints[2].add(new Point(350,385));
-//        zonePoints[2].add(new Point(447,385));
-//        
-//        zonePoints[3].add(new Point(502,95));
-//        zonePoints[3].add(new Point(554,100));
-//        zonePoints[3].add(new Point(588,170));
-//        zonePoints[3].add(new Point(584,315));
-//        zonePoints[3].add(new Point(546,382));
-//        zonePoints[3].add(new Point(495,384));
-//        
-//        Pitch pitch = new Pitch(pitchPoints, zonePoints);
-//        imageProcessor.process(frame.getBufferedImage());
-//        Ball ball = new Ball();
-//        pitch.updateBallPosition(imageProcessor.getBallPoint());
-//        pitch.updateRobotState(id, p, theta)
+
         ImageProcessor.process(frame.getBufferedImage());
-        // Now the objects should be set
-        callback.update(ImageProcessor.ballCentroid(), ImageProcessor.yellowRobots(), ImageProcessor.blueRobots());
+		Point ballCentroid = ImageProcessor.ballCentroid();
+		List<Tuple<Point, Point>> yellowRobots = ImageProcessor.yellowRobots();
+		List<Tuple<Point, Point>> blueRobots = ImageProcessor.blueRobots();
+        switch (state) {
+		case Preparation:
+    		boolean prepared = false;
+    		
+    		// If we don't have the ball then we're not ready
+    		if (ballCentroid != null) {
+    			System.out.printf("Ball position: %s\n", ballCentroid);
+    			prepared = true;
+    		}
+    		
+    		// If we don't have all 4 robots, we're not ready
+    		if (yellowRobots.size() != 2 || blueRobots.size() != 2) {
+    			prepared = false;
+    		}
+
+    		// If one of the direction vectors is null we're not ready
+    		// Position (first of tuple) is never null
+    		for (Tuple<Point, Point> tuple : blueRobots) {
+    			System.out.printf("Blue Robot position %s\n", tuple.getFirst());
+    			System.out.printf("Blue Robot dot position %s\n", tuple.getSecond());
+    			if (tuple.getSecond() == null) {
+    				prepared = false;
+    			}
+    		}
+    		
+    		// If one of the direction vectors is null we're not ready
+    		// Position (first of tuple) is never null
+    		for (Tuple<Point, Point> tuple : yellowRobots) {
+    			System.out.printf("Yellow Robot position %s\n", tuple.getFirst());
+    			System.out.printf("Yellow Robot dot position %s\n", tuple.getSecond());
+    			if (tuple.getSecond() == null) {
+    				prepared = false;
+    			}
+    		}
+    		if (prepared) {
+    			// We're ready switch to processing
+    			state = VisionState.Processing;
+    		}
+			break;
+
+		case Processing:
+	        // Now the objects should be set
+	        callback.update(ballCentroid, yellowRobots, blueRobots);
+	        break;
+	       
+	    default:
+	    	// Shouldnt occur
+	    	break;
+		}
         frame.recycle();
         return;
     }
