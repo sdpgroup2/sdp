@@ -24,7 +24,7 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 		double theta = Math.atan2(this.y - other.y, this.x - other.x);
 		
 		while (theta > Math.PI)  { theta -= 2 * Math.PI; }
-		while (theta < -Math.PI) { theta += 2 * Math.PI; }
+		while (theta <= -Math.PI) { theta += 2 * Math.PI; }
 		
 		System.out.println("***");
 		System.out.println(this);

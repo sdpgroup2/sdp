@@ -17,7 +17,7 @@ public class Millimeter {
 	}
 	
 	public static double pix2mm(double pix) {
-		return 0.259843661 * pix;
+		return pix / 0.259843661;
 	}
 	
 	public static int mm2pix(double mm) {
