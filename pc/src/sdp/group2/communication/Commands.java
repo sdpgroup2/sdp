@@ -33,6 +33,9 @@ public class Commands{
 	public final static short BEEP = 42;
 	public final static short ARC = 37;
 	public final static short STEER = 36;
+	
+	public final static short SIMPLEGRAB = 37;
+	public final static short SIMPLEKICK = 38;
 
 	/**
 	 * 
@@ -61,6 +64,15 @@ public class Commands{
 	public static int[] kick(int angle, int speed) {
 		return new int[] {KICK,angle,speed,0};
 		
+	}
+	
+	
+	public static int[] simpleGrab() {
+		return new int[] {SIMPLEGRAB, 0, 0, 0};
+	}
+	
+	public static int[] simpleKick() {
+		return new int[] {SIMPLEKICK, 0, 0, 0};
 	}
 	
 	/**

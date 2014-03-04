@@ -67,6 +67,18 @@ public class Sender implements CommInterface {
 		return confirmation;
 
 	}
+	
+	public synchronized int simpleKick() throws IOException {
+		short[] command = { Commands.SIMPLEKICK, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		return confirmation;
+	}
+	
+	public synchronized int simpleGrab() throws IOException {
+		short[] command = { Commands.SIMPLEGRAB, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		return confirmation;
+	}
 
 	public synchronized int stop() {
 		short[] command = { Commands.STOP, 0, 0, 0 };
