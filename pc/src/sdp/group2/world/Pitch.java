@@ -159,37 +159,50 @@ public class Pitch extends Plane implements IPitch {
         return ball;
     }
     
+    private boolean isDefender(Point point) {
+		if (zones[0].contains(point) || 
+				zones[3].contains(point)) {
+			return true;
+		}
+    	return false;
+    }
+    
     public void updateRobots(List<Tuple<Point, Point>> robots, TeamColour colour) {
     	// Only take more than 1 robot because otherwise
     	// we don't know if defender or attacker
     	if (robots.size() > 1) {
     		// Needs to be sorted by defender first and attacker next or something
-    		Collections.sort(robots);
-    		Robot defender;
-    		Robot attacker;
-    		
-    		if (colour == TeamColour.YELLOW) {
-    			defender = yellowDefender;
-    			attacker = yellowAttacker;
-    		} else {
-    			defender = blueDefender;
-    			attacker = blueAttacker;
-    		}
-    		
-    		Tuple<Point, Point> tuple = robots.get(0);
-			defender.updatePosition(tuple.getFirst().toMillis());
-    		Point dotCenter = tuple.getSecond();
-			if (dotCenter == null) {
-				defender.updateFacing(dotCenter);
-			}
-			
-			tuple = robots.get(1);
-			attacker.updatePosition(tuple.getFirst().toMillis());
-			dotCenter = tuple.getSecond();
-			if (dotCenter == null) {
-				attacker.updateFacing(dotCenter);
+    		for (Tuple<Point, Point> tuple : robots) {
+				Point position = tuple.getFirst();
+				Point dotPosition = tuple.getSecond();
+    			if (colour == TeamColour.YELLOW) {
+    				if (isDefender(position)) {
+    					yellowDefender.updatePosition(position);
+    					if (dotPosition == null) {
+    						yellowDefender.updateFacing(dotPosition);
+    					}
+    				} else {
+    					yellowAttacker.updatePosition(position);
+    					if (dotPosition == null) {
+    						yellowAttacker.updateFacing(dotPosition);
+    					}
+    				}
+    			} else {
+    				if (isDefender(position)) {
+    					blueDefender.updatePosition(position);
+    					if (dotPosition == null) {
+    						blueDefender.updateFacing(dotPosition);
+    					}
+    				} else {
+    					blueAttacker.updatePosition(position);
+    					if (dotPosition == null) {
+    						blueAttacker.updateFacing(dotPosition);
+    					}
+    				}
+    			}
 			}
     	}
+    	System.out.println();
     }
 
     /**

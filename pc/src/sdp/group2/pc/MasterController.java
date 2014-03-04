@@ -29,7 +29,7 @@ public class MasterController implements VisionServiceCallback {
     public MasterController() {
         // Start the vision system
         this.visionService = new VisionService(5, this);
-        this.commService = new CommunicationService(Constants.ROBOT_2D_NAME);
+//        this.commService = new CommunicationService(Constants.ROBOT_2D_NAME);
     }
 
     /**
@@ -72,10 +72,12 @@ public class MasterController implements VisionServiceCallback {
 	@Override
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
-		pitch.updateBallPosition(ballCentroid.toMillis());
+		if (ballCentroid != null) {
+			pitch.updateBallPosition(ballCentroid.toMillis());
+		}
 		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
 		pitch.updateRobots(blueRobots, TeamColour.BLUE);
 		
-		defPlanner.act();
+//		defPlanner.act();
 	}
 }
