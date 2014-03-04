@@ -30,8 +30,7 @@ public class Sender implements CommInterface {
 	
 
 	public Sender(String robotName, String robotMacAddress) throws IOException{
-		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
-				robotMacAddress);
+		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName, robotMacAddress);
 		openBluetoothConn(robotName);
 	}
 
@@ -113,7 +112,6 @@ public class Sender implements CommInterface {
 	}
 
 	private void openBluetoothConn(String robotName) throws IOException {
-
 		comm = null;
 		try {
 			comm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
