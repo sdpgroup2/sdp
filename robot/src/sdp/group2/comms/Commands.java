@@ -31,4 +31,8 @@ public class Commands {
 	public final static int BEEP = 42;
 	public final static int ARC = 37;
 	public final static int STEER = 36;
+	public final static int OPENKICKER = 25;
+	public final static int CLOSEKICKER = 26;
+	public final static int ROTATEKICKER = 27;
+	
 }
