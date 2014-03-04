@@ -65,6 +65,9 @@ public class Visualizator extends JFrame {
 		this.setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		pitch.updateBallPosition(new Point(500, 400));
+		
     }
     
     private void drawOutline() {
