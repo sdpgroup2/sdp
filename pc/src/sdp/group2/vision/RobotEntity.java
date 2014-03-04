@@ -9,6 +9,7 @@ import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static sdp.group2.vision.ImageProcessor.newImage;
 
@@ -45,14 +46,14 @@ public class RobotEntity extends Entity {
     
 //    // SIDE PITCH
     int[][] mins = new int[][] {
-            new int[] {40, 60, 180}, // base plate min
+            new int[] {40, 60, 150}, // base plate min
 //            new int[] {19, 107, 155}, // yellow min
 //            new int[] {135, 20, 34}, // blue min
 //            new int[] {20, 49, 120}, // dot min
     };
 //
     int[][] maxs = new int[][] {
-            new int[] {80, 230, 255}, // base plate max
+            new int[] {80, 160, 255}, // base plate max
 //            new int[] {36, 155, 255}, // yellow max
 //            new int[] {200, 50, 70}, // blue max
 //            new int[] {57, 89, 160}, // dot max
@@ -87,6 +88,7 @@ public class RobotEntity extends Entity {
 //        cvInRangeS(hsvImage, cvScalar(mins[2][0], mins[2][1], mins[2][2], 0), cvScalar(maxs[2][0], maxs[2][1], maxs[2][2], 0), tempImage);
 //        cvOr(binaryImage, tempImage, binaryImage, null);
         // Measure so we connect to one component
+        cvErode(binaryImage, binaryImage, null, 3);
         cvDilate(binaryImage, binaryImage, null, 9);
         return binaryImage;
     }
@@ -99,7 +101,7 @@ public class RobotEntity extends Entity {
     	blueRobots.clear();
     	for (Point rectCentroid : centroids) {
     		// Set the region of interest so we threshold only part of image
-    		CvRect rect = rectFromPoint(rectCentroid, 30, 30);
+    		CvRect rect = rectFromPoint(rectCentroid, 40, 40);
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);

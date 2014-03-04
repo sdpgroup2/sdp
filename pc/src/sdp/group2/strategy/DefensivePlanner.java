@@ -2,6 +2,7 @@ package sdp.group2.strategy;
 
 import java.io.IOException;
 
+
 import lejos.geom.Rectangle;
 import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
@@ -10,7 +11,9 @@ import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
+import sdp.group2.geometry.Vector;
 import sdp.group2.util.Constants;
+import sdp.group2.world.Ball;
 import sdp.group2.world.IPitch;
 import sdp.group2.world.Robot;
 import sdp.group2.world.Zone;
@@ -48,20 +51,18 @@ public class DefensivePlanner extends Planner {
      */
     public void interceptSimple() {
     	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Ball ball = pitch.getBall();
     	System.out.println("Sending intercept comand.");
         if (defenceRobot.isMoving()) {
             return;
         }
-        double yBall = pitch.getBall().getPosition().getY();
-        double yRobot = defenceRobot.getPosition().getY();
-        // int distance = (int) Plane.pix2mm((int) (xBall - xRobot));
-//        int distance = (int) Plane.pix2mm((int) (yBall - yRobot));
-        int distance = (int)GOAL.sub(defenceRobot.getPosition()).length();
+        Vector diffVector = ball.getPosition().sub(defenceRobot.getPosition());
+        int distance = (int) Math.round(diffVector.y);
         int sign = distance < 0 ? -1 : 1;
         distance = Math.abs(distance);
         
         //ERROR
-        double angle = defenceRobot.angleToPoint(new Point (GOAL.x, pitch.getBall().getPosition().y));
+        double angle = defenceRobot.angleToPoint(new Point(GOAL.x, ball.getPosition().y));
 
         CommandQueue.add(Commands.rotate(((int)Math.floor(angle)), Constants.DEF_MOVE_SPEED), robotName);
         CommandQueue.add(Commands.move(sign, Constants.DEF_MOVE_SPEED, distance), robotName);

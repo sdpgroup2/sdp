@@ -14,15 +14,14 @@ public class TestComms {
 //		planner2A.startRunningFromQueue();
 //		planner2A.startRunningFromQueue();
 
-		CommunicationService commService = new CommunicationService(Constants.ROBOT_2A_NAME);
+		CommunicationService commService = new CommunicationService(Constants.ROBOT_2D_NAME);
 		commService.startRunningFromQueue();
 
-		CommandQueue.add(Commands.move(1, 34, 2000), Constants.ROBOT_2A_NAME);
-		CommandQueue.add(Commands.kick(30, 3403), Constants.ROBOT_2A_NAME);
-		CommandQueue.add(Commands.rotate(180,2344), Constants.ROBOT_2A_NAME);
+		CommandQueue.add(Commands.move(1, 34, 2000), Constants.ROBOT_2D_NAME);
+		CommandQueue.add(Commands.kick(30, 3403), Constants.ROBOT_2D_NAME);
+		CommandQueue.add(Commands.rotate(180,2344), Constants.ROBOT_2D_NAME);
 
-		
-		Thread input = new Thread(new Runnable(){
+		Thread input = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -32,7 +31,7 @@ public class TestComms {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				CommandQueue.clear(Constants.ROBOT_2A_NAME);
+				CommandQueue.clear(Constants.ROBOT_2D_NAME);
 			}	
 		});
 //		input.start();
