@@ -8,6 +8,7 @@ import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
 import sdp.group2.communication.Sender;
 import sdp.group2.geometry.Line;
+import sdp.group2.geometry.Millimeter;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
@@ -23,7 +24,7 @@ public class DefensivePlanner extends Planner {
 
     private static final int SPEED = 40;
     private static final String robotName = Constants.ROBOT_2D_NAME;
-    private static final Point GOAL = new Point(0, Plane.pix2mm(150));
+    private static final Point GOAL = new Point(0, Millimeter.pix2mm(150));
     private boolean isRobotAligned = false;
     private Sender sender;
     private long lastRotation = System.currentTimeMillis();

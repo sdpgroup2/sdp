@@ -41,12 +41,16 @@ public class Robot extends MovableObject {
     }
 
     public double getDirection() {
-        return direction;
+    	System.out.println("** Angle vectors **");
+    	System.out.println(facingVector);
+    	System.out.println(new Vector(1, 0));
+    	System.out.println("** --- **");
+        return facingVector.angleDegrees(new Vector(1, 0));
     }
     
     public void updateFacing(Point dotPosition) {
     	if (dotPosition != null) {
-    		this.facingVector = getPosition().sub(dotPosition.toMillis());
+    		this.facingVector = getPosition().sub(dotPosition);
     	}
     }
 
