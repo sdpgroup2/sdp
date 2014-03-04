@@ -92,6 +92,24 @@ public class Receiver {
 							replyToPC(opcode, outStream);
 							break;
 							
+						case Commands.OPENKICKER:
+							LCD.clear();
+							LCD.refresh();
+							pilot.openKicker();
+							break;
+							
+						case Commands.CLOSEKICKER:
+							LCD.clear();
+							LCD.refresh();
+							pilot.closeKicker();
+							break;
+							
+						case Commands.ROTATEKICKER:
+							LCD.clear();
+							LCD.refresh();
+							pilot.rotateKicker();
+							break;
+							
 						case Commands.DISCONNECT: 
 							break;
 							
