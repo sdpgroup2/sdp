@@ -2,11 +2,9 @@ package sdp.group2.pc;
 
 import java.util.List;
 
-import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
-import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
@@ -57,9 +55,7 @@ public class MasterController implements VisionServiceCallback {
     
     public void start() {
         visionService.start();
-    }
-    
-    
+    }    
 
     @Override
     public void onPreparationFrame() {
