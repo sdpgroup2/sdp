@@ -33,8 +33,12 @@
     </target>
 
 	<target name="run-bt" depends="compile">
-		<java dir="." classpathref="build.classpath" classname="sdp.group2.comms.TestComms">
-		</java>
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.communication.TestComms">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+        	<arg value="0"/>
+        	<arg value="0"/>
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+        </java>
 	</target>
 	
 	<target name="run-simulation" depends="compile">
