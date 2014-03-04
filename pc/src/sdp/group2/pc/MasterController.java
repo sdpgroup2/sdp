@@ -57,8 +57,8 @@ public class MasterController implements VisionServiceCallback {
     
     public void start() {
         visionService.start();
-        commService.startRunningFromQueue();
-    }    
+//        commService.startRunningFromQueue();
+    }
 
     @Override
     public void onPreparationFrame() {
@@ -77,7 +77,7 @@ public class MasterController implements VisionServiceCallback {
 		}
 		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
 		pitch.updateRobots(blueRobots, TeamColour.BLUE);
-		
+		System.out.println();
 //		defPlanner.act();
 	}
 }

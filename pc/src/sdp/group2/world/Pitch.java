@@ -202,7 +202,6 @@ public class Pitch extends Plane implements IPitch {
     			}
 			}
     	}
-    	System.out.println();
     }
 
     /**
