@@ -55,7 +55,7 @@ public class ImageProcessor {
     private static Point ballCentroid;
     
     static {
-    	cropRectSide = cvRect(30, 80, 590, 315);
+    	cropRectSide = cvRect(45, 90, 543, 300);
     	cropRectMain = cvRect(30, 60, 590, 310);
         if (MasterController.ENABLE_GUI) {
         	imageViewer = new ImageViewer();

@@ -22,53 +22,17 @@ public class MasterController implements VisionServiceCallback {
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch;
-    private DefensivePlanner defPlanner = new DefensivePlanner(pitch);
+    private DefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
     private VisionService visionService;
     private CommunicationService commService;
 
     public MasterController() {
-    	// Create a pitch
-    	PointSet pitchPoints = new PointSet();
-    	pitchPoints.add(new Point(101, 94));
-    	pitchPoints.add(new Point(66, 164));
-    	pitchPoints.add(new Point(67, 311));
-    	pitchPoints.add(new Point(100, 377));
-    	pitchPoints.add(new Point(546, 382));
-    	pitchPoints.add(new Point(584, 315));
-		  pitchPoints.add(new Point(588, 170));
-		  pitchPoints.add(new Point(554, 100));
-		  PointSet[] zonePoints = new PointSet[4];
-		  for (int i = 0; i < zonePoints.length; i++) {
-				zonePoints[i] = new PointSet();
-			}
-		  zonePoints[0].add(new Point(157,89));
-		  zonePoints[0].add(new Point(101,94));
-		  zonePoints[0].add(new Point(66,164));
-		  zonePoints[0].add(new Point(67,311));
-		  zonePoints[0].add(new Point(100,377));
-		  zonePoints[0].add(new Point(155,382));
-		  
-		  zonePoints[1].add(new Point(206,88));
-		  zonePoints[1].add(new Point(306,88));
-		  zonePoints[1].add(new Point(204,383));
-		  zonePoints[1].add(new Point(301,385));
-		  
-		  zonePoints[2].add(new Point(356,90));
-		  zonePoints[2].add(new Point(453,94));
-		  zonePoints[2].add(new Point(350,385));
-		  zonePoints[2].add(new Point(447,385));
-		  
-		  zonePoints[3].add(new Point(502,95));
-		  zonePoints[3].add(new Point(554,100));
-		  zonePoints[3].add(new Point(588,170));
-		  zonePoints[3].add(new Point(584,315));
-		  zonePoints[3].add(new Point(546,382));
-		  zonePoints[3].add(new Point(495,384));
-    	this.pitch = new Pitch();
+    	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
+    	this.defPlanner = new DefensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
-//        this.commService = new CommunicationService(Constants.ROBOT_2D_NAME);
+        this.commService = new CommunicationService(Constants.ROBOT_2A_NAME);
     }
 
     /**
@@ -94,9 +58,9 @@ public class MasterController implements VisionServiceCallback {
   
     }
     
-    public void start() {
+    public void start() {	
         visionService.start();
-//        commService.startRunningFromQueue();
+        commService.startRunningFromQueue();
     }
 
     @Override
@@ -111,12 +75,24 @@ public class MasterController implements VisionServiceCallback {
 	@Override
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
-		if (ballCentroid != null) {
-			pitch.updateBallPosition(ballCentroid.toMillis());
+		
+//		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
+//		pitch.updateRobots(blueRobots, TeamColour.BLUE);
+		
+		if (ballCentroid == null) {
+			return;
 		}
-		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
-		pitch.updateRobots(blueRobots, TeamColour.BLUE);
-		System.out.println();
+		
+		pitch.updateBallPosition(ballCentroid.toMillis());
+
+		
+		for (int i = 0; i < 4; i++) {
+			if (pitch.getZone(i).contains(ballCentroid)) {
+				System.out.println(ballCentroid);
+				System.out.println(i);
+			}
+		}
+		
 //		defPlanner.act();
 	}
 }

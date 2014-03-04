@@ -20,7 +20,6 @@ public class Robot extends MovableObject {
      */
     private double direction = 0.0;
     private Vector facingVector;
-    private Point position = null;
 
     public Robot() {
         super();
@@ -47,16 +46,8 @@ public class Robot extends MovableObject {
     
     public void updateFacing(Point dotPosition) {
     	if (dotPosition != null) {
-    		this.facingVector = position.sub(dotPosition.toMillis());
+    		this.facingVector = getPosition().sub(dotPosition.toMillis());
     	}
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setPosition(Point p) {
-        this.position = p;
     }
 
     public Vector getFacingVector() {

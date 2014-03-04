@@ -21,16 +21,18 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     }
 
 	public double getAngle(Point other) {
-        double dtheta, theta1, theta2;
-
-        theta1 = Math.atan2(this.getY(), this.getX());
-        theta2 = Math.atan2(other.getY(), other.getX());
-        dtheta = theta2 - theta1;
-
-        while (dtheta > Math.PI)  { dtheta -= 2 * Math.PI; }
-        while (dtheta < -Math.PI) { dtheta += 2 * Math.PI; }
-
-        return dtheta;
+		double theta = Math.atan2(this.y - other.y, this.x - other.x);
+		
+		while (theta > Math.PI)  { theta -= 2 * Math.PI; }
+		while (theta < -Math.PI) { theta += 2 * Math.PI; }
+		
+		System.out.println("***");
+		System.out.println(this);
+		System.out.println(other);
+		System.out.println(theta);
+		System.out.println("***");
+		
+		return theta;
     }
 	
 	public void offset(Point other) {
@@ -58,7 +60,7 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     }
     
     public Point toMillis() {
-    	return new Point(Milimeter.pix2mm(x), Milimeter.pix2mm(y));
+    	return new Point(Millimeter.pix2mm(x), Millimeter.pix2mm(y));
     }
 
     @Override

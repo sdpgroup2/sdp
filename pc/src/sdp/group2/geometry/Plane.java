@@ -7,7 +7,7 @@ import lejos.geom.Rectangle;
 public class Plane {
 	private String id = null;
 	private PointSet outline = null;
-	private double eps = 1e-9;
+	private double eps = 1e-6;
 	private Rectangle boundary = null;
 	private int SIGNIFICANT_BOUNCSES = 10;
 
@@ -41,22 +41,23 @@ public class Plane {
 	}
 
 	public boolean contains(Point p) {
-		outline.sort();
 		int N = outline.size();
 		double angle = 0.0;
 		Point p1 = new Point(0, 0);
 		Point p2 = new Point(0, 0);
 
-		Point curPoint;
-
 		for (int i = 0; i < N; i++) {
-			curPoint = outline.get(i);
-			p1.setX(curPoint.getX() - p.getX());
-			p1.setY(curPoint.getY() - p.getX());
+			p1.setX(outline.get(i).getX() - p.getX());
+			p1.setY(outline.get(i).getY() - p.getY());
 			p2.setX(outline.get((i + 1) % N).getX() - p.getX());
 			p2.setY(outline.get((i + 1) % N).getY() - p.getY());
 			angle += p1.getAngle(p2);
 		}
+		
+		while (angle > Math.PI)  { angle -= 2 * Math.PI; }
+		while (angle < -Math.PI) { angle += 2 * Math.PI; }
+		
+		System.out.println("Alpha = " + angle);
 
 		return Math.PI - Math.abs(angle) < eps;
 	}

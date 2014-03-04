@@ -31,7 +31,7 @@ public class VisionService implements CaptureCallback {
 	private JPEGFrameGrabber frameGrabber;
 	private VisionServiceCallback callback;
 	private Timer timer = new Timer(10);
-	private VisionState state = VisionState.Preparation;
+	private VisionState state = VisionState.Processing;
 
 	/**
 	 * Initialises a new vision service with a certain device name, number of

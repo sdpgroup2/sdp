@@ -10,7 +10,7 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import sdp.group2.geometry.Milimeter;
+import sdp.group2.geometry.Millimeter;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.world.Ball;
 import sdp.group2.world.IPitch;
@@ -90,10 +90,10 @@ public class Visualizator extends JFrame {
     		for (int i = 1; i < N + 1; i++) {
     			Point p0 = pitchOutline.get((i - 1) % N);
     			Point p1 = pitchOutline.get(i % N);
-    			g.drawLine (Milimeter.mm2pix(p0.x), 
-    					Milimeter.mm2pix(p0.y),
-    					Milimeter.mm2pix(p1.x),
-    					Milimeter.mm2pix(p1.y));
+    			g.drawLine (Millimeter.mm2pix(p0.x), 
+    					Millimeter.mm2pix(p0.y),
+    					Millimeter.mm2pix(p1.x),
+    					Millimeter.mm2pix(p1.y));
     		}
     		
     		for(Zone zone : pitch.getAllZoneOutline()) {
@@ -103,10 +103,10 @@ public class Visualizator extends JFrame {
     			for (int i = 1; i < N + 1; i++) {
         			Point p0 = outline.get((i - 1) % N);
         			Point p1 = outline.get(i % N);
-        			g.drawLine (Milimeter.mm2pix(p0.x), 
-        					Milimeter.mm2pix(p0.y),
-        					Milimeter.mm2pix(p1.x),
-        					Milimeter.mm2pix(p1.y));
+        			g.drawLine (Millimeter.mm2pix(p0.x), 
+        					Millimeter.mm2pix(p0.y),
+        					Millimeter.mm2pix(p1.x),
+        					Millimeter.mm2pix(p1.y));
         		}
     			
     			g.setColor(new Color(0, 0, 100));
@@ -119,9 +119,9 @@ public class Visualizator extends JFrame {
     		g.setColor(new Color(255, 0, 0));
     		
     		Ball ball = pitch.getBall();
-    		int r = Milimeter.mm2pix(ball.getRadius());
-    		int x = Milimeter.mm2pix(ball.getPosition().x - r);
-    		int y = Milimeter.mm2pix(ball.getPosition().y - r);
+    		int r = Millimeter.mm2pix(ball.getRadius());
+    		int x = Millimeter.mm2pix(ball.getPosition().x - r);
+    		int y = Millimeter.mm2pix(ball.getPosition().y - r);
     		g.fillOval(x, y, 2 * r, 2 * r);
      
     	}
