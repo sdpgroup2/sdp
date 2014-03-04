@@ -23,8 +23,8 @@ public interface IPitch
      *              pairing
      *  @param ps - convex hull of the zone, note points can be in any order,
      *              as sorting method is in place. */
-    public void setZone(byte id, PointSet ps);
-    public Zone getZone(byte id);
+    public void setZone(int id, PointSet ps);
+    public Zone getZone(int id);
     
     /** From the origin, is ally on even or odd number fields
      *  @param even - is on even fields? */
@@ -40,13 +40,13 @@ public interface IPitch
      *              the origin 
      *  @param p - current position of the robot
      *  @param theta - angle of the robot from the origin */
-    public void updateRobotState(byte id, Point p, double theta);
+    public void updateRobotState(int id, Point p, double theta);
     
     /** Gets singleton instance of the pitch. */
     //public IPitch getInstance();
     
     /** Returns zone in which the ball is. */
-    public int getBallZone();
+    public Zone getBallZone();
     
     // TODO: Add methods useful for AI
     
@@ -65,7 +65,7 @@ public interface IPitch
 
     public Ball getBall();
 
-    public Robot getOurDefender();
+    public Robot getOurDefenderRobot();
 
     public Robot getOurAttacker();
 
@@ -73,9 +73,9 @@ public interface IPitch
 
     public Robot getFoeAttacker();
     
-    public int getOurDefendZone();
+    public Zone getOurDefendZone();
 
-    public int getOurAttackZone();
+    public Zone getOurAttackZone();
     
     public PointSet getOutline();
     public Zone[] getAllZoneOutline();

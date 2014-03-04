@@ -92,14 +92,31 @@ public class Receiver {
 							replyToPC(opcode, outStream);
 							break;
 							
-						case Commands.DISCONNECT: 
-							
+						case Commands.OPENKICKER:
+							LCD.clear();
+							LCD.refresh();
+							pilot.openKicker();
 							break;
-	
-						case Commands.FORCEQUIT:
 							
+						case Commands.CLOSEKICKER:
+							LCD.clear();
+							LCD.refresh();
+							pilot.closeKicker();
+							break;
+							
+						case Commands.ROTATEKICKER:
+							LCD.clear();
+							LCD.refresh();
+							pilot.rotateKicker();
+							break;
+							
+						case Commands.DISCONNECT: 
+							break;
+							
+						case Commands.FORCEQUIT:							
 							forceQuit = true;
 							break;
+							
 						default:
 							// Ignore it
 					}

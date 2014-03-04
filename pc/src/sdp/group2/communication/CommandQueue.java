@@ -1,4 +1,4 @@
-package sdp.group2.pc;
+package sdp.group2.communication;
 
 
 import sdp.group2.util.Constants;

@@ -3,6 +3,7 @@ package sdp.group2.world;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.Vector;
+import sdp.group2.util.Tuple;
 
 
 /**
@@ -19,7 +20,6 @@ public class Robot extends MovableObject {
      */
     private double direction = 0.0;
     private Vector facingVector;
-    private Point position = null;
 
     public Robot() {
         super();
@@ -43,13 +43,11 @@ public class Robot extends MovableObject {
     public double getDirection() {
         return direction;
     }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setPosition(Point p) {
-        this.position = p;
+    
+    public void updateFacing(Point dotPosition) {
+    	if (dotPosition != null) {
+    		this.facingVector = getPosition().sub(dotPosition.toMillis());
+    	}
     }
 
     public Vector getFacingVector() {
@@ -84,7 +82,7 @@ public class Robot extends MovableObject {
         return object.getPosition().sub(getPosition());
     }
     
-    //!
+    //
     public Vector vectorTo(Point p){
     	return p.sub(getPosition());
     }

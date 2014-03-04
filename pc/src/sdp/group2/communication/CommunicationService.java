@@ -2,14 +2,13 @@
  * @author Place your name here 
  * */
 
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 
 import java.io.IOException;
 import java.util.HashSet;
 
 
-import sdp.group2.pc.CommandQueue;
 import sdp.group2.util.Constants;
 
 
@@ -17,7 +16,7 @@ public class CommunicationService {
 	
 private Sender sender;
     
-	public CommunicationService (String robotName) {
+	public CommunicationService(String robotName) {
 		try {
 			if (robotName.equals(Constants.ROBOT_2A_NAME)) {
 				sender = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
@@ -103,7 +102,7 @@ private Sender sender;
 						sender.stop();
 						sender.clearBuff();
 						CommandQueue.clear(Constants.ROBOT_2D_NAME);
-					}		
+					}
 				}
 				
 			}

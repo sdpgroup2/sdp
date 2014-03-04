@@ -1,10 +1,10 @@
 package sdp.group2.geometry;
 
-public class Milimeter {
+public class Millimeter {
 
 	public double value;
 	
-	public Milimeter(double value) {
+	public Millimeter(double value) {
 		this.value = value;
 	}
 	

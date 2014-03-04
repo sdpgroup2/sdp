@@ -1,29 +1,38 @@
 package sdp.group2.pc;
 
-import sdp.group2.geometry.Rect;
+import java.util.List;
+
+import sdp.group2.communication.CommunicationService;
+import sdp.group2.geometry.Point;
+import sdp.group2.geometry.PointSet;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
+import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
-import sdp.group2.vision.Image;
+import sdp.group2.util.Tuple;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
-import sdp.group2.vision.clusters.BallCluster;
-import sdp.group2.vision.clusters.RobotBaseCluster;
+import sdp.group2.world.Pitch;
 
 
 public class MasterController implements VisionServiceCallback {
 
-    //private Pitch pitch;
+	public static boolean ENABLE_GUI = true;
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
+    private Pitch pitch;
     private DefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
     private VisionService visionService;
+    private CommunicationService commService;
 
     public MasterController() {
+    	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
+    	this.defPlanner = new DefensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
+        this.commService = new CommunicationService(Constants.ROBOT_2A_NAME);
     }
 
     /**
@@ -43,57 +52,47 @@ public class MasterController implements VisionServiceCallback {
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
-        MasterController mc = new MasterController();
-        mc.start();
+        
+        final MasterController controller = new MasterController();    
+        controller.start();
+  
     }
-
-    //public void onPreparationReady(PitchLinesCluster lines, PitchSectionCluster sections,
-    //		BallCluster ballCluster, YellowRobotCluster yellowCluster, BlueRobotCluster blueCluster) {
-    //this.pitch = new Pitch(lines, sections);
-    //Ball ball = new Ball(ballCluster.getImportantRects().get(0));
-    //pitch.addBall(ball);
-    //List<Robot> blueRobots = new ArrayList<Robot>();
-    //List<Robot> yellowRobots = new ArrayList<Robot>();
-    //for (Rect rect : blueCluster.getImportantRects().subList(0, 2)) {
-    //	blueRobots.add(new Robot(rect));
-    //}
-    //for (Rect rect : yellowCluster.getImportantRects().subList(0, 2)) {
-    //	yellowRobots.add(new Robot(rect));
-    //}
-    //pitch.addRobots(blueRobots, yellowRobots, ourTeam);
-    //}
-
-    public void start() {
+    
+    public void start() {	
         visionService.start();
-    }
-
-    @Override
-    public boolean onPreparationReady(Image currentImage, BallCluster ballCluster, RobotBaseCluster robotBaseCluster, Rect pitchRect, Rect[] sectionRects) {
-        return false;
-    }
-
-    @Override
-    public void onFrameGrabbed(Image currentImage) {
-
-    }
-
-    @Override
-    public void onImageFiltered(Image currentImage) {
-
+        commService.startRunningFromQueue();
     }
 
     @Override
     public void onPreparationFrame() {
-
-    }
-
-    @Override
-    public void onImageProcessed(Image currentImage, BallCluster ballCluster, RobotBaseCluster robotBaseCluster) {
-
     }
 
     @Override
     public void onExceptionThrown(Exception e) {
-
+    	e.printStackTrace();
     }
+
+	@Override
+	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+			List<Tuple<Point, Point>> blueRobots) {
+		
+//		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
+//		pitch.updateRobots(blueRobots, TeamColour.BLUE);
+		
+		if (ballCentroid == null) {
+			return;
+		}
+		
+		pitch.updateBallPosition(ballCentroid.toMillis());
+
+		
+		for (int i = 0; i < 4; i++) {
+			if (pitch.getZone(i).contains(ballCentroid)) {
+				System.out.println(ballCentroid);
+				System.out.println(i);
+			}
+		}
+		
+//		defPlanner.act();
+	}
 }

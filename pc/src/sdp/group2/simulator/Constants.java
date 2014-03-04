@@ -29,6 +29,7 @@ public class Constants {
 			zones[i] = new PointSet();
 		}
 		
+		int offsetY = 32;
 		zones[0].add(130, 50);
 		zones[0].add(330, 50);
 		zones[0].add(330, 1100);
@@ -46,12 +47,19 @@ public class Constants {
 		zones[2].add(1527, 1100);
 		zones[2].add(1119, 1110);
 		
-		zones[3].add(1735, 50);
-		zones[3].add(1935, 50);
-		zones[3].add(2065, 275);
-		zones[3].add(2065, 875);
-		zones[3].add(1935, 1100);
-		zones[3].add(1735, 1100);
+		for (int i = 0; i < 3; i++) {
+			for (Point p : zones[i].getPoints()) {
+				p.y -= offsetY;
+			}
+		}
+		
+		int offset4 = 40;
+		zones[3].add(1735 - offset4, 50);
+		zones[3].add(1935 - offset4, 50);
+		zones[3].add(2065 - offset4, 275);
+		zones[3].add(2065 - offset4, 875);
+		zones[3].add(1935 - offset4, 1100);
+		zones[3].add(1735 - offset4, 1100);
 		
 		return zones;
 	}

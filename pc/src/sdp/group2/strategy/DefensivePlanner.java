@@ -2,15 +2,18 @@ package sdp.group2.strategy;
 
 import java.io.IOException;
 
+
 import lejos.geom.Rectangle;
-import sdp.group2.comms.Commands;
-import sdp.group2.comms.Sender;
+import sdp.group2.communication.CommandQueue;
+import sdp.group2.communication.Commands;
+import sdp.group2.communication.Sender;
 import sdp.group2.geometry.Line;
 import sdp.group2.geometry.Plane;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
-import sdp.group2.pc.CommandQueue;
+import sdp.group2.geometry.Vector;
 import sdp.group2.util.Constants;
+import sdp.group2.world.Ball;
 import sdp.group2.world.IPitch;
 import sdp.group2.world.Robot;
 import sdp.group2.world.Zone;
@@ -21,10 +24,6 @@ public class DefensivePlanner extends Planner {
     private static final int SPEED = 40;
     private static final String robotName = Constants.ROBOT_2D_NAME;
     private static final Point GOAL = new Point(0, Plane.pix2mm(150));
-    private Zone offenceZone;
-    private Zone defenceZone;
-    private Robot offenceRobot;
-    private Robot defenceRobot;
     private boolean isRobotAligned = false;
     private Sender sender;
     private long lastRotation = System.currentTimeMillis();
@@ -42,10 +41,8 @@ public class DefensivePlanner extends Planner {
      * @param pitch  pitch we are playing
      * @param zoneId zone the defender is in
      */
-    public DefensivePlanner(IPitch pitch, byte zoneId) {
+    public DefensivePlanner(IPitch pitch) {
         super(pitch);
-        this.defenceZone = getPitch().getZone(zoneId);
-        this.defenceRobot = pitch.getOurDefender();
     }
 
     /**
@@ -53,25 +50,27 @@ public class DefensivePlanner extends Planner {
      * Tries to intercept the ball.
      */
     public void interceptSimple() {
+    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Ball ball = pitch.getBall();
+    	System.out.println("Sending intercept comand.");
         if (defenceRobot.isMoving()) {
             return;
         }
-        double yBall = pitch.getBall().getPosition().getY();
-        double yRobot = defenceRobot.getPosition().getY();
-        // int distance = (int) Plane.pix2mm((int) (xBall - xRobot));
-//        int distance = (int) Plane.pix2mm((int) (yBall - yRobot));
-        int distance = (int)GOAL.sub(defenceRobot.getPosition()).length();
+        Vector diffVector = ball.getPosition().sub(defenceRobot.getPosition());
+        int distance = (int) Math.round(diffVector.y);
         int sign = distance < 0 ? -1 : 1;
         distance = Math.abs(distance);
         
         //ERROR
-        double angle = defenceRobot.angleToPoint(new Point (GOAL.x, pitch.getBall().getPosition().y));
+        double angle = defenceRobot.angleToPoint(new Point(GOAL.x, ball.getPosition().y));
 
         CommandQueue.add(Commands.rotate(((int)Math.floor(angle)), Constants.DEF_MOVE_SPEED), robotName);
         CommandQueue.add(Commands.move(sign, Constants.DEF_MOVE_SPEED, distance), robotName);
     }
 
     public void intercept() {
+    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Zone defenceZone = pitch.getOurDefendZone();
         if (defenceRobot.isMoving()) {
             return;
         }
@@ -101,6 +100,7 @@ public class DefensivePlanner extends Planner {
     }
 
     public void align() {
+    	Robot defenceRobot = pitch.getOurDefenderRobot();
         if (lastRotation + 3000 > System.currentTimeMillis()) {
             return;
         } else {
@@ -126,6 +126,7 @@ public class DefensivePlanner extends Planner {
     //Unfinished
     public void pass(){
     	//Pass from defender to attacker
+    	System.out.println("Sending pass command.");
     }
 
     public Line recognizeDangerSimple() {
@@ -133,6 +134,7 @@ public class DefensivePlanner extends Planner {
     }
 
     public Line recognizeDanger() {
+    	Zone defenceZone = pitch.getOurDefendZone();
         PointSet trajectory = getPitch().getTrajectory();
         for (int i = 1; i < trajectory.size() - 1; i++) {
             Point p0 = trajectory.get(i - 1);
@@ -155,6 +157,7 @@ public class DefensivePlanner extends Planner {
      * @return
      */
     public Line getSidewalk() {
+    	Zone defenceZone = pitch.getOurDefendZone();
         Rectangle boundary = defenceZone.getBoundary();
 
         // Point p0 = new Point(defenceRobot.getPosition().x, boundary.y);
@@ -172,11 +175,12 @@ public class DefensivePlanner extends Planner {
     }
 
 
-    //What shal be running when the robot starts
+    //What shall be running when the robot starts
     public void act() {
+    	Zone defenceZone = pitch.getOurDefendZone();
     	//If the ball is in our defending zone, pass;
     	//Else stay at GOAL.x, Ball.y 
-    	if (pitch.getBallZone() == pitch.getOurDefendZone()){
+    	if (pitch.getBallZone().getID() == defenceZone.getID()){
     		pass();
     	} else {
     		interceptSimple();

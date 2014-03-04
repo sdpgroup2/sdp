@@ -2,6 +2,7 @@ from __future__ import print_function, division
 
 import pygame
 from pygame.rect import *
+from pygame import camera
 from PIL import Image
 
 import math
@@ -11,8 +12,8 @@ import colorsys
 
 
 class ViewingWindow(object):
-    def __init__(self, filename):
-        self.image = load_image(filename)
+    def __init__(self, image):
+        self.image = image
         self.screen = pygame.display.set_mode(self.image.get_size())
         self.clock = pygame.time.Clock()
         self.selections = []
@@ -35,7 +36,8 @@ class ViewingWindow(object):
                 s.drawmask(self.screen)
         pygame.display.flip()
 
-    def run(self):
+    def run(self, im):
+        self.image = im
         ms = self.clock.tick(60)
         self.draw()
         for event in pygame.event.get():
@@ -229,8 +231,13 @@ def load_image(filename):
 
 
 if __name__ == "__main__":
-    filename = sys.argv[1]
+    # filename = sys.argv[1]
     pygame.init()
-    main = ViewingWindow(filename)
+    camera.init()
+    cam = camera.Camera("/dev/video0", (640, 480))
+    cam.start()
+    im = cam.get_image()
+    main = ViewingWindow(im)
     while True:
-        main.run()
+        im = cam.get_image()
+        main.run(im)

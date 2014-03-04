@@ -36,6 +36,21 @@ public class Pilot extends DifferentialPilot implements LightListener {
 		Motor.B.rotate(angle);
 		Motor.B.rotate(-angle);
 	}
+	
+	public void openKicker(){
+		Motor.B.setSpeed(100);
+		Motor.B.rotate(10);
+	}
+	
+	public void closeKicker(){
+		Motor.B.setSpeed(100);
+		Motor.B.rotate(-10);
+	}
+	
+	public void rotateKicker(){
+		Motor.B.setSpeed(Integer.MAX_VALUE);
+		Motor.B.rotate(-360);
+	}
 
 	public void stop() {
 		LCD.drawString("stopped!", 10, 10);

@@ -1,4 +1,4 @@
-package sdp.group2.comms;
+package sdp.group2.communication;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,11 +27,10 @@ public class Sender implements CommInterface {
 	private int buffer = 0;
 	private NXTInfo nxtInfo;
 	private boolean robotReady;
-	private boolean lock;
+	
 
 	public Sender(String robotName, String robotMacAddress) throws IOException{
-		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName,
-				robotMacAddress);
+		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName, robotMacAddress);
 		openBluetoothConn(robotName);
 	}
 
@@ -39,23 +38,24 @@ public class Sender implements CommInterface {
 		int confirmation =0;
 		short[] command = { Commands.ANGLEMOVE, (short) direction, (short) speed, (short) distance};
 		confirmation = attemptConnection(command);
-		System.out.printf("Moving in %d direction with %d speed and %d distance\n", direction, speed, distance);
+		System.out.println("moved");
+//		System.out.printf("Moving in %d direction with %d speed and %d distance\n", direction, speed, distance);
 		return confirmation;
 	} 
 
 	public synchronized int rotate(int angle, int speed) throws IOException {
 		short[] command = { Commands.ROTATE, (short) angle, (short) speed, 0};
 		int confirmation = attemptConnection(command);
-		System.out.printf("Rotating at a %d angle\n", angle);
+		System.out.println("rotated");
+//		System.out.printf("Rotating at a %d angle\n", angle);
 		return confirmation;
 	}
 
 	public synchronized int kick(int angle, int speed) throws IOException {
 		short[] command = { Commands.KICK, (short) angle, (short) speed, 0 };
-		long timeStart = System.currentTimeMillis();
 		int confirmation = attemptConnection(command);
-		long timeEnd = System.currentTimeMillis();
-		System.out.printf("Kick with angle %d and speed %d, took %dms\n", angle, speed, timeEnd-timeStart);
+		System.out.println("kicked");
+//		System.out.printf("Kick with angle %d and speed %d, took %dms\n", angle, speed, timeEnd-timeStart);
 		return confirmation;
 
 	}
@@ -112,7 +112,6 @@ public class Sender implements CommInterface {
 	}
 
 	private void openBluetoothConn(String robotName) throws IOException {
-
 		comm = null;
 		try {
 			comm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
@@ -176,8 +175,8 @@ public class Sender implements CommInterface {
 				buffer -= 1;
 				return confirmation[1];
 			} else {
-				System.out.printf("Con: [%d %d %d %d], Comm: [%d %d %d %d]\n", confirmation[0], confirmation[1], confirmation[2], confirmation[3], comm[0], comm[1], comm[2], comm[3]);
-				System.out.printf("Confirmation should be %d, was %d\n", comm[0], confirmation[1]);
+//				System.out.printf("Con: [%d %d %d %d], Comm: [%d %d %d %d]\n", confirmation[0], confirmation[1], confirmation[2], confirmation[3], comm[0], comm[1], comm[2], comm[3]);
+//				System.out.printf("Confirmation should be %d, was %d\n", comm[0], confirmation[1]);
 				//System.out.println("Could not receive confirmation");
 				buffer -= 1;
 				return -2;
@@ -215,14 +214,9 @@ public class Sender implements CommInterface {
 		buffer = 0;
 	}
 	
-	public void lock() {
-		this.lock = true;
-	}
 
 	private int attemptConnection(short[] command) {
-		if (this.lock) {
-			return 7;
-		}
+
 		int confirmation = 0;
 		System.out.println("Command: " + command[0]);
 		//for (int i = 0; i<10; i++){
