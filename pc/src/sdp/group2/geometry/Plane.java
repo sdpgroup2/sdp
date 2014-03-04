@@ -246,13 +246,5 @@ public class Plane extends Polygon {
 		
 		return outline;
 	}
-	
-	public boolean contains(Point p) {
-//		System.out.println("---");
-//		System.out.println(p);
-//		
-//		System.out.println("---");
-		return super.contains(p.x / 0.259843661, p.y / 0.259843661);
-	}
 
 }

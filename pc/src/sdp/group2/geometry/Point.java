@@ -60,7 +60,9 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     }
     
     public Point toMillis() {
-    	return new Point(Millimeter.pix2mm(x), Millimeter.pix2mm(y));
+    	x = Millimeter.pix2mm(x);
+    	y = Millimeter.pix2mm(y);
+    	return this;
     }
 
     @Override
