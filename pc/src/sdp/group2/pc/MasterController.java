@@ -46,6 +46,13 @@ public class MasterController implements VisionServiceCallback {
             System.err.println("Not specified which team we are and what pitch we're playing");
             System.exit(1);
         }
+        try { 
+            Integer.parseInt(args[0]); 
+            Integer.parseInt(args[1]);
+        } catch(NumberFormatException e) { 
+        	System.err.println("Not integer parameters supplied");
+            System.exit(1);
+        }
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
             pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));

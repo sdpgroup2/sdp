@@ -17,8 +17,6 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class BallEntity extends Entity {
 
-    private int[] mins = new int[]{-10, 92, 140};
-    private int[] maxs = new int[]{10, 256, 256};
     private static IplImage[] hsvImages = new IplImage[3];
 
 
@@ -33,8 +31,8 @@ public class BallEntity extends Entity {
         IplImage tempImage = newImage(hsvImage, 1);
 
         for (int i = 0; i < 3; ++i) {
-            int min = mins[i];
-            int max = maxs[i];
+            int min = Thresholds.activeThresholds.ballMins[i];
+            int max = Thresholds.activeThresholds.ballMaxs[i];
 
             if (i == 0) {
                 if (min < 0) {

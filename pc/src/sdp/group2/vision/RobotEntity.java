@@ -129,6 +129,8 @@ public class RobotEntity extends Entity {
     
     private boolean isYellowRobot(IplImage hsvImage) {
     	IplImage channel = newImage(hsvImage, 1);
+    	int[] yellowMins = new int[3];
+    	int[] yellowMaxs = new int[3];
     	cvInRangeS(hsvImage, cvScalar(20, 100, 100, 0), cvScalar(30, 255, 255, 0), channel);
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);

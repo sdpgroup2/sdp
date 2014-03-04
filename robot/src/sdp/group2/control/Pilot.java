@@ -13,6 +13,9 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public static int LightTreshhold = 0;
 	public static int WHITE_THRESHOLD = 37;
 	public MyLightSensor rightSensor;
+	
+	public static final int DEFAULT_KICKER_ANGLE = 30;
+	public static final int DEFAULT_KICKER_SPEED = 3400;
 
 	public void move(int direction, int speed, int distance) {
 		LCD.drawString("moving forward!", 10, 10);
@@ -38,13 +41,13 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	}
 	
 	public void openKicker(){
-		Motor.B.setSpeed(100);
-		Motor.B.rotate(10);
+		Motor.B.setSpeed(DEFAULT_KICKER_SPEED);
+		Motor.B.rotate(DEFAULT_KICKER_ANGLE);
 	}
 	
 	public void closeKicker(){
-		Motor.B.setSpeed(100);
-		Motor.B.rotate(-10);
+		Motor.B.setSpeed(DEFAULT_KICKER_SPEED);
+		Motor.B.rotate(-DEFAULT_KICKER_ANGLE);
 	}
 	
 	public void rotateKicker(){

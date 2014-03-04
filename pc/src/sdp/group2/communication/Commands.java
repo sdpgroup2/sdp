@@ -28,15 +28,14 @@ public class Commands{
 	public final static short SLOWMOVE = 13;
 	public final static short DRIBBLERON = 23;
 	public final static short DRIBBLEROFF = 24;
-	public final static short TEST = 66;
 	public final static short FORCEQUIT = 55;
 	public final static short BEEP = 42;
-	public final static short ARC = 37;
 	public final static short STEER = 36;
 	
-	public final static short SIMPLEGRAB = 37;
-	public final static short SIMPLEKICK = 38;
-
+	public final static short CLOSEKICKER = 37;
+	public final static short ROTATEKICKER = 38;
+	public final static short OPENKICKER = 39;
+	
 	/**
 	 * 
 	 * @param direction = 1 clockwise, -1 anti-clockwise
@@ -66,14 +65,18 @@ public class Commands{
 		
 	}
 	
-	
-	public static int[] simpleGrab() {
-		return new int[] {SIMPLEGRAB, 0, 0, 0};
+	public static int[] closeKicker() {
+		return new int[] {CLOSEKICKER, 0, 0, 0};
 	}
 	
-	public static int[] simpleKick() {
-		return new int[] {SIMPLEKICK, 0, 0, 0};
+	public static int[] rotateKicker() {
+		return new int[] {ROTATEKICKER, 0, 0, 0};
 	}
+	
+	public static int[] openKicker() {
+		return new int[] {OPENKICKER, 0, 0, 0};
+	}
+	
 	
 	/**
 	 * 
