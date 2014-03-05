@@ -14,23 +14,26 @@ public class MovableObject {
 	private static long SIGNIFICANT_TIME = 5000; /** [ms] */
 	
 	private PointSet history = new PointSet(false);
+	private Point position;
 	private boolean uptodate = true;
 	private double speed = 0.0;
 	private static double POSITION_EPS = 5; /** [mm] */
 	
 	public Point getPosition() {
-		if (history.size() < 2) {
-			// TODO: WTF?
+		return position;
+		/*if (history.size() < 1) {
 			return new Point(0.0, 0.0);
 		}
 		else {
 			return history.right();
-		}
+		}*/
 	}
 	
 	public void updatePosition(Point position) {
-		history.add(position);
-		uptodate = false;
+		this.position = position;
+		return;
+		/*history.add(position);
+		uptodate = false;*/
 	}
 	
 	public double getSpeed() {

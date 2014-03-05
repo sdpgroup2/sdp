@@ -92,6 +92,20 @@ public class Sender implements CommInterface {
 		System.out.println("Stop");
 		return confirmation;
 	}
+	
+	public synchronized int forwards(int speed) {
+		short[] command = { Commands.FORWARDS, (short) speed, 0, 0 };
+		int confirmation = attemptConnection(command);
+		System.out.println("Forwards");
+		return confirmation;
+	}
+	
+	public synchronized int backwards(int speed) {
+		short[] command = { Commands.BACKWARDS, (short) speed, 0, 0 };
+		int confirmation = attemptConnection(command);
+		System.out.println("Backwards");
+		return confirmation;
+	}
 
 	@Override
 	public synchronized void disconnect() {

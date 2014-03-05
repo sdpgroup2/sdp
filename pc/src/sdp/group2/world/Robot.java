@@ -55,7 +55,7 @@ public class Robot extends MovableObject {
 		Vector newFacing = getPosition().sub(dotPosition);
 		if (previousDetectedFacing != null) {
 			double deltaAngle = newFacing.angleDegrees(previousDetectedFacing);
-			if (deltaAngle > 30) {
+			if (deltaAngle > 100) {
 				Debug.log("ANGLE TOO BIG!!!");
 				previousDetectedFacing = newFacing;
 				return;

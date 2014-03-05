@@ -20,7 +20,7 @@ public class Thresholds {
 		    new int[] {30, 255, 255},
 		    
 		    // yellow pixel threshold
-		 	120
+		 	60
 	);
 	
 	public static Thresholds mainPitchThresholds = new Thresholds(
@@ -58,8 +58,8 @@ public class Thresholds {
             new int[] {90, 240, 110},
 		    
 		    // yellow mins/maxs
-		    new int[] {20, 120, 200}, 
-		    new int[] {40, 180, 256},
+            new int[] {20, 100, 100}, 
+		    new int[] {30, 255, 255},
 			
 			// yellow pixel threshold
 			10
