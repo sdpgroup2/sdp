@@ -30,50 +30,6 @@ public class RobotEntity extends Entity {
     private static List<Tuple<Point, Point>> yellowRobots = new ArrayList<Tuple<Point, Point>>();
     private static List<Tuple<Point, Point>> blueRobots = new ArrayList<Tuple<Point, Point>>();
 
-    int[] basePlateMins = Thresholds.activeThresholds.basePlateMins;
-    int[] basePlateMaxs = Thresholds.activeThresholds.basePlateMaxs;
-    int[] yellowMins = Thresholds.activeThresholds.yellowMins;
-    int[] yellowMaxs = Thresholds.activeThresholds.yellowMaxs;
-    int[] dotMins = Thresholds.activeThresholds.dotMins;
-    int[] dotMaxs = Thresholds.activeThresholds.dotMaxs;
-    
-    // MAIN PITCH
-//    int[][] mins = new int[][] {
-//            new int[] {65, 135, 175}, // base plate min
-//          	new int[] {20, 120, 200}, // yellow min
-////          	new int[] {75, 65, 150}, // blue min
-//    };
-    
-//    int[][] maxs = new int[][] {
-//            new int[] {80, 204, 250}, // base plate max
-//      		new int[] {40, 180, 256}, // yellow max
-////            new int[] {120, 130, 240}, // blue max
-//    };
-    
-    
-//    // SIDE PITCH
-//    int[][] mins = new int[][] {
-//            new int[] {40, 60, 150}, // base plate min
-//            new int[] {19, 107, 155}, // yellow min
-//            new int[] {135, 20, 34}, // blue min
-//            new int[] {20, 49, 120}, // dot min
-//    };
-//
-//    int[][] maxs = new int[][] {
-//            new int[] {80, 160, 255}, // base plate max
-//            new int[] {36, 155, 255}, // yellow max
-//            new int[] {200, 50, 70}, // blue max
-//            new int[] {57, 89, 160}, // dot max
-//    };
-    
-    int[][] mins = new int[][] {
-    		basePlateMins
-    };
-
-    int[][] maxs = new int[][] {
-    		basePlateMaxs
-    };
-    
     
     public static List<Tuple<Point, Point>> yellowRobots() {
 		return yellowRobots;
@@ -95,7 +51,9 @@ public class RobotEntity extends Entity {
         IplImage binaryImage = newImage(hsvImage, 1);
         IplImage tempImage = newImage(hsvImage, 1);
         // Range the bases
-        cvInRangeS(hsvImage, cvScalar(mins[0][0], mins[0][1], mins[0][2], 0), cvScalar(maxs[0][0], maxs[0][1], maxs[0][2], 0), binaryImage);
+        int[] mins = Thresholds.activeThresholds.basePlateMins;
+        int[] maxs = Thresholds.activeThresholds.basePlateMaxs;
+        cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), binaryImage);
         // Range the yellow or blue
 //        cvInRangeS(hsvImage, cvScalar(mins[1][0], mins[1][1], mins[1][2], 0), cvScalar(maxs[1][0], maxs[1][1], maxs[1][2], 0), tempImage);
 //        cvOr(binaryImage, tempImage, binaryImage, null);
@@ -144,11 +102,13 @@ public class RobotEntity extends Entity {
     
     private boolean isYellowRobot(IplImage hsvImage) {
     	IplImage channel = newImage(hsvImage, 1);
-    	cvInRangeS(hsvImage, cvScalar(20, 100, 100, 0), cvScalar(30, 255, 255, 0), channel);
+    	int[] mins = Thresholds.activeThresholds.yellowMins;
+    	int[] maxs = Thresholds.activeThresholds.yellowMaxs;
+    	cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), channel);
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
     	System.out.println(nonZero);
-    	return nonZero > 120 ? true : false;
+    	return nonZero > Thresholds.activeThresholds.yellowPixelsThreshold ? true : false;
     }
     
 }

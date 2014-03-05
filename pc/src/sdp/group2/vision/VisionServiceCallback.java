@@ -8,11 +8,12 @@ import sdp.group2.util.Tuple;
 
 public interface VisionServiceCallback {
 
-    public void onPreparationFrame();
-
 	public void onExceptionThrown(Exception e);
 	
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+			List<Tuple<Point, Point>> blueRobots);
+
+	void prepared(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots);
 
 }
