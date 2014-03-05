@@ -9,9 +9,9 @@ import sdp.group2.world.IPitch;
 import sdp.group2.world.Robot;
 import sdp.group2.util.Debug;
 
-public class EvenSimplerDefensivePlanner extends Planner {
+public class EvenSimplerAttackingPlanner extends Planner {
 	
-	private static final String robotName = Constants.ROBOT_2D_NAME;
+	private static final String robotName = Constants.ROBOT_2A_NAME;
 	
 	// The number of frames in between commands
 	private int STUTTER_FRAMES = 10;
@@ -24,14 +24,14 @@ public class EvenSimplerDefensivePlanner extends Planner {
 	private int frames = 0;
 	
 	
-	public EvenSimplerDefensivePlanner(IPitch pitch) {
+	public EvenSimplerAttackingPlanner(IPitch pitch) {
         super(pitch);
     }
 	
 	public void act() {
 		frames += 1;
 		int ballZoneId = pitch.getBallZone().getID();
-		int defenderZoneId = pitch.getOurDefendZone().getID();
+		int defenderZoneId = pitch.getOurAttackZone().getID();
 		if (ballZoneId != defenderZoneId) {
 			stutter();
 		} else {
@@ -40,7 +40,7 @@ public class EvenSimplerDefensivePlanner extends Planner {
 	}
 	
 	public void pass() {
-		Robot robot = pitch.getOurDefender();
+		Robot robot = pitch.getOurAttacker();
 		
 		// Angle ranges from -180 to 180 degrees.
 		System.out.printf("Vector to the ball: %s.\n", robot.vectorTo(pitch.getBall()));
@@ -86,8 +86,8 @@ public class EvenSimplerDefensivePlanner extends Planner {
 				CommandQueue.clear(robotName);
 				CommandQueue.add(Commands.move(-1, 1500, (int) distanceToGo), robotName);
 			} else {
-//				CommandQueue.clear(robotName);
-//				CommandQueue.add(Commands.kick(Constants.DEF_KICK_ANGLE, Constants.DEF_KICK_POWER), robotName);
+				CommandQueue.clear(robotName);
+				CommandQueue.add(Commands.kick(Constants.ATK_KICK_ANGLE, Constants.ATK_KICK_POWER), robotName);
 			}
 		}
 		
@@ -99,7 +99,7 @@ public class EvenSimplerDefensivePlanner extends Planner {
 	 * trying to match the ball's position.
 	 */
 	public void stutter() {
-		Robot robot = pitch.getOurDefender();
+		Robot robot = pitch.getOurAttacker();
 		
 		// Angle ranges from -180 to 180 degrees.
 		double angle = robot.getFacingVector().signedAngleDegrees();

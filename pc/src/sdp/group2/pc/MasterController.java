@@ -4,6 +4,7 @@ import java.util.List;
 
 import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
+import sdp.group2.strategy.EvenSimplerAttackingPlanner;
 import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.strategy.SimpleDefensivePlanner;
 import sdp.group2.util.Constants;
@@ -24,16 +25,19 @@ public class MasterController implements VisionServiceCallback {
     public static PitchType pitchPlayed;
     private Pitch pitch;
     private EvenSimplerDefensivePlanner defPlanner;
-    private OffensivePlanner offPlanner;
+    private EvenSimplerAttackingPlanner offPlanner;
     private VisionService visionService;
     private CommunicationService commService;
+    private CommunicationService commService2;
 
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
     	this.defPlanner = new EvenSimplerDefensivePlanner(pitch);
+    	this.offPlanner = new EvenSimplerAttackingPlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
         this.commService = new CommunicationService(Constants.ROBOT_2D_NAME);
+        this.commService2 = new CommunicationService(Constants.ROBOT_2A_NAME);
     }
 
     /**
@@ -78,6 +82,7 @@ public class MasterController implements VisionServiceCallback {
     public void start() {	
         visionService.start();
         commService.startRunningFromQueue();
+        commService2.startRunningFromQueue();
     }
 
     // Sorry
@@ -125,6 +130,7 @@ public class MasterController implements VisionServiceCallback {
 		}
 		
 		defPlanner.act();
+		offPlanner.act();
 	}
 	
 

@@ -12,7 +12,7 @@ public class Constants {
     public static final int ATK_KICK_ANGLE = 45;
     public static final int DEF_KICK_ANGLE = 45;
     public static final int ATK_KICK_POWER = Integer.MAX_VALUE;
-    public static final int DEF_KICK_POWER = 200;
+    public static final int DEF_KICK_POWER = 1000;
     public static final int ATK_MOVE_SPEED = 1000;
     public static final int DEF_MOVE_SPEED = 1000;
 
