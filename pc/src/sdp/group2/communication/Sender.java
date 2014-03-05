@@ -67,7 +67,25 @@ public class Sender implements CommInterface {
 		return confirmation;
 
 	}
-
+	
+	public synchronized int rotateKicker() throws IOException {
+		short[] command = { Commands.ROTATEKICKER, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		return confirmation;
+	}
+	
+	public synchronized int closeKicker() throws IOException {
+		short[] command = { Commands.CLOSEKICKER, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		return confirmation;
+	}
+	
+	public synchronized int openKicker() throws IOException {
+		short[] command = { Commands.OPENKICKER, 0, 0, 0 };
+		int confirmation = attemptConnection(command);
+		return confirmation;
+	}
+	
 	public synchronized int stop() {
 		short[] command = { Commands.STOP, 0, 0, 0 };
 		int confirmation = attemptConnection(command);

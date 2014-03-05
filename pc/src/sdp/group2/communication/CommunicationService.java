@@ -51,6 +51,16 @@ private Sender sender;
 							case Commands.STEER:
 								sender.steer(commands[1]);
 								break;
+							case Commands.CLOSEKICKER:
+								sender.closeKicker();
+								break;
+							case Commands.ROTATEKICKER:
+								sender.rotateKicker();
+								break;
+							case Commands.OPENKICKER:
+								sender.openKicker();
+								break;
+								
 							default:
 								
 							}
@@ -74,6 +84,12 @@ private Sender sender;
 								break;
 							case Commands.STEER:
 								sender.steer(commands[1]);
+								break;
+							case Commands.CLOSEKICKER:
+								sender.closeKicker();
+								break;
+							case Commands.ROTATEKICKER:
+								sender.rotateKicker();
 								break;
 							default:
 								

@@ -30,6 +30,13 @@ public class RobotEntity extends Entity {
     private static List<Tuple<Point, Point>> yellowRobots = new ArrayList<Tuple<Point, Point>>();
     private static List<Tuple<Point, Point>> blueRobots = new ArrayList<Tuple<Point, Point>>();
 
+    int[] basePlateMins = Thresholds.activeThresholds.basePlateMins;
+    int[] basePlateMaxs = Thresholds.activeThresholds.basePlateMaxs;
+    int[] yellowMins = Thresholds.activeThresholds.yellowMins;
+    int[] yellowMaxs = Thresholds.activeThresholds.yellowMaxs;
+    int[] dotMins = Thresholds.activeThresholds.dotMins;
+    int[] dotMaxs = Thresholds.activeThresholds.dotMaxs;
+    
     // MAIN PITCH
 //    int[][] mins = new int[][] {
 //            new int[] {65, 135, 175}, // base plate min
@@ -45,20 +52,28 @@ public class RobotEntity extends Entity {
     
     
 //    // SIDE PITCH
-    int[][] mins = new int[][] {
-            new int[] {40, 60, 150}, // base plate min
+//    int[][] mins = new int[][] {
+//            new int[] {40, 60, 150}, // base plate min
 //            new int[] {19, 107, 155}, // yellow min
 //            new int[] {135, 20, 34}, // blue min
 //            new int[] {20, 49, 120}, // dot min
-    };
+//    };
 //
-    int[][] maxs = new int[][] {
-            new int[] {80, 160, 255}, // base plate max
+//    int[][] maxs = new int[][] {
+//            new int[] {80, 160, 255}, // base plate max
 //            new int[] {36, 155, 255}, // yellow max
 //            new int[] {200, 50, 70}, // blue max
 //            new int[] {57, 89, 160}, // dot max
-
+//    };
+    
+    int[][] mins = new int[][] {
+    		basePlateMins
     };
+
+    int[][] maxs = new int[][] {
+    		basePlateMaxs
+    };
+    
     
     public static List<Tuple<Point, Point>> yellowRobots() {
 		return yellowRobots;

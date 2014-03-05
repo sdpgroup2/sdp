@@ -8,7 +8,6 @@ import sdp.group2.util.Constants;
 public class TestComms {
 
 	public static void main(String[] args) {
-		
 //		Planner planner2A = new Planner(Constants.ROBOT_2A_NAME);
 //		Planner planner2A = new Planner(Constants.ROBOT_2A_NAME);
 //		planner2A.startRunningFromQueue();
@@ -35,6 +34,7 @@ public class TestComms {
 			}	
 		});
 //		input.start();
+
 	}
 
 }
