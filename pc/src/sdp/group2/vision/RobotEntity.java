@@ -43,22 +43,35 @@ public class RobotEntity extends Entity {
 ////            new int[] {120, 130, 240}, // blue max
 //    };
     
+
+//    Baseplate
+//    Minimum color (HSB): (51, 110, 78)
+//    Maximum color (HSB): (89, 235, 102)
+    
+//    Pitch
+//    Minimum color (HSB): (56, 63, 67)
+//    Maximum color (HSB): (83, 117, 77)
+
     
 //    // SIDE PITCH
     int[][] mins = new int[][] {
-            new int[] {40, 60, 150}, // base plate min
+            new int[] {45, 110, 77}, // base plate min
 //            new int[] {19, 107, 155}, // yellow min
 //            new int[] {135, 20, 34}, // blue min
 //            new int[] {20, 49, 120}, // dot min
     };
 //
     int[][] maxs = new int[][] {
-            new int[] {80, 160, 255}, // base plate max
+            new int[] {90, 240, 110}, // base plate max
 //            new int[] {36, 155, 255}, // yellow max
 //            new int[] {200, 50, 70}, // blue max
 //            new int[] {57, 89, 160}, // dot max
 
     };
+    
+// Original values for base plate:
+//    new int[] {40, 60, 150}, // base plate min
+//    new int[] {80, 160, 255}, // base plate max
     
     public static List<Tuple<Point, Point>> yellowRobots() {
 		return yellowRobots;

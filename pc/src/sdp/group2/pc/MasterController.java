@@ -76,8 +76,8 @@ public class MasterController implements VisionServiceCallback {
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
 		
-//		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
-//		pitch.updateRobots(blueRobots, TeamColour.BLUE);
+		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
+		pitch.updateRobots(blueRobots, TeamColour.BLUE);
 		
 		if (ballCentroid == null) {
 			return;

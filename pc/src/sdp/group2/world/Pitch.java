@@ -153,26 +153,18 @@ public class Pitch extends Plane implements IPitch {
     			if (colour == TeamColour.YELLOW) {
     				if (isDefender(position)) {
     					yellowDefender.updatePosition(position);
-    					if (dotPosition == null) {
-    						yellowDefender.updateFacing(dotPosition);
-    					}
+   						yellowDefender.updateFacing(dotPosition);
     				} else {
     					yellowAttacker.updatePosition(position);
-    					if (dotPosition == null) {
-    						yellowAttacker.updateFacing(dotPosition);
-    					}
+   						yellowAttacker.updateFacing(dotPosition);
     				}
     			} else {
     				if (isDefender(position)) {
     					blueDefender.updatePosition(position);
-    					if (dotPosition == null) {
-    						blueDefender.updateFacing(dotPosition);
-    					}
+   						blueDefender.updateFacing(dotPosition);
     				} else {
     					blueAttacker.updatePosition(position);
-    					if (dotPosition == null) {
-    						blueAttacker.updateFacing(dotPosition);
-    					}
+   						blueAttacker.updateFacing(dotPosition);
     				}
     			}
 			}

@@ -3,7 +3,7 @@ package sdp.group2.world;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.Vector;
-import sdp.group2.util.Tuple;
+import sdp.group2.util.Debug;
 
 
 /**
@@ -45,8 +45,12 @@ public class Robot extends MovableObject {
     }
     
     public void updateFacing(Point dotPosition) {
+    	Debug.log("Updating facing");
     	if (dotPosition != null) {
-    		this.facingVector = getPosition().sub(dotPosition.toMillis());
+    		Vector newFacing = getPosition().sub(dotPosition.toMillis());
+    		double deltaAngle = newFacing.angleDegrees(facingVector);
+    		Debug.logf("Delta angle: %f", deltaAngle);
+    		facingVector = newFacing;
     	}
     }
 
