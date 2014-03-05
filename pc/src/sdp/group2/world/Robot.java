@@ -1,9 +1,7 @@
 package sdp.group2.world;
 
 import sdp.group2.geometry.Point;
-import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.Vector;
-import sdp.group2.util.Tuple;
 
 
 /**
@@ -18,40 +16,30 @@ public class Robot extends MovableObject {
     /**
      * [mm], measured as robot width from kicker to the back through its centre divided by 2
      */
-    private double direction = 0.0;
-    private Vector facingVector = new Vector(0, 1); // TODO: <-- That is not pretty
+    private Vector facingVector;
 
-    public Robot() {
-        super();
+    public Robot(Point robotPosition, Point dotPosition) {
+    	updatePosition(robotPosition);
+    	updateFacing(dotPosition);
     }
-
-    public Robot(Rect boundingRect, Vector facingVector) {
-        this();
-        setBoundingRect(boundingRect);
-        updatePosition(boundingRect.getCenter());
-        setFacingVector(facingVector);
-    }
-
+    
     public double getRadius() {
         return RADIUS;
     }
 
-    public void setDirection(double direction) {
-        this.direction = direction;
-    }
-
     public double getDirection() {
-//    	System.out.println("** Angle vectors **");
-////    	System.out.println(facingVector);
-//    	System.out.println(new Vector(1, 0));
-//    	System.out.println("** --- **");
         return facingVector.angleDegrees(new Vector(1, 0));
     }
     
-    public void updateFacing(Point dotPosition) {
+    public void updateState(Point position, Point dotPosition) {
+    	updatePosition(position);
     	if (dotPosition != null) {
-    		this.facingVector = getPosition().sub(dotPosition);
+    		updateFacing(dotPosition);
     	}
+    }
+    
+    public void updateFacing(Point dotPosition) {
+    	this.facingVector = getPosition().sub(dotPosition);
     }
 
     public Vector getFacingVector() {

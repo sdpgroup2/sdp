@@ -33,14 +33,13 @@ public class Pitch extends Plane implements IPitch {
     private TeamSide ourSide;
 
     private Zone[] zones = new Zone[4];
-    private Ball ball = new Ball();
+    private Ball ball;
     //Specify what Colour and Side of the pitch we are on;
-    private Robot[] robots;
 
-    private Robot blueDefender = new Robot();
-    private Robot blueAttacker = new Robot();
-    private Robot yellowDefender = new Robot();
-    private Robot yellowAttacker = new Robot();
+    private Robot blueDefender;
+    private Robot blueAttacker;
+    private Robot yellowDefender;
+    private Robot yellowAttacker;
 
 
     /**
@@ -106,11 +105,6 @@ public class Pitch extends Plane implements IPitch {
     }
 
     @Override
-    public void updateRobotState(int id, Point p, double theta) {
-        zones[id].updateRobotState(p, theta);
-    }
-
-    @Override
     public Zone getBallZone() {
         for (int i = 0; i < zones.length; i++) {
             if (zones[i].contains(getBall().getPosition())) {
@@ -124,77 +118,64 @@ public class Pitch extends Plane implements IPitch {
 //		if (ourTeam == TeamColour.YELLOW &&)
 //	}
 
-    @Override
-    public PointSet getTrajectory() {
-        return super.getTrajectory(ball.getPosition(), ball.getDirection());
-    }
+//    @Override
+//    public PointSet getTrajectory() {
+//        return super.getTrajectory(ball.getPosition(), ball.getDirection());
+//    }
 
     @Override
     public Ball getBall() {
         return ball;
     }
     
-    private boolean isDefender(Point point) {
-		if (zones[0].contains(point) || 
-				zones[3].contains(point)) {
-			return true;
-		}
-    	return false;
-    }
-    
-    public void updateRobots(List<Tuple<Point, Point>> robots, TeamColour colour) {
-    	if (robots.size() == 2) {
-    		Tuple<Point, Point> firstRobot = robots.get(0);
-    		Tuple<Point, Point> secondRobot = robots.get(1);
-    		Point firstPosition = firstRobot.getFirst();
-    		Point firstDotPosition = firstRobot.getSecond();
-    		Point secondPosition = secondRobot.getFirst();
-    		Point secondDotPosition = secondRobot.getSecond();
-    		if (isDefender(firstPosition)) {
-    			// First is defender
-    			if (colour == TeamColour.YELLOW) {
-    				// Team is yellow
-    				yellowDefender.updatePosition(firstPosition.toMillis());
-    				yellowAttacker.updatePosition(secondPosition.toMillis());
-    				if (firstDotPosition != null) {
-    					yellowDefender.updateFacing(firstDotPosition.toMillis());
-    				}
-    				if (secondDotPosition != null) {
-    					yellowAttacker.updateFacing(secondDotPosition.toMillis());
-    				}
-    			} else {
-    				// Team is blue
-    				blueDefender.updatePosition(firstPosition.toMillis());
-    				blueAttacker.updatePosition(secondPosition.toMillis());
-    				if (firstDotPosition != null) {
-    					blueDefender.updateFacing(firstDotPosition.toMillis());
-    				}
-    				if (secondDotPosition != null) {
-    					blueAttacker.updateFacing(secondDotPosition.toMillis());
-    				}
-    			}
-    		} else {
-    			// First is attacker
-    			if (colour == TeamColour.YELLOW) {
-    				// Team is yellow
-    				yellowAttacker.updatePosition(firstPosition.toMillis());
-    				yellowDefender.updatePosition(secondPosition.toMillis());
-    				if (firstDotPosition != null) {
-    					yellowAttacker.updateFacing(firstDotPosition.toMillis());
-    				}
-    				if (secondDotPosition != null) {
-    					yellowDefender.updateFacing(secondDotPosition.toMillis());
-    				}
-    			} else {
-    				blueAttacker.updatePosition(firstPosition.toMillis());
-    				blueDefender.updatePosition(secondPosition.toMillis());
-    				if (firstDotPosition != null) {
-    					blueAttacker.updateFacing(firstDotPosition.toMillis());
-    				}
-    				if (secondDotPosition != null) {
-    					blueDefender.updateFacing(secondDotPosition.toMillis());
-    				}
-    			}
+    public void updateRobots(List<Tuple<Point, Point>> yellowRobots, List<Tuple<Point, Point>> blueRobots) {
+    	// We find out which one is left from history
+    	// TODO: Add zone assignments to robots
+    	if (yellowDefender.getPosition().x < blueDefender.getPosition().x) {
+    		// Yellow | Blue | Yellow | Blue
+    		if (yellowRobots.size() == 2) {
+    			// Sort them by X position
+    			Collections.sort(yellowRobots);
+    			// Defender is 0
+    			Tuple<Point, Point> tuple = yellowRobots.get(0);
+    			yellowDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    			// Attacker is 1
+    			tuple = yellowRobots.get(1);
+    			yellowAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+        	}
+    		// Yellow | Blue | Yellow | Blue
+    		if (blueRobots.size() == 2) {
+    			// Sort them by X position
+    			Collections.sort(blueRobots); 
+    			// Attacker is 0
+    			Tuple<Point, Point> tuple = blueRobots.get(0);
+    			blueAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+    			// Defender is 1
+    			tuple = blueRobots.get(1);
+    			blueDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    		}
+    	} else {
+    		// Blue | Yellow | Blue | Yellow
+    		if (yellowRobots.size() == 2) {
+    			// Sort them
+    			Collections.sort(yellowRobots);
+    			// Attacker is 0
+    			Tuple<Point, Point> tuple = yellowRobots.get(0);
+    			yellowAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+    			// Defender is 1
+    			tuple = yellowRobots.get(1);
+    			yellowDefender.updateState(tuple.getFirst(), tuple.getSecond());
+        	}
+    		// Blue | Yellow | Blue | Yellow
+    		if (blueRobots.size() == 2) {
+    			// Sort them
+    			Collections.sort(blueRobots);
+    			// Defender is 0
+    			Tuple<Point, Point> tuple = blueRobots.get(0);
+    			blueDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    			// Attacker is 1
+    			tuple = blueRobots.get(1);
+    			blueAttacker.updateState(tuple.getFirst(), tuple.getSecond());
     		}
     	}
     }
@@ -363,12 +344,60 @@ public class Pitch extends Plane implements IPitch {
 
 	@Override
 	public void setZone(int id, PointSet ps) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public Zone[] getAllZoneOutline() {
 		return zones;
+	}
+
+	public void initialise(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+			List<Tuple<Point, Point>> blueRobots) {
+		
+		// We have to be prepared at this point so cannot be null
+		this.ball = new Ball(ballCentroid);
+		
+		// We sort both
+		Collections.sort(yellowRobots);
+		Collections.sort(blueRobots);
+		
+		// We compare first one - smaller should be left
+		Tuple<Point, Point> firstYellow = yellowRobots.get(0);
+		Tuple<Point, Point> firstBlue = blueRobots.get(0);
+		Tuple<Point, Point> secondYellow = yellowRobots.get(1);
+		Tuple<Point, Point> secondBlue = blueRobots.get(1);
+		
+		if (firstYellow.getFirst().x < firstBlue.getFirst().x) {
+    		// Yellow | Blue | Yellow | Blue
+			// Yellow is on the left of blue
+			// Thus yellow 0 is defender and yellow 1 is attacker
+			// And blue 0 is attacker and blue 1 is defender
+			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond());
+			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond());
+			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond());
+			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond());
+		} else {
+    		// Blue | Yellow | Blue | Yellow
+			// Blue is on the left of yellow
+			// Thus yellow 0 is attacker and yellow 1 is defender
+			// And blue 0 is defender and blue 1 is attacker
+			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond());
+			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond());
+			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond());
+			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond());
+		}
+		
+	}
+
+	@Override
+	public void updateRobotState(int id, Point p, double theta) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public PointSet getTrajectory() {
+		throw new UnsupportedOperationException();
 	}
 }

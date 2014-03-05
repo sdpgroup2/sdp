@@ -1,22 +1,17 @@
 package sdp.group2.world;
 
-import sdp.group2.geometry.Rect;
+import sdp.group2.geometry.Point;
 
 
 public class Ball extends MovableObject {
 
 	private static final double RADIUS = 25; /** [mm] */
 
-	public Ball() {
-        super();
-    }
-	
-	public Ball(Rect boundingRect) {
-		this();
-        setBoundingRect(boundingRect);
-		updatePosition(boundingRect.getCenter());
+	public Ball(Point ballPosition) {
+        updatePosition(ballPosition);
 	}
 	
-	public double getRadius()
-	{ return RADIUS; }
+	public double getRadius() {
+		return RADIUS;
+	}
 }
