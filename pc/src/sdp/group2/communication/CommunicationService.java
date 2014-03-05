@@ -91,6 +91,9 @@ private Sender sender;
 							case Commands.ROTATEKICKER:
 								sender.rotateKicker();
 								break;
+							case Commands.OPENKICKER:
+								sender.openKicker();
+								break;
 							default:
 								
 							}

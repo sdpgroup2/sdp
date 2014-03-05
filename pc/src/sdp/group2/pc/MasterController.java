@@ -34,7 +34,7 @@ public class MasterController implements VisionServiceCallback {
     	this.defPlanner = new SimpleDefensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
-        this.commService = new CommunicationService(Constants.ROBOT_2A_NAME);
+        this.commService = new CommunicationService(Constants.ROBOT_2D_NAME);
     }
 
     /**

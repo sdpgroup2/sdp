@@ -16,23 +16,29 @@ public class TestComms {
 		CommunicationService commService = new CommunicationService(Constants.ROBOT_2A_NAME);
 		commService.startRunningFromQueue();
 
-		CommandQueue.add(Commands.move(1, 34, 200), Constants.ROBOT_2A_NAME);
-//		CommandQueue.add(Commands.kick(30, 3403), Constants.ROBOT_2A_NAME);
+//		CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2A_NAME);
+		
+//		CommandQueue.add(Commands.move(1, 34, 200), Constants.ROBOT_2A_NAME);
+		for (int i = 0; i<60; i++){
+			CommandQueue.add(Commands.closeKicker(), Constants.ROBOT_2A_NAME);
+			CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2A_NAME);
+			
+		}
 //		CommandQueue.add(Commands.rotate(180,2344), Constants.ROBOT_2A_NAME);
 
-		Thread input = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(2000);
-					System.out.println("got here");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				CommandQueue.clear(Constants.ROBOT_2A_NAME);
-			}	
-		});
+//		Thread input = new Thread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				try {
+//					Thread.sleep(2000);
+//					System.out.println("got here");
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				CommandQueue.clear(Constants.ROBOT_2A_NAME);
+//			}	
+//		});
 //		input.start();
 
 	}
