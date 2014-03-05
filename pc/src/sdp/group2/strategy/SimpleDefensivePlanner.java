@@ -63,15 +63,16 @@ public class SimpleDefensivePlanner extends Planner {
         distance = Math.abs(distance);
         
         double angle = 90.0 - robot.getDirection();
-        if (Math.abs(angle) < 5.0) {
-        	angle = 0.0;
-        }
 
         System.out.println("Rotating angle: " + angle);
         System.out.println("Moving forward: " + distance);
         
-//        CommandQueue.add(Commands.rotate(((int)Math.floor(angle)), Constants.DEF_MOVE_SPEED), robotName);
-//        CommandQueue.add(Commands.move(sign, Constants.DEF_MOVE_SPEED, distance), robotName);
+        if (Math.abs(angle) > 10.0) {
+            CommandQueue.add(Commands.rotate(((int)Math.floor(angle)), Constants.DEF_MOVE_SPEED), robotName);
+        }
+
+        CommandQueue.add(Commands.move(sign, Constants.DEF_MOVE_SPEED, distance), robotName);
+//        System.exit(0);
     }
 
     public void disconnect() {

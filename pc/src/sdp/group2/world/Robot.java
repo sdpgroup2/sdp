@@ -19,7 +19,7 @@ public class Robot extends MovableObject {
      * [mm], measured as robot width from kicker to the back through its centre divided by 2
      */
     private double direction = 0.0;
-    private Vector facingVector;
+    private Vector facingVector = new Vector(0, 1); // TODO: <-- That is not pretty
 
     public Robot() {
         super();
@@ -41,10 +41,10 @@ public class Robot extends MovableObject {
     }
 
     public double getDirection() {
-    	System.out.println("** Angle vectors **");
-    	System.out.println(facingVector);
-    	System.out.println(new Vector(1, 0));
-    	System.out.println("** --- **");
+//    	System.out.println("** Angle vectors **");
+////    	System.out.println(facingVector);
+//    	System.out.println(new Vector(1, 0));
+//    	System.out.println("** --- **");
         return facingVector.angleDegrees(new Vector(1, 0));
     }
     
