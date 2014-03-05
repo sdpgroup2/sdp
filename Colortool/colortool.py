@@ -236,11 +236,11 @@ if __name__ == "__main__":
     static_img = load_image(filename)   
     ## comment this out for camera
     pygame.init()
-    camera.init()
-    cam = camera.Camera("/dev/video0", (640, 480))
-    cam.start()
-    im = cam.get_image()
-    main = ViewingWindow(im)
+#    camera.init()
+#    cam = camera.Camera("/dev/video0", (640, 480))
+#    cam.start()
+#    im = cam.get_image()
+    main = ViewingWindow(static_img)
     while True:
         #im = cam.get_image()
         main.run(static_img)

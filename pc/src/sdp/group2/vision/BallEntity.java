@@ -17,8 +17,12 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class BallEntity extends Entity {
 
-    private int[] mins = new int[]{-10, 92, 140};
-    private int[] maxs = new int[]{10, 256, 256};
+//    Pitch 2:
+//    private int[] mins = new int[]{-10, 92, 140};
+//    private int[] maxs = new int[]{10, 256, 256};
+	
+	  private int[] mins = new int[]{-10, 80, 70};
+	  private int[] maxs = new int[]{10, 256, 256};
 
 	
     private static IplImage[] hsvImages = new IplImage[3];

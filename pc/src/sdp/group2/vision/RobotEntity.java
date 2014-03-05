@@ -145,8 +145,8 @@ public class RobotEntity extends Entity {
     	cvInRangeS(hsvImage, cvScalar(20, 100, 100, 0), cvScalar(30, 255, 255, 0), channel);
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
-//    	System.out.println(nonZero);
-    	return nonZero > 20 ? true : false;
+    	System.out.println(nonZero);
+    	return nonZero > 10 ? true : false;
     }
     
 }

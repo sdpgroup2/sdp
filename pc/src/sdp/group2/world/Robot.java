@@ -19,7 +19,8 @@ public class Robot extends MovableObject {
      * [mm], measured as robot width from kicker to the back through its centre divided by 2
      */
     private double direction = 0.0;
-    private Vector facingVector;
+    private Vector facingVector = new Vector(0, 1); // TODO: <-- That is not pretty
+    private Vector previousDetectedFacing = null;
 
     public Robot() {
         super();
@@ -41,17 +42,25 @@ public class Robot extends MovableObject {
     }
 
     public double getDirection() {
-        return direction;
+//    	System.out.println("** Angle vectors **");
+////    	System.out.println(facingVector);
+//    	System.out.println(new Vector(1, 0));
+//    	System.out.println("** --- **");
+        return facingVector.angleDegrees(new Vector(1, 0));
     }
     
     public void updateFacing(Point dotPosition) {
-    	Debug.log("Updating facing");
-    	if (dotPosition != null) {
-    		Vector newFacing = getPosition().sub(dotPosition.toMillis());
-    		double deltaAngle = newFacing.angleDegrees(facingVector);
-    		Debug.logf("Delta angle: %f", deltaAngle);
-    		facingVector = newFacing;
-    	}
+		Vector newFacing = getPosition().sub(dotPosition);
+		if (previousDetectedFacing != null) {
+			double deltaAngle = newFacing.angleDegrees(previousDetectedFacing);
+			if (deltaAngle > 30) {
+				Debug.log("ANGLE TOO BIG!!!");
+				previousDetectedFacing = newFacing;
+				return;
+			}
+		}
+		facingVector = newFacing;
+		previousDetectedFacing = newFacing;
     }
 
     public Vector getFacingVector() {

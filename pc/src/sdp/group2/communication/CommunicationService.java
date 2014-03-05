@@ -30,7 +30,6 @@ private Sender sender;
 		
 	}
 	public void startRunningFromQueue() {
-		System.out.println("popping from 2D queue");
 		Thread popThread = new Thread(new Runnable() {
 			
 			@Override

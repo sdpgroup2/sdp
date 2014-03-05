@@ -7,6 +7,7 @@ import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
+import sdp.group2.strategy.SimpleDefensivePlanner;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
@@ -22,14 +23,14 @@ public class MasterController implements VisionServiceCallback {
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch;
-    private DefensivePlanner defPlanner;
+    private SimpleDefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
     private VisionService visionService;
     private CommunicationService commService;
 
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
-    	this.defPlanner = new DefensivePlanner(pitch);
+    	this.defPlanner = new SimpleDefensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
         this.commService = new CommunicationService(Constants.ROBOT_2A_NAME);
@@ -84,7 +85,6 @@ public class MasterController implements VisionServiceCallback {
 		}
 		
 		pitch.updateBallPosition(ballCentroid.toMillis());
-
 		
 		for (int i = 0; i < 4; i++) {
 			if (pitch.getZone(i).contains(ballCentroid)) {
@@ -93,6 +93,6 @@ public class MasterController implements VisionServiceCallback {
 			}
 		}
 		
-//		defPlanner.act();
+		defPlanner.act();
 	}
 }
