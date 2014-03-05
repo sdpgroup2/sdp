@@ -8,8 +8,8 @@ public class Thresholds {
 			new int[]{10, 256, 256},
 			
 			// dot mins/maxs
-			new int[] {30, 22, 50},
-		    new int[] {80, 130, 140},
+			new int[] {26, 19, 43},
+		    new int[] {65, 139, 135},
 		    
 		    // baseplate mins/maxs
 		    new int[] {40, 60, 150},
