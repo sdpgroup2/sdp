@@ -12,12 +12,33 @@ public class Thresholds {
 		    new int[] {65, 139, 135},
 		    
 		    // baseplate mins/maxs
-		    new int[] {35, 50, 150},
-		    new int[] {90, 180, 255},
+		    new int[] {20, 20, 100},
+		    new int[] {120, 220, 255},
 		    
 		    // yellow mins/maxs
-		    new int[] {20, 90, 100}, 
-		    new int[] {40, 255, 255},
+		    new int[] {20, 110, 128}, 
+		    new int[] {30, 255, 255},
+		    
+		    // yellow pixel threshold
+		 	60
+	);
+	
+	public static Thresholds sidePitchThresholdsGlenorchy = new Thresholds(
+			// ball mins/maxs
+			new int[]{-10, 92, 140}, 
+			new int[]{10, 256, 256},
+			
+			// dot mins/maxs
+			new int[] {26, 19, 43},
+		    new int[] {65, 139, 135},
+		    
+		    // baseplate mins/maxs
+		    new int[] {20, 20, 100},
+		    new int[] {120, 220, 255},
+		    
+		    // yellow mins/maxs
+		    new int[] {20, 110, 128}, 
+		    new int[] {30, 255, 255},
 		    
 		    // yellow pixel threshold
 		 	60
