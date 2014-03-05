@@ -70,7 +70,7 @@ public class EvenSimplerDefensivePlanner extends Planner {
 			// ballDir is 1 if the ball is above, -1 if the ball is below.
 			// dir multiplies these two to find the direction in which to move.
 			double angleSign = Math.signum(angle);
-			int ballDir = Math.signum(ry-by);
+			int ballDir = (int) Math.signum(ry-by);
 			int dir = (int) (ballDir * angleSign);
 			
 			int dist = (int) Math.abs(ry-by);

@@ -101,7 +101,7 @@ public class DefensivePlanner extends Planner {
     }
 
     public void align() {
-    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Robot defenceRobot = pitch.getOurDefender();
         if (lastRotation + 3000 > System.currentTimeMillis()) {
             return;
         } else {
