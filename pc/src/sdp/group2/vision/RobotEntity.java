@@ -108,7 +108,7 @@ public class RobotEntity extends Entity {
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
     	System.out.println(nonZero);
-    	return nonZero > 10 ? true : false;
+    	return nonZero > Thresholds.activeThresholds.yellowPixelsThreshold ? true : false;
     }
     
 }

@@ -68,7 +68,7 @@ public class MasterController implements VisionServiceCallback {
         } else {
         	Thresholds.activeThresholds = Thresholds.sidePitchThresholds;
         }
-        //Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
+        Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
         
         final MasterController controller = new MasterController();    
         controller.start();
