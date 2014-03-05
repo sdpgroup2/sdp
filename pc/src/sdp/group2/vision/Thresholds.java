@@ -12,12 +12,12 @@ public class Thresholds {
 		    new int[] {65, 139, 135},
 		    
 		    // baseplate mins/maxs
-		    new int[] {40, 60, 150},
-		    new int[] {80, 160, 255},
+		    new int[] {35, 50, 150},
+		    new int[] {90, 180, 255},
 		    
 		    // yellow mins/maxs
-		    new int[] {20, 100, 100}, 
-		    new int[] {30, 255, 255},
+		    new int[] {20, 90, 100}, 
+		    new int[] {40, 255, 255},
 		    
 		    // yellow pixel threshold
 		 	60
@@ -39,6 +39,7 @@ public class Thresholds {
 		    // yellow mins/maxs
 		    new int[] {20, 100, 100}, 
 		    new int[] {30, 255, 255},
+		    
 		    
 		    // yellow pixel threshold
 		 	60
