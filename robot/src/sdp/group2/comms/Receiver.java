@@ -90,7 +90,7 @@ public class Receiver {
 							break;
 							
 						case Commands.BACKWARDS:
-							pilot.moveForward(option1);
+							pilot.moveBackward(option1);
 							replyToPC(opcode, outStream);
 							break;
 						

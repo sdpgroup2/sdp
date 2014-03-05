@@ -23,6 +23,27 @@ public class Thresholds {
 		 	60
 	);
 	
+	public static Thresholds spongeBobSquarePitch = new Thresholds(
+			// ball mins/maxs
+			new int[]{-10, 92, 140}, 
+			new int[]{10, 256, 256},
+			
+			// dot mins/maxs
+			new int[] {20, 40, 90},
+		    new int[] {60, 100, 142},
+		    
+		    // baseplate mins/maxs
+		    new int[] {28, 72, 160},
+		    new int[] {80, 160, 255},
+		    
+		    // yellow mins/maxs
+		    new int[] {20, 100, 100}, 
+		    new int[] {30, 255, 255},
+		    
+		    // yellow pixel threshold
+		 	60
+	);	
+	
 	public static Thresholds mainPitchThresholds = new Thresholds(
 			// ball mins/maxs
 			new int[]{-10, 80, 70},

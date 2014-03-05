@@ -12,86 +12,78 @@ import sdp.group2.util.Debug;
 public class EvenSimplerDefensivePlanner extends Planner {
 	
 	private static final String robotName = Constants.ROBOT_2D_NAME;
+	
+	// The number of frames in between commands
+	private int STUTTER_FRAMES = 20;
+	
+	// The min/max Y that the robot is allowed to have. (The goal posts)
+	private static final double minY = 285;
+	private static final double maxY = 853;
+	
+	// The number of frames this has been running.
 	private int frames = 0;
-	private int sleepFrames = 0;
-	private int currentDirection = 0;
+	
 	
 	public EvenSimplerDefensivePlanner(IPitch pitch) {
         super(pitch);
     }
 	
 	public void act() {
-		trackBall();
-	}
-	
-	public void trackBall() {
-		if (sleepFrames > 0) {
-			sleepFrames -= 1;
-			return;
-		}
-		Robot robot = pitch.getOurDefenderRobot();
-		Ball ball = pitch.getBall();
-		double angle = robot.getFacingVector().signedAngleDegrees();
-		double angleSign = Math.signum(angle);
-		double distance = robot.getPosition().y - ball.getPosition().y;
-		int direction = (int) (Math.signum(distance) * angleSign);
-		boolean moving = (currentDirection != 0);
-		if (Math.abs(distance) <= 60) {
-			Debug.logf("Close enough to ball: %f", distance);
-			if (moving) {
-				Debug.log("Robot is moving: stopping it.");
-				CommandQueue.clear(robotName);
-				CommandQueue.add(Commands.stop(), robotName);
-				sleepFrames = 30;
-				currentDirection = 0;
-			}
-		} else {
-			Debug.logf("Too far from ball: %f", distance);
-			CommandQueue.clear(robotName);
-			CommandQueue.add(Commands.stop(), robotName);
-			moveDirection(direction);
-		}
-	}
-	
-	public void moveDirection(int direction) {
-		switch (direction) {
-		case 1:  {
-			CommandQueue.add(Commands.forwards(4000), robotName);
-			currentDirection = 1;
-			break;
-		}
-		case -1: {
-			CommandQueue.add(Commands.backwards(4000), robotName);
-			currentDirection = -1;
-			break;
-		}
-		default: break;
-		}
-	}
-	
-	public void stutter() {
 		frames += 1;
+		stutter();
+	}
+	
+	/**
+	 * Every STUTTER_FRAMES frames, either adjust the angle of the defending robot to be
+	 * more vertical (in line with goal) OR move the defending robot forwards or backwards
+	 * trying to match the ball's position.
+	 */
+	public void stutter() {
 		Robot robot = pitch.getOurDefenderRobot();
+		
+		// Angle ranges from -180 to 180 degrees.
 		double angle = robot.getFacingVector().signedAngleDegrees();
-		if (frames%60 == 0) {
-			Debug.log("Every-three-second rotation!!!");
+		double unsignedAngle = Math.abs(angle);
+		
+		// The angle is wrong if it is more than 10 degrees away from 90.
+		boolean wrongAngle = !(80 < unsignedAngle && unsignedAngle < 100);
+		
+		// Do this every 20 frames, starting from frame 0
+		if (frames%STUTTER_FRAMES == 0) {
 			Debug.logf("  Defender angle is: %f", angle);
-			double unsignedAngle = Math.abs(angle);
-			if (85 < unsignedAngle && unsignedAngle < 95) {
-				Debug.log("Angle is fine.");
-			} else {
+			if (wrongAngle) {
 				Debug.log("Too big an angle difference, rotating.");
+				// angleSign is negative for an anticlockwise rotation and positive for a clockwise.
 				double angleSign = Math.signum(angle);
 				CommandQueue.add(Commands.rotate((int)(angleSign*(90-unsignedAngle)), Short.MAX_VALUE), robotName);
+			} else {
+				Debug.log("Angle is fine.");
 			}
 		}
-		else if (frames%60 == 30) {
+		
+		// Do this every 20 frames, starting from frame 10
+		else if (frames%STUTTER_FRAMES == STUTTER_FRAMES/2) {
 			double ry = robot.getPosition().y;
 			double by = pitch.getBall().getPosition().y;
+			
+			// angleSign is 1 if the robot is facing upwards and -1 if downwards.
+			// ballDir is 1 if the ball is above, -1 if the ball is below.
+			// dir multiplies these two to find the direction in which to move.
 			double angleSign = Math.signum(angle);
-			int dir = (int) (Math.signum(ry-by) * angleSign);
+			int ballDir = Math.signum(ry-by);
+			int dir = (int) (ballDir * angleSign);
+			
 			int dist = (int) Math.abs(ry-by);
-			if (dist > 30) {
+			
+			// If the ball is outwith the range of the goal post, we only want to move as far as the goal post
+			if (by <= minY) {
+				dist = (int) Math.abs(minY - ry);
+			} else if (by >= maxY) {
+				dist = (int) Math.abs(maxY - ry);
+			}
+			
+			// If the distance is too great, and the robot is roughly vertically aligned:
+			if (dist > 30 && !wrongAngle) {
 				CommandQueue.clear(robotName);
 				CommandQueue.add(Commands.move(dir, 5000, dist), robotName);
 			}
