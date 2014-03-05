@@ -14,8 +14,8 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public static int WHITE_THRESHOLD = 37;
 	public MyLightSensor rightSensor;
 	
-	public static final int DEFAULT_KICKER_ANGLE = 30;
-	public static final int DEFAULT_KICKER_SPEED = 3400;
+	public static final int DEFAULT_KICKER_ANGLE = 60;
+	public static final int DEFAULT_KICKER_SPEED = Short.MAX_VALUE;
 
 	public void move(int direction, int speed, int distance) {
 		LCD.drawString("moving forward!", 10, 10);

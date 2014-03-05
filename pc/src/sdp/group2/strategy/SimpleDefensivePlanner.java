@@ -23,7 +23,7 @@ import sdp.group2.world.Zone;
 public class SimpleDefensivePlanner extends Planner {
 
     private static final int SPEED = 40;
-    private static final String robotName = Constants.ROBOT_2A_NAME;
+    private static final String robotName = Constants.ROBOT_2D_NAME;
     private static final Point GOAL = new Point(40, Millimeter.pix2mm(150));
     private boolean isRobotAligned = false;
     private Sender sender;
