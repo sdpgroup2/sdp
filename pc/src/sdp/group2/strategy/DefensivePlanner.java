@@ -51,7 +51,7 @@ public class DefensivePlanner extends Planner {
      * Tries to intercept the ball.
      */
     public void interceptSimple() {
-    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Robot defenceRobot = pitch.getOurDefender();
     	Ball ball = pitch.getBall();
     	System.out.println("Sending intercept comand.");
         if (defenceRobot.isMoving()) {
@@ -70,7 +70,7 @@ public class DefensivePlanner extends Planner {
     }
 
     public void intercept() {
-    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Robot defenceRobot = pitch.getOurDefender();
     	Zone defenceZone = pitch.getOurDefendZone();
         if (defenceRobot.isMoving()) {
             return;

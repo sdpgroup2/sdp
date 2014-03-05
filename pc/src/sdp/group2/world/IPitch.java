@@ -65,7 +65,7 @@ public interface IPitch
 
     public Ball getBall();
 
-    public Robot getOurDefenderRobot();
+    public Robot getOurDefender();
 
     public Robot getOurAttacker();
 

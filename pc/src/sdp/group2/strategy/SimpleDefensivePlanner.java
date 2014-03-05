@@ -28,7 +28,7 @@ public class SimpleDefensivePlanner extends Planner {
     private boolean isRobotAligned = false;
     private Sender sender;
     private long lastRotation = System.currentTimeMillis();
-    private Point enemyGoal;
+    private Point enemyGoal = new Point(553, Millimeter.pix2mm(153));
 
     // Still to implement:
     // Pass();
@@ -51,7 +51,7 @@ public class SimpleDefensivePlanner extends Planner {
      * Tries to intercept the ball.
      */
     public void interceptSimple() {
-    	Robot robot = pitch.getOurDefenderRobot();
+    	Robot robot = pitch.getOurDefender();
     	Ball ball = pitch.getBall();
     	System.out.println("Sending intercept comand.");
     	
