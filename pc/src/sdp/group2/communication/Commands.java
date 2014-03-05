@@ -77,6 +77,18 @@ public class Commands{
 		return new int[] {OPENKICKER, 0, 0, 0};
 	}
 	
+	public static int[] stop() {
+		return new int[] {STOP, 0, 0, 0};
+	}
+	
+	public static int[] forwards(int speed) {
+		return new int[] {FORWARDS, speed, 0, 0};
+	}
+	
+	public static int[] backwards(int speed) {
+		return new int[] {BACKWARDS, speed, 0, 0};
+	}
+	
 	
 	/**
 	 * 

@@ -83,6 +83,16 @@ public class Receiver {
 							pilot.stop();
 							replyToPC(opcode, outStream);
 							break;
+							
+						case Commands.FORWARDS:
+							pilot.moveForward(option1);
+							replyToPC(opcode, outStream);
+							break;
+							
+						case Commands.BACKWARDS:
+							pilot.moveBackward(option1);
+							replyToPC(opcode, outStream);
+							break;
 						
 						case Commands.STEER:
 							LCD.clear();

@@ -18,6 +18,14 @@ public class Vector extends Vector2d {
 	public double angleDegrees(Vector other) {
 		return Math.toDegrees(this.angle(other));
 	}
+	
+	/**
+	 * Returns the angle in degrees relative to positive x axis.
+	 * @return angle in degrees
+	 */
+	public double signedAngleDegrees() {
+		return Math.toDegrees(Math.atan2(this.y, this.x));
+	}
 
 	@Override
 	public String toString() {

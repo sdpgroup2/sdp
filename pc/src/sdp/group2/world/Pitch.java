@@ -8,12 +8,15 @@ package sdp.group2.world;
 import java.util.Collections;
 import java.util.List;
 
-import sdp.group2.geometry.*;
-import sdp.group2.world.Zone;
+import sdp.group2.geometry.Plane;
+import sdp.group2.geometry.Point;
+import sdp.group2.geometry.PointSet;
+import sdp.group2.geometry.Vector;
 import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Tuple;
+import sdp.group2.util.Debug;
 
 
 public class Pitch extends Plane implements IPitch {
@@ -369,19 +372,25 @@ public class Pitch extends Plane implements IPitch {
 		Tuple<Point, Point> secondBlue = blueRobots.get(1);
 		
 		if (firstYellow.getFirst().x < firstBlue.getFirst().x) {
+			Debug.log("Yellow defender on left.");
     		// Yellow | Blue | Yellow | Blue
 			// Yellow is on the left of blue
 			// Thus yellow 0 is defender and yellow 1 is attacker
 			// And blue 0 is attacker and blue 1 is defender
-			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(),zones[0]);
-			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(),zones[2]);
-			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(),zones[1]);
-			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(),zones[3]);
+			Debug.logf("First yellow: %s    Second yellow: %s", firstYellow.getFirst(), secondYellow.getSecond());
+			Debug.logf("First blue: %s    Second blue: %s", firstBlue.getFirst(), secondBlue.getSecond());
+			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), zones[0]);
+			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), zones[2]);
+			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), zones[1]);
+			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), zones[3]);
 		} else {
+			Debug.log("Blue defender on left.");
     		// Blue | Yellow | Blue | Yellow
 			// Blue is on the left of yellow
 			// Thus yellow 0 is attacker and yellow 1 is defender
 			// And blue 0 is defender and blue 1 is attacker
+			Debug.logf("First yellow: %s    Second yellow: %s", firstYellow.getFirst(), secondYellow.getSecond());
+			Debug.logf("First blue: %s    Second blue: %s", firstBlue.getFirst(), secondBlue.getSecond());
 			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond(),zones[1]);
 			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond(),zones[3]);
 			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond(),zones[0]);

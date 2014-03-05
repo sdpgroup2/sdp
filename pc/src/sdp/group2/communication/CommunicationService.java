@@ -60,6 +60,15 @@ private Sender sender;
 							case Commands.OPENKICKER:
 								sender.openKicker();
 								break;
+							case Commands.STOP:
+								sender.stop();
+								break;
+							case Commands.FORWARDS:
+								sender.forwards(commands[1]);
+								break;
+							case Commands.BACKWARDS:
+								sender.backwards(commands[1]);
+								break;
 								
 							default:
 								
@@ -93,6 +102,15 @@ private Sender sender;
 								break;
 							case Commands.OPENKICKER:
 								sender.openKicker();
+								break;
+							case Commands.STOP:
+								sender.stop();
+								break;
+							case Commands.FORWARDS:
+								sender.forwards(commands[1]);
+								break;
+							case Commands.BACKWARDS:
+								sender.backwards(commands[1]);
 								break;
 							default:
 								

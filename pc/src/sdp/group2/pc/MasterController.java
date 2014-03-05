@@ -14,6 +14,7 @@ import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.world.Pitch;
+import sdp.group2.strategy.EvenSimplerDefensivePlanner;
 
 
 public class MasterController implements VisionServiceCallback {
@@ -22,14 +23,14 @@ public class MasterController implements VisionServiceCallback {
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch;
-    private SimpleDefensivePlanner defPlanner;
+    private EvenSimplerDefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
     private VisionService visionService;
     private CommunicationService commService;
 
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
-    	this.defPlanner = new SimpleDefensivePlanner(pitch);
+    	this.defPlanner = new EvenSimplerDefensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
         this.commService = new CommunicationService(Constants.ROBOT_2D_NAME);
@@ -67,6 +68,7 @@ public class MasterController implements VisionServiceCallback {
         	Thresholds.activeThresholds = Thresholds.sidePitchThresholds;
         }
 //        Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
+        Thresholds.activeThresholds = Thresholds.spongeBobSquarePitch;
         
         final MasterController controller = new MasterController();    
         controller.start();
@@ -78,6 +80,14 @@ public class MasterController implements VisionServiceCallback {
         commService.startRunningFromQueue();
     }
 
+    // Sorry
+    public static void tupleOfPointsToMillis(Tuple<Point, Point> tuple) {
+    	Point first = tuple.getFirst();
+    	Point second = tuple.getSecond();
+    	if (first != null) { first.toMillis(); }
+    	if (second != null) { second.toMillis(); }
+    }
+    
     /**
      * Callback ran after the vision service has found all the neccessary things.
      */
@@ -88,12 +98,10 @@ public class MasterController implements VisionServiceCallback {
 		// is in millis. Also nothing should be null in this otherwise
     	// we wouldn't be prepared, right?
     	for (Tuple<Point, Point> tuple : blueRobots) {
-    		tuple.getFirst().toMillis();
-    		tuple.getSecond().toMillis();
+    		tupleOfPointsToMillis(tuple);
 		}
     	for (Tuple<Point, Point> tuple : yellowRobots) {
-    		tuple.getFirst().toMillis();
-    		tuple.getSecond().toMillis();
+    		tupleOfPointsToMillis(tuple);
 		}
     	pitch.initialise(ballCentroid.toMillis(), yellowRobots, blueRobots);
     }
@@ -106,7 +114,12 @@ public class MasterController implements VisionServiceCallback {
 			List<Tuple<Point, Point>> blueRobots) {
 		
 		pitch.updateRobots(yellowRobots, blueRobots);
-		
+		for (Tuple<Point, Point> tuple : blueRobots) {
+			tupleOfPointsToMillis(tuple);
+		}
+    	for (Tuple<Point, Point> tuple : yellowRobots) {
+    		tupleOfPointsToMillis(tuple);
+		}
 		if (ballCentroid != null) {
 			pitch.updateBallPosition(ballCentroid.toMillis());
 		}

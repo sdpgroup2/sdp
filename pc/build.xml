@@ -67,8 +67,44 @@
         </java>
     </target>
 	
+	<target name="run-yellow-main" depends="compile">
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+        	<arg value="0"/> <!-- YELLOW = 0, BLUE = 1 -->
+        	<arg value="0"/> <!-- MAIN = 0, SIDE = 1 -->
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+        </java>
+    </target>
+	
+	<target name="run-yellow-side" depends="compile">
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+        	<arg value="0"/> <!-- YELLOW = 0, BLUE = 1 -->
+        	<arg value="1"/> <!-- MAIN = 0, SIDE = 1 -->
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+        </java>
+    </target>
+	
+	<target name="run-blue-main" depends="compile">
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+        	<arg value="1"/> <!-- YELLOW = 0, BLUE = 1 -->
+        	<arg value="0"/> <!-- MAIN = 0, SIDE = 1 -->
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+        </java>
+    </target>
+	
+	<target name="run-blue-side" depends="compile">
+        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
+            <sysproperty key="java.library.path" path="${lib.dir}"/>
+        	<arg value="1"/> <!-- YELLOW = 0, BLUE = 1 -->
+        	<arg value="1"/> <!-- MAIN = 0, SIDE = 1 -->
+	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+        </java>
+    </target>
+	
 	<target name="test" depends="compile, compile-tests">
-		<junit printsummary="yes" haltonfailure="yes" showoutput="true">
+		<junit printsummary="withOutAndErr" haltonfailure="no" showoutput="true">
 			  <classpath>
 			<pathelement location="${build.dir}"/>
 			<pathelement path="build.classpath"/>
