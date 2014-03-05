@@ -10,6 +10,7 @@ import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
+import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.world.Pitch;
@@ -45,12 +46,27 @@ public class MasterController implements VisionServiceCallback {
             System.err.println("Not specified which team we are and what pitch we're playing");
             System.exit(1);
         }
+        try { 
+            Integer.parseInt(args[0]); 
+            Integer.parseInt(args[1]);
+        } catch(NumberFormatException e) { 
+        	System.err.println("Not integer parameters supplied");
+            System.exit(1);
+        }
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
             pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
+        
+        // Sets the thresholds to be used based on pitch type.
+        if (pitchPlayed == Constants.PitchType.MAIN) {
+        	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
+        } else {
+        	Thresholds.activeThresholds = Thresholds.sidePitchThresholds;
+        }
+        Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
         
         final MasterController controller = new MasterController();    
         controller.start();

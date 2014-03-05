@@ -2,6 +2,8 @@ package sdp.group2.world;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Vector;
+import sdp.group2.util.Debug;
+import sdp.group2.util.Tuple;
 
 
 /**
@@ -17,6 +19,7 @@ public class Robot extends MovableObject {
      * [mm], measured as robot width from kicker to the back through its centre divided by 2
      */
     private Vector facingVector;
+    private Vector previousDetectedFacing;
 
     public Robot(Point robotPosition, Point dotPosition) {
     	updatePosition(robotPosition);
@@ -38,8 +41,22 @@ public class Robot extends MovableObject {
     	}
     }
     
+    public void updateState(Tuple<Point, Point> tuple) {
+    	updateState(tuple.getFirst(), tuple.getSecond());
+    }
+
     public void updateFacing(Point dotPosition) {
-    	this.facingVector = getPosition().sub(dotPosition);
+		Vector newFacing = getPosition().sub(dotPosition);
+		if (previousDetectedFacing != null) {
+			double deltaAngle = newFacing.angleDegrees(previousDetectedFacing);
+			if (deltaAngle > 30) {
+				Debug.log("ANGLE TOO BIG!!!");
+				previousDetectedFacing = newFacing;
+				return;
+			}
+		}
+		facingVector = newFacing;
+		previousDetectedFacing = newFacing;
     }
 
     public Vector getFacingVector() {

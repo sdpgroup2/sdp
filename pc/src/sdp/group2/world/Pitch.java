@@ -138,10 +138,10 @@ public class Pitch extends Plane implements IPitch {
     			Collections.sort(yellowRobots);
     			// Defender is 0
     			Tuple<Point, Point> tuple = yellowRobots.get(0);
-    			yellowDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    			yellowDefender.updateState(tuple);
     			// Attacker is 1
     			tuple = yellowRobots.get(1);
-    			yellowAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+    			yellowAttacker.updateState(tuple);
         	}
     		// Yellow | Blue | Yellow | Blue
     		if (blueRobots.size() == 2) {
@@ -149,10 +149,10 @@ public class Pitch extends Plane implements IPitch {
     			Collections.sort(blueRobots); 
     			// Attacker is 0
     			Tuple<Point, Point> tuple = blueRobots.get(0);
-    			blueAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+    			blueAttacker.updateState(tuple);
     			// Defender is 1
     			tuple = blueRobots.get(1);
-    			blueDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    			blueDefender.updateState(tuple);
     		}
     	} else {
     		// Blue | Yellow | Blue | Yellow
@@ -161,10 +161,10 @@ public class Pitch extends Plane implements IPitch {
     			Collections.sort(yellowRobots);
     			// Attacker is 0
     			Tuple<Point, Point> tuple = yellowRobots.get(0);
-    			yellowAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+    			yellowAttacker.updateState(tuple);
     			// Defender is 1
     			tuple = yellowRobots.get(1);
-    			yellowDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    			yellowDefender.updateState(tuple);
         	}
     		// Blue | Yellow | Blue | Yellow
     		if (blueRobots.size() == 2) {
@@ -172,10 +172,10 @@ public class Pitch extends Plane implements IPitch {
     			Collections.sort(blueRobots);
     			// Defender is 0
     			Tuple<Point, Point> tuple = blueRobots.get(0);
-    			blueDefender.updateState(tuple.getFirst(), tuple.getSecond());
+    			blueDefender.updateState(tuple);
     			// Attacker is 1
     			tuple = blueRobots.get(1);
-    			blueAttacker.updateState(tuple.getFirst(), tuple.getSecond());
+    			blueAttacker.updateState(tuple);
     		}
     	}
     }

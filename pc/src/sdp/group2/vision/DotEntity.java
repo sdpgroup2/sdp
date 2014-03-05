@@ -15,13 +15,9 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class DotEntity extends Entity {
 
-	// MAIN PITCH
-//    private int[] mins = new int[] {30, 30, 100};
-//    private int[] maxs = new int[] {90, 155, 155};
-	
-	// SIDE PITCH
-    private int[] mins = new int[] {30, 22, 50};
-    private int[] maxs = new int[] {80, 130, 140};
+	private int[] mins = Thresholds.activeThresholds.dotMins;
+	private int[] maxs = Thresholds.activeThresholds.dotMaxs;
+
 
     @Override
     public IplImage threshold(IplImage hsvImage) {
