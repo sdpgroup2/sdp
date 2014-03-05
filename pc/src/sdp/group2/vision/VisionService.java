@@ -146,6 +146,7 @@ public class VisionService implements CaptureCallback {
     		if (prepared) {
     			// We're ready switch to processing
     			state = VisionState.Processing;
+    			callback.prepared(ballCentroid, yellowRobots, blueRobots);
     			System.out.println("Prepared!");
     		}
 			break;
@@ -166,8 +167,7 @@ public class VisionService implements CaptureCallback {
 	/**
 	 * Called if there is an exception raised by the listener.
 	 * 
-	 * @param e
-	 *            - The exception raised.
+	 * @param e - The exception raised.
 	 */
 	
 	@Override

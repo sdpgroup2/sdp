@@ -4,8 +4,6 @@ import java.util.List;
 
 import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
-import sdp.group2.geometry.PointSet;
-import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.strategy.SimpleDefensivePlanner;
 import sdp.group2.util.Constants;
@@ -80,35 +78,45 @@ public class MasterController implements VisionServiceCallback {
         commService.startRunningFromQueue();
     }
 
+    /**
+     * Callback ran after the vision service has found all the neccessary things.
+     */
     @Override
-    public void onPreparationFrame() {
+    public void prepared(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+    		List<Tuple<Point, Point>> blueRobots) {
+		// The toMillis is in-place. We change to millis so from now on everything
+		// is in millis. Also nothing should be null in this otherwise
+    	// we wouldn't be prepared, right?
+    	for (Tuple<Point, Point> tuple : blueRobots) {
+    		tuple.getFirst().toMillis();
+    		tuple.getSecond().toMillis();
+		}
+    	for (Tuple<Point, Point> tuple : yellowRobots) {
+    		tuple.getFirst().toMillis();
+    		tuple.getSecond().toMillis();
+		}
+    	pitch.initialise(ballCentroid.toMillis(), yellowRobots, blueRobots);
     }
+
+    /**
+     * Callback ran every frame after the image was processed after preparation.
+     */
+	@Override
+	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
+			List<Tuple<Point, Point>> blueRobots) {
+		
+		pitch.updateRobots(yellowRobots, blueRobots);
+		
+		if (ballCentroid != null) {
+			pitch.updateBallPosition(ballCentroid.toMillis());
+		}
+		
+		defPlanner.act();
+	}
+	
 
     @Override
     public void onExceptionThrown(Exception e) {
     	e.printStackTrace();
     }
-
-	@Override
-	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
-			List<Tuple<Point, Point>> blueRobots) {
-		
-		pitch.updateRobots(yellowRobots, TeamColour.YELLOW);
-		pitch.updateRobots(blueRobots, TeamColour.BLUE);
-		
-		if (ballCentroid == null) {
-			return;
-		}
-		
-		pitch.updateBallPosition(ballCentroid.toMillis());
-		
-		for (int i = 0; i < 4; i++) {
-			if (pitch.getZone(i).contains(ballCentroid)) {
-				System.out.println(ballCentroid);
-				System.out.println(i);
-			}
-		}
-		
-		defPlanner.act();
-	}
 }

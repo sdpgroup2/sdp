@@ -66,14 +66,13 @@ public class Constants {
 	
 	public static Pitch getDefaultPitch() {
 		Pitch pitch = new Pitch();
-		
 		pitch.setOutline(Constants.getDefaultPitchOutline());
 		pitch.setAllZonesOutlines(Constants.getDefaultZoneOutlines());
-		pitch.updateRobotState((byte) 0, new Point(230.0, 575.0), 0.0);
-		pitch.updateRobotState((byte) 1, new Point(720.0, 575.0), 0.0);
-		pitch.updateRobotState((byte) 2, new Point(1323.0, 575.0), 0.0);
-		pitch.updateRobotState((byte) 3, new Point(1900.0, 575.0), 0.0);
-		initializeBall(pitch, -1);
+//		pitch.updateRobotState((byte) 0, new Point(230.0, 575.0), 0.0);
+//		pitch.updateRobotState((byte) 1, new Point(720.0, 575.0), 0.0);
+//		pitch.updateRobotState((byte) 2, new Point(1323.0, 575.0), 0.0);
+//		pitch.updateRobotState((byte) 3, new Point(1900.0, 575.0), 0.0);
+//		initializeBall(pitch, -1);
 		return pitch;
 	}
 	

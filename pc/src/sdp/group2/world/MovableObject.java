@@ -6,7 +6,6 @@ package sdp.group2.world;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
-import sdp.group2.geometry.Rect;
 import sdp.group2.geometry.Vector;
 
 
@@ -16,13 +15,12 @@ public class MovableObject {
 	
 	private PointSet history = new PointSet(false);
 	private boolean uptodate = true;
-	private double direction = 0.0;
-    private Rect boundingRect;
 	private double speed = 0.0;
 	private static double POSITION_EPS = 5; /** [mm] */
 	
 	public Point getPosition() {
 		if (history.size() < 2) {
+			// TODO: WTF?
 			return new Point(0.0, 0.0);
 		}
 		else {
@@ -40,19 +38,6 @@ public class MovableObject {
 		return speed;
 	}
 	
-	public double getDirection() {
-		update();
-		return direction;
-	}
-
-    public void setBoundingRect(Rect boundingRect) {
-        this.boundingRect = boundingRect;
-    }
-
-    public Rect getBoundingRect() {
-        return boundingRect;
-    }
-
     /**
      * Returns the vector from this object to another object.
      * @param other object we want a vector to
@@ -80,8 +65,6 @@ public class MovableObject {
 		double firstTime = history.get(i).getTimestamp();
 		
 		this.speed = Math.sqrt(xsum * xsum + ysum * ysum) / (lastTime - firstTime);
-		this.direction = Math.atan2(ysum, xsum);
-		
 		uptodate = true;
 	}
 
