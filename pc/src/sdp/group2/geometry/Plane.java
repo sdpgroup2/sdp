@@ -2,18 +2,19 @@
 
 package sdp.group2.geometry;
 
+import java.awt.Polygon;
+
 import lejos.geom.Rectangle;
 
-public class Plane {
+public class Plane extends Polygon {
+	
 	private String id = null;
-	private PointSet outline = null;
-	private double eps = 1e-9;
 	private Rectangle boundary = null;
 	private int SIGNIFICANT_BOUNCSES = 10;
 
 	public Plane(String id) {
+		super();
 		this.id = id;
-		outline = new PointSet(false);
 	}
 
 	public String getId() {
@@ -21,44 +22,18 @@ public class Plane {
 	}
 
 	public void addPoint(Point p) {
-		outline.add(p);
-	}
-
-	public void addPoint(double x, double y) {
-		outline.add(new Point(x, y));
-	}
-	
-	public PointSet getOutline() {
-		return outline;
+		super.addPoint((int) p.x, (int) p.y);
 	}
 	
 	public void setOutline(PointSet outline) {
-		this.outline = outline;
+		super.reset();
+		for (Point p : outline.getPoints()) {
+			addPoint(p);
+		}
 	}
 
 	public boolean isWellFormed() {
-		return outline.size() > 2;
-	}
-
-	public boolean contains(Point p) {
-		outline.sort();
-		int N = outline.size();
-		double angle = 0.0;
-		Point p1 = new Point(0, 0);
-		Point p2 = new Point(0, 0);
-
-		Point curPoint;
-
-		for (int i = 0; i < N; i++) {
-			curPoint = outline.get(i);
-			p1.setX(curPoint.getX() - p.getX());
-			p1.setY(curPoint.getY() - p.getX());
-			p2.setX(outline.get((i + 1) % N).getX() - p.getX());
-			p2.setY(outline.get((i + 1) % N).getY() - p.getY());
-			angle += p1.getAngle(p2);
-		}
-
-		return Math.PI - Math.abs(angle) < eps;
+		return super.npoints > 2;
 	}
 
 	public PointSet getTrajectory(Point origin, double direction) {
@@ -116,9 +91,9 @@ public class Plane {
 	}
 
 	public boolean isIntersectedBy(Line m) {
-		for (int i = 1; i < outline.size(); i++) {
-			Point p0 = outline.get(i - 1);
-			Point p1 = outline.get(i);
+		for (int i = 1; i < super.npoints; i++) {
+			Point p0 = new Point(super.xpoints[i - 1], super.ypoints[i - 1]);
+			Point p1 = new Point(super.xpoints[i],     super.ypoints[i]    );
 			Line wall = new Line(p0.x, p1.x, p0.y, p1.y);
 
 			if (intersects(m, wall)) {
@@ -156,9 +131,9 @@ public class Plane {
 	public Point getIntersection(Line line) {
 		Point intersection = null;
 
-		for (int i = 1; i < outline.size(); i++) {
-			Point p0 = outline.get(i - 1);
-			Point p1 = outline.get(i);
+		for (int i = 1; i < super.npoints; i++) {
+			Point p0 = new Point(super.xpoints[i - 1], super.ypoints[i - 1]);
+			Point p1 = new Point(super.xpoints[i], super.ypoints[i]);
 
 			Line wall = new Line(p0.x, p1.x, p0.y, p1.y);
 
@@ -175,9 +150,9 @@ public class Plane {
 		Line line = expand(origin, direction);
 		Point intersection = null;
 
-		for (int i = 1; i < outline.size(); i++) {
-			Point p0 = outline.get(i - 1);
-			Point p1 = outline.get(i);
+		for (int i = 1; i < super.npoints; i++) {
+			Point p0 = new Point(super.xpoints[i - 1], super.ypoints[i - 1]);
+			Point p1 = new Point(super.xpoints[i], super.ypoints[i]);
 
 			Line wall = new Line(p0.x, p1.x, p0.y, p1.y);
 
@@ -217,11 +192,11 @@ public class Plane {
 			double maxX = Float.MIN_VALUE;
 			double maxY = Float.MIN_VALUE;
 
-			for (Point p : outline.getPoints()) {
-				minX = Math.min(minX, p.x);
-				minY = Math.min(minY, p.y);
-				maxX = Math.max(maxX, p.x);
-				maxY = Math.max(maxY, p.y);
+			for (int i = 0; i < super.npoints; i++) {
+				minX = Math.min(minX, super.xpoints[i]);
+				minY = Math.min(minY, super.ypoints[i]);
+				maxX = Math.max(maxX, super.xpoints[i]);
+				maxY = Math.max(maxY, super.ypoints[i]);
 			}
 
 			boundary = new Rectangle((float) minX, (float) minY,
@@ -260,6 +235,16 @@ public class Plane {
 
 	public static int rad2deg(double rad) {
 		return (int) (180.0 * rad / Math.PI);
+	}
+	
+	public PointSet getOutline() {
+		PointSet outline = new PointSet();
+		
+		for (int i = 0; i < super.npoints; i++) {
+			outline.add(new Point(xpoints[i], ypoints[i]));
+		}
+		
+		return outline;
 	}
 
 }

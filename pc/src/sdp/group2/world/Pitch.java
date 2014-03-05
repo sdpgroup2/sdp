@@ -10,6 +10,7 @@ import java.util.List;
 
 import sdp.group2.geometry.*;
 import sdp.group2.world.Zone;
+import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Tuple;
@@ -28,13 +29,12 @@ public class Pitch extends Plane implements IPitch {
     /**
      * [mm], from wall to wall
      */
+    
+    private TeamSide ourSide;
 
     private Zone[] zones = new Zone[4];
     private Ball ball = new Ball();
     //Specify what Colour and Side of the pitch we are on;
-    private TeamColour ourTeam;
-    private TeamSide ourSide;
-
     private Robot[] robots;
 
     private Robot blueDefender = new Robot();
@@ -50,31 +50,6 @@ public class Pitch extends Plane implements IPitch {
         super("Pitch");
         for (int i = 0; i < zones.length; i++) {
             zones[i] = new Zone(i);
-        }
-    }
-
-    /**
-     * Initialises the pitch with a given bounding rectangle of the pitch
-     * and the sections.
-     *
-     * @param pitchRect bounding rectangle of the pitch
-     * @param sections  bounding rectangles of the sections
-     */
-    public Pitch(Rect pitchRect, Rect[] sections, TeamColour ourTeam) {
-        this();
-        this.ourTeam = ourTeam;
-        addPoint(new Point(pitchRect.x, pitchRect.y));
-        addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y));
-        addPoint(new Point(pitchRect.x + pitchRect.width, pitchRect.y + pitchRect.height));
-        addPoint(new Point(pitchRect.x, pitchRect.y + pitchRect.height));
-
-        int zoneId = 0;
-        for (Rect section : sections) {
-            zones[zoneId].addPoint(new Point(section.x, section.y));
-            zones[zoneId].addPoint(section.x + section.width, section.y);
-            zones[zoneId].addPoint(section.x + section.width, section.y + section.height);
-            zones[zoneId].addPoint(section.x, section.y + section.height);
-            zoneId++;
         }
     }
     
@@ -168,41 +143,60 @@ public class Pitch extends Plane implements IPitch {
     }
     
     public void updateRobots(List<Tuple<Point, Point>> robots, TeamColour colour) {
-    	// Only take more than 1 robot because otherwise
-    	// we don't know if defender or attacker
-    	if (robots.size() > 1) {
-    		// Needs to be sorted by defender first and attacker next or something
-    		for (Tuple<Point, Point> tuple : robots) {
-				Point position = tuple.getFirst();
-				Point dotPosition = tuple.getSecond();
+    	if (robots.size() == 2) {
+    		Tuple<Point, Point> firstRobot = robots.get(0);
+    		Tuple<Point, Point> secondRobot = robots.get(1);
+    		Point firstPosition = firstRobot.getFirst();
+    		Point firstDotPosition = firstRobot.getSecond();
+    		Point secondPosition = secondRobot.getFirst();
+    		Point secondDotPosition = secondRobot.getSecond();
+    		if (isDefender(firstPosition)) {
+    			// First is defender
     			if (colour == TeamColour.YELLOW) {
-    				if (isDefender(position)) {
-    					yellowDefender.updatePosition(position);
-    					if (dotPosition == null) {
-    						yellowDefender.updateFacing(dotPosition);
-    					}
-    				} else {
-    					yellowAttacker.updatePosition(position);
-    					if (dotPosition == null) {
-    						yellowAttacker.updateFacing(dotPosition);
-    					}
+    				// Team is yellow
+    				yellowDefender.updatePosition(firstPosition.toMillis());
+    				yellowAttacker.updatePosition(secondPosition.toMillis());
+    				if (firstDotPosition != null) {
+    					yellowDefender.updateFacing(firstDotPosition.toMillis());
+    				}
+    				if (secondDotPosition != null) {
+    					yellowAttacker.updateFacing(secondDotPosition.toMillis());
     				}
     			} else {
-    				if (isDefender(position)) {
-    					blueDefender.updatePosition(position);
-    					if (dotPosition == null) {
-    						blueDefender.updateFacing(dotPosition);
-    					}
-    				} else {
-    					blueAttacker.updatePosition(position);
-    					if (dotPosition == null) {
-    						blueAttacker.updateFacing(dotPosition);
-    					}
+    				// Team is blue
+    				blueDefender.updatePosition(firstPosition.toMillis());
+    				blueAttacker.updatePosition(secondPosition.toMillis());
+    				if (firstDotPosition != null) {
+    					blueDefender.updateFacing(firstDotPosition.toMillis());
+    				}
+    				if (secondDotPosition != null) {
+    					blueAttacker.updateFacing(secondDotPosition.toMillis());
     				}
     			}
-			}
+    		} else {
+    			// First is attacker
+    			if (colour == TeamColour.YELLOW) {
+    				// Team is yellow
+    				yellowAttacker.updatePosition(firstPosition.toMillis());
+    				yellowDefender.updatePosition(secondPosition.toMillis());
+    				if (firstDotPosition != null) {
+    					yellowAttacker.updateFacing(firstDotPosition.toMillis());
+    				}
+    				if (secondDotPosition != null) {
+    					yellowDefender.updateFacing(secondDotPosition.toMillis());
+    				}
+    			} else {
+    				blueAttacker.updatePosition(firstPosition.toMillis());
+    				blueDefender.updatePosition(secondPosition.toMillis());
+    				if (firstDotPosition != null) {
+    					blueAttacker.updateFacing(firstDotPosition.toMillis());
+    				}
+    				if (secondDotPosition != null) {
+    					blueDefender.updateFacing(secondDotPosition.toMillis());
+    				}
+    			}
+    		}
     	}
-    	System.out.println();
     }
 
     /**
@@ -210,7 +204,7 @@ public class Pitch extends Plane implements IPitch {
      * @return our defender Robot
      */
     public Robot getOurDefenderRobot() {
-        if (ourTeam == TeamColour.YELLOW) {
+        if (MasterController.ourTeam == TeamColour.YELLOW) {
             return yellowDefender;
         } else {
             return blueDefender;
@@ -222,7 +216,7 @@ public class Pitch extends Plane implements IPitch {
      * @return our attacker Robot
      */
     public Robot getOurAttacker() {
-        if (ourTeam == TeamColour.YELLOW) {
+        if (MasterController.ourTeam == TeamColour.YELLOW) {
             return yellowAttacker;
         } else {
             return blueAttacker;
@@ -234,7 +228,7 @@ public class Pitch extends Plane implements IPitch {
      * @return opposing defender Robot
      */
     public Robot getFoeDefender() {
-        if (ourTeam == TeamColour.BLUE) {
+        if (MasterController.ourTeam == TeamColour.BLUE) {
             return yellowDefender;
         } else {
             return blueDefender;
@@ -246,7 +240,7 @@ public class Pitch extends Plane implements IPitch {
      * @return opposing attacker Robot
      */
     public Robot getFoeAttacker() {
-        if (ourTeam == TeamColour.BLUE) {
+        if (MasterController.ourTeam == TeamColour.BLUE) {
             return yellowAttacker;
         } else {
             return blueAttacker;
@@ -255,101 +249,101 @@ public class Pitch extends Plane implements IPitch {
 
     //Zones 0-3
 
-    // Any returns of -1 is not found
-    public int getYellowAttackZone() {
-        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
-            return 2;
-        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
-            return 1;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
-            return 1;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
-            return 2;
-        } else {
-            return -1;
-        }
-    }
+//    // Any returns of -1 is not found
+//    public int getYellowAttackZone() {
+//        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
+//            return 2;
+//        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
+//            return 1;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
+//            return 1;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
+//            return 2;
+//        } else {
+//            return -1;
+//        }
+//    }
+//
+//    // Any returns of -1 is not found
+//    public int getBlueAttackZone() {
+//        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
+//            return 1;
+//        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
+//            return 2;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
+//            return 2;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
+//            return 1;
+//        } else {
+//            return -1;
+//        }
+//    }
+//
+//    // Any returns of -1 is not found
+//    public int getYellowDefendZone() {
+//        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
+//            return 0;
+//        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
+//            return 3;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
+//            return 3;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
+//            return 0;
+//        } else {
+//            return -1;
+//        }
+//    }
+//
+//    // Any returns of -1 is not found
+//    public int getBlueDefendZone() {
+//        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
+//            return 3;
+//        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
+//            return 0;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
+//            return 0;
+//        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
+//            return 3;
+//        } else {
+//            return -1;
+//        }
+//    }
 
     // Any returns of -1 is not found
-    public int getBlueAttackZone() {
-        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
-            return 1;
-        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
-            return 2;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
-            return 2;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
-
-    // Any returns of -1 is not found
-    public int getYellowDefendZone() {
-        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
-            return 0;
-        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
-            return 3;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
-            return 3;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-
-    // Any returns of -1 is not found
-    public int getBlueDefendZone() {
-        if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.YELLOW) {
-            return 3;
-        } else if (ourSide == TeamSide.LEFT && ourTeam == TeamColour.BLUE) {
-            return 0;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.YELLOW) {
-            return 0;
-        } else if (ourSide == TeamSide.RIGHT && ourTeam == TeamColour.BLUE) {
-            return 3;
-        } else {
-            return -1;
-        }
-    }
-
-    // Any returns of -1 is not found
-    public boolean foeAttackerHasBall() {
-        if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone().getID() == getBlueAttackZone());
-        } else {
-            return (getBallZone().getID() == getYellowAttackZone());
-        }
-    }
-
-    // Any returns of -1 is not found
-    public boolean foeDefenderHasBall() {
-        if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone().getID() == getYellowDefendZone());
-        } else {
-            return (getBallZone().getID() == getBlueDefendZone());
-        }
-    }
-
-    // Any returns of -1 is not found
-    public boolean ourAttackerHasBall() {
-        if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone().getID() == getYellowAttackZone());
-        } else {
-            return (getBallZone().getID() == getBlueAttackZone());
-        }
-    }
-
-    // Any returns of -1 is not found
-    public boolean ourDefenderHasBall() {
-        if (ourTeam == TeamColour.YELLOW) {
-            return (getBallZone().getID() == getYellowDefendZone());
-        } else {
-            return (getBallZone().getID() == getBlueDefendZone());
-        }
-    }
+//    public boolean foeAttackerHasBall() {
+//        if (MasterController.ourTeam == TeamColour.YELLOW) {
+//            return (getBallZone().getID() == getBlueAttackZone());
+//        } else {
+//            return (getBallZone().getID() == getYellowAttackZone());
+//        }
+//    }
+//
+//    // Any returns of -1 is not found
+//    public boolean foeDefenderHasBall() {
+//        if (MasterController.ourTeam == TeamColour.YELLOW) {
+//            return (getBallZone().getID() == getYellowDefendZone());
+//        } else {
+//            return (getBallZone().getID() == getBlueDefendZone());
+//        }
+//    }
+//
+//    // Any returns of -1 is not found
+//    public boolean ourAttackerHasBall() {
+//        if (MasterController.ourTeam == TeamColour.YELLOW) {
+//            return (getBallZone().getID() == getYellowAttackZone());
+//        } else {
+//            return (getBallZone().getID() == getBlueAttackZone());
+//        }
+//    }
+//
+//    // Any returns of -1 is not found
+//    public boolean ourDefenderHasBall() {
+//        if (MasterController.ourTeam == TeamColour.YELLOW) {
+//            return (getBallZone().getID() == getYellowDefendZone());
+//        } else {
+//            return (getBallZone().getID() == getBlueDefendZone());
+//        }
+//    }
     
     public Zone getOurDefendZone(){
     	if (ourSide == TeamSide.LEFT){

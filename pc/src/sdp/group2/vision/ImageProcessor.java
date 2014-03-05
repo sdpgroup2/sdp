@@ -53,9 +53,9 @@ public class ImageProcessor {
     private static RobotEntity robotEntity = new RobotEntity();; // Robot thresholding
     
     private static Point ballCentroid;
-    
+        
     static {
-    	cropRectSide = cvRect(30, 80, 590, 315);
+    	cropRectSide = cvRect(45, 90, 543, 300);
     	cropRectMain = cvRect(30, 60, 590, 310);
         if (MasterController.ENABLE_GUI) {
         	imageViewer = new ImageViewer();
@@ -200,7 +200,7 @@ public class ImageProcessor {
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
         crop(image, cropRectSide);
-//        cvConvertScale(image, image, 1.2, 0); // increase contrast or whatever
+//        cvConvertScale(image, image, 2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);
         if (MasterController.ENABLE_GUI) {

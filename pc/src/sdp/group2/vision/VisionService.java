@@ -146,11 +146,11 @@ public class VisionService implements CaptureCallback {
     		if (prepared) {
     			// We're ready switch to processing
     			state = VisionState.Processing;
+    			System.out.println("Prepared!");
     		}
 			break;
 
 		case Processing:
-			System.out.println("Prepared!");
 	        // Now the objects should be set
 	        callback.update(ballCentroid, yellowRobots, blueRobots);
 	        break;

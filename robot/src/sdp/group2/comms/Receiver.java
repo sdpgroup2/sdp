@@ -109,7 +109,7 @@ public class Receiver {
 							LCD.refresh();
 							pilot.rotateKicker();
 							break;
-							
+						
 						case Commands.DISCONNECT: 
 							break;
 							
