@@ -327,18 +327,18 @@ public class Pitch extends Plane implements IPitch {
 //    }
     
     public Zone getOurDefendZone(){
-    	if (ourSide == TeamSide.LEFT){
-    		return new Zone(0);
+    	if (MasterController.ourTeam == TeamColour.YELLOW) {
+    		return yellowDefender.getZone();
     	} else {
-    		return new Zone(3);
+    		return blueDefender.getZone();
     	}
     }
     
     public Zone getOurAttackZone(){
-    	if (ourSide == TeamSide.LEFT){
-    		return new Zone(2);
+    	if (MasterController.ourTeam == TeamColour.YELLOW) {
+    		return yellowAttacker.getZone();
     	} else {
-    		return new Zone(1);
+    		return blueAttacker.getZone();
     	}
     }
 
@@ -373,19 +373,19 @@ public class Pitch extends Plane implements IPitch {
 			// Yellow is on the left of blue
 			// Thus yellow 0 is defender and yellow 1 is attacker
 			// And blue 0 is attacker and blue 1 is defender
-			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond());
-			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond());
-			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond());
-			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond());
+			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(),zones[0]);
+			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(),zones[2]);
+			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(),zones[1]);
+			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(),zones[3]);
 		} else {
     		// Blue | Yellow | Blue | Yellow
 			// Blue is on the left of yellow
 			// Thus yellow 0 is attacker and yellow 1 is defender
 			// And blue 0 is defender and blue 1 is attacker
-			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond());
-			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond());
-			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond());
-			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond());
+			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond(),zones[1]);
+			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond(),zones[3]);
+			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond(),zones[0]);
+			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond(),zones[2]);
 		}
 		
 	}

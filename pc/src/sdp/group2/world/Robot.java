@@ -20,10 +20,16 @@ public class Robot extends MovableObject {
      */
     private Vector facingVector;
     private Vector previousDetectedFacing;
+    private Zone zone;    
 
-    public Robot(Point robotPosition, Point dotPosition) {
+    public Robot(Point robotPosition, Point dotPosition, Zone zone) {
     	updatePosition(robotPosition);
     	updateFacing(dotPosition);
+    	this.zone = zone;
+    }
+    
+    public Zone getZone() {
+    	return zone;
     }
     
     public double getRadius() {
