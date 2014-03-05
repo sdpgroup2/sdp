@@ -30,10 +30,13 @@ public class BallEntity extends Entity {
         IplImage binaryImage = newImage(hsvImage, 1);
         IplImage tempImage = newImage(hsvImage, 1);
 
+        int[] mins = Thresholds.activeThresholds.ballMins;
+        int[] maxs = Thresholds.activeThresholds.ballMaxs;
+        int min, max;
+        
         for (int i = 0; i < 3; ++i) {
-            int min = Thresholds.activeThresholds.ballMins[i];
-            int max = Thresholds.activeThresholds.ballMaxs[i];
-
+        	min = mins[i];
+        	max = maxs[i];
             if (i == 0) {
                 if (min < 0) {
                     // This is a workaround for hue because it's circular

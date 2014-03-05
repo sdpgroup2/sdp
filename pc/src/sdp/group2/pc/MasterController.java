@@ -11,6 +11,7 @@ import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
+import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.world.Pitch;
@@ -58,6 +59,12 @@ public class MasterController implements VisionServiceCallback {
             pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
+        }
+        
+        if (pitchPlayed == Constants.PitchType.MAIN) {
+        	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
+        } else {
+        	Thresholds.activeThresholds = Thresholds.sidePitchThresholds;
         }
         
         final MasterController controller = new MasterController();    
