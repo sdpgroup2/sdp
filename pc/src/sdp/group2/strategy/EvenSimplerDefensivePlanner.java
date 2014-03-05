@@ -39,7 +39,7 @@ public class EvenSimplerDefensivePlanner extends Planner {
 	 * trying to match the ball's position.
 	 */
 	public void stutter() {
-		Robot robot = pitch.getOurDefenderRobot();
+		Robot robot = pitch.getOurDefender();
 		
 		// Angle ranges from -180 to 180 degrees.
 		double angle = robot.getFacingVector().signedAngleDegrees();
