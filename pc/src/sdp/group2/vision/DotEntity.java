@@ -15,21 +15,9 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class DotEntity extends Entity {
 
+	private int[] mins = Thresholds.activeThresholds.dotMins;
+	private int[] maxs = Thresholds.activeThresholds.dotMaxs;
 
-	// MAIN PITCH
-//  private int[] mins = new int[] {30, 30, 100};
-//  private int[] maxs = new int[] {90, 155, 155};
-	
-    private int[] mins = new int[] {26, 55, 40};
-    private int[] maxs = new int[] {100, 210, 60};
-	
-	// SIDE PITCH
-//    private int[] mins = new int[] {30, 22, 50};
-//    private int[] maxs = new int[] {80, 130, 140};
-	
-	// Main pitch at midnight
-//	Minimum color (HSB): (16, 59, 45)
-//	Maximum color (HSB): (97, 198, 70)
 
     @Override
     public IplImage threshold(IplImage hsvImage) {

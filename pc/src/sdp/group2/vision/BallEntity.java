@@ -17,14 +17,6 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class BallEntity extends Entity {
 
-//    Pitch 2:
-//    private int[] mins = new int[]{-10, 92, 140};
-//    private int[] maxs = new int[]{10, 256, 256};
-	
-	  private int[] mins = new int[]{-10, 80, 70};
-	  private int[] maxs = new int[]{10, 256, 256};
-
-	
     private static IplImage[] hsvImages = new IplImage[3];
 
 
@@ -38,10 +30,13 @@ public class BallEntity extends Entity {
         IplImage binaryImage = newImage(hsvImage, 1);
         IplImage tempImage = newImage(hsvImage, 1);
 
+        int[] mins = Thresholds.activeThresholds.ballMins;
+        int[] maxs = Thresholds.activeThresholds.ballMaxs;
+        int min, max;
+        
         for (int i = 0; i < 3; ++i) {
-            int min = mins[i];
-            int max = maxs[i];
-
+        	min = mins[i];
+        	max = maxs[i];
             if (i == 0) {
                 if (min < 0) {
                     // This is a workaround for hue because it's circular
