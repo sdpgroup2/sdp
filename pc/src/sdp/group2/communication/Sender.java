@@ -19,7 +19,7 @@ import lejos.pc.comm.NXTInfo;
  * code based on that from burti (Lawrie Griffiths) at /www.lejos.org/forum/viewtopic.php?p=10843
  * and from SDP Group 4 2013
  */
-public class Sender implements CommInterface {
+public class Sender {
 	private OutputStream outStream;
 	private InputStream inStream;
 	private NXTComm comm;
@@ -93,7 +93,7 @@ public class Sender implements CommInterface {
 		return confirmation;
 	}
 
-	@Override
+
 	public synchronized void disconnect() {
 		short[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
@@ -111,7 +111,7 @@ public class Sender implements CommInterface {
 		System.out.println("Quit... Please reconnect.");
 	}
 
-	@Override
+
 	public synchronized void forcequit() {
 		short[] command = { Commands.FORCEQUIT, 0, 0, 0 };
 		try {
