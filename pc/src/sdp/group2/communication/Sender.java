@@ -46,6 +46,7 @@ public class Sender {
 	 */
 	public synchronized int command(short[] command) throws IOException {
 		int confirmation = attemptConnection(command);
+		System.out.println("Command: "+Commands.getName((int) command[0]));
 		return confirmation;
 	}
 
