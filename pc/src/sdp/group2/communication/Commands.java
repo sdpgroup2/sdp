@@ -52,7 +52,7 @@ public class Commands{
 	 *
 	 */
 	public static int[] rotate (int direction, int speed) {
-		return new int[] {ROTATE,direction,speed};
+		return new int[] {ROTATE,direction,speed, 0};
 	}
 	/**
 	 * 
@@ -76,19 +76,13 @@ public class Commands{
 	public static int[] openKicker() {
 		return new int[] {OPENKICKER, 0, 0, 0};
 	}
-	
-	
-	/**
-	 * 
-	 * @param turnRate
-	 *
-	 */
+
 	public static int[] steer(int turnRate){
 		return new int[] {STEER,turnRate,0,0};
 	}
 	
 	public static int[] disconnect() {
-		return new int[] {DISCONNECT};
+		return new int[] {DISCONNECT,0,0,0};
 	}
 	
 	public static int[] clear() {

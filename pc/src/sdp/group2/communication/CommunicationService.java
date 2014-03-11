@@ -14,47 +14,56 @@ import sdp.group2.util.Constants;
 
 public class CommunicationService {
 	
-private Sender sender;
-    
-	public CommunicationService(String robotName) {
+	private Sender sender2A;
+	private Sender sender2D;   
+	
+	public CommunicationService() {
+
 		try {
-			if (robotName.equals(Constants.ROBOT_2A_NAME)) {
-				sender = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
-			} else if(robotName.equals(Constants.ROBOT_2D_NAME)) {
-				sender = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
-			}
-			
+			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
+			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 	public void startRunningFromQueue() {
-		Thread popThread = new Thread(new Runnable() {
+		Thread popThread2A = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				while(true) {
-					sendCommands(Constants.ROBOT_2A_NAME);
-					sendCommands(Constants.ROBOT_2D_NAME);
+					sendCommands(sender2A);
 				}
 			}
 			
 		});
 		
-		popThread.start();
+		popThread2A.start();
+		
+		Thread popThread2D = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					sendCommands(sender2D);
+				}
+			}
+			
+		});
+		
+		popThread2D.start();
+		
 		Thread attemptClear = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				while(true) {
 					if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2A_NAME)) {
-						sender.stop();
-						sender.clearBuff();
+						sender2A.clearBuff();
 						CommandQueue.clear(Constants.ROBOT_2A_NAME);
 					} else if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2D_NAME)) {
-						sender.stop();
-						sender.clearBuff();
+						sender2D.clearBuff();
 						CommandQueue.clear(Constants.ROBOT_2D_NAME);
 					}
 				}
@@ -66,40 +75,21 @@ private Sender sender;
 
 	}
 	
-	public void sendCommands(String robotName) {
-		if (!CommandQueue.isEmpty(robotName)) {
-			int[] commands = CommandQueue.poll(robotName);
-			try {
-				switch(commands[0]) {
-				case Commands.ANGLEMOVE:
-					sender.move(commands[1],commands[2],commands[3]);
-					break;
-				case Commands.ROTATE:
-					sender.rotate(commands[1],commands[2]);
-					break;
-				case Commands.KICK:
-					sender.kick(commands[1],commands[2]);
-					break;
-				case Commands.STEER:
-					sender.steer(commands[1]);
-					break;
-				case Commands.CLOSEKICKER:
-					sender.closeKicker();
-					break;
-				case Commands.ROTATEKICKER:
-					sender.rotateKicker();
-					break;
-				case Commands.OPENKICKER:
-					sender.openKicker();
-					break;
-					
-				default:
-					
-				}
+	public void sendCommands(Sender sender) {
+		if (!CommandQueue.isEmpty(sender.getName())) {
+			short[] commands = new short[4];
+			int i = 0;
+			for (int command : CommandQueue.poll(sender.getName())) {
+				commands[i] = (short) command;
+				i++;        
+			}
+			try {		
+				sender.command(commands);
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+	
 	
 }

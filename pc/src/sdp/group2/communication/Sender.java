@@ -27,88 +27,27 @@ public class Sender {
 	private int buffer = 0;
 	private NXTInfo nxtInfo;
 	private boolean robotReady;
-	
+	private String robotName;
 
 	public Sender(String robotName, String robotMacAddress) throws IOException{
+		this.robotName = robotName;
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName, robotMacAddress);
 		openBluetoothConn(robotName);
+	}
+	
+	public String getName(){
+		return robotName;
 	}
 	
 	/**
 	 * Basic way of sending a command.
 	 * @param command One of the constants from Commands
-	 * @param message The message to print once the command is complete
-	 * @param arg1 The first argument.
-	 * @param arg2 The second.
-	 * @param arg3 The third.
 	 * @return A confirmation code.
 	 */
-	public synchronized int command(short command, String message, short arg1, short arg2, short arg3) {
-		short[] command = { command, arg1, arg2, arg3 }
-		int confirmation = attemptConnection(command);
-		System.out.println(message);
-		return confirmation;
-	}
-
-	public synchronized int move(int direction, int speed, int distance) throws IOException {
-		int confirmation =0;
-		short[] command = { Commands.ANGLEMOVE, (short) direction, (short) speed, (short) distance};
-		confirmation = attemptConnection(command);
-		System.out.println("moved");
-//		System.out.printf("Moving in %d direction with %d speed and %d distance\n", direction, speed, distance);
-		return confirmation;
-	} 
-
-	public synchronized int rotate(int angle, int speed) throws IOException {
-		short[] command = { Commands.ROTATE, (short) angle, (short) speed, 0};
-		int confirmation = attemptConnection(command);
-		System.out.println("rotated");
-//		System.out.printf("Rotating at a %d angle\n", angle);
-		return confirmation;
-	}
-
-	public synchronized int kick(int angle, int speed) throws IOException {
-		short[] command = { Commands.KICK, (short) angle, (short) speed, 0 };
-		int confirmation = attemptConnection(command);
-		System.out.println("kicked");
-//		System.out.printf("Kick with angle %d and speed %d, took %dms\n", angle, speed, timeEnd-timeStart);
-		return confirmation;
-
-	}
-	
-	public synchronized int steer(int turnRate) throws IOException {
-		short[] command = { Commands.STEER, (short) turnRate, 0, 0 };
-		int confirmation = attemptConnection(command);
-		System.out.println("Steer...");
-		return confirmation;
-
-	}
-	
-	public synchronized int rotateKicker() throws IOException {
-		short[] command = { Commands.ROTATEKICKER, 0, 0, 0 };
+	public synchronized int command(short[] command) throws IOException {
 		int confirmation = attemptConnection(command);
 		return confirmation;
 	}
-	
-	public synchronized int closeKicker() throws IOException {
-		short[] command = { Commands.CLOSEKICKER, 0, 0, 0 };
-		int confirmation = attemptConnection(command);
-		return confirmation;
-	}
-	
-	public synchronized int openKicker() throws IOException {
-		short[] command = { Commands.OPENKICKER, 0, 0, 0 };
-		int confirmation = attemptConnection(command);
-		return confirmation;
-	}
-	
-	public synchronized int stop() {
-		short[] command = { Commands.STOP, 0, 0, 0 };
-		int confirmation = attemptConnection(command);
-		System.out.println("Stop");
-		return confirmation;
-	}
-
 
 	public synchronized void disconnect() {
 		short[] command = { Commands.DISCONNECT, 0, 0, 0 };
@@ -209,9 +148,6 @@ public class Sender {
 				buffer -= 1;
 				return confirmation[1];
 			} else {
-//				System.out.printf("Con: [%d %d %d %d], Comm: [%d %d %d %d]\n", confirmation[0], confirmation[1], confirmation[2], confirmation[3], comm[0], comm[1], comm[2], comm[3]);
-//				System.out.printf("Confirmation should be %d, was %d\n", comm[0], confirmation[1]);
-				//System.out.println("Could not receive confirmation");
 				buffer -= 1;
 				return -2;
 			}
