@@ -2,16 +2,17 @@ package sdp.group2.simulator;
 
 import java.util.Random;
 
-import sdp.group2.world.IPitch;
+import sdp.group2.world.Pitch;
+
 
 public class Simulator implements Runnable {
 
 	private static final long ITERATION_MS = 250L;
 	private static final boolean visualize = true;
 	private boolean running = true;
-	private IPitch pitch;
+	private Pitch pitch;
 	
-	public Simulator(IPitch pitch) {
+	public Simulator(Pitch pitch) {
 		this.pitch = pitch;
 		if (visualize) {
 			new Visualizator(pitch);

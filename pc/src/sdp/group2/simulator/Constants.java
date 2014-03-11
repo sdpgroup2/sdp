@@ -2,7 +2,6 @@ package sdp.group2.simulator;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
-import sdp.group2.world.IPitch;
 import sdp.group2.world.Pitch;
 
 public class Constants {
@@ -76,7 +75,7 @@ public class Constants {
 		return pitch;
 	}
 	
-	public static void initializeBall(IPitch pitch, double multiplier) {
+	public static void initializeBall(Pitch pitch, double multiplier) {
 		
 		double x = 1075.0, y = 575.0;
 		

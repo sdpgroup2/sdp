@@ -1,19 +1,20 @@
 package sdp.group2.strategy;
 
-import sdp.group2.world.IPitch;
+import sdp.group2.world.Pitch;
+
 
 /**
  * @author Jaroslaw Hirniak
- * */
+ */
 
 public abstract class Planner {
-	protected IPitch pitch;
+    protected Pitch pitch;
 
-	public Planner(IPitch pitch) {
-		this.pitch = (IPitch) pitch;
-	}
+    public Planner(Pitch pitch) {
+        this.pitch = pitch;
+    }
 
-	public IPitch getPitch() {
-		return pitch;
-	}
+    public Pitch getPitch() {
+        return pitch;
+    }
 }

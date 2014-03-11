@@ -4,6 +4,6 @@ import sdp.group2.world.*;
 
 public class Strategy {
 
-	IPitch pitch = (IPitch) new Pitch();
+	Pitch pitch = new Pitch();
 	
 }

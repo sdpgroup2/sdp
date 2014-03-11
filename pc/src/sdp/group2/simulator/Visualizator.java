@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import sdp.group2.geometry.Millimeter;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.world.Ball;
-import sdp.group2.world.IPitch;
+import sdp.group2.world.Pitch;
 import sdp.group2.world.Zone;
 import sdp.group2.geometry.Point;
 
@@ -35,12 +35,12 @@ public class Visualizator extends JFrame {
     private static final Color COLOR_BOUNDARY = new Color(255, 255, 255);
     private static final Color COLOR_PITCH = new Color(0, 100, 0);
     
-    private IPitch pitch;
+    private Pitch pitch;
     
     private JPanel frame;
 	private JPanel panel;
     
-    public Visualizator(IPitch pitch) {
+    public Visualizator(Pitch pitch) {
     	super();
     	this.pitch = pitch;
     	initializeComponent();
