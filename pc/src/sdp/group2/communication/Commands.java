@@ -47,8 +47,7 @@ public class Commands{
 		}
 	}
 	
-	/**
-	 * 
+	/** 
 	 * @param direction = 1 clockwise, -1 anti-clockwise
 	 * @param speed
 	 * @param distance in mm to travel
@@ -56,24 +55,13 @@ public class Commands{
 	public static int[] move(int direction, int speed, int distance) {
 		return new int[] {ANGLEMOVE,direction,speed,distance};
 	}
-	/**
-	 * 
-	 * @param angle
-	 * @param speed
-	 *
-	 */
+	
 	public static int[] rotate (int direction, int speed) {
-		return new int[] {ROTATE,direction,speed};
+		return new int[] {ROTATE,direction,speed, 0};
 	}
-	/**
-	 * 
-	 * @param angle
-	 * @param speed
-	 *
-	 */
+
 	public static int[] kick(int angle, int speed) {
 		return new int[] {KICK,angle,speed,0};
-		
 	}
 	
 	public static int[] closeKicker() {
@@ -87,18 +75,12 @@ public class Commands{
 	public static int[] openKicker() {
 		return new int[] {OPENKICKER, 0, 0, 0};
 	}
-	
-	
-	/**
-	 * 
-	 * @param turnRate
-	 *
-	 */
+
 	public static int[] steer(int turnRate){
 		return new int[] {STEER,turnRate,0,0};
 	}
 	
 	public static int[] disconnect() {
-		return new int[] {DISCONNECT};
-	}	
+		return new int[] {DISCONNECT,0,0,0};
+	}
 }
