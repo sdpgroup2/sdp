@@ -10,30 +10,39 @@ package sdp.group2.comms;
  *
  */
 public class Commands {
+	
 	public final static int DO_NOTHING = 0;
 	public final static int FORWARDS = 1;
 	public final static int BACKWARDS = 2;
-	public final static int STOP = 3;
-	public final static int KICK = 4;
-	public final static int DISCONNECT = 5;
-	public final static int ROTATE = 6;
-	public final static int ROTATEMOVE = 7;
-	public final static int TRAVEL_ARC = 8;
-	public final static int ACCELERATE = 9;
-	public final static int LEFT = 10;
-	public final static int RIGHT = 11;
-	public final static int ANGLEMOVE = 12;
-	public final static int SLOWMOVE = 13;
-	public final static int DRIBBLERON = 23;
-	public final static int DRIBBLEROFF = 24;
-	public final static int TEST = 66;
-	public final static int FORCEQUIT = 55;
-	public final static int BEEP = 42;
-	public final static int ARC = 37;
-	public final static int STEER = 36;
-	public final static int OPENKICKER = 39;
-	public final static int CLOSEKICKER = 37;
-	public final static int ROTATEKICKER = 38;
-
+	public final static int ANGLEMOVE = 3;
+	public final static int ROTATE = 4;
+	public final static int STOP = 5;
+	public final static int KICK = 6;
+	public final static int STEER = 7;
+	public final static int OPENKICKER = 8;
+	public final static int CLOSEKICKER = 9;
+	public final static int ROTATEKICKER = 10;
 	
+	public final static int FORCEQUIT = 63;
+	public final static int DISCONNECT = 64;
+	
+
+	public static String getInitial(int command) {
+		switch (command) {
+		case DO_NOTHING: 	return "STAY";
+		case FORWARDS: 		return "FW";
+		case BACKWARDS: 	return "BK";
+		case ANGLEMOVE: 	return "MV";
+		case ROTATE:		return "ROT";
+		case STOP:			return "STOP";
+		case KICK:			return "KICK";
+		case STEER:			return "STR";
+		case OPENKICKER:	return "OPENK";
+		case CLOSEKICKER:	return "CLOSEK";
+		case ROTATEKICKER:	return "ROTK";
+		case FORCEQUIT:		return "QUIT";
+		case DISCONNECT:	return "DISCONNECT";
+		default: return "";
+		}
+	}
 }

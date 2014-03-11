@@ -53,75 +53,60 @@ public class Receiver {
 					option2 = command[2];
 					option3 = command[3];
 
+					LCD.clear();
+					LCD.refresh();
+					LCD.drawString(Commands.getInitial(opcode)+" "+option1+" "+option2+" "+option3, 0, 2);
+					boolean replying = true;
+					
 					switch (opcode) {
 					
 						case Commands.ANGLEMOVE:
-							LCD.clear();
-							LCD.refresh();
-							LCD.drawString("M" + option1 + " "+ option2 + " " + option3, 0, 2);
 							pilot.move(option1, option2, option3);
-							replyToPC(opcode, outStream);
 							break;
 						
 						case Commands.ROTATE:
-							LCD.clear();
-							LCD.refresh();
 							pilot.rotate(option1, option2);
-							LCD.drawString("R" + option1 + " "+ option2 + " " + option3, 0, 2);
-							replyToPC(opcode, outStream);
 							break;
 	
 						case Commands.KICK:
-							LCD.clear();
-							LCD.refresh();
-							LCD.drawString("K" + option1 + " "+ option2 + " " + option3, 0, 2);
 							pilot.kick(option1, option2);
-							replyToPC(opcode, outStream);
 							break;
 						
 						case Commands.STOP:
 							pilot.stop();
-							replyToPC(opcode, outStream);
 							break;
 						
 						case Commands.STEER:
-							LCD.clear();
-							LCD.drawString("Stopping!", 0, 2);
-							LCD.refresh();
 							pilot.steer(option1);
-							replyToPC(opcode, outStream);
 							break;
 							
 						case Commands.OPENKICKER:
-							LCD.clear();
-							LCD.refresh();
 							pilot.openKicker();
-							replyToPC(opcode, outStream);
 							break;
 							
 						case Commands.CLOSEKICKER:
-							LCD.clear();
-							LCD.refresh();
 							pilot.closeKicker();
-							replyToPC(opcode, outStream);
 							break;
 							
 						case Commands.ROTATEKICKER:
-							LCD.clear();
-							LCD.refresh();
 							pilot.rotateKicker();
-							replyToPC(opcode, outStream);
 							break;
 						
 						case Commands.DISCONNECT: 
+							replying = false;
 							break;
 							
 						case Commands.FORCEQUIT:							
 							forceQuit = true;
+							replying = false;
 							break;
 							
 						default:
-							// Ignore it
+							replying = false;
+							break;
+					}
+					if (replying) {
+						replyToPC(opcode, outStream);
 					}
 				}
 

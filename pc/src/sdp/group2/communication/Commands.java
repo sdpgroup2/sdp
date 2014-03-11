@@ -12,29 +12,40 @@ import java.io.IOException;
  */
 public class Commands{
 	
-	public final static short CLEAR = 0;
-	public final static short FORWARDS = 1;
-	public final static short BACKWARDS = 2;
-	public final static short STOP = 3;
-	public final static short KICK = 4;
-	public final static short DISCONNECT = 5;
-	public final static short ROTATE = 6;
-	public final static short ROTATEMOVE = 7;
-	public final static short TRAVEL_ARC = 8;
-	public final static short ACCELERATE = 9;
-	public final static short LEFT = 10;
-	public final static short RIGHT = 11;
-	public final static short ANGLEMOVE = 12;
-	public final static short SLOWMOVE = 13;
-	public final static short DRIBBLERON = 23;
-	public final static short DRIBBLEROFF = 24;
-	public final static short FORCEQUIT = 55;
-	public final static short BEEP = 42;
-	public final static short STEER = 36;
+	public final static int DO_NOTHING = 0;
+	public final static int FORWARDS = 1;
+	public final static int BACKWARDS = 2;
+	public final static int ANGLEMOVE = 3;
+	public final static int ROTATE = 4;
+	public final static int STOP = 5;
+	public final static int KICK = 6;
+	public final static int STEER = 7;
+	public final static int OPENKICKER = 8;
+	public final static int CLOSEKICKER = 9;
+	public final static int ROTATEKICKER = 10;
 	
-	public final static short CLOSEKICKER = 37;
-	public final static short ROTATEKICKER = 38;
-	public final static short OPENKICKER = 39;
+	public final static int FORCEQUIT = 63;
+	public final static int DISCONNECT = 64;
+	
+
+	public static String getName(int command) {
+		switch (command) {
+		case DO_NOTHING: 	return "Do nothing";
+		case FORWARDS: 		return "Forwards";
+		case BACKWARDS: 	return "Backwards";
+		case ANGLEMOVE: 	return "Anglemove";
+		case ROTATE:		return "Rotate";
+		case STOP:			return "Stop";
+		case KICK:			return "Kick";
+		case STEER:			return "Steer";
+		case OPENKICKER:	return "Open kicker";
+		case CLOSEKICKER:	return "Close kicker";
+		case ROTATEKICKER:	return "Rotate kicker";
+		case FORCEQUIT:		return "Force quit";
+		case DISCONNECT:	return "Disconnect";
+		default: return "";
+		}
+	}
 	
 	/**
 	 * 
@@ -89,11 +100,5 @@ public class Commands{
 	
 	public static int[] disconnect() {
 		return new int[] {DISCONNECT};
-	}
-	
-	public static int[] clear() {
-		return new int[] {Commands.CLEAR, 0,0,0};
-	}
-	
-	
+	}	
 }
