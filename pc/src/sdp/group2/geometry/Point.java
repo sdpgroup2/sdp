@@ -5,11 +5,6 @@ package sdp.group2.geometry;
 
 import java.awt.geom.Point2D;
 
-/**
- * 2D Point.
- * Implements lexicographical order.
- */
-
 public class Point extends Point2D.Double implements Comparable<Point> {
 
 	private static final long serialVersionUID = 13L;
@@ -20,6 +15,11 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.timestamp = System.currentTimeMillis();
     }
 
+    /**
+     * What is this for? Use the Vector class.
+     * @param other
+     * @return
+     */
 	public double getAngle(Point other) {
 		double theta = Math.atan2(this.y - other.y, this.x - other.x);
 		
@@ -35,24 +35,10 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 		return theta;
     }
 	
-	public void offset(Point other) {
-		this.x += other.x;
-		this.y += other.y;
-	}
-	
 	public void offset(double x, double y) {
 		this.x += x;
 		this.y += y;
 	}
-
-    public boolean less(Point other) {
-    	return this.compareTo(other) == -1;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-    	return this.compareTo((Point) other) == 0;
-    }
 
     @Override
     public String toString() {
@@ -60,8 +46,8 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     }
     
     public Point toMillis() {
-    	x = Millimeter.pix2mm(x);
-    	y = Millimeter.pix2mm(y);
+    	this.x = Millimeter.pix2mm(x);
+    	this.y = Millimeter.pix2mm(y);
     	return this;
     }
 
@@ -90,6 +76,11 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	return timestamp;
     }
 
+    /**
+     * Returns a vector between this point and other point.
+     * @param other other point.
+     * @return vector between the points.
+     */
     public Vector sub(Point other) {
     	return new Vector(this.x - other.x, this.y - other.y);
     }
