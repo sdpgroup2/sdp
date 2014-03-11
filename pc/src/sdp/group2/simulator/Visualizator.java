@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import sdp.group2.geometry.Millimeter;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.world.Ball;
-import sdp.group2.world.IPitch;
+import sdp.group2.world.Pitch;
 import sdp.group2.world.Zone;
 import sdp.group2.geometry.Point;
 
@@ -35,12 +35,12 @@ public class Visualizator extends JFrame {
     private static final Color COLOR_BOUNDARY = new Color(255, 255, 255);
     private static final Color COLOR_PITCH = new Color(0, 100, 0);
     
-    private IPitch pitch;
+    private Pitch pitch;
     
     private JPanel frame;
 	private JPanel panel;
     
-    public Visualizator(IPitch pitch) {
+    public Visualizator(Pitch pitch) {
     	super();
     	this.pitch = pitch;
     	initializeComponent();
@@ -93,10 +93,10 @@ public class Visualizator extends JFrame {
     		for (int i = 1; i < N + 1; i++) {
     			Point p0 = pitchOutline.get((i - 1) % N);
     			Point p1 = pitchOutline.get(i % N);
-    			g.drawLine (Millimeter.mm2pix(p0.x), 
-    					Millimeter.mm2pix(p0.y),
-    					Millimeter.mm2pix(p1.x),
-    					Millimeter.mm2pix(p1.y));
+    			g.drawLine((int) Millimeter.mm2pix(p0.x),
+                        (int) Millimeter.mm2pix(p0.y),
+                        (int) Millimeter.mm2pix(p1.x),
+                        (int) Millimeter.mm2pix(p1.y));
     		}
     		
     		for(Zone zone : pitch.getAllZoneOutline()) {
@@ -106,10 +106,10 @@ public class Visualizator extends JFrame {
     			for (int i = 1; i < N + 1; i++) {
         			Point p0 = outline.get((i - 1) % N);
         			Point p1 = outline.get(i % N);
-        			g.drawLine (Millimeter.mm2pix(p0.x), 
-        					Millimeter.mm2pix(p0.y),
-        					Millimeter.mm2pix(p1.x),
-        					Millimeter.mm2pix(p1.y));
+        			g.drawLine((int) Millimeter.mm2pix(p0.x),
+                            (int) Millimeter.mm2pix(p0.y),
+                            (int) Millimeter.mm2pix(p1.x),
+                            (int) Millimeter.mm2pix(p1.y));
         		}
     			
     			g.setColor(new Color(0, 0, 100));
@@ -122,9 +122,9 @@ public class Visualizator extends JFrame {
     		g.setColor(new Color(255, 0, 0));
     		
     		Ball ball = pitch.getBall();
-    		int r = Millimeter.mm2pix(ball.getRadius());
-    		int x = Millimeter.mm2pix(ball.getPosition().x - r);
-    		int y = Millimeter.mm2pix(ball.getPosition().y - r);
+    		int r = (int) Millimeter.mm2pix(ball.getRadius());
+    		int x = (int) Millimeter.mm2pix(ball.getPosition().x - r);
+    		int y = (int) Millimeter.mm2pix(ball.getPosition().y - r);
     		g.fillOval(x, y, 2 * r, 2 * r);
      
     	}

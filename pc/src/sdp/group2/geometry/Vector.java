@@ -4,19 +4,17 @@ import javax.vecmath.Vector2d;
 
 public class Vector extends Vector2d {
 
-	private static final long serialVersionUID = 1L;
+    public Vector(double x, double y) {
+        super(x, y);
+    }
 
-	public Vector(double d, double e) {
-		super(d, e);
-	}
-	
-	public void averageWith(Vector other) {
-		this.x = (this.x + other.x) / 2;
-		this.y = (this.y + other.y) / 2;
-	}
-	
+    /**
+     * Calculates the angle between this and the other vector (Tested).
+     * @param other the other vector
+     * @return angle in degrees
+     */
 	public double angleDegrees(Vector other) {
-		return Math.toDegrees(this.angle(other));
+        return Math.toDegrees(Math.atan2(this.y, this.x) - Math.atan2(other.y, other.x));
 	}
 
 	@Override

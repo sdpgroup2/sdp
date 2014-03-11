@@ -27,7 +27,7 @@ public class OffensivePlanner extends Planner {
     //Still to implemenent:
     //Receive pass;
     
-    public OffensivePlanner(IPitch pitch, byte zoneId) {
+    public OffensivePlanner(Pitch pitch, byte zoneId) {
         super(pitch);
         this.offensiveZone = getPitch().getZone(zoneId);
         this.attackerRobot = pitch.getOurAttacker();

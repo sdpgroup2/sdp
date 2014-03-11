@@ -14,10 +14,7 @@ import sdp.group2.geometry.Point;
 import sdp.group2.geometry.PointSet;
 import sdp.group2.geometry.Vector;
 import sdp.group2.util.Constants;
-import sdp.group2.world.Ball;
-import sdp.group2.world.IPitch;
-import sdp.group2.world.Robot;
-import sdp.group2.world.Zone;
+import sdp.group2.world.*;
 
 
 public class DefensivePlanner extends Planner {
@@ -42,7 +39,7 @@ public class DefensivePlanner extends Planner {
      * @param pitch  pitch we are playing
      * @param zoneId zone the defender is in
      */
-    public DefensivePlanner(IPitch pitch) {
+    public DefensivePlanner(Pitch pitch) {
         super(pitch);
     }
 

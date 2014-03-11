@@ -16,9 +16,7 @@ import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Tuple;
 
 
-public class Pitch extends Plane implements IPitch {
-
-	private static Pitch instance = null;
+public class Pitch extends Plane {
 	
     private static final int CUR_ZONE = 0;
     private double WIDTH = 2165;
@@ -86,16 +84,10 @@ public class Pitch extends Plane implements IPitch {
     	}
     }
 
-//	public Vector getRobotBallVector() {
-//		return this.ball.getPosition().sub(this.robot.getPosition());
-//	}
-
-    @Override
     public Zone getZone(int id) {
         return zones[id];
     }
 
-    @Override
     public void updateBallPosition(Point p) {
     	ball.updatePosition(p);
     }
@@ -104,7 +96,6 @@ public class Pitch extends Plane implements IPitch {
     	updateBallPosition(new Point(x, y));
     }
 
-    @Override
     public Zone getBallZone() {
         for (int i = 0; i < zones.length; i++) {
             if (zones[i].contains(getBall().getPosition())) {
@@ -123,7 +114,6 @@ public class Pitch extends Plane implements IPitch {
 //        return super.getTrajectory(ball.getPosition(), ball.getDirection());
 //    }
 
-    @Override
     public Ball getBall() {
         return ball;
     }
@@ -342,12 +332,10 @@ public class Pitch extends Plane implements IPitch {
     	}
     }
 
-	@Override
 	public void setZone(int id, PointSet ps) {
 		
 	}
 
-	@Override
 	public Zone[] getAllZoneOutline() {
 		return zones;
 	}
@@ -390,13 +378,11 @@ public class Pitch extends Plane implements IPitch {
 		
 	}
 
-	@Override
 	public void updateRobotState(int id, Point p, double theta) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
 	public PointSet getTrajectory() {
 		throw new UnsupportedOperationException();
 	}
