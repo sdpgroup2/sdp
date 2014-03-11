@@ -33,6 +33,22 @@ public class Sender {
 		nxtInfo = new NXTInfo(NXTCommFactory.BLUETOOTH, robotName, robotMacAddress);
 		openBluetoothConn(robotName);
 	}
+	
+	/**
+	 * Basic way of sending a command.
+	 * @param command One of the constants from Commands
+	 * @param message The message to print once the command is complete
+	 * @param arg1 The first argument.
+	 * @param arg2 The second.
+	 * @param arg3 The third.
+	 * @return A confirmation code.
+	 */
+	public synchronized int command(short command, String message, short arg1, short arg2, short arg3) {
+		short[] command = { command, arg1, arg2, arg3 }
+		int confirmation = attemptConnection(command);
+		System.out.println(message);
+		return confirmation;
+	}
 
 	public synchronized int move(int direction, int speed, int distance) throws IOException {
 		int confirmation =0;
