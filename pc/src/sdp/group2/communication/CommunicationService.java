@@ -35,73 +35,9 @@ private Sender sender;
 			@Override
 			public void run() {
 				while(true) {
-					if (!CommandQueue.isEmpty(Constants.ROBOT_2A_NAME)) {
-						int[] commands = CommandQueue.poll(Constants.ROBOT_2A_NAME);
-						try {
-							switch(commands[0]) {
-							case Commands.ANGLEMOVE:
-								sender.move(commands[1],commands[2],commands[3]);
-								break;
-							case Commands.ROTATE:
-								sender.rotate(commands[1],commands[2]);
-								break;
-							case Commands.KICK:
-								sender.kick(commands[1],commands[2]);
-								break;
-							case Commands.STEER:
-								sender.steer(commands[1]);
-								break;
-							case Commands.CLOSEKICKER:
-								sender.closeKicker();
-								break;
-							case Commands.ROTATEKICKER:
-								sender.rotateKicker();
-								break;
-							case Commands.OPENKICKER:
-								sender.openKicker();
-								break;
-								
-							default:
-								
-							}
-						} catch(IOException e) {
-							e.printStackTrace();
-						}
-					}
-					if (!CommandQueue.isEmpty(Constants.ROBOT_2D_NAME)) {
-						
-						int[] commands = CommandQueue.poll(Constants.ROBOT_2D_NAME);
-						try {
-							switch(commands[0]) {
-							case Commands.ANGLEMOVE:
-								sender.move(commands[1],commands[2],commands[3]);
-								break;
-							case Commands.ROTATE:
-								sender.rotate(commands[1],commands[2]);
-								break;
-							case Commands.KICK:
-								sender.kick(commands[1],commands[2]);
-								break;
-							case Commands.STEER:
-								sender.steer(commands[1]);
-								break;
-							case Commands.CLOSEKICKER:
-								sender.closeKicker();
-								break;
-							case Commands.ROTATEKICKER:
-								sender.rotateKicker();
-								break;
-							case Commands.OPENKICKER:
-								sender.openKicker();
-								break;
-							default:
-								
-							}
-						} catch(IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}	
+					sendCommands(Constants.ROBOT_2A_NAME);
+					sendCommands(Constants.ROBOT_2D_NAME);
+				}
 			}
 			
 		});
@@ -128,6 +64,42 @@ private Sender sender;
 		});
 		attemptClear.start();
 
+	}
+	
+	public void sendCommands(String robotName) {
+		if (!CommandQueue.isEmpty(robotName)) {
+			int[] commands = CommandQueue.poll(robotName);
+			try {
+				switch(commands[0]) {
+				case Commands.ANGLEMOVE:
+					sender.move(commands[1],commands[2],commands[3]);
+					break;
+				case Commands.ROTATE:
+					sender.rotate(commands[1],commands[2]);
+					break;
+				case Commands.KICK:
+					sender.kick(commands[1],commands[2]);
+					break;
+				case Commands.STEER:
+					sender.steer(commands[1]);
+					break;
+				case Commands.CLOSEKICKER:
+					sender.closeKicker();
+					break;
+				case Commands.ROTATEKICKER:
+					sender.rotateKicker();
+					break;
+				case Commands.OPENKICKER:
+					sender.openKicker();
+					break;
+					
+				default:
+					
+				}
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }
