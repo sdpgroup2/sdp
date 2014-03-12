@@ -1,17 +1,20 @@
 package sdp.group2.world;
 
+import sdp.group2.geometry.Point;
+import sdp.group2.geometry.Vector;
 import junit.framework.TestCase;
 
 
-public class MoveableObjectTest extends TestCase {
+public class MovableObjectTest extends TestCase {
 	
-	private MoveableObject notMovedObj;
-	private MoveableObject movedObj;
+	private MovableObject movObjA;
+	private MovableObject movObjB;
+	private MovableObject movObjC;
 	
 	protected void setUp() throws Exception {
-		this.movObjA = new MoveableObject();
-		this.movObjB = new MoveableObject();
-		this.movObjC = new MoveableObject();
+		this.movObjA = new MovableObject();
+		this.movObjB = new MovableObject();
+		this.movObjC = new MovableObject();
 		
 		movObjB.updatePosition(new Point(1.0, 2.0));
 		Thread.sleep(500);
@@ -45,12 +48,8 @@ public class MoveableObjectTest extends TestCase {
 	}
 	
 	public void testIsMoving() {
-		assertTrue(movObjA.isMoving, false);
-		assertTrue(movObjB.isMoving, true);
-	}
-	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+		assertFalse(movObjA.isMoving());
+		assertTrue(movObjB.isMoving());
 	}
 
 }
