@@ -58,6 +58,8 @@ public class MovableObject {
 		double xsum = 0.0;
 		double ysum = 0.0;
 		int i = history.size() - 1;
+		// Shouldn't this be i >= 0?
+		// Seems like it misses the earliest point in history i.e. history.get(0)
 		for (; i >= 1 && history.isWithinTimestamp(i, SIGNIFICANT_TIME); i--) {
 			xsum += history.get(i).getX();
 			ysum += history.get(i).getY();
