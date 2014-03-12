@@ -24,6 +24,7 @@ public class Commands{
 	public final static int CLOSEKICKER = 9;
 	public final static int ROTATEKICKER = 10;
 	
+	public final static int CLEAR = 62;
 	public final static int FORCEQUIT = 63;
 	public final static int DISCONNECT = 64;
 	
@@ -41,6 +42,7 @@ public class Commands{
 		case OPENKICKER:	return "Open kicker";
 		case CLOSEKICKER:	return "Close kicker";
 		case ROTATEKICKER:	return "Rotate kicker";
+		case CLEAR:			return "Clear";
 		case FORCEQUIT:		return "Force quit";
 		case DISCONNECT:	return "Disconnect";
 		default: return "";
@@ -82,5 +84,9 @@ public class Commands{
 	
 	public static int[] disconnect() {
 		return new int[] {DISCONNECT,0,0,0};
+	}
+	
+	public static int[] clear() {
+		return new int[] {CLEAR, 0, 0, 0};
 	}
 }

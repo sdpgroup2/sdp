@@ -90,11 +90,7 @@ public class DefensivePlanner extends Planner {
         {
             System.out.println("Trespassing @ " + intersection.toString());
         }
-        try {
-            sender.move(sign, SPEED, distance);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       	CommandQueue.add(Commands.move(sign, SPEED, distance), Constants.ROBOT_2D_NAME);
     }
 
     public void align() {
@@ -114,11 +110,7 @@ public class DefensivePlanner extends Planner {
         int sign = direction > robotDirection ? 1 : -1;
         int thetaDeg = sign * Zone.rad2deg(theta);
 
-        try {
-            sender.rotate(thetaDeg, SPEED);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CommandQueue.add(Commands.rotate(thetaDeg, SPEED), Constants.ROBOT_2D_NAME);
     }
     
     //Unfinished

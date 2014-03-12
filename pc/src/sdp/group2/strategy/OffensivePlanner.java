@@ -68,11 +68,7 @@ public class OffensivePlanner extends Planner {
         int sign = direction > robotDirection ? 1 : -1;
         int thetaDeg = sign * Zone.rad2deg(theta);
 
-        try {
-            sender.rotate(thetaDeg, SPEED);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CommandQueue.add(Commands.rotate(thetaDeg, SPEED), Constants.ROBOT_2A_NAME);
     }
     
     //Unfinished

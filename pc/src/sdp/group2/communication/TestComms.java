@@ -13,7 +13,7 @@ public class TestComms {
 //		planner2A.startRunningFromQueue();
 //		planner2A.startRunningFromQueue();
 
-		CommunicationService commService = new CommunicationService(Constants.ROBOT_2A_NAME);
+		CommunicationService commService = new CommunicationService();
 		commService.startRunningFromQueue();
 
 //		CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2A_NAME);
