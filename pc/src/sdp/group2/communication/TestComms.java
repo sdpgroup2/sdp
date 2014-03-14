@@ -1,6 +1,6 @@
 package sdp.group2.communication;
 
-import java.io.IOException;
+import java.util.Scanner;
 
 import sdp.group2.util.Constants;
 
@@ -8,39 +8,30 @@ import sdp.group2.util.Constants;
 public class TestComms {
 
 	public static void main(String[] args) {
-//		Planner planner2A = new Planner(Constants.ROBOT_2A_NAME);
-//		Planner planner2A = new Planner(Constants.ROBOT_2A_NAME);
-//		planner2A.startRunningFromQueue();
-//		planner2A.startRunningFromQueue();
 
 		CommunicationService commService = new CommunicationService();
 		commService.startRunningFromQueue();
 
-//		CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2A_NAME);
-		
-//		CommandQueue.add(Commands.move(1, 34, 200), Constants.ROBOT_2A_NAME);
-		for (int i = 0; i<60; i++){
-			CommandQueue.add(Commands.closeKicker(), Constants.ROBOT_2A_NAME);
-			CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2A_NAME);
-			
+//		for (int i = 0; i<4; i++){
+//			System.out.println("close kick");
+//			CommandQueue.add(Commands.closeKicker(), Constants.ROBOT_2D_NAME);
+//			System.out.println("open kick");
+//			CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2D_NAME);		
+//		}
+//		System.out.println("MOVE");
+//		CommandQueue.add(Commands.move(1, 3433, 500), Constants.ROBOT_2D_NAME);	
+//		System.out.println("rotate");
+//		CommandQueue.add(Commands.rotate(90,200), Constants.ROBOT_2D_NAME);
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Type more than 10 characters to quit.");
+		String line = scanner.nextLine();
+		while (line.length() < 10) {
+			CommandQueue.add(Commands.closeKicker(), Constants.ROBOT_2D_NAME);
+			line = scanner.nextLine();
+			CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2D_NAME);
+			line = scanner.nextLine();
 		}
-//		CommandQueue.add(Commands.rotate(180,2344), Constants.ROBOT_2A_NAME);
-
-//		Thread input = new Thread(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				try {
-//					Thread.sleep(2000);
-//					System.out.println("got here");
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				CommandQueue.clear(Constants.ROBOT_2A_NAME);
-//			}	
-//		});
-//		input.start();
-
+		CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2D_NAME);
 	}
 
 }

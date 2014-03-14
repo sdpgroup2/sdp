@@ -20,10 +20,14 @@ public class CommunicationService {
 	public CommunicationService() {
 
 		try {
-			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
-			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
+			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);	
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Can't connect to 2A!");
+		}
+		try {
+			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);	
+		} catch (IOException e) {
+			System.err.println("Can't connect to 2D!");
 		}
 
 	}
@@ -60,11 +64,15 @@ public class CommunicationService {
 			public void run() {
 				while(true) {
 					if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2A_NAME)) {
-						sender2A.clearBuff();
-						CommandQueue.clear(Constants.ROBOT_2A_NAME);
+						if (sender2A != null) {
+							sender2A.clearBuff();
+							CommandQueue.clear(Constants.ROBOT_2A_NAME);
+						}
 					} else if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2D_NAME)) {
-						sender2D.clearBuff();
-						CommandQueue.clear(Constants.ROBOT_2D_NAME);
+						if (sender2D != null) {
+							sender2D.clearBuff();
+							CommandQueue.clear(Constants.ROBOT_2D_NAME);
+						}
 					}
 				}
 				
@@ -76,6 +84,9 @@ public class CommunicationService {
 	}
 	
 	public void sendCommands(Sender sender) {
+		if (sender == null) {
+			return;
+		}
 		if (!CommandQueue.isEmpty(sender.getName())) {
 			short[] commands = new short[4];
 			int i = 0;

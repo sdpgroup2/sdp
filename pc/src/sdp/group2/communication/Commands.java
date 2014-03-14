@@ -58,8 +58,8 @@ public class Commands{
 		return new int[] {ANGLEMOVE,direction,speed,distance};
 	}
 	
-	public static int[] rotate (int direction, int speed) {
-		return new int[] {ROTATE,direction,speed, 0};
+	public static int[] rotate (int angle, int speed) {
+		return new int[] {ROTATE,angle,speed, 0};
 	}
 
 	public static int[] kick(int angle, int speed) {
