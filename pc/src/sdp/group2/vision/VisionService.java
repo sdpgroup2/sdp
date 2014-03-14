@@ -30,6 +30,7 @@ public class VisionService implements CaptureCallback {
 	private VideoDevice device;
 	private JPEGFrameGrabber frameGrabber;
 	private VisionServiceCallback callback;
+	private VisionServiceCallback gui;
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
 
@@ -105,6 +106,9 @@ public class VisionService implements CaptureCallback {
         timer.tick(25); // Prints the framerate every 25 frames
 
         ImageProcessor.process(frame.getBufferedImage());
+        if (gui != null) {
+        	gui.getImage(ImageProcessor.getImage());
+        }
 		Point ballCentroid = ImageProcessor.ballCentroid();
 		List<Tuple<Point, Point>> yellowRobots = ImageProcessor.yellowRobots();
 		List<Tuple<Point, Point>> blueRobots = ImageProcessor.blueRobots();
@@ -177,6 +181,10 @@ public class VisionService implements CaptureCallback {
 		e.printStackTrace();
 	}
 
+	public void addGUI(VisionServiceCallback gui) {
+		this.gui = gui;
+	}
+	
 	private void updateGUI() {
 		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 

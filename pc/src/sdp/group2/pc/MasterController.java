@@ -1,5 +1,6 @@
 package sdp.group2.pc;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import sdp.group2.communication.CommunicationService;
@@ -25,13 +26,16 @@ public class MasterController implements VisionServiceCallback {
     private SimpleDefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
     private VisionService visionService;
+    private VisionGUI gui;
     private CommunicationService commService;
 
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
     	this.defPlanner = new SimpleDefensivePlanner(pitch);
-        // Start the vision system
-        this.visionService = new VisionService(5, this);
+        // Start the vision system        
+    	this.visionService = new VisionService(5, this);
+        this.gui = new VisionGUI(visionService);
+        visionService.addGUI(gui);
         this.commService = new CommunicationService();
     }
 
@@ -75,6 +79,7 @@ public class MasterController implements VisionServiceCallback {
     
     public void start() {	
         visionService.start();
+        gui.start();
         commService.startRunningFromQueue();
     }
 
@@ -119,4 +124,8 @@ public class MasterController implements VisionServiceCallback {
     public void onExceptionThrown(Exception e) {
     	e.printStackTrace();
     }
+
+	@Override
+	public void getImage(BufferedImage image) {
+	}
 }

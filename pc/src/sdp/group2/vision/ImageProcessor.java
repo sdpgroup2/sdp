@@ -188,6 +188,10 @@ public class ImageProcessor {
     public static IplImage newImage(IplImage img, int channels) {
         return IplImage.create(cvGetSize(img), img.depth(), channels);
     }
+    
+    public static BufferedImage getImage() {
+    	return image.getBufferedImage();
+    }
 
     /**
      * Processes the image.
