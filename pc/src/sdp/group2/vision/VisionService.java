@@ -1,12 +1,12 @@
 package sdp.group2.vision;
 
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.SwingWorker;
 
 import sdp.group2.geometry.Point;
-import sdp.group2.geometry.Rect;
 import sdp.group2.pc.Timer;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
@@ -18,6 +18,8 @@ import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.VideoDevice;
 import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
+
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
 public class VisionService implements CaptureCallback {
 
@@ -33,6 +35,7 @@ public class VisionService implements CaptureCallback {
 	private VisionServiceCallback gui;
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
+	private CvRect cropRect = Thresholds.activeThresholds.cropRect;
 
 	/**
 	 * Initialises a new vision service with a certain device name, number of
@@ -106,9 +109,7 @@ public class VisionService implements CaptureCallback {
         timer.tick(25); // Prints the framerate every 25 frames
 
         ImageProcessor.process(frame.getBufferedImage());
-        if (gui != null) {
-        	gui.getImage(ImageProcessor.getImage());
-        }
+        gui.getImage(crop(ImageProcessor.getImage()));
 		Point ballCentroid = ImageProcessor.ballCentroid();
 		List<Tuple<Point, Point>> yellowRobots = ImageProcessor.yellowRobots();
 		List<Tuple<Point, Point>> blueRobots = ImageProcessor.blueRobots();
@@ -220,7 +221,11 @@ public class VisionService implements CaptureCallback {
 	 * @return dimension of the frame grabber
 	 */
 	public Dimension getSize() {
-		return new Dimension(frameGrabber.getWidth(), frameGrabber.getHeight());
+		return new Dimension(cropRect.width(), cropRect.height());
+	}
+	
+	public BufferedImage crop(BufferedImage image) {
+		return image.getSubimage(cropRect.x(), cropRect.y(), cropRect.width(), cropRect.height());
 	}
 
 	private enum VisionState {

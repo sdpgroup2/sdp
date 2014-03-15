@@ -40,8 +40,6 @@ public class ImageProcessor {
     // Matrices used for remapping
     private static final CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
     private static final CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
-    private static final CvRect cropRectSide;
-    private static final CvRect cropRectMain;
     
     private static ImageViewer imageViewer;
     private static ImageViewer[] entityViewers;
@@ -55,8 +53,6 @@ public class ImageProcessor {
     private static Point ballCentroid;
         
     static {
-    	cropRectSide = cvRect(45, 90, 543, 300);
-    	cropRectMain = cvRect(30, 60, 590, 310);
         if (MasterController.ENABLE_GUI) {
         	imageViewer = new ImageViewer();
         	entityViewers = new ImageViewer[2];
@@ -203,13 +199,13 @@ public class ImageProcessor {
         image = IplImage.createFrom(inputImage);
         temp = newImage(image, 3);
         undistort(image, temp, cameraMatrix, distCoeffs);
-        crop(image, cropRectSide);
+        crop(image, Thresholds.activeThresholds.cropRect);
 //        cvConvertScale(image, image, 2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);
-        if (MasterController.ENABLE_GUI) {
-        	imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
-        }
+//        if (MasterController.ENABLE_GUI) {
+//        	imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
+//        }
     }
 
 }

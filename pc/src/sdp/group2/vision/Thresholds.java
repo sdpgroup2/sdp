@@ -1,5 +1,9 @@
 package sdp.group2.vision;
 
+import static com.googlecode.javacv.cpp.opencv_core.cvRect;
+
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
+
 public class Thresholds {
 	
 	public static Thresholds sidePitchThresholds = new Thresholds(
@@ -20,7 +24,10 @@ public class Thresholds {
 		    new int[] {30, 255, 255},
 		    
 		    // yellow pixel threshold
-		 	120
+		 	120,
+		 	
+		 	// Cropping rectangle
+		 	cvRect(45, 90, 543, 300)
 	);
 	
 	public static Thresholds mainPitchThresholds = new Thresholds(
@@ -41,7 +48,10 @@ public class Thresholds {
 		    new int[] {40, 180, 256},
 		    
 		    // yellow pixel threshold
-		    10
+		    10,
+		    
+		    // Cropping rectangle
+		 	cvRect(30, 60, 590, 310)
 	);
 	
 	public static Thresholds nightMainPitchThresholds = new Thresholds(
@@ -62,7 +72,10 @@ public class Thresholds {
 		    new int[] {40, 180, 256},
 			
 			// yellow pixel threshold
-			10
+			10,
+			
+			// Cropping rectangle
+		 	cvRect(30, 60, 590, 310)
 	);
 	
 	public static Thresholds activeThresholds = mainPitchThresholds;
@@ -77,10 +90,12 @@ public class Thresholds {
 	public final int[] yellowMins;
 	public final int[] yellowMaxs;
 	public final int yellowPixelsThreshold;
+	public final CvRect cropRect;
 	
 	public Thresholds(int[] ballMins, int[] ballMaxs, int[] dotMins,
 			int[] dotMaxs, int[] basePlateMins, int[] basePlateMaxs,
-			int[] yellowMins, int[] yellowMaxs, int yellowPixelsThreshold) {
+			int[] yellowMins, int[] yellowMaxs, int yellowPixelsThreshold,
+			CvRect cropRect) {
 		super();
 		this.ballMins = ballMins;
 		this.ballMaxs = ballMaxs;
@@ -91,6 +106,7 @@ public class Thresholds {
 		this.yellowMins = yellowMins;
 		this.yellowMaxs = yellowMaxs;
 		this.yellowPixelsThreshold = yellowPixelsThreshold;
+		this.cropRect = cropRect;
 	}
 
 }
