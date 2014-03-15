@@ -67,10 +67,10 @@ public class MasterController implements VisionServiceCallback {
         // Sets the thresholds to be used based on pitch type.
         if (pitchPlayed == Constants.PitchType.MAIN) {
         	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
+        	//Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
         } else {
         	Thresholds.activeThresholds = Thresholds.sidePitchThresholds;
         }
-//        Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
         
         final MasterController controller = new MasterController();    
         controller.start();

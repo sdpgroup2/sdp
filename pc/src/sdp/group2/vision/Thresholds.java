@@ -2,14 +2,19 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
+import java.util.ArrayList;
+
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
 public class Thresholds {
 	
+	//Sorry
+	public static EntityThresh[] entities = new EntityThresh[4];
+	
 	public static Thresholds sidePitchThresholds = new Thresholds(
 			// ball mins/maxs
 			new int[]{-10, 92, 140}, 
-			new int[]{10, 256, 256},
+			new int[]{10, 255, 255},
 			
 			// dot mins/maxs
 			new int[] {26, 19, 43},
@@ -33,7 +38,7 @@ public class Thresholds {
 	public static Thresholds mainPitchThresholds = new Thresholds(
 			// ball mins/maxs
 			new int[]{-10, 80, 70},
-			new int[]{10, 256, 256},
+			new int[]{10, 255, 255},
 			
 			// dot mins/maxs
 			new int[] {30, 30, 100},
@@ -45,7 +50,7 @@ public class Thresholds {
 		    
 		    // yellow mins/maxs
 		    new int[] {20, 120, 200}, 
-		    new int[] {40, 180, 256},
+		    new int[] {40, 180, 255},
 		    
 		    // yellow pixel threshold
 		    10,
@@ -57,7 +62,7 @@ public class Thresholds {
 	public static Thresholds nightMainPitchThresholds = new Thresholds(
 			// ball mins/maxs
 			new int[]{-10, 80, 70},
-			new int[]{10, 256, 256},
+			new int[]{10, 255, 255},
 			
 			// dot mins/maxs
 			new int[] {26, 55, 40},
@@ -69,7 +74,7 @@ public class Thresholds {
 		    
 		    // yellow mins/maxs
 		    new int[] {20, 120, 200}, 
-		    new int[] {40, 180, 256},
+		    new int[] {40, 180, 255},
 			
 			// yellow pixel threshold
 			10,
@@ -81,16 +86,16 @@ public class Thresholds {
 	public static Thresholds activeThresholds = mainPitchThresholds;
 	
 	
-	public final int[] ballMins;
-	public final int[] ballMaxs;
-	public final int[] dotMins;
-	public final int[] dotMaxs;
-	public final int[] basePlateMins;
-	public final int[] basePlateMaxs;
-	public final int[] yellowMins;
-	public final int[] yellowMaxs;
-	public final int yellowPixelsThreshold;
-	public final CvRect cropRect;
+	public int[] ballMins;
+	public int[] ballMaxs;
+	public int[] dotMins;
+	public int[] dotMaxs;
+	public int[] basePlateMins;
+	public int[] basePlateMaxs;
+	public int[] yellowMins;
+	public int[] yellowMaxs;
+	public int yellowPixelsThreshold;
+	public CvRect cropRect;
 	
 	public Thresholds(int[] ballMins, int[] ballMaxs, int[] dotMins,
 			int[] dotMaxs, int[] basePlateMins, int[] basePlateMaxs,
@@ -107,6 +112,27 @@ public class Thresholds {
 		this.yellowMaxs = yellowMaxs;
 		this.yellowPixelsThreshold = yellowPixelsThreshold;
 		this.cropRect = cropRect;
+		
+		EntityThresh ball = new EntityThresh("Ball");
+		EntityThresh dot = new EntityThresh("Dot");
+		EntityThresh basePlate = new EntityThresh("BasePlate");
+		EntityThresh yellow = new EntityThresh("Yellow");
+		
+		ball.mins = ballMins;
+		ball.maxs = ballMaxs;
+		dot.mins = dotMins;
+		dot.maxs = dotMaxs;
+		basePlate.mins = basePlateMins;
+		basePlate.maxs = basePlateMaxs;
+		yellow.mins = yellowMins;
+		yellow.maxs = yellowMaxs;
+		
+		entities[0] = ball;
+		entities[1] = dot;
+		entities[2] = basePlate;
+		entities[3] = yellow;
+		
 	}
+
 
 }

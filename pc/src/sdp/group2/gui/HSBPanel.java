@@ -5,11 +5,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import sdp.group2.vision.Thresholds;
+
 public class HSBPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private HSBColor color = new HSBColor(0,0,0);
+	private int[] color = new int[3];
 
 	JLabel titleLabel;
 	SliderPanel hue;
@@ -21,9 +23,9 @@ public class HSBPanel extends JPanel {
 		setBorder(new EmptyBorder(5,5,5,5));
 
 		titleLabel = new JLabel(title);
-		hue = new SliderPanel(this, "Hue", 0, 360, 0, 30, 90);
-		saturation = new SliderPanel(this, "Saturation", 0, 100, 0, 5, 20);
-		brightness = new SliderPanel(this, "Brightness", 0, 100, 0, 5, 20);
+		hue = new SliderPanel(this, "Hue", 0, 180, 0, 15, 30);
+		saturation = new SliderPanel(this, "Saturation", 0, 255, 0, 25, 50);
+		brightness = new SliderPanel(this, "Brightness", 0, 255, 0, 25, 50);
 
 		add(titleLabel);
 		add(hue);
@@ -32,19 +34,27 @@ public class HSBPanel extends JPanel {
 	}
 
 	public void updateValue() {
-		color = new HSBColor(hue.getValue(), saturation.getValue(), brightness.getValue());
-		titleLabel.setForeground(color.getRGBColor());
+		System.out.println("Before:\nHue: " + color[0]);
+		System.out.println("Sat: " + color[1]);
+		System.out.println("Val: " + color[2]);
+		color[0] = hue.getValue();
+		color[1] = saturation.getValue();
+		color[2] = brightness.getValue();
+		System.out.println("After:\nHue: " + color[0]);
+		System.out.println("Sat: " + color[1]);
+		System.out.println("Val: " + color[2]);
+		//titleLabel.setForeground(color.getRGBColor());
 	}
 
-	public void setValue(HSBColor color) {
+	public void setValue(int[] color) {
 		this.color = color;
-		hue.setValue(color.iHue());
-		saturation.setValue(color.iSaturation());
-		brightness.setValue(color.iBrightness());
-		titleLabel.setForeground(color.getRGBColor());
+		hue.setValue(color[0]);
+		saturation.setValue(color[1]);
+		brightness.setValue(color[2]);
+		//titleLabel.setForeground(color.getRGBColor());
 	}
 
-	public HSBColor getValue() {
+	public int[] getValue() {
 		return color;
 	}
 
