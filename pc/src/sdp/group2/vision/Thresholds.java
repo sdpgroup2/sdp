@@ -14,7 +14,7 @@ public class Thresholds {
 	public static Thresholds sidePitchThresholds = new Thresholds(
 			// ball mins/maxs
 			new int[]{-10, 92, 140}, 
-			new int[]{10, 255, 255},
+			new int[]{10, 230, 230},
 			
 			// dot mins/maxs
 			new int[] {26, 19, 43},

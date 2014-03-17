@@ -8,6 +8,7 @@ import javax.swing.SwingWorker;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.pc.Timer;
+import sdp.group2.pc.VisionGUI;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
 import au.edu.jcu.v4l4j.CaptureCallback;
@@ -32,7 +33,7 @@ public class VisionService implements CaptureCallback {
 	private VideoDevice device;
 	private JPEGFrameGrabber frameGrabber;
 	private VisionServiceCallback callback;
-	private VisionServiceCallback gui;
+	private VisionGUI gui = new VisionGUI(FRAME_WIDTH, FRAME_HEIGHT);
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
 	private CvRect cropRect = Thresholds.activeThresholds.cropRect;
@@ -71,7 +72,7 @@ public class VisionService implements CaptureCallback {
 		} catch (V4L4JException e) {
 			e.printStackTrace();
 		}
-		frameGrabber.setCaptureCallback(this);
+		frameGrabber.setCaptureCallback(this);		
 	}
 
 	/**
@@ -96,6 +97,7 @@ public class VisionService implements CaptureCallback {
 		} catch (V4L4JException e) {
 			e.printStackTrace();
 		}
+		gui.start();
 	}
 
 	/**
@@ -109,7 +111,7 @@ public class VisionService implements CaptureCallback {
         timer.tick(25); // Prints the framerate every 25 frames
 
         ImageProcessor.process(frame.getBufferedImage());
-        gui.getImage(crop(ImageProcessor.getImage()));
+        gui.setImage(crop(ImageProcessor.getImage(gui.getSelectedTab())));
 		Point ballCentroid = ImageProcessor.ballCentroid();
 		List<Tuple<Point, Point>> yellowRobots = ImageProcessor.yellowRobots();
 		List<Tuple<Point, Point>> blueRobots = ImageProcessor.blueRobots();
@@ -182,19 +184,17 @@ public class VisionService implements CaptureCallback {
 		e.printStackTrace();
 	}
 
-	public void addGUI(VisionServiceCallback gui) {
-		this.gui = gui;
-	}
-	
 	private void updateGUI() {
 		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
 			@Override
 			protected Void doInBackground() throws Exception {
+				//gui.setImage(crop(ImageProcessor.getImage()));
 				// visionDisplay.redraw(currentImage, ball, robots);
 				return null;
 			}
 		};
+		worker.run();
 	}
 
 	/**

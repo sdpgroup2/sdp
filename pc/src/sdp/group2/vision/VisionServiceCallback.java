@@ -16,7 +16,5 @@ public interface VisionServiceCallback {
 
 	void prepared(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots);
-	
-	void getImage(BufferedImage image);
-
+		
 }

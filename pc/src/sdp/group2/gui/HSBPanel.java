@@ -34,15 +34,15 @@ public class HSBPanel extends JPanel {
 	}
 
 	public void updateValue() {
-		System.out.println("Before:\nHue: " + color[0]);
-		System.out.println("Sat: " + color[1]);
-		System.out.println("Val: " + color[2]);
+//		System.out.println("Before:\nHue: " + color[0]);
+//		System.out.println("Sat: " + color[1]);
+//		System.out.println("Val: " + color[2]);
 		color[0] = hue.getValue();
 		color[1] = saturation.getValue();
 		color[2] = brightness.getValue();
-		System.out.println("After:\nHue: " + color[0]);
-		System.out.println("Sat: " + color[1]);
-		System.out.println("Val: " + color[2]);
+//		System.out.println("After:\nHue: " + color[0]);
+//		System.out.println("Sat: " + color[1]);
+//		System.out.println("Val: " + color[2]);
 		//titleLabel.setForeground(color.getRGBColor());
 	}
 

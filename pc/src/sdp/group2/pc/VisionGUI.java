@@ -3,10 +3,10 @@ package sdp.group2.pc;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -14,33 +14,34 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.gui.ColorChecker;
 import sdp.group2.gui.HSBPanel;
-import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 
-public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
+public class VisionGUI extends WindowAdapter {
 	
     private static final int WINDOW_WIDTH = 1024;
-    private static final int WINDOW_HEIGHT = 768;
+    private static final int WINDOW_HEIGHT = 600;
 
-    private VisionService visionService;
 
     private JFrame windowFrame;
     private Dimension frameSize;
@@ -48,15 +49,19 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
     private ColorChecker colorChecker;
     private EntityThresh[] entities;
     private String[] entityNames;
+    private int selectedTab;
 
     private BufferedImage currentImage;	   
 
-	public VisionGUI(VisionService visionService) {
+	public VisionGUI(int width, int height) {
 		super();
-		this.visionService = visionService;
-		this.frameSize = visionService.getSize();
+		this.frameSize = new Dimension(width, height);
 	}
 	
+	public int getSelectedTab() {
+		return selectedTab;
+	}
+
 	public void start() {
 	    JPanel contentPanel;
 	    entities = Thresholds.entities;
@@ -76,11 +81,30 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
         contentPanel.setBorder(new EmptyBorder(10,10,10,10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));
 
-        // Image
+        // Images
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
-        contentPanel.add(imageLabel);
+        
+      //Tabs
+        final JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent event) {
+				selectedTab = tabbedPane.getSelectedIndex();				
+			}
+        	
+        });
+        tabbedPane.addTab("Main view", null, imageLabel,
+                          "Shows real image");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+
+        tabbedPane.addTab("Ball view", null, new JLabel(),
+        "Shows balls");
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+        
+        contentPanel.add(tabbedPane);
 
         // Sidebar
         JPanel controlPanel = new JPanel();
@@ -93,7 +117,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
         entityList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         entityList.setLayoutOrientation(JList.VERTICAL);
         entityList.setVisibleRowCount(-1);
-        entityList.setPreferredSize(new Dimension(200, 100));
+        entityList.setPreferredSize(new Dimension(200, 80));
         entityList.setBorder(new LineBorder(Color.black));
         entityList.setSelectedIndex(0);
         minHSBPanel.setValue(entities[0].mins);
@@ -104,9 +128,8 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
                 if (e.getValueIsAdjusting() == false) {
                     int index = entityList.getSelectedIndex();
                     if (index >= 0) {
-                        EntityThresh entity = entities[index];
-                        minHSBPanel.setValue(entity.mins);
-                        maxHSBPanel.setValue(entity.maxs);
+                        minHSBPanel.setValue(entities[index].mins);
+                        maxHSBPanel.setValue(entities[index].maxs);
                     }
                 }
             }
@@ -116,7 +139,7 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
 
         // Sliders
         controlPanel.add(minHSBPanel);
-        controlPanel.add(maxHSBPanel);
+        controlPanel.add(maxHSBPanel);               
 
      // Update button
 
@@ -148,65 +171,23 @@ public class VisionGUI extends WindowAdapter implements VisionServiceCallback {
                 }
             }
         });
-        controlPanel.add(button);
-
-        // Debug checkboxes
-        final JCheckBox fillBox = new JCheckBox("Fill clusters");
-        fillBox.setSelected(Debug.VISION_FILL_PIXELS);
-        fillBox.addItemListener(new ItemListener() {
-            @Override
-			public void itemStateChanged(ItemEvent e) {
-                Debug.VISION_FILL_PIXELS = ((JCheckBox) e.getSource()).isSelected();
-            }
-        });
-        final JCheckBox rectBox = new JCheckBox("Draw rectangles");
-        rectBox.setSelected(Debug.VISION_DRAW_BOUNDS);
-        rectBox.addItemListener(new ItemListener() {
-            @Override
-			public void itemStateChanged(ItemEvent e) {
-                Debug.VISION_DRAW_BOUNDS = ((JCheckBox) e.getSource()).isSelected();
-            }
-        });
-        final JCheckBox normBox = new JCheckBox("Normalize image");
-		normBox.setSelected(Debug.VISION_NORMALIZE_IMAGE);
-		normBox.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				Debug.VISION_NORMALIZE_IMAGE = ((JCheckBox) e.getSource()).isSelected();
-			}
-		});
-        controlPanel.add(fillBox);
-        controlPanel.add(rectBox);
-        controlPanel.add(normBox);
+        controlPanel.add(button);        
 
         windowFrame.setContentPane(contentPanel);
     }
 	
-	public void getImage(BufferedImage image) {
+	protected JComponent makeTextPanel(String text) {
+	    JPanel panel = new JPanel(false);
+	    JLabel filler = new JLabel(text);
+	    filler.setHorizontalAlignment(JLabel.CENTER);
+	    panel.setLayout(new GridLayout(1, 1));
+	    panel.add(filler);
+	    return panel;
+	}
+	
+	public void setImage(BufferedImage image) {
 		//System.out.println("Got image.");
 		imageLabel.setIcon(new ImageIcon(image));
-	}
-
-	@Override
-	public void onExceptionThrown(Exception e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(Point ballCentroid,
-			List<Tuple<Point, Point>> yellowRobots,
-			List<Tuple<Point, Point>> blueRobots) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void prepared(Point ballCentroid,
-			List<Tuple<Point, Point>> yellowRobots,
-			List<Tuple<Point, Point>> blueRobots) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

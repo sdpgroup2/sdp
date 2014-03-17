@@ -46,6 +46,9 @@ public class ImageProcessor {
 
     private static IplImage temp; // Temporary image used for processing
     private static IplImage image; // Processing image
+    private static IplImage binaryBallImage;
+    private static IplImage binaryRobotImage;
+    private static IplImage binaryDotImage;
     private static IplImage binaryImage; // Temporary binary image for processing
     private static BallEntity ballEntity = new BallEntity(); // Ball thresholding
     private static RobotEntity robotEntity = new RobotEntity();; // Robot thresholding
@@ -152,13 +155,15 @@ public class ImageProcessor {
         binaryImage = ballEntity.threshold(temp);
         ballCentroid = ballEntity.findCentroid(binaryImage);
         if (MasterController.ENABLE_GUI) {
-        	entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        	//entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        	binaryBallImage = binaryImage;
         }
         
         binaryImage = robotEntity.threshold(temp);
         robotEntity.detectRobots(temp, binaryImage);
         if (MasterController.ENABLE_GUI) {
-        	entityViewers[1].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        	//entityViewers[1].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
+        	binaryRobotImage = binaryImage;
         }
     }
 
@@ -185,8 +190,22 @@ public class ImageProcessor {
         return IplImage.create(cvGetSize(img), img.depth(), channels);
     }
     
-    public static BufferedImage getImage() {
-    	return image.getBufferedImage();
+    public static BufferedImage getImage(int index) {
+    	switch (index) {    	
+    	case 1: {
+    		return binaryBallImage.getBufferedImage();
+    	}
+    	case 2: {
+    		return binaryRobotImage.getBufferedImage();
+    	}
+    	case 3: {
+    		return binaryDotImage.getBufferedImage();
+    	}
+    	case 0:
+    	default: {
+    		return image.getBufferedImage();
+    	}
+    	}
     }
 
     /**
