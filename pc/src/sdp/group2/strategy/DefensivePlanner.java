@@ -27,12 +27,6 @@ public class DefensivePlanner extends Planner {
     private long lastRotation = System.currentTimeMillis();
     private Point enemyGoal;
 
-    // Still to implement:
-    // Pass();
-    // AbleToPass();
-    // Track x Coordinate of Ball;
-    // returnToGoal();
-
     /**
      * Initialises a defensive planner in a given zone for a given pitch
      *
@@ -48,7 +42,7 @@ public class DefensivePlanner extends Planner {
      * Tries to intercept the ball.
      */
     public void interceptSimple() {
-    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Robot defenceRobot = pitch.getOurDefender();
     	Ball ball = pitch.getBall();
     	System.out.println("Sending intercept comand.");
         if (defenceRobot.isMoving()) {
@@ -67,7 +61,7 @@ public class DefensivePlanner extends Planner {
     }
 
     public void intercept() {
-    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Robot defenceRobot = pitch.getOurDefender();
     	Zone defenceZone = pitch.getOurDefendZone();
         if (defenceRobot.isMoving()) {
             return;
@@ -94,7 +88,7 @@ public class DefensivePlanner extends Planner {
     }
 
     public void align() {
-    	Robot defenceRobot = pitch.getOurDefenderRobot();
+    	Robot defenceRobot = pitch.getOurDefender();
         if (lastRotation + 3000 > System.currentTimeMillis()) {
             return;
         } else {

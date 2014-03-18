@@ -174,7 +174,7 @@ public class Pitch extends Plane {
      * Returns the defender of our team.
      * @return our defender Robot
      */
-    public Robot getOurDefenderRobot() {
+    public Robot getOurDefender() {
         if (MasterController.ourTeam == TeamColour.YELLOW) {
             return yellowDefender;
         } else {
