@@ -19,7 +19,6 @@ public class BallEntity extends Entity {
 
     private static IplImage[] hsvImages = new IplImage[3];
 
-
     @Override
     public IplImage threshold(IplImage hsvImage) {
         for (int i = 0; i < 3; ++i) {
@@ -52,8 +51,8 @@ public class BallEntity extends Entity {
             }
         }
         // Erode here to remove all the small white pixel chunks
-        cvErode(binaryImage, binaryImage, null, 3);
-        cvDilate(binaryImage, binaryImage, null, 1);
+        cvErode(binaryImage, binaryImage, null, 2);
+        cvDilate(binaryImage, binaryImage, null, 2);
         return binaryImage;
     }
     

@@ -22,10 +22,9 @@ public class MasterController implements VisionServiceCallback {
     public static PitchType pitchPlayed;
     private Pitch pitch;
     private DefensivePlanner defPlanner;
-//    private EvenSimplerAttackingPlanner offPlanner;
+//    private OffensivePlanner offPlanner;
     private VisionService visionService;
     private CommunicationService commService;
-    private CommunicationService commService2;
 
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
@@ -78,7 +77,6 @@ public class MasterController implements VisionServiceCallback {
     public void start() {	
         visionService.start();
         commService.startRunningFromQueue();
-        commService2.startRunningFromQueue();
     }
 
     // Sorry

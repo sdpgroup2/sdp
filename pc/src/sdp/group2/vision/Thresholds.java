@@ -2,8 +2,6 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
-import java.util.ArrayList;
-
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
 public class Thresholds {

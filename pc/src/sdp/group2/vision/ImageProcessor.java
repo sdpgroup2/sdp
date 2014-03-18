@@ -1,21 +1,18 @@
 package sdp.group2.vision;
 
+import static com.googlecode.javacv.cpp.opencv_core.CV_8U;
 import static com.googlecode.javacv.cpp.opencv_core.IPL_DEPTH_32F;
-import static com.googlecode.javacv.cpp.opencv_core.cvConvertScale;
 import static com.googlecode.javacv.cpp.opencv_core.cvCopy;
 import static com.googlecode.javacv.cpp.opencv_core.cvGetSize;
 import static com.googlecode.javacv.cpp.opencv_core.cvLoad;
-import static com.googlecode.javacv.cpp.opencv_core.cvMerge;
-import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalarAll;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
-import static com.googlecode.javacv.cpp.opencv_core.cvSplit;
+import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
+import static com.googlecode.javacv.cpp.opencv_core.cvSize;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_BGR2HSV;
-import static com.googlecode.javacv.cpp.opencv_imgproc.CV_HSV2BGR;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_INTER_LINEAR;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_WARP_FILL_OUTLIERS;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvCvtColor;
-import static com.googlecode.javacv.cpp.opencv_imgproc.cvEqualizeHist;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvInitUndistortMap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvRemap;
 import static com.googlecode.javacv.cpp.opencv_imgproc.medianBlur;
@@ -24,7 +21,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import sdp.group2.geometry.Point;
-import sdp.group2.pc.MasterController;
+import sdp.group2.gui.VisionGUI;
 import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
@@ -33,22 +30,20 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
 public class ImageProcessor {
-
+	
     private static final int MEDIAN_FILTER_SIZE = 3; // must be odd and > 1
     private static final String ASSETS_FOLDER = "./assets";
     
     // Matrices used for remapping
     private static final CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
     private static final CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
-    
-    private static ImageViewer imageViewer;
-    private static ImageViewer[] entityViewers;
 
+    private static CvRect cropRect = Thresholds.activeThresholds.cropRect; 
+
+	private static IplImage uncropped;
+    private static IplImage uncroppedTemp;
     private static IplImage temp; // Temporary image used for processing
     private static IplImage image; // Processing image
-    private static IplImage binaryBallImage;
-    private static IplImage binaryRobotImage;
-    private static IplImage binaryDotImage;
     private static IplImage binaryImage; // Temporary binary image for processing
     private static BallEntity ballEntity = new BallEntity(); // Ball thresholding
     private static RobotEntity robotEntity = new RobotEntity();; // Robot thresholding
@@ -56,12 +51,9 @@ public class ImageProcessor {
     private static Point ballCentroid;
         
     static {
-        if (MasterController.ENABLE_GUI) {
-        	imageViewer = new ImageViewer();
-        	entityViewers = new ImageViewer[2];
-            entityViewers[0] = new ImageViewer();
-            entityViewers[1] = new ImageViewer();
-        }
+    	uncroppedTemp = IplImage.create(cvSize(640, 480), 8, 3);
+    	temp = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 3);
+    	image = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 3);
     }
 
     /**
@@ -96,42 +88,13 @@ public class ImageProcessor {
      * @param image    image to be set
      * @param cropRect region of interest
      */
-    private static void crop(IplImage image, CvRect cropRect) {
-    	cvSetImageROI(image, cropRect);
-    	IplImage cropped = newImage(image, 3);
-    	IplImage cropped2 = newImage(image, 3);
+    private static void crop(IplImage uncropped, CvRect cropRect) {
+    	cvSetImageROI(uncropped, cropRect);
     	//Copy original image (only ROI) to the cropped image
-    	image = cropped;
-    	temp = cropped2;
-//        cvSetImageROI(image, cropRect);
-        // needs to be set on temp as well for future filters and stuff
-//        cvSetImageROI(temp, cropRect);
+    	cvCopy(uncropped, image);
+    	cvCopy(uncropped, temp);
+    	cvResetImageROI(uncropped);
     }
-
-    /**
-     * DON'T USE THIS
-     * Normalises the image.
-     *
-     * @param image image to be normalised
-     * @return 
-     */
-   
-    private static void normalize(IplImage image) {
-    	cvCvtColor(image, image, CV_BGR2HSV);
-    	IplImage[] channels = new IplImage[3];
-    	for (int i = 0; i < 1; i++) {
-			channels[i] = newImage(image, 1);
-		}
-    	cvSplit(image, channels[0], channels[1], channels[2], null);
-    	for (int i = 0; i < 1; i++) {
-    		cvEqualizeHist(channels[i], channels[i]);
-		}
-    	cvMerge(channels[0], channels[1], channels[2], null, image);
-    	cvCvtColor(image, image, CV_HSV2BGR);
-//        cvNormalize(image, image);
-//        cvNormalize(image, image, 0, 255, CV_MINMAX, null);
-    		
-	}
 
     /**
      * Filters the image with the median blur. This should remove noise
@@ -153,18 +116,18 @@ public class ImageProcessor {
         cvCvtColor(image, temp, CV_BGR2HSV);
         
         binaryImage = ballEntity.threshold(temp);
-        ballCentroid = ballEntity.findCentroid(binaryImage);
-        if (MasterController.ENABLE_GUI) {
-        	//entityViewers[0].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
-        	binaryBallImage = binaryImage;
+        if (VisionGUI.selectedImage == VisionGUI.BALL_INDEX) {
+        	// show ball
+        	VisionGUI.updateImage(binaryImage);
         }
+        ballCentroid = ballEntity.findCentroid(binaryImage);
         
         binaryImage = robotEntity.threshold(temp);
-        robotEntity.detectRobots(temp, binaryImage);
-        if (MasterController.ENABLE_GUI) {
-        	//entityViewers[1].showImage(binaryImage, BufferedImage.TYPE_BYTE_INDEXED);
-        	binaryRobotImage = binaryImage;
+        if (VisionGUI.selectedImage == VisionGUI.ROBOT_INDEX) {
+        	// show robots
+        	VisionGUI.updateImage(binaryImage);
         }
+        robotEntity.detectRobots(temp, binaryImage);
     }
 
     public static Point ballCentroid() {
@@ -189,42 +152,23 @@ public class ImageProcessor {
     public static IplImage newImage(IplImage img, int channels) {
         return IplImage.create(cvGetSize(img), img.depth(), channels);
     }
-    
-    public static BufferedImage getImage(int index) {
-    	switch (index) {    	
-    	case 1: {
-    		return binaryBallImage.getBufferedImage();
-    	}
-    	case 2: {
-    		return binaryRobotImage.getBufferedImage();
-    	}
-    	case 3: {
-    		return binaryDotImage.getBufferedImage();
-    	}
-    	case 0:
-    	default: {
-    		return image.getBufferedImage();
-    	}
-    	}
-    }
 
     /**
      * Processes the image.
      *
      * @param inputImage image to be processed
      */
-
     public static void process(BufferedImage inputImage) {
-        image = IplImage.createFrom(inputImage);
-        temp = newImage(image, 3);
-        undistort(image, temp, cameraMatrix, distCoeffs);
-        crop(image, Thresholds.activeThresholds.cropRect);
+        uncropped = IplImage.createFrom(inputImage);
+        undistort(uncropped, uncroppedTemp, cameraMatrix, distCoeffs);
+        crop(uncroppedTemp, cropRect);
 //        cvConvertScale(image, image, 2, 0); // increase contrast or whatever
         filter(image);
         detect(image, temp);
-//        if (MasterController.ENABLE_GUI) {
-//        	imageViewer.showImage(image, BufferedImage.TYPE_3BYTE_BGR);
-//        }
+        if (VisionGUI.selectedImage == VisionGUI.MAIN_INDEX) { 
+        	// show main
+        	VisionGUI.updateImage(image);
+        }
     }
 
 }

@@ -26,7 +26,6 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 public class RobotEntity extends Entity {
 	
     private static DotEntity dotEntity = new DotEntity();
-    private ImageViewer iv = new ImageViewer();
     private static List<Tuple<Point, Point>> yellowRobots = new ArrayList<Tuple<Point, Point>>();
     private static List<Tuple<Point, Point>> blueRobots = new ArrayList<Tuple<Point, Point>>();
 
@@ -78,7 +77,6 @@ public class RobotEntity extends Entity {
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);
-    		iv.showImage(binaryTemp);
     		
     		// beware the method below could return null
     		// we still add it though

@@ -1,4 +1,4 @@
-package sdp.group2.pc;
+package sdp.group2.gui;
 
 
 import java.awt.Color;
@@ -28,9 +28,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
+
 import sdp.group2.geometry.Point;
-import sdp.group2.gui.ColorChecker;
-import sdp.group2.gui.HSBPanel;
 import sdp.group2.util.Tuple;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
@@ -42,24 +42,26 @@ public class VisionGUI extends WindowAdapter {
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 600;
 
+	public static final int MAIN_INDEX = 0;
+	public static final int BALL_INDEX = 1;
+	public static final int ROBOT_INDEX = 2;
+	public static final int DOT_INDEX = 3;
 
-    private JFrame windowFrame;
-    private Dimension frameSize;
-    private JLabel imageLabel = new JLabel();
-    private ColorChecker colorChecker;
-    private EntityThresh[] entities;
-    private String[] entityNames;
-    private int selectedTab;
-
-    private BufferedImage currentImage;	   
+    private static JFrame windowFrame;
+    private static Dimension frameSize;
+    private static JLabel imageLabel = new JLabel();
+    private static ColorChecker colorChecker;
+    private static EntityThresh[] entities;
+    private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
+    private static String[] entityNames;
+    public static int selectedImage;
+    
+    private static VisionGUI singleton;
 
 	public VisionGUI(int width, int height) {
 		super();
-		this.frameSize = new Dimension(width, height);
-	}
-	
-	public int getSelectedTab() {
-		return selectedTab;
+		frameSize = new Dimension(width, height);
+		singleton = this;
 	}
 
 	public void start() {
@@ -70,6 +72,7 @@ public class VisionGUI extends WindowAdapter {
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
 	    colorChecker = new ColorChecker();
 	    final JList<String> entityList = new JList<String>(entityNames);
+	    final JList<String> imageList = new JList<String>(imageNames);
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.addWindowListener(this); 
@@ -118,13 +121,31 @@ public class VisionGUI extends WindowAdapter {
         });
         listPanel.add(entityList);
         controlPanel.add(listPanel);
+        
+        // Image List
+        JPanel imagePanel = new JPanel();
+        imageList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        imageList.setLayoutOrientation(JList.VERTICAL);
+        imageList.setVisibleRowCount(-1);
+        imageList.setPreferredSize(new Dimension(200, 80));
+        imageList.setBorder(new LineBorder(Color.black));
+        imageList.setSelectedIndex(0);
+        imageList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+			public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting() == false) {
+                    selectedImage = imageList.getSelectedIndex();
+                }
+            }
+        });
+        imagePanel.add(imageList);
+        controlPanel.add(imagePanel);
 
         // Sliders
         controlPanel.add(minHSBPanel);
         controlPanel.add(maxHSBPanel);               
 
      // Update button
-
         controlPanel.add(colorChecker);// Update button
         JButton button = new JButton("Update");
         button.addActionListener(new ActionListener() {
@@ -159,6 +180,10 @@ public class VisionGUI extends WindowAdapter {
 
         windowFrame.setContentPane(contentPanel);
     }
+	
+	public static void updateImage(IplImage image) {
+		singleton.setImage(image.getBufferedImage());
+	}
 	
 	protected JComponent makeTextPanel(String text) {
 	    JPanel panel = new JPanel(false);

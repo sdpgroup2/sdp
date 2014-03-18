@@ -7,8 +7,8 @@ import java.util.List;
 import javax.swing.SwingWorker;
 
 import sdp.group2.geometry.Point;
+import sdp.group2.gui.VisionGUI;
 import sdp.group2.pc.Timer;
-import sdp.group2.pc.VisionGUI;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
 import au.edu.jcu.v4l4j.CaptureCallback;
@@ -111,7 +111,7 @@ public class VisionService implements CaptureCallback {
         timer.tick(25); // Prints the framerate every 25 frames
 
         ImageProcessor.process(frame.getBufferedImage());
-        gui.setImage(crop(ImageProcessor.getImage(gui.getSelectedTab())));
+//        gui.setImage(crop(ImageProcessor.getImage(gui.getSelectedImage())));
 		Point ballCentroid = ImageProcessor.ballCentroid();
 		List<Tuple<Point, Point>> yellowRobots = ImageProcessor.yellowRobots();
 		List<Tuple<Point, Point>> blueRobots = ImageProcessor.blueRobots();
@@ -222,10 +222,6 @@ public class VisionService implements CaptureCallback {
 	 */
 	public Dimension getSize() {
 		return new Dimension(cropRect.width(), cropRect.height());
-	}
-	
-	public BufferedImage crop(BufferedImage image) {
-		return image.getSubimage(cropRect.x(), cropRect.y(), cropRect.width(), cropRect.height());
 	}
 
 	private enum VisionState {
