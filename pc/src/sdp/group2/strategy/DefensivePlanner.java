@@ -1,181 +1,142 @@
 package sdp.group2.strategy;
 
-import java.io.IOException;
-
-
-import lejos.geom.Rectangle;
 import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
-import sdp.group2.communication.Sender;
-import sdp.group2.geometry.Line;
-import sdp.group2.geometry.Millimeter;
-import sdp.group2.geometry.Plane;
-import sdp.group2.geometry.Point;
-import sdp.group2.geometry.PointSet;
 import sdp.group2.geometry.Vector;
 import sdp.group2.util.Constants;
-import sdp.group2.world.*;
-
+import sdp.group2.world.Ball;
+import sdp.group2.world.Pitch;
+import sdp.group2.world.Robot;
+import sdp.group2.util.Debug;
 
 public class DefensivePlanner extends Planner {
-
-    private static final int SPEED = 40;
-    private static final String robotName = Constants.ROBOT_2D_NAME;
-    private static final Point GOAL = new Point(0, Millimeter.pix2mm(150));
-    private boolean isRobotAligned = false;
-    private Sender sender;
-    private long lastRotation = System.currentTimeMillis();
-    private Point enemyGoal;
-
-    /**
-     * Initialises a defensive planner in a given zone for a given pitch
-     *
-     * @param pitch  pitch we are playing
-     * @param zoneId zone the defender is in
-     */
-    public DefensivePlanner(Pitch pitch) {
+	
+	private static final String robotName = Constants.ROBOT_2D_NAME;
+	
+	// The number of frames in between commands
+	private int STUTTER_FRAMES = 10;
+	
+	// The min/max Y that the robot is allowed to have. (The goal posts)
+	private static final double minY = 285;
+	private static final double maxY = 853;
+	
+	// The number of frames this has been running.
+	private int frames = 0;
+	
+	
+	public DefensivePlanner(Pitch pitch) {
         super(pitch);
     }
-
-    /**
-     * TODO: Should check whether we need to rotate
-     * Tries to intercept the ball.
-     */
-    public void interceptSimple() {
-    	Robot defenceRobot = pitch.getOurDefender();
-    	Ball ball = pitch.getBall();
-    	System.out.println("Sending intercept comand.");
-        if (defenceRobot.isMoving()) {
-            return;
-        }
-        Vector diffVector = ball.getPosition().sub(defenceRobot.getPosition());
-        int distance = (int) Math.round(diffVector.y);
-        int sign = distance < 0 ? -1 : 1;
-        distance = Math.abs(distance);
-        
-        //ERROR
-        double angle = defenceRobot.angleToPoint(new Point(GOAL.x, ball.getPosition().y));
-
-        CommandQueue.add(Commands.rotate(((int)Math.floor(angle)), Constants.DEF_MOVE_SPEED), robotName);
-        CommandQueue.add(Commands.move(sign, Constants.DEF_MOVE_SPEED, distance), robotName);
-    }
-
-    public void intercept() {
-    	Robot defenceRobot = pitch.getOurDefender();
-    	Zone defenceZone = pitch.getOurDefendZone();
-        if (defenceRobot.isMoving()) {
-            return;
-        }
-
-        // align();
-        Line trespass = recognizeDangerSimple();
-        if (trespass == null) {
-            return;
-        }
-        Line sidewalk = getSidewalk();
-        Point intersection = defenceZone.getIntersection(trespass, sidewalk);
-        if (intersection == null) {
-            return;
-        }
-        Point robotPos = defenceRobot.getPosition();
-        int sign = robotPos.getY() < intersection.getY() ? 1 : -1;
-        int distance = sign
-                * (int) Plane.pix2mm((int) robotPos.distance(intersection));
-        {
-            System.out.println("Trespassing @ " + intersection.toString());
-        }
-       	CommandQueue.add(Commands.move(sign, SPEED, distance), Constants.ROBOT_2D_NAME);
-    }
-
-    public void align() {
-    	Robot defenceRobot = pitch.getOurDefender();
-        if (lastRotation + 3000 > System.currentTimeMillis()) {
-            return;
-        } else {
-            lastRotation = System.currentTimeMillis();
-        }
-
-        double direction = Math.PI / 2;
-        double robotDirection = defenceRobot.getDirection();
-        double theta = Math.abs(Math.abs(direction) - Math.abs(robotDirection)); // rotation to align
-        if (Math.abs(theta) < 0.3) {
-            return;
-        }
-        int sign = direction > robotDirection ? 1 : -1;
-        int thetaDeg = sign * Zone.rad2deg(theta);
-
-        CommandQueue.add(Commands.rotate(thetaDeg, SPEED), Constants.ROBOT_2D_NAME);
-    }
-    
-    //Unfinished
-    public void pass(){
-    	//Pass from defender to attacker
-    	System.out.println("Sending pass command.");
-    }
-
-    public Line recognizeDangerSimple() {
-        return new Line(GOAL, pitch.getBall().getPosition());
-    }
-
-    public Line recognizeDanger() {
-    	Zone defenceZone = pitch.getOurDefendZone();
-        PointSet trajectory = getPitch().getTrajectory();
-        for (int i = 1; i < trajectory.size() - 1; i++) {
-            Point p0 = trajectory.get(i - 1);
-            Point p1 = trajectory.get(i);
-            if (defenceZone.isInterestedByLine(p0, p1)) {
-                return new Line(p0, p1);
-            }
-        }
-
-        Point p1 = trajectory.left();
-        Point p0 = new Point(p1.x, 0.0);
-        return new Line(p0, p1);
-
-        // return null;
-    }
-
-    /**
-     * Returns the walk path for the robot
-     *
-     * @return
-     */
-    public Line getSidewalk() {
-    	Zone defenceZone = pitch.getOurDefendZone();
-        Rectangle boundary = defenceZone.getBoundary();
-
-        // Point p0 = new Point(defenceRobot.getPosition().x, boundary.y);
-        // Point p1 = new Point(defenceRobot.getPosition().y, boundary.width);
-
-        double x = (boundary.x + boundary.width) / 2.0;
-        Point p0 = new Point(x, boundary.y);
-        Point p1 = new Point(x, boundary.y + boundary.width);
-
-        return new Line(p0, p1);
-    }
-
-    public void disconnect() {
-        this.sender.disconnect();
-    }
-
-
-    //What shall be running when the robot starts
-    public void act() {
-    	Zone defenceZone = pitch.getOurDefendZone();
-    	//If the ball is in our defending zone, pass;
-    	//Else stay at GOAL.x, Ball.y 
-    	if (pitch.getBallZone().getID() == defenceZone.getID()){
-    		pass();
-    	} else {
-    		interceptSimple();
-    	}
-    }
-
-    //Unfinished
-    public void returnToGoal() {
-
-        //Return back to the centre of the goal if ball is either
-        //in our attacking zone or enemies defending zone
-    }
-
+	
+	public void act() {
+		frames += 1;
+		int ballZoneId = pitch.getBallZone().getID();
+		int defenderZoneId = pitch.getOurDefendZone().getID();
+		
+		if (ballZoneId != defenderZoneId) {
+			stutter();
+		} else {
+			pass();
+		}
+	}
+	
+	public void pass() {
+		Robot robot = pitch.getOurDefender();
+		
+		// Angle ranges from -180 to 180 degrees.		
+		double angleToBall = robot.angleToBall(pitch.getBall());
+		System.out.printf("Angle to the ball: %f\n", angleToBall);
+		
+		boolean wrongAngle = Math.abs(angleToBall) > 5;
+		
+		// Do this every 20 frames, starting from frame 0
+		if (frames % STUTTER_FRAMES == 0) {
+			if (wrongAngle) {
+				Debug.log("Too big an angle difference, rotating.");
+				// angleSign is negative for an anticlockwise rotation and positive for a clockwise.
+//				angleSign = Math.signum(angleToBall);
+				CommandQueue.add(Commands.rotate((int) angleToBall, 100), robotName);
+			} else {
+				Debug.log("Angle is fine.");
+			}
+		}
+		
+		// Do this every 20 frames, starting from frame 10
+		else if (frames % STUTTER_FRAMES == STUTTER_FRAMES / 2) {
+			
+			double distanceToGo = robot.vectorTo(pitch.getBall()).length();
+			
+			// Multiply by 0.9 so that we don't hit the wall and stuff
+			distanceToGo = 0.9 * distanceToGo;
+			
+			// If the distance is too great, and the robot is roughly vertically aligned:
+			if (distanceToGo > 30 && !wrongAngle) {
+				CommandQueue.clear(robotName);
+				CommandQueue.add(Commands.move(-1, 1500, (int) distanceToGo), robotName);
+			} else {
+//				CommandQueue.clear(robotName);
+//				CommandQueue.add(Commands.kick(Constants.DEF_KICK_ANGLE, Constants.DEF_KICK_POWER), robotName);
+			}
+		}
+		
+	}
+	
+	/**
+	 * Every STUTTER_FRAMES frames, either adjust the angle of the defending robot to be
+	 * more vertical (in line with goal) OR move the defending robot forwards or backwards
+	 * trying to match the ball's position.
+	 */
+	public void stutter() {
+		Robot robot = pitch.getOurDefender();
+		
+		// Angle ranges from -180 to 180 degrees.
+		double angle = robot.angleToX();
+		double unsignedAngle = Math.abs(angle);
+		
+		// The angle is wrong if it is more than 10 degrees away from 90.
+		boolean wrongAngle = !(85 < unsignedAngle && unsignedAngle < 90);
+		
+		// Do this every 20 frames, starting from frame 0
+		if (frames % STUTTER_FRAMES == 0) {
+			Debug.logf("Defender angle is: %f", angle);
+			if (wrongAngle) {
+				Debug.log("Too big an angle difference, rotating.");
+				// angleSign is negative for an anticlockwise rotation and positive for a clockwise.
+				double angleSign = Math.signum(angle);
+				CommandQueue.add(Commands.rotate((int) (angleSign * (90 - unsignedAngle)), 100), robotName);
+			} else {
+				Debug.log("Angle is fine.");
+			}
+		} else if (frames % STUTTER_FRAMES == STUTTER_FRAMES / 2) {
+			// Do this every 20 frames, starting from frame 10
+			double ry = robot.getPosition().y;
+			double by = pitch.getBall().getPosition().y;
+			
+			// angleSign is 1 if the robot is facing upwards and -1 if downwards.
+			// ballDir is 1 if the ball is above, -1 if the ball is below.
+			// dir multiplies these two to find the direction in which to move.
+			double angleSign = Math.signum(angle);
+			int ballDir = (int) Math.signum(ry - by);
+			int dir = (int) (ballDir * angleSign);
+			
+			int dist = (int) Math.abs(ry - by);
+			
+			// If the ball is outwith the range of the goal post, we only want to move as far as the goal post
+			if (by <= minY) {
+				dist = (int) Math.abs(minY - ry);
+			} else if (by >= maxY) {
+				dist = (int) Math.abs(maxY - ry);
+			}
+			
+			// Multiply by 0.9 so that we don't hit the wall and stuff
+			dist = (int) (0.9 * dist);
+			
+			// If the distance is too great, and the robot is roughly vertically aligned:
+			if (dist > 30 && !wrongAngle) {
+				CommandQueue.clear(robotName);
+				CommandQueue.add(Commands.move(dir, 1500, dist), robotName);
+			}
+		}
+	}
+	
 }

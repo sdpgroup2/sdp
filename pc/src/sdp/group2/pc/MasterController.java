@@ -4,7 +4,7 @@ import java.util.List;
 
 import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
-import sdp.group2.strategy.EvenSimplerDefensivePlanner;
+import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
@@ -21,7 +21,7 @@ public class MasterController implements VisionServiceCallback {
     public static TeamColour ourTeam;
     public static PitchType pitchPlayed;
     private Pitch pitch;
-    private EvenSimplerDefensivePlanner defPlanner;
+    private DefensivePlanner defPlanner;
 //    private EvenSimplerAttackingPlanner offPlanner;
     private VisionService visionService;
     private CommunicationService commService;
@@ -29,7 +29,7 @@ public class MasterController implements VisionServiceCallback {
 
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
-    	this.defPlanner = new EvenSimplerDefensivePlanner(pitch);
+    	this.defPlanner = new DefensivePlanner(pitch);
 //    	this.offPlanner = new EvenSimplerAttackingPlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
