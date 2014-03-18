@@ -47,7 +47,7 @@ public class HSBPanel extends JPanel {
 	}
 
 	public void setValue(int[] color) {
-		this.color = color;
+		System.out.println("Set H: " + color[0] + "S: " + color[1] + "V: " + color[2]);
 		hue.setValue(color[0]);
 		saturation.setValue(color[1]);
 		brightness.setValue(color[2]);
@@ -56,6 +56,10 @@ public class HSBPanel extends JPanel {
 
 	public int[] getValue() {
 		return color;
+	}
+	
+	public int[] copyValue() {
+		return new int[] { color[0], color[1], color[2] };
 	}
 
 }

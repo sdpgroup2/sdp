@@ -79,32 +79,13 @@ public class VisionGUI extends WindowAdapter {
         // Main container
         contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(10,10,10,10));
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));
-
-        // Images
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));               
+        
+     // Images
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
-        
-      //Tabs
-        final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent event) {
-				selectedTab = tabbedPane.getSelectedIndex();				
-			}
-        	
-        });
-        tabbedPane.addTab("Main view", null, imageLabel,
-                          "Shows real image");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-
-        tabbedPane.addTab("Ball view", null, new JLabel(),
-        "Shows balls");
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-        
-        contentPanel.add(tabbedPane);
+        contentPanel.add(imageLabel);
 
         // Sidebar
         JPanel controlPanel = new JPanel();
@@ -127,6 +108,7 @@ public class VisionGUI extends WindowAdapter {
 			public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting() == false) {
                     int index = entityList.getSelectedIndex();
+                    System.out.println("Selected option "+index);
                     if (index >= 0) {
                         minHSBPanel.setValue(entities[index].mins);
                         maxHSBPanel.setValue(entities[index].maxs);
@@ -149,26 +131,28 @@ public class VisionGUI extends WindowAdapter {
             @Override
 			public void actionPerformed(ActionEvent e) {
                 int index = entityList.getSelectedIndex();
+                System.out.println("Update button pressed.");
                 switch (index) {
-                	case 0: 
-                		Thresholds.activeThresholds.ballMins = minHSBPanel.getValue();
-                		Thresholds.activeThresholds.ballMaxs = maxHSBPanel.getValue();
+                	case 0:                 		
+                		Thresholds.activeThresholds.ballMins = minHSBPanel.copyValue();
+                		Thresholds.activeThresholds.ballMaxs = maxHSBPanel.copyValue();
                 		break;
                 	case 1:
-                		Thresholds.activeThresholds.dotMins = minHSBPanel.getValue();
-                		Thresholds.activeThresholds.dotMaxs = maxHSBPanel.getValue();
+                		Thresholds.activeThresholds.dotMins = minHSBPanel.copyValue();
+                		Thresholds.activeThresholds.dotMaxs = maxHSBPanel.copyValue();
                 		break;
                 	case 2:
-                		Thresholds.activeThresholds.basePlateMins = minHSBPanel.getValue();
-                		Thresholds.activeThresholds.basePlateMaxs = maxHSBPanel.getValue();
+                		Thresholds.activeThresholds.basePlateMins = minHSBPanel.copyValue();
+                		Thresholds.activeThresholds.basePlateMaxs = maxHSBPanel.copyValue();
                 		break;
                 	case 3:
-                		Thresholds.activeThresholds.yellowMins = minHSBPanel.getValue();
-                		Thresholds.activeThresholds.yellowMaxs = maxHSBPanel.getValue();
+                		Thresholds.activeThresholds.yellowMins = minHSBPanel.copyValue();
+                		Thresholds.activeThresholds.yellowMaxs = maxHSBPanel.copyValue();
                 		break;
                 	default:
                 		break;
                 }
+                updateEntities(entities);
             }
         });
         controlPanel.add(button);        
@@ -188,6 +172,27 @@ public class VisionGUI extends WindowAdapter {
 	public void setImage(BufferedImage image) {
 		//System.out.println("Got image.");
 		imageLabel.setIcon(new ImageIcon(image));
+	}
+	
+	public void updateEntities(EntityThresh[] entities) {
+		for (int i =0; i<entities.length; i++) {
+			if (entities[i].name.equals("Ball")) {
+				entities[i].mins = Thresholds.activeThresholds.ballMins;
+				entities[i].maxs = Thresholds.activeThresholds.ballMaxs;
+			}
+			if (entities[i].name.equals("Dot")) {
+				entities[i].mins = Thresholds.activeThresholds.dotMins;
+				entities[i].maxs = Thresholds.activeThresholds.dotMaxs;
+			}
+			if (entities[i].name.equals("BasePlate")) {
+				entities[i].mins = Thresholds.activeThresholds.basePlateMins;
+				entities[i].maxs = Thresholds.activeThresholds.basePlateMaxs;
+			}
+			if (entities[i].name.equals("Yellow")) {
+				entities[i].mins = Thresholds.activeThresholds.yellowMins;
+				entities[i].maxs = Thresholds.activeThresholds.yellowMaxs;
+			}
+		}
 	}
 	
 }
