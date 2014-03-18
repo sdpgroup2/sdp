@@ -40,9 +40,9 @@ public class Receiver {
 				// Begin reading commands
 				short opcode = Commands.DO_NOTHING;
 				short option1, option2, option3;
-
+				int noTimesSent = 0;
 				while ((opcode != Commands.DISCONNECT) && (opcode != Commands.FORCEQUIT) && !(Button.ESCAPE.isDown())) {
-
+					
 					// Get the next command from the inputstream
 					byte[] bytes = new byte[8];
 					inStream.read(bytes, 0, 8);
@@ -62,6 +62,7 @@ public class Receiver {
 					
 						case Commands.ANGLEMOVE:
 							pilot.move(option1, option2, option3);
+							LCD.drawString("move" + option1 + " "+ option2 +" " + option3,1,1); 
 							break;
 						
 						case Commands.ROTATE:
@@ -69,6 +70,8 @@ public class Receiver {
 							break;
 	
 						case Commands.KICK:
+							noTimesSent++;
+							System.out.println("\n\n\n no of times"+noTimesSent);
 							pilot.kick(option1, option2);
 							break;
 						
@@ -85,6 +88,7 @@ public class Receiver {
 							break;
 							
 						case Commands.CLOSEKICKER:
+							System.out.println("closing");
 							pilot.closeKicker();
 							break;
 							

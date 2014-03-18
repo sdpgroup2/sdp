@@ -33,6 +33,6 @@ public class Milestone2 {
 		LCD.clear();
 		
 		Pilot pilot = new Pilot();
-		pilot.kick(90, kick_speed);
+		pilot.kick(3, kick_speed);
 	}
 }
