@@ -2,14 +2,14 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_core.cvSize;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
-import static sdp.group2.vision.ImageProcessor.newImage;
 
 import java.util.List;
 
 import sdp.group2.geometry.Point;
 
-
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 
@@ -17,11 +17,15 @@ public class DotEntity extends Entity {
 
 	private int[] mins = Thresholds.activeThresholds.dotMins;
 	private int[] maxs = Thresholds.activeThresholds.dotMaxs;
+	private static IplImage binaryImage;
 
+	static {
+		CvRect cropRect = Thresholds.activeThresholds.cropRect;
+		binaryImage = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 1);
+	}
 
     @Override
     public IplImage threshold(IplImage hsvImage) {
-        IplImage binaryImage = newImage(hsvImage, 1);
         cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), binaryImage);
         cvDilate(binaryImage, binaryImage, null, 1);
         return binaryImage;

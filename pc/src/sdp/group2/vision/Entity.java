@@ -1,20 +1,18 @@
 package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.CV_WHOLE_SEQ;
+import static com.googlecode.javacv.cpp.opencv_core.cvGetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvRectangle;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
-import static com.googlecode.javacv.cpp.opencv_core.cvGetSeqElem;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_CHAIN_APPROX_SIMPLE;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_RETR_LIST;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvBoundingRect;
-import static com.googlecode.javacv.cpp.opencv_core.cvGetImageROI;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvCanny;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvContourArea;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvFindContours;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvMoments;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,6 @@ import sdp.group2.geometry.Point;
 import com.googlecode.javacpp.Loader;
 import com.googlecode.javacv.cpp.opencv_core.CvContour;
 import com.googlecode.javacv.cpp.opencv_core.CvMemStorage;
-import com.googlecode.javacv.cpp.opencv_core.CvPoint;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.CvSeq;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;

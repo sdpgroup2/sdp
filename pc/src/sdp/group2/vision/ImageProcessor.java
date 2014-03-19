@@ -1,13 +1,15 @@
 package sdp.group2.vision;
 
-import static com.googlecode.javacv.cpp.opencv_core.CV_8U;
 import static com.googlecode.javacv.cpp.opencv_core.IPL_DEPTH_32F;
+import static com.googlecode.javacv.cpp.opencv_core.cvCircle;
 import static com.googlecode.javacv.cpp.opencv_core.cvCopy;
 import static com.googlecode.javacv.cpp.opencv_core.cvGetSize;
+import static com.googlecode.javacv.cpp.opencv_core.cvLine;
 import static com.googlecode.javacv.cpp.opencv_core.cvLoad;
+import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
+import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalarAll;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
-import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvSize;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_BGR2HSV;
 import static com.googlecode.javacv.cpp.opencv_imgproc.CV_INTER_LINEAR;
@@ -25,6 +27,7 @@ import sdp.group2.gui.VisionGUI;
 import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
+import com.googlecode.javacv.cpp.opencv_core.CvPoint;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
@@ -40,10 +43,10 @@ public class ImageProcessor {
 
     private static CvRect cropRect = Thresholds.activeThresholds.cropRect; 
 
-	private static IplImage uncropped;
-    private static IplImage uncroppedTemp;
+	private static IplImage uncropped; // The image we get from the camera 
+    private static IplImage uncroppedTemp; // Temp image we need in undistort
     private static IplImage temp; // Temporary image used for processing
-    private static IplImage image; // Processing image
+    private static IplImage image; // Processing image (immutable)
     private static IplImage binaryImage; // Temporary binary image for processing
     private static BallEntity ballEntity = new BallEntity(); // Ball thresholding
     private static RobotEntity robotEntity = new RobotEntity();; // Robot thresholding
@@ -81,7 +84,7 @@ public class ImageProcessor {
             }
         }
     }
-
+    
     /**
      * Sets the region of interest (ROI) of the image.
      *
@@ -152,6 +155,38 @@ public class ImageProcessor {
     public static IplImage newImage(IplImage img, int channels) {
         return IplImage.create(cvGetSize(img), img.depth(), channels);
     }
+    
+    /**
+     * Draws world objects on the shitty pitch.
+     * 
+     * @param image
+     */
+    public static void drawShit(IplImage image) {
+    	if (ballCentroid != null) {
+    		cvCircle(image, ballCentroid.cv(), 6, cvScalar(0, 0, 255, 0), -1, 8, 0);
+    	}
+    	
+    	CvPoint centroid;
+    	Point dotPoint;
+    	
+    	for (Tuple<Point, Point> robot : blueRobots()) {
+    		centroid = robot.getFirst().cv();
+    		cvCircle(image, centroid, 8, cvScalar(255, 0, 0, 0), -1, 8, 0);
+    		dotPoint = robot.getSecond();
+    		if (dotPoint != null) {
+    			cvLine(image, centroid, dotPoint.cv(), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    		}
+		}
+    	
+    	for (Tuple<Point, Point> robot : yellowRobots()) {
+    		centroid = robot.getFirst().cv();
+    		cvCircle(image, centroid, 8, cvScalar(0, 255, 255, 0), -1, 8, 0);
+    		dotPoint = robot.getSecond();
+    		if (dotPoint != null) {
+    			cvLine(image, centroid, dotPoint.cv(), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    		}
+		}
+    }
 
     /**
      * Processes the image.
@@ -161,14 +196,17 @@ public class ImageProcessor {
     public static void process(BufferedImage inputImage) {
         uncropped = IplImage.createFrom(inputImage);
         undistort(uncropped, uncroppedTemp, cameraMatrix, distCoeffs);
-        crop(uncroppedTemp, cropRect);
-//        cvConvertScale(image, image, 2, 0); // increase contrast or whatever
+        crop(uncropped, cropRect);
         filter(image);
         detect(image, temp);
         if (VisionGUI.selectedImage == VisionGUI.MAIN_INDEX) { 
         	// show main
+            if (VisionGUI.drawShit) {
+            	drawShit(image);
+            }
         	VisionGUI.updateImage(image);
         }
+
     }
 
 }

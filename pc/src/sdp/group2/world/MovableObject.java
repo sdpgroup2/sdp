@@ -1,7 +1,3 @@
-/**
- * @author Jaroslaw Hirniak, s1143166
- */
-
 package sdp.group2.world;
 
 import sdp.group2.geometry.Point;

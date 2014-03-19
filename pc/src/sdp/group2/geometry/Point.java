@@ -1,9 +1,11 @@
 
-/** @author Jaroslaw Hirniak */
-
 package sdp.group2.geometry;
 
 import java.awt.geom.Point2D;
+
+import com.googlecode.javacv.cpp.opencv_core.CvPoint;
+
+import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 
 public class Point extends Point2D.Double implements Comparable<Point> {
 
@@ -62,6 +64,10 @@ public class Point extends Point2D.Double implements Comparable<Point> {
         } else {
         	return 1;
         }
+    }
+    
+    public CvPoint cv() {
+    	return cvPoint((int) x, (int) y);
     }
     
     public void setX(double x) {

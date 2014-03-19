@@ -1,22 +1,26 @@
 package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvCountNonZero;
+import static com.googlecode.javacv.cpp.opencv_core.cvInRange;
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvLine;
-import static com.googlecode.javacv.cpp.opencv_core.cvOr;
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
+import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
+import static com.googlecode.javacv.cpp.opencv_core.cvSet;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
+import static com.googlecode.javacv.cpp.opencv_core.cvSize;
+import static com.googlecode.javacv.cpp.opencv_core.cvSplit;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
-import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static sdp.group2.vision.ImageProcessor.newImage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import sdp.group2.geometry.Point;
+import sdp.group2.gui.VisionGUI;
 import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
@@ -28,7 +32,28 @@ public class RobotEntity extends Entity {
     private static DotEntity dotEntity = new DotEntity();
     private static List<Tuple<Point, Point>> yellowRobots = new ArrayList<Tuple<Point, Point>>();
     private static List<Tuple<Point, Point>> blueRobots = new ArrayList<Tuple<Point, Point>>();
-
+//    private static IplImage lowerLightMask;
+//    private static IplImage upperLightMask;
+    
+//    static {
+//    	CvRect cropRect = Thresholds.activeThresholds.cropRect;
+//    	lowerLightMask = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 1);
+//    	upperLightMask = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 1);
+//    	
+//    	// Set lower value for all regions
+//    	cvSet(lowerLightMask, cvScalar(100, 0, 0, 0));
+//    	// Set the rightmost region to an even lower value (light balance)
+//    	cvSetImageROI(lowerLightMask, cvRect(420, 0, 123, 300));
+//    	cvSet(lowerLightMask, cvScalar(90, 0, 0, 0));
+//    	cvResetImageROI(lowerLightMask);
+//
+//    	// Set upper value for all regions
+//    	cvSet(upperLightMask, cvScalar(130, 0, 0, 0));
+//    	// Set the rightmost region to an even lower value (light balance)
+//    	cvSetImageROI(upperLightMask, cvRect(420, 0, 123, 300));
+//    	cvSet(upperLightMask, cvScalar(110, 0, 0, 0));
+//    	cvResetImageROI(upperLightMask);
+//    }
     
     public static List<Tuple<Point, Point>> yellowRobots() {
 		return yellowRobots;
@@ -48,26 +73,31 @@ public class RobotEntity extends Entity {
      */
     public IplImage threshold(IplImage hsvImage) {
         IplImage binaryImage = newImage(hsvImage, 1);
-        IplImage tempImage = newImage(hsvImage, 1);
         // Range the bases
         int[] mins = Thresholds.activeThresholds.basePlateMins;
         int[] maxs = Thresholds.activeThresholds.basePlateMaxs;
         cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), binaryImage);
-        // Range the yellow or blue
-//        cvInRangeS(hsvImage, cvScalar(mins[1][0], mins[1][1], mins[1][2], 0), cvScalar(maxs[1][0], maxs[1][1], maxs[1][2], 0), tempImage);
-//        cvOr(binaryImage, tempImage, binaryImage, null);
-//        // Range the other one
-//        cvInRangeS(hsvImage, cvScalar(mins[2][0], mins[2][1], mins[2][2], 0), cvScalar(maxs[2][0], maxs[2][1], maxs[2][2], 0), tempImage);
-//        cvOr(binaryImage, tempImage, binaryImage, null);
-        // Measure so we connect to one component
         cvErode(binaryImage, binaryImage, null, 3);
         cvDilate(binaryImage, binaryImage, null, 9);
         return binaryImage;
     }
-
+    
+//    public IplImage threshold(IplImage rgbImage) {
+//    	// when using this, set the areas to 1500 and 2500
+//        IplImage greyImage = newImage(rgbImage, 1);
+//        IplImage binaryTemp = newImage(rgbImage, 1);
+//        cvSplit(rgbImage, null, greyImage, null, null);
+//        cvInRange(greyImage, lowerLightMask, upperLightMask, binaryTemp);
+//        
+//        cvErode(binaryTemp, binaryTemp, null, 1);
+//        cvDilate(binaryTemp, binaryTemp, null, 4);
+//    	
+//        return binaryTemp;
+//    }
+    
     public void detectRobots(IplImage hsvImage, IplImage binaryImage) {
     	IplImage binaryTemp = newImage(binaryImage, 1);
-    	List<Point> centroids = findPossibleCentroids(binaryImage, 1500, 3000, 4);
+    	List<Point> centroids = findPossibleCentroids(binaryImage, 1500, 2500, 4);
 //    	System.out.printf("Found %d robots.\n", centroids.size());
     	yellowRobots.clear();
     	blueRobots.clear();
@@ -77,6 +107,9 @@ public class RobotEntity extends Entity {
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);
+    		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
+    			VisionGUI.updateImage(binaryTemp);
+    		}
     		
     		// beware the method below could return null
     		// we still add it though
@@ -105,7 +138,7 @@ public class RobotEntity extends Entity {
     	cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), channel);
     	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
-    	System.out.println(nonZero);
+//    	System.out.println(nonZero);
     	return nonZero > Thresholds.activeThresholds.yellowPixelsThreshold ? true : false;
     }
     

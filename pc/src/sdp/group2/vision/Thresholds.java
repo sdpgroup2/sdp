@@ -6,7 +6,7 @@ import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
 public class Thresholds {
 	
-	//Sorry
+	// Sorry - lol
 	public static EntityThresh[] entities = new EntityThresh[4];
 	
 	public static Thresholds sidePitchThresholds = new Thresholds(
@@ -23,11 +23,35 @@ public class Thresholds {
 		    new int[] {80, 160, 255},
 		    
 		    // yellow mins/maxs
-		    new int[] {20, 100, 100}, 
+		    new int[] {20, 100, 100},
 		    new int[] {30, 255, 255},
 		    
 		    // yellow pixel threshold
 		 	120,
+		 	
+		 	// Cropping rectangle
+		 	cvRect(45, 90, 543, 300)
+	);
+	
+	public static Thresholds hikuaiThresholds = new Thresholds(
+			// ball mins/maxs
+			new int[]{-10, 80, 120}, 
+			new int[]{10, 250, 250},
+			
+			// dot mins/maxs
+			new int[] {26, 19, 43},
+		    new int[] {65, 139, 135},
+		    
+		    // baseplate mins/maxs
+		    new int[] {20, 60, 100},
+		    new int[] {120, 200, 255},
+		    
+		    // yellow mins/maxs
+		    new int[] {20, 100, 100},
+		    new int[] {30, 255, 255},
+		    
+		    // yellow pixel threshold
+		 	30,
 		 	
 		 	// Cropping rectangle
 		 	cvRect(45, 90, 543, 300)
@@ -83,7 +107,6 @@ public class Thresholds {
 	
 	public static Thresholds activeThresholds = mainPitchThresholds;
 	
-	
 	public int[] ballMins;
 	public int[] ballMaxs;
 	public int[] dotMins;
@@ -99,7 +122,6 @@ public class Thresholds {
 			int[] dotMaxs, int[] basePlateMins, int[] basePlateMaxs,
 			int[] yellowMins, int[] yellowMaxs, int yellowPixelsThreshold,
 			CvRect cropRect) {
-		super();
 		this.ballMins = ballMins;
 		this.ballMaxs = ballMaxs;
 		this.dotMins = dotMins;
@@ -131,6 +153,5 @@ public class Thresholds {
 		entities[3] = yellow;
 		
 	}
-
 
 }

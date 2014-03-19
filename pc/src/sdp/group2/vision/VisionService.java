@@ -33,7 +33,6 @@ public class VisionService implements CaptureCallback {
 	private VideoDevice device;
 	private JPEGFrameGrabber frameGrabber;
 	private VisionServiceCallback callback;
-	private VisionGUI gui = new VisionGUI(FRAME_WIDTH, FRAME_HEIGHT);
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
 	private CvRect cropRect = Thresholds.activeThresholds.cropRect;
@@ -97,7 +96,7 @@ public class VisionService implements CaptureCallback {
 		} catch (V4L4JException e) {
 			e.printStackTrace();
 		}
-		gui.start();
+		VisionGUI.start();
 	}
 
 	/**
@@ -182,19 +181,6 @@ public class VisionService implements CaptureCallback {
 		this.stopVision();
 		this.callback.onExceptionThrown(e);
 		e.printStackTrace();
-	}
-
-	private void updateGUI() {
-		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-
-			@Override
-			protected Void doInBackground() throws Exception {
-				//gui.setImage(crop(ImageProcessor.getImage()));
-				// visionDisplay.redraw(currentImage, ball, robots);
-				return null;
-			}
-		};
-		worker.run();
 	}
 
 	/**

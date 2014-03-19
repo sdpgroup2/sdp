@@ -1,8 +1,3 @@
-/**
- * @author Jaroslaw Hirniak, s1143166
- * @author Mikey
- */
-
 package sdp.group2.world;
 
 import java.util.Collections;

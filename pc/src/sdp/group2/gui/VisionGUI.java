@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
@@ -14,6 +16,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -55,16 +58,20 @@ public class VisionGUI extends WindowAdapter {
     private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
     private static String[] entityNames;
     public static int selectedImage;
+    public static boolean drawShit = false;
     
     private static VisionGUI singleton;
+    
+    static {
+    	singleton = new VisionGUI(640, 480);
+    }
 
 	public VisionGUI(int width, int height) {
 		super();
 		frameSize = new Dimension(width, height);
-		singleton = this;
 	}
 
-	public void start() {
+	public void initialise() {
 	    JPanel contentPanel;
 	    entities = Thresholds.entities;
 	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name, entities[3].name};
@@ -95,6 +102,26 @@ public class VisionGUI extends WindowAdapter {
         controlPanel.setBorder(new EmptyBorder(10,10,10,10));
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
         contentPanel.add(controlPanel);
+        
+        // Draw Shit
+        JCheckBox drawBox = new JCheckBox();
+        drawBox.setSelected(drawShit);
+        drawBox.setText("Draw Shit!");
+        drawBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				drawShit = !drawShit;
+			}
+		});
+//        drawBox.addChangeListener(new ChangeListener() {
+//			
+//			@Override
+//			public void stateChanged(ChangeEvent e) {
+//				drawShit = !drawShit;
+//			}
+//		});
+        controlPanel.add(drawBox);
 
      // Entity list
         JPanel listPanel = new JPanel();
@@ -181,6 +208,10 @@ public class VisionGUI extends WindowAdapter {
         windowFrame.setContentPane(contentPanel);
     }
 	
+	public static void start() {
+		singleton.initialise();
+	}
+	
 	public static void updateImage(IplImage image) {
 		singleton.setImage(image.getBufferedImage());
 	}
@@ -195,7 +226,6 @@ public class VisionGUI extends WindowAdapter {
 	}
 	
 	public void setImage(BufferedImage image) {
-		//System.out.println("Got image.");
 		imageLabel.setIcon(new ImageIcon(image));
 	}
 	

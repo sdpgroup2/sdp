@@ -64,10 +64,8 @@ public class MasterController implements VisionServiceCallback {
         if (pitchPlayed == Constants.PitchType.MAIN) {
         	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
         } else {
-        	Thresholds.activeThresholds = Thresholds.sidePitchThresholds;
+        	Thresholds.activeThresholds = Thresholds.hikuaiThresholds;
         }
-//        Thresholds.activeThresholds = Thresholds.nightMainPitchThresholds;
-//        Thresholds.activeThresholds = Thresholds.spongeBobSquarePitch;
         
         final MasterController controller = new MasterController();    
         controller.start();
