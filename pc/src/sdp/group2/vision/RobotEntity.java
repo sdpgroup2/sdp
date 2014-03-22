@@ -136,7 +136,6 @@ public class RobotEntity extends Entity {
     	int[] mins = Thresholds.activeThresholds.yellowMins;
     	int[] maxs = Thresholds.activeThresholds.yellowMaxs;
     	cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), channel);
-    	// Yellow robots have non zero about 60
     	int nonZero = cvCountNonZero(channel);
 //    	System.out.println(nonZero);
     	return nonZero > Thresholds.activeThresholds.yellowPixelsThreshold ? true : false;

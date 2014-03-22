@@ -97,6 +97,7 @@ public class VisionService implements CaptureCallback {
 			e.printStackTrace();
 		}
 		VisionGUI.start();
+		System.out.println("In Preparation state.");
 	}
 
 	/**
@@ -120,40 +121,45 @@ public class VisionService implements CaptureCallback {
 			boolean prepared = false;
 
     		// If we don't have the ball then we're not ready
-    		if (ballCentroid != null) {
-//    			System.out.printf("Ball position: %s\n", ballCentroid);
-    			prepared = true;
+    		if (ballCentroid == null) {
+    		    System.out.println("Can't find ball.");
+    			prepared = false;
+    			break;
     		}
     		
     		// If we don't have all 4 robots, we're not ready
     		if (yellowRobots.size() != 2 || blueRobots.size() != 2) {
+    		    Debug.logf(
+    		            "Finding %d yellow and %d blue robots. Need 2 of each.",
+    		            yellowRobots.size(), blueRobots.size());
     			prepared = false;
+    			break;
     		}
 
     		// If one of the direction vectors is null we're not ready
     		// Position (first of tuple) is never null
     		for (Tuple<Point, Point> tuple : blueRobots) {
-    			System.out.printf("Blue Robot position %s\n", tuple.getFirst());
-    			System.out.printf("Blue Robot dot position %s\n", tuple.getSecond());
     			if (tuple.getSecond() == null) {
+    			    System.out.println("Can't find dot for blue robot.");
     				prepared = false;
+    				break;
     			}
     		}
     		
     		// If one of the direction vectors is null we're not ready
     		// Position (first of tuple) is never null
     		for (Tuple<Point, Point> tuple : yellowRobots) {
-    			System.out.printf("Yellow Robot position %s\n", tuple.getFirst());
-    			System.out.printf("Yellow Robot dot position %s\n", tuple.getSecond());
     			if (tuple.getSecond() == null) {
+    			    System.out.println("Can't find dot for yellow robot.");
     				prepared = false;
+    				break;
     			}
     		}
     		if (prepared) {
     			// We're ready switch to processing
     			state = VisionState.Processing;
     			callback.prepared(ballCentroid, yellowRobots, blueRobots);
-    			System.out.println("Prepared!");
+    			System.out.println("Prepared! Switched state to Processing.");
     		}
 			break;
 
