@@ -16,10 +16,8 @@ public class Debug {
 	public static boolean VISION_DRAW_BOUNDS = false;
 	public static boolean VISION_NORMALIZE_IMAGE = false;
 
-	public static void log(String message) {
-		if (DEBUG_LOGGING) {
-			System.out.println(message);
-		}
+	public static void log(String message, Object... args) {
+		logf(message, args);
 	}
 
 	public static void logf(String message, Object... args) {

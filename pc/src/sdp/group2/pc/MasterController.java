@@ -13,6 +13,7 @@ import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.world.Pitch;
+import sdp.group2.util.Debug;
 
 
 public class MasterController implements VisionServiceCallback {
@@ -66,6 +67,10 @@ public class MasterController implements VisionServiceCallback {
         } else {
         	Thresholds.activeThresholds = Thresholds.hikuaiThresholds;
         }
+        // Remove this if I have forgotten to:
+        Thresholds.activeThresholds = Thresholds.torosayThresholds;
+        Debug.log("Using thresholds: %s", Thresholds.activeThresholds.name);
+        
         
         final MasterController controller = new MasterController();    
         controller.start();

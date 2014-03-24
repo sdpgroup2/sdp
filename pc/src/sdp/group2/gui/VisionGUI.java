@@ -73,7 +73,7 @@ public class VisionGUI extends WindowAdapter {
 
 	public void initialise() {
 	    JPanel contentPanel;
-	    entities = Thresholds.entities;
+	    entities = Thresholds.activeThresholds.entities;
 	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name, entities[3].name};
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");

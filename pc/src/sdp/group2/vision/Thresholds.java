@@ -6,10 +6,8 @@ import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
 public class Thresholds {
 	
-	// Sorry - lol
-	public static EntityThresh[] entities = new EntityThresh[4];
-	
 	public static Thresholds sidePitchThresholds = new Thresholds(
+	        "Side Pitch",
 			// ball mins/maxs
 			new int[]{-10, 92, 140}, 
 			new int[]{10, 230, 230},
@@ -34,6 +32,7 @@ public class Thresholds {
 	);
 	
 	public static Thresholds hikuaiThresholds = new Thresholds(
+	        "Hikuai",
 			// ball mins/maxs
 			new int[]{-10, 80, 120}, 
 			new int[]{10, 250, 250},
@@ -58,6 +57,7 @@ public class Thresholds {
 	);
 	
 	public static Thresholds mainPitchThresholds = new Thresholds(
+			"Main Pitch",
 			// ball mins/maxs
 			new int[]{-10, 80, 70},
 			new int[]{10, 255, 255},
@@ -82,6 +82,7 @@ public class Thresholds {
 	);
 	
 	public static Thresholds nightMainPitchThresholds = new Thresholds(
+	        "Night Main Pitch",
 			// ball mins/maxs
 			new int[]{-10, 80, 70},
 			new int[]{10, 255, 255},
@@ -105,8 +106,34 @@ public class Thresholds {
 		 	cvRect(30, 60, 590, 310)
 	);
 	
+	public static Thresholds torosayThresholds = new Thresholds(
+			"Torosay",
+			// ball mins/maxs
+			new int[]{-10, 80, 70},
+			new int[]{10, 255, 255},
+			
+			// dot mins/maxs
+			new int[] {26, 55, 40},
+			new int[] {100, 210, 60},
+		    
+		    // baseplate mins/maxs
+            new int[] {45, 110, 77},
+            new int[] {90, 240, 183},
+		    
+		    // yellow mins/maxs
+		    new int[] {20, 76, 81}, 
+		    new int[] {53, 255, 255},
+			
+			// yellow pixel threshold
+			30,
+			
+			// Cropping rectangle
+		 	cvRect(30, 60, 590, 310)
+	);
+	
 	public static Thresholds activeThresholds = mainPitchThresholds;
 	
+	public String name;
 	public int[] ballMins;
 	public int[] ballMaxs;
 	public int[] dotMins;
@@ -117,11 +144,13 @@ public class Thresholds {
 	public int[] yellowMaxs;
 	public int yellowPixelsThreshold;
 	public CvRect cropRect;
+	public EntityThresh[] entities = new EntityThresh[4];
 	
-	public Thresholds(int[] ballMins, int[] ballMaxs, int[] dotMins,
+	public Thresholds(String name, int[] ballMins, int[] ballMaxs, int[] dotMins,
 			int[] dotMaxs, int[] basePlateMins, int[] basePlateMaxs,
 			int[] yellowMins, int[] yellowMaxs, int yellowPixelsThreshold,
 			CvRect cropRect) {
+		this.name = name;
 		this.ballMins = ballMins;
 		this.ballMaxs = ballMaxs;
 		this.dotMins = dotMins;

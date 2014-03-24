@@ -5,6 +5,7 @@ import static com.googlecode.javacv.cpp.opencv_core.cvInRange;
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvLine;
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
+import static com.googlecode.javacv.cpp.opencv_core.cvCircle;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
@@ -97,6 +98,7 @@ public class RobotEntity extends Entity {
     
     public void detectRobots(IplImage hsvImage, IplImage binaryImage) {
     	IplImage binaryTemp = newImage(binaryImage, 1);
+    	//cvSet(binaryTemp, cvScalar(0, 0, 0, 0));
     	List<Point> centroids = findPossibleCentroids(binaryImage, 1500, 2500, 4);
 //    	System.out.printf("Found %d robots.\n", centroids.size());
     	yellowRobots.clear();
@@ -107,6 +109,9 @@ public class RobotEntity extends Entity {
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);
+    		/*cvCircle(binaryTemp, rectCentroid.cv(), 15,
+    		        cvScalar(255, 255, 255, 0), -1, 8, 0);*/
+    		
     		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
     			VisionGUI.updateImage(binaryTemp);
     		}
@@ -114,6 +119,7 @@ public class RobotEntity extends Entity {
     		// beware the method below could return null
     		// we still add it though
     		Point dotCentroid = dotEntity.findClosestCentroid(binaryTemp, 40, 120, rectCentroid);
+    		
     		if (dotCentroid != null) {
     			cvLine(binaryImage, cvPoint((int) dotCentroid.x, (int) dotCentroid.y), cvPoint((int) rectCentroid.x, (int) rectCentroid.y), cvScalar(255, 255, 255, 0), 1, 8, 0);
     		}
