@@ -18,18 +18,44 @@ public class CommunicationService {
 	private Sender sender2D;   
 	
 	public CommunicationService() {
+		Thread connect2A = new Thread(new Runnable() {
 
+			@Override
+			public void run() {
+				try {
+					sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);	
+				} catch (IOException e) {
+					System.err.println("Can't connect to 2A!");
+				}
+				
+			}
+			
+		});
+		Thread connect2D = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);	
+				} catch (IOException e) {
+					System.err.println("Can't connect to 2D!");
+				}
+			}
+			
+		});
+		connect2A.start();
+		connect2D.start();
 		try {
-			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);	
-		} catch (IOException e) {
-			System.err.println("Can't connect to 2A!");
+			connect2A.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		try {
-			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);	
-		} catch (IOException e) {
-			System.err.println("Can't connect to 2D!");
+			connect2D.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
+		
 	}
 	public void startRunningFromQueue() {
 		Thread popThread2A = new Thread(new Runnable() {
@@ -37,25 +63,55 @@ public class CommunicationService {
 			@Override
 			public void run() {
 				while(true) {
-					sendCommands(sender2A);
+					while(true) {
+						if (!CommandQueue.isEmpty(Constants.ROBOT_2A_NAME)) {
+							short[] commands = new short[4];
+							int i = 0;
+							for (int command : CommandQueue.poll(Constants.ROBOT_2A_NAME)) {
+								
+								commands[i] = (short) command;
+								i++;        
+							}
+							try {	
+								
+								sender2A.command(commands);
+							} catch(IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
 				}
 			}
 			
 		});
 		
-		popThread2A.start();
+		
 		
 		Thread popThread2D = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				while(true) {
-					sendCommands(sender2D);
+					if (!CommandQueue.isEmpty(Constants.ROBOT_2D_NAME)) {
+						short[] commands = new short[4];
+						int i = 0;
+						for (int command : CommandQueue.poll(Constants.ROBOT_2D_NAME)) {
+							
+							commands[i] = (short) command;
+							i++;        
+						}
+						try {	
+							
+							sender2D.command(commands);
+						} catch(IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 			
 		});
-		
+		popThread2A.start();
 		popThread2D.start();
 		
 		Thread attemptClear = new Thread(new Runnable() {
@@ -82,25 +138,5 @@ public class CommunicationService {
 		attemptClear.start();
 
 	}
-	
-	public void sendCommands(Sender sender) {
-		if (sender == null) {
-			return;
-		}
-		if (!CommandQueue.isEmpty(sender.getName())) {
-			short[] commands = new short[4];
-			int i = 0;
-			for (int command : CommandQueue.poll(sender.getName())) {
-				commands[i] = (short) command;
-				i++;        
-			}
-			try {		
-				sender.command(commands);
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	
 }

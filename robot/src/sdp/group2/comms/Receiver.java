@@ -98,6 +98,7 @@ public class Receiver {
 						
 						case Commands.DISCONNECT: 
 							replying = false;
+							System.out.println("Waiting for connection...");
 							break;
 							
 						case Commands.FORCEQUIT:							
