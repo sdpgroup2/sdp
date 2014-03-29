@@ -10,17 +10,15 @@ import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 public class Point extends Point2D.Double implements Comparable<Point> {
 
 	private static final long serialVersionUID = 13L;
-	private long timestamp;
 	
     public Point(double x, double y) {
     	super(x, y);
-    	this.timestamp = System.currentTimeMillis();
     }
 
     /**
      * What is this for? Use the Vector class.
      * @param other
-     * @return
+     * @returnR
      */
 	public double getAngle(Point other) {
 		double theta = Math.atan2(this.y - other.y, this.x - other.x);
@@ -78,9 +76,6 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.y = y;
     }
     
-    public long getTimestamp() {
-    	return timestamp;
-    }
 
     /**
      * Returns a vector between this point and other point.

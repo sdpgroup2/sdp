@@ -23,7 +23,7 @@ public class Robot extends MovableObject {
     private Zone zone;    
 
     public Robot(Point robotPosition, Point dotPosition, Zone zone) {
-    	updatePosition(robotPosition);
+    	super(robotPosition);
     	updateFacing(dotPosition);
     	this.zone = zone;
     }
@@ -41,7 +41,7 @@ public class Robot extends MovableObject {
     }
     
     public void updateState(Point position, Point dotPosition) {
-    	updatePosition(position);
+    	setPosition(position);
     	if (dotPosition != null) {
     		updateFacing(dotPosition);
     	}

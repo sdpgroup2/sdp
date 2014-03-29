@@ -195,7 +195,7 @@ public class ImageProcessor {
      */
     public static void process(BufferedImage inputImage) {
         uncropped = IplImage.createFrom(inputImage);
-        undistort(uncropped, uncroppedTemp, cameraMatrix, distCoeffs);
+//        undistort(uncropped, uncroppedTemp, cameraMatrix, distCoeffs);
         crop(uncropped, cropRect);
         filter(image);
         detect(image, temp);

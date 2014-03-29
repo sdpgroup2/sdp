@@ -84,7 +84,7 @@ public class Pitch extends Plane {
     }
 
     public void updateBallPosition(Point p) {
-    	ball.updatePosition(p);
+    	ball.setPosition(p);
     }
     
     public void updateBallPosition(double x, double y) {
