@@ -16,26 +16,6 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	super(x, y);
     	this.timestamp = System.currentTimeMillis();
     }
-
-    /**
-     * What is this for? Use the Vector class.
-     * @param other
-     * @return
-     */
-	public double getAngle(Point other) {
-		double theta = Math.atan2(this.y - other.y, this.x - other.x);
-		
-		while (theta > Math.PI)  { theta -= 2 * Math.PI; }
-		while (theta <= -Math.PI) { theta += 2 * Math.PI; }
-		
-		System.out.println("***");
-		System.out.println(this);
-		System.out.println(other);
-		System.out.println(theta);
-		System.out.println("***");
-		
-		return theta;
-    }
 	
 	public void offset(double x, double y) {
 		this.x += x;

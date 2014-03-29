@@ -1,5 +1,7 @@
 package sdp.group2.world;
 
+import sdp.group2.communication.CommandQueue;
+import sdp.group2.communication.Commands;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Vector;
 import sdp.group2.util.Debug;
@@ -72,13 +74,9 @@ public class Robot extends MovableObject {
     public void setFacingVector(Vector facingVector) {
         this.facingVector = facingVector;
     }
-
-    public double angleToVector(Vector destinationVector) {
-        return facingVector.angleDegrees(destinationVector);
-    }
     
     public double angleToX() {
-    	return angleToVector(new Vector(1, 0));
+    	return facingVector.angleDegrees(new Vector(1, 0));
     }
     
     /**
@@ -86,19 +84,81 @@ public class Robot extends MovableObject {
      * @param ball
      * @return
      */
-    public double angleToBall(Ball ball){
-    	return angleToVector(vectorTo(ball));
+    public double angleTo(Ball ball) {
+    	return angleTo(ball.getPosition());
+    }
+    
+    public void forward(int dir, int distance) {
+    	// TODO: change the name in the method below
+    	CommandQueue.add(Commands.move(dir, 1500, distance), "SDP2D");
+    }
+    
+    public void rotate(double degrees) {
+    	// TODO: change the name in the method below
+    	CommandQueue.add(Commands.rotate((int) degrees, 100), "SDP2D");
+    }
+    
+    /**
+     * Goes to a point. The facingForward parameter needs
+     * to be true if we require the robot to be facing the
+     * point when it gets to it.
+     * @param point - point we are going to
+     * @param facingForward - do we need to be facing the point
+     */
+    public void goTo(Point point, boolean facingForward) {
+    	// First check how much we need to rotate
+    	Vector vectorToBall = vectorTo(point);
+    	// Get degrees to turn to ball
+    	double angleToBall = facingVector.angleDegrees(vectorToBall);
+    	double unsignedAngle = Math.abs(angleToBall);
+    	double angleSign = Math.signum(angleToBall);
+    	// Going backwards requires less rotating if angle above 90
+    	// so we do that if we don't need to be facing forward
+    	if (!facingForward && unsignedAngle > 90) {
+    		// becomes -60 if it was 120
+    		// and 60 if it was -120
+    		angleToBall = angleSign * (180 - unsignedAngle);
+    	}
+    	rotate(angleToBall);
+    	// Then go forward until we hit it
+    	int distance = (int) vectorTo(point).length();
+    	int dir = 1;
+    	forward(dir, distance);
+    }
+    
+    public double getSmallerAngle(Point point) {
+    	Vector vectorToPoint = vectorTo(point);
+//    	System.out.println(vectorToPoint);
+    	double angleToBall = facingVector.angleDegrees(vectorToPoint);
+//    	System.out.println(angleToBall);
+    	double unsignedAngle = Math.abs(angleToBall);
+    	double angleSign = Math.signum(angleToBall);
+    	if (unsignedAngle > 90) {
+    		// becomes -60 if it was 120
+    		// and 60 if it was -120
+    		angleToBall = angleSign * (180 - unsignedAngle);
+    	}
+    	return angleToBall;
+    }
+    
+    /**
+     * Makes the robot go to the ball.
+     * @param ball - ball to go to
+     * @param facingForward - do we need to face it?
+     */
+    public void goTo(Ball ball, boolean facingForward) {
+    	this.goTo(ball.getPosition(), facingForward);
     }
     
     /**
      * Returns the angle from the robot to a point;
      */
-    public double angleToPoint(Point point){
-    	return angleToVector(vectorTo(point));
+    public double angleTo(Point point){
+    	return facingVector.angleDegrees(vectorTo(point));
     }
 
-    public Vector vectorTo(MovableObject object) {
-        return object.getPosition().sub(getPosition());
+    public Vector vectorTo(Ball ball) {
+    	return vectorTo(ball.getPosition());
     }
     
     

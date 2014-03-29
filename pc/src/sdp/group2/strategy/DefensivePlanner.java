@@ -44,7 +44,7 @@ public class DefensivePlanner extends Planner {
 		Robot robot = pitch.getOurDefender();
 		
 		// Angle ranges from -180 to 180 degrees.		
-		double angleToBall = robot.angleToBall(pitch.getBall());
+		double angleToBall = robot.angleTo(pitch.getBall());
 		System.out.printf("Angle to the ball: %f\n", angleToBall);
 		
 		boolean wrongAngle = Math.abs(angleToBall) > 5;
