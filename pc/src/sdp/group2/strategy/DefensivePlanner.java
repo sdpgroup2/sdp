@@ -30,7 +30,7 @@ public class DefensivePlanner extends Planner {
 	
 	public void act() {
 		frames += 1;
-		int ballZoneId = pitch.getBallZone().getID();
+		int ballZoneId = pitch.getBallZone();
 		int defenderZoneId = pitch.getOurDefendZone().getID();
 		
 		if (ballZoneId != defenderZoneId) {

@@ -8,6 +8,7 @@ import sdp.group2.world.Zone;
 import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Constants.TeamSide;
+import sdp.group2.util.Constants;
 import sdp.group2.util.Tuple;
 
 
@@ -91,23 +92,18 @@ public class Pitch extends Plane {
     	updateBallPosition(new Point(x, y));
     }
 
-    public Zone getBallZone() {
-        for (int i = 0; i < zones.length; i++) {
-            if (zones[i].contains(getBall().getPosition())) {
-                return new Zone((int) i);
-            }
-        }
-        return new Zone((int) -1);
+    public int getBallZone() {
+    	double ballX = ball.getPosition().x;
+    	if (ballX <= Constants.LINE_1) {
+    		return 0;
+    	} else if (ballX <= Constants.LINE_2) {
+    		return 1;
+    	} else if (ballX <= Constants.LINE_3) {
+    		return 2;
+    	} else {
+    		return 3;
+    	}
     }
-
-//	public void setTeamSide(){
-//		if (ourTeam == TeamColour.YELLOW &&)
-//	}
-
-//    @Override
-//    public PointSet getTrajectory() {
-//        return super.getTrajectory(ball.getPosition(), ball.getDirection());
-//    }
 
     public Ball getBall() {
         return ball;
