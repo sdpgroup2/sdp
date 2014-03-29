@@ -1,5 +1,12 @@
 package sdp.group2.pc;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import sdp.group2.communication.CommunicationService;
@@ -47,13 +54,19 @@ public class MasterController implements VisionServiceCallback {
             System.err.println("Not specified which team we are and what pitch we're playing");
             System.exit(1);
         }
-        try { 
-            Integer.parseInt(args[0]); 
-            Integer.parseInt(args[1]);
-        } catch(NumberFormatException e) { 
-        	System.err.println("Not integer parameters supplied");
-            System.exit(1);
-        }
+        
+        try {
+        	BufferedReader threshIn = new BufferedReader(new FileReader(args[1] + ".txt"));
+        	String currentThresh = "";
+			while((currentThresh = threshIn.readLine()) != null){
+				
+			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
             pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
@@ -63,12 +76,13 @@ public class MasterController implements VisionServiceCallback {
         
         // Sets the thresholds to be used based on pitch type.
         if (pitchPlayed == Constants.PitchType.MAIN) {
-        	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
+//        	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
+        	Thresholds.activeThresholds = Thresholds.rothesayThresholds;
         } else {
         	Thresholds.activeThresholds = Thresholds.hikuaiThresholds;
         }
         // Remove this if I have forgotten to:
-        Thresholds.activeThresholds = Thresholds.torosayThresholds;
+//        Thresholds.activeThresholds = Thresholds.torosayThresholds;
         Debug.log("Using thresholds: %s", Thresholds.activeThresholds.name);
         
         

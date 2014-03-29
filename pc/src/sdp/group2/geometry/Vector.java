@@ -19,7 +19,7 @@ public class Vector extends Vector2d {
      * @return angle in degrees
      */
 	public double angleDegrees(Vector other) {
-        return Math.toDegrees(Math.atan2(this.y, this.x) - Math.atan2(other.y, other.x));
+        return Math.toDegrees(-Math.atan2(this.x * other.y - this.y * other.x, this.x * other.x + this.y * other.y));
 	}
 	
 	/**

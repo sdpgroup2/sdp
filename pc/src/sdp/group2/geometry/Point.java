@@ -10,11 +10,9 @@ import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 public class Point extends Point2D.Double implements Comparable<Point> {
 
 	private static final long serialVersionUID = 13L;
-	private long timestamp;
 	
     public Point(double x, double y) {
     	super(x, y);
-    	this.timestamp = System.currentTimeMillis();
     }
 	
 	public void offset(double x, double y) {
@@ -58,9 +56,6 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.y = y;
     }
     
-    public long getTimestamp() {
-    	return timestamp;
-    }
 
     /**
      * Returns a vector between this point and other point.

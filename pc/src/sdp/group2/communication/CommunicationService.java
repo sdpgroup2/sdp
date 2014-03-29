@@ -1,16 +1,11 @@
 /**
- * @author Place your name here 
+ * @author Gordon Edwards and Michael Mair
  * */
 
 package sdp.group2.communication;
 
-
 import java.io.IOException;
-import java.util.HashSet;
-
-
 import sdp.group2.util.Constants;
-
 
 public class CommunicationService {
 	

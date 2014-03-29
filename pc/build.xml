@@ -5,6 +5,7 @@
     <property name="src.dir" location="src" />
 	<property name="tests.dir" location="tests" />
     <property name="build.dir" location="bin" />
+	<property name="build.tests.dir" location="bin" />
 	<property name="reports.tests" location="report" />
     <property environment="env"/>
 
@@ -27,7 +28,6 @@
 	</target>
 
     <target name="compile" depends="clean, makedir">
-        <exec executable="../.hooks/add_hooks" failonerror="true" osfamily="unix"/>
         <javac target="1.7" source="1.7" srcdir="${src.dir}" destdir="${build.dir}"
             classpathref="build.classpath" includeantruntime="true" debug="true">
             <compilerarg value="-Xlint:unchecked"/>
@@ -35,21 +35,11 @@
     </target>
 	
 	<target name="compile-tests" depends="clean, makedir">
-        <exec executable="../.hooks/add_hooks" failonerror="true" osfamily="unix"/>
-        <javac target="1.7" source="1.7" srcdir="${tests.dir}" destdir="${build.dir}"
+        <javac target="1.7" source="1.7" srcdir="${tests.dir}" destdir="${build.tests.dir}"
             classpathref="build.classpath" includeantruntime="true" debug="true">
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-
-	<target name="run-bt" depends="compile">
-        <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.communication.TestComms">
-            <sysproperty key="java.library.path" path="${lib.dir}"/>
-        	<arg value="0"/>
-        	<arg value="1"/>
-	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
-        </java>
-	</target>
 	
 	<target name="run-simulation" depends="compile">
         <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.simulator.SimulationController">
@@ -61,18 +51,18 @@
 	<target name="run" depends="compile">
         <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
             <sysproperty key="java.library.path" path="${lib.dir}"/>
-        	<arg value="0"/> <!-- YELLOW = 0, BLUE = 1 -->
-        	<arg value="0"/> <!-- MAIN = 0, SIDE = 1 -->
+        	<arg value="${team}"/> <!-- YELLOW = 0, BLUE = 1 -->
+        	<arg value="${side}"/> <!-- MAIN = 0, SIDE = 1 -->
 	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
     </target>
 	
 	<target name="test" depends="compile, compile-tests">
-		<junit printsummary="withOutAndErr" haltonfailure="no" showoutput="true" fork="true" >
-			<classpath>
-				<pathelement location="${build.dir}"/>
-				<pathelement path="build.classpath"/>
-			</classpath>
+		<junit printsummary="withOutAndErr" haltonfailure="no" showoutput="true" fork="false" >
+			  <classpath>
+			    <pathelement location="${build.tests.dir}"/>
+			    <pathelement path="${build.classpath}"/>
+			  </classpath>
 			
 			<formatter type="plain" usefile="false" />
 			

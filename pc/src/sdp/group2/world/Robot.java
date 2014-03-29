@@ -25,7 +25,7 @@ public class Robot extends MovableObject {
     private Zone zone;    
 
     public Robot(Point robotPosition, Point dotPosition, Zone zone) {
-    	updatePosition(robotPosition);
+    	super(robotPosition);
     	updateFacing(dotPosition);
     	this.zone = zone;
     }
@@ -43,7 +43,7 @@ public class Robot extends MovableObject {
     }
     
     public void updateState(Point position, Point dotPosition) {
-    	updatePosition(position);
+    	setPosition(position);
     	if (dotPosition != null) {
     		updateFacing(dotPosition);
     	}
@@ -98,6 +98,14 @@ public class Robot extends MovableObject {
     	CommandQueue.add(Commands.rotate((int) degrees, 100), "SDP2D");
     }
     
+    public double distanceTo(Point point) {
+    	return vectorTo(point).length();
+    }
+    
+    public double distanceTo(Ball ball) {
+    	return distanceTo(ball.getPosition());
+    }
+    
     /**
      * Goes to a point. The facingForward parameter needs
      * to be true if we require the robot to be facing the
@@ -107,36 +115,34 @@ public class Robot extends MovableObject {
      */
     public void goTo(Point point, boolean facingForward) {
     	// First check how much we need to rotate
-    	Vector vectorToBall = vectorTo(point);
-    	// Get degrees to turn to ball
-    	double angleToBall = facingVector.angleDegrees(vectorToBall);
-    	double unsignedAngle = Math.abs(angleToBall);
-    	double angleSign = Math.signum(angleToBall);
-    	// Going backwards requires less rotating if angle above 90
-    	// so we do that if we don't need to be facing forward
-    	if (!facingForward && unsignedAngle > 90) {
-    		// becomes -60 if it was 120
-    		// and 60 if it was -120
-    		angleToBall = angleSign * (180 - unsignedAngle);
+    	double angleToBall = angleTo(point);
+    	int direction = 1;
+    	if (!facingForward) {
+    		// direction will be reversed if above 90 degrees
+    		direction = angleToBall <= 90 ? 1 : -1;
+    		smallerAngle(point);
     	}
     	rotate(angleToBall);
     	// Then go forward until we hit it
     	int distance = (int) vectorTo(point).length();
-    	int dir = 1;
-    	forward(dir, distance);
+    	forward(direction, distance);
     }
     
-    public double getSmallerAngle(Point point) {
+    /**
+     * Returns the smaller signed angle to a certain point.
+     * Good for going backwards if needed
+     * @param point to get angle to
+     * @return angle in degrees
+     */
+    public double smallerAngle(Point point) {
     	Vector vectorToPoint = vectorTo(point);
-//    	System.out.println(vectorToPoint);
     	double angleToBall = facingVector.angleDegrees(vectorToPoint);
-//    	System.out.println(angleToBall);
     	double unsignedAngle = Math.abs(angleToBall);
     	double angleSign = Math.signum(angleToBall);
     	if (unsignedAngle > 90) {
     		// becomes -60 if it was 120
     		// and 60 if it was -120
-    		angleToBall = angleSign * (180 - unsignedAngle);
+    		angleToBall = -angleSign * (180 - unsignedAngle);
     	}
     	return angleToBall;
     }

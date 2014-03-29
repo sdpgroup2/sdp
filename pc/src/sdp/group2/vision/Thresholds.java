@@ -131,6 +131,31 @@ public class Thresholds {
 		 	cvRect(30, 60, 590, 310)
 	);
 	
+	public static Thresholds rothesayThresholds = new Thresholds(
+			"Rothesay",
+			// ball mins/maxs
+			new int[]{-10, 80, 70},
+			new int[]{10, 255, 255},
+			
+			// dot mins/maxs
+			new int[] {31,28,89},
+			new int[] {95, 189, 250},
+		    
+		    // baseplate mins/maxs
+            new int[] {45, 110, 77},
+            new int[] {90, 240, 183},
+		    
+		    // yellow mins/maxs
+		    new int[] {20, 76, 81}, 
+		    new int[] {53, 255, 255},
+			
+			// yellow pixel threshold
+			100,
+			
+			// Cropping rectangle
+		 	cvRect(30, 60, 590, 310)
+	);
+	
 	public static Thresholds activeThresholds = mainPitchThresholds;
 	
 	public String name;

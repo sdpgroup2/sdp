@@ -13,7 +13,7 @@ public class BallTest extends TestCase {
 	}
 	
 	public void testGetRadius() {
-		assertEquals(25, b.getRadius());
+		assertEquals(25.0, b.getRadius());
 	}
 	
 	public void testBallPosition() {

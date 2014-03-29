@@ -402,12 +402,6 @@ public class PointSet implements Comparable<PointSet> {
 		}
 	}
 
-	public boolean isWithinTimestamp(int i, long significantTime) {
-		if (size() < 2) {
-			return true;
-		} else {
-			return right().getTimestamp() - get(i).getTimestamp() < significantTime;
-		}
-	}
+	
 
 }

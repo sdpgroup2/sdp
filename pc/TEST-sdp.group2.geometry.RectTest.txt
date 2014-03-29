@@ -1,6 +1,0 @@
-Testsuite: sdp.group2.geometry.RectTest
-Tests run: 3, Failures: 0, Errors: 0, Time elapsed: 0.016 sec
-
-Testcase: testContains took 0.001 sec
-Testcase: testGetCenter took 0 sec
-Testcase: testExpand took 0 sec
