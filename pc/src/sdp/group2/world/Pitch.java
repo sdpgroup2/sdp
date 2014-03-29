@@ -3,85 +3,42 @@ package sdp.group2.world;
 import java.util.Collections;
 import java.util.List;
 
-import sdp.group2.geometry.*;
-import sdp.group2.world.Zone;
+import sdp.group2.geometry.Point;
+import sdp.group2.geometry.PointSet;
 import sdp.group2.pc.MasterController;
-import sdp.group2.util.Constants.TeamColour;
-import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Constants;
+import sdp.group2.util.Constants.PitchType;
+import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
 
 
-public class Pitch extends Plane {
+public class Pitch {
 	
-    private static final int CUR_ZONE = 0;
-    private double WIDTH = 2165;
+//    private double WIDTH = 2165;
     /**
      * [mm], from goal to goal mouth
      */
-    private double HEIGHT = 1150;
+//    private double HEIGHT = 1150;
     /**
      * [mm], from wall to wall
      */
     
-    private TeamSide ourSide;
+//    private TeamSide ourSide;
+    private int[] lines;
 
-    private Zone[] zones = new Zone[4];
     private Ball ball;
-    //Specify what Colour and Side of the pitch we are on;
 
     private Robot blueDefender;
     private Robot blueAttacker;
     private Robot yellowDefender;
     private Robot yellowAttacker;
 
-
-    /**
-     * Initialises the pitch
-     */
-    public Pitch() {
-        super("Pitch");
-        for (int i = 0; i < zones.length; i++) {
-            zones[i] = new Zone(i);
-        }
-    }
-    
-    public Pitch(PointSet pitchConvexHull, PointSet[] zoneConvexHulls) {
-    	this();
-    	
-    	setOutline(pitchConvexHull);
-    	
-    	for (int i = 0; i < zones.length; i++) {
-    		zones[i].setOutline(zoneConvexHulls[i]);
-    	}
-    
+    public Pitch(PitchType pitchType) {
+    	this.lines = pitchType == PitchType.MAIN ? Constants.MAIN_LINES : Constants.SIDE_LINES;
     }
 
     public void addBall(Ball ball) {
         this.ball = ball;
-    }
-
-    public void updateRobotStates(Point robotPosition, Vector direction) {
-        //this.robot.setPosition(robotPosition);
-        //this.robot.setDirection(direction.angle(new Vector2d(robotPosition.x, robotPosition.y)));
-    }
-
-    public void setZoneOutline(int id, PointSet ps) {
-        zones[id].setOutline(ps);
-    }
-    
-    public void setAllZonesOutlines(PointSet[] outlines) {
-    	if (outlines.length != zones.length) {
-    		throw new IllegalArgumentException("Expected the number of outlines (" + outlines.length + 
-    				") to be equal to the number of zones (" + zones.length  + "), but was not.");
-    	}
-    	for (int i = 0; i < zones.length; i++) {
-    		zones[i].setOutline(outlines[i]);
-    	}
-    }
-
-    public Zone getZone(int id) {
-        return zones[id];
     }
 
     public void updateBallPosition(Point p) {
@@ -91,14 +48,14 @@ public class Pitch extends Plane {
     public void updateBallPosition(double x, double y) {
     	updateBallPosition(new Point(x, y));
     }
-
+    
     public int getBallZone() {
     	double ballX = ball.getPosition().x;
-    	if (ballX <= Constants.LINE_1) {
+    	if (ballX <= lines[0]) {
     		return 0;
-    	} else if (ballX <= Constants.LINE_2) {
+    	} else if (ballX <= lines[1]) {
     		return 1;
-    	} else if (ballX <= Constants.LINE_3) {
+    	} else if (ballX <= lines[2]) {
     		return 2;
     	} else {
     		return 3;
@@ -307,29 +264,13 @@ public class Pitch extends Plane {
 //        }
 //    }
     
-    public Zone getOurDefendZone(){
-    	if (MasterController.ourTeam == TeamColour.YELLOW) {
-    		return yellowDefender.getZone();
-    	} else {
-    		return blueDefender.getZone();
-    	}
+    public int getOurDefendZone(){
+    	return getOurDefender().getZone();
     }
     
-    public Zone getOurAttackZone(){
-    	if (MasterController.ourTeam == TeamColour.YELLOW) {
-    		return yellowAttacker.getZone();
-    	} else {
-    		return blueAttacker.getZone();
-    	}
+    public int getOurAttackZone() {
+    	return getOurAttacker().getZone();
     }
-
-	public void setZone(int id, PointSet ps) {
-		
-	}
-
-	public Zone[] getAllZoneOutline() {
-		return zones;
-	}
 
 	public void initialise(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
@@ -352,25 +293,24 @@ public class Pitch extends Plane {
 			// Yellow is on the left of blue
 			// Thus yellow 0 is defender and yellow 1 is attacker
 			// And blue 0 is attacker and blue 1 is defender
-			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(),zones[0]);
-			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(),zones[2]);
-			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(),zones[1]);
-			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(),zones[3]);
+			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), 0);
+			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), 2);
+			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), 1);
+			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 3);
 		} else {
     		// Blue | Yellow | Blue | Yellow
 			// Blue is on the left of yellow
 			// Thus yellow 0 is attacker and yellow 1 is defender
 			// And blue 0 is defender and blue 1 is attacker
-			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond(),zones[1]);
-			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond(),zones[3]);
-			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond(),zones[0]);
-			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond(),zones[2]);
+			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), 1);
+			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), 3);
+			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), 0);
+			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 2);
 		}
 		
 	}
 
 	public void updateRobotState(int id, Point p, double theta) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 

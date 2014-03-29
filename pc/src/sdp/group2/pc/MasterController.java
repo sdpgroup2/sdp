@@ -35,7 +35,7 @@ public class MasterController implements VisionServiceCallback {
     private CommunicationService commService;
 
     public MasterController() {
-    	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
+    	this.pitch = new Pitch();
     	this.defPlanner = new DefensivePlanner(pitch);
 //    	this.offPlanner = new EvenSimplerAttackingPlanner(pitch);
         // Start the vision system

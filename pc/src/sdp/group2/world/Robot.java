@@ -22,15 +22,15 @@ public class Robot extends MovableObject {
      */
     private Vector facingVector;
     private Vector previousDetectedFacing;
-    private Zone zone;    
+    private int zone;    
 
-    public Robot(Point robotPosition, Point dotPosition, Zone zone) {
+    public Robot(Point robotPosition, Point dotPosition, int zone) {
     	super(robotPosition);
     	updateFacing(dotPosition);
     	this.zone = zone;
     }
     
-    public Zone getZone() {
+    public int getZone() {
     	return zone;
     }
     

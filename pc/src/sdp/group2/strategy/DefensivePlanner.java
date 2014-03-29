@@ -31,7 +31,7 @@ public class DefensivePlanner extends Planner {
 	public void act() {
 		frames += 1;
 		int ballZoneId = pitch.getBallZone();
-		int defenderZoneId = pitch.getOurDefendZone().getID();
+		int defenderZoneId = pitch.getOurDefendZone();
 		
 		if (ballZoneId != defenderZoneId) {
 			stutter();

@@ -19,9 +19,9 @@ public class Constants {
     public static final double PX_TO_MM = 4.56310;
     public static final double MM_TO_PX = 0.2191;
     
-    public static final int LINE_1 = 661;
-    public static final int LINE_2 = 1337;
-    public static final int LINE_3 = 2021;
+    // Lines in millimetres
+    public static final int[] MAIN_LINES = {661, 1337, 2021};
+    public static final int[] SIDE_LINES = {584, 1278, 1939};
 
     public enum TeamColour {
         YELLOW,
