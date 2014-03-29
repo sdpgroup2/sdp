@@ -2,12 +2,10 @@ package sdp.group2.strategy;
 
 import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
-import sdp.group2.geometry.Vector;
 import sdp.group2.util.Constants;
-import sdp.group2.world.Ball;
+import sdp.group2.util.Debug;
 import sdp.group2.world.Pitch;
 import sdp.group2.world.Robot;
-import sdp.group2.util.Debug;
 
 public class DefensivePlanner extends Planner {
 	

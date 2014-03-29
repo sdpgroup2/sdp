@@ -34,8 +34,8 @@ public class MasterController implements VisionServiceCallback {
     private VisionService visionService;
     private CommunicationService commService;
 
-    public MasterController() {
-    	this.pitch = new Pitch();
+    public MasterController(PitchType pitchPlayed) {
+    	this.pitch = new Pitch(pitchPlayed);
     	this.defPlanner = new DefensivePlanner(pitch);
 //    	this.offPlanner = new EvenSimplerAttackingPlanner(pitch);
         // Start the vision system
@@ -86,7 +86,7 @@ public class MasterController implements VisionServiceCallback {
         Debug.log("Using thresholds: %s", Thresholds.activeThresholds.name);
         
         
-        final MasterController controller = new MasterController();    
+        final MasterController controller = new MasterController(pitchPlayed);    
         controller.start();
   
     }
