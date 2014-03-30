@@ -12,9 +12,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -51,7 +52,6 @@ public class VisionGUI extends WindowAdapter {
 	public static final int DOT_INDEX = 3;
 
     private static JFrame windowFrame;
-    private static Dimension frameSize;
     private static JLabel imageLabel = new JLabel();
     private static EntityThresh[] entities;
     private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
@@ -63,13 +63,8 @@ public class VisionGUI extends WindowAdapter {
     private static VisionGUI singleton;
     
     static {
-    	singleton = new VisionGUI(540, 300);
+    	singleton = new VisionGUI();
     }
-
-	public VisionGUI(int width, int height) {
-		super();
-		frameSize = new Dimension(width, height);
-	}
 
 	public void initialise() {
 	    JPanel contentPanel;
@@ -79,7 +74,6 @@ public class VisionGUI extends WindowAdapter {
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
         
 	    entityList = new JList<String>(entityNames);
-	    final JList<String> imageList = new JList<String>(imageNames);
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.addWindowListener(this); 
@@ -91,13 +85,13 @@ public class VisionGUI extends WindowAdapter {
         contentPanel.setBorder(new EmptyBorder(10,10,10,10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));               
         
+        // Image List
         JPanel mainPanel = new JPanel();
-        mainPanel.setBorder(new EmptyBorder(10,10,10,10));
+        mainPanel.setBorder(BorderFactory.createTitledBorder("Select Image:"));
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         contentPanel.add(mainPanel);
-        
-     // Image List
-        JPanel imagePanel = new JPanel();
+
+	    final JList<String> imageList = new JList<String>(imageNames);
         imageList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         imageList.setLayoutOrientation(JList.VERTICAL);
         imageList.setVisibleRowCount(-1);
@@ -112,19 +106,12 @@ public class VisionGUI extends WindowAdapter {
                 }
             }
         });
-        imagePanel.add(imageList);
-        mainPanel.add(imagePanel);
-        
-        // Images
-        imageLabel.setMinimumSize(frameSize);
-        imageLabel.setPreferredSize(frameSize);
-        imageLabel.setMaximumSize(frameSize);
-       
+        mainPanel.add(imageList);
         mainPanel.add(imageLabel);
 
         // Sidebar
         JPanel controlPanel = new JPanel();
-        controlPanel.setBorder(new EmptyBorder(10,10,10,10));
+        controlPanel.setBorder(BorderFactory.createTitledBorder("Edit Thresholds:"));
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
         contentPanel.add(controlPanel);
         
@@ -201,11 +188,10 @@ public class VisionGUI extends WindowAdapter {
                 updateEntities(entities);
 			}
 		};
-
 		minHSBPanel.addParentChangeListener(slideListener);
 		maxHSBPanel.addParentChangeListener(slideListener);
 		
-        // Update button
+        // Save button
         JButton button = new JButton("Save");
         button.addActionListener(new ActionListener() {
             @Override
@@ -244,21 +230,12 @@ public class VisionGUI extends WindowAdapter {
 		singleton.setImage(image.getBufferedImage());
 	}
 	
-	protected JComponent makeTextPanel(String text) {
-	    JPanel panel = new JPanel(false);
-	    JLabel filler = new JLabel(text);
-	    filler.setHorizontalAlignment(JLabel.CENTER);
-	    panel.setLayout(new GridLayout(1, 1));
-	    panel.add(filler);
-	    return panel;
-	}
-	
 	public void setImage(BufferedImage image) {
 		imageLabel.setIcon(new ImageIcon(image));
 	}
 	
 	public void updateEntities(EntityThresh[] entities) {
-		for (int i =0; i<entities.length; i++) {
+		for (int i =0; i < entities.length; i++) {
 			if (entities[i].name.equals("Ball")) {
 				entities[i].mins = Thresholds.activeThresholds.ballMins;
 				entities[i].maxs = Thresholds.activeThresholds.ballMaxs;
