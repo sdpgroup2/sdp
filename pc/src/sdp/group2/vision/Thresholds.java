@@ -3,13 +3,20 @@ package sdp.group2.vision;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.channels.FileChannel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import sdp.group2.util.JSonWriter;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
@@ -32,15 +39,37 @@ public class Thresholds {
 	public EntityThresh[] entities = new EntityThresh[4];
 	public static String pitchName;
 	
+	public static void writeToFile(Thresholds thresholds) {
+		JSONObject jsonThresh = Thresholds.activeThresholds.serialize();
+		FileWriter file = null;
+		try {
+			file = new FileWriter("assets/thresholds/" + pitchName + ".json");
+			Writer writer = new JSonWriter(); 
+			jsonThresh.writeJSONString(writer);
+			file.write(writer.toString());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			if (file != null) {
+				try {
+					file.flush();
+					file.close();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+			}
+		}
+	}
+	
     public static Thresholds readThresholds(String filename, int pitch) throws IOException, ParseException {
       
     	JSONParser parser = new JSONParser();
     	File jsonFile = new File("assets/thresholds/" + filename + ".json");
     	if (!jsonFile.exists()) {
     		if (pitch == 0) {
-    			jsonFile = new File("assets/thresholds/mainPitch.json");
+    			copyFile(new File("assets/thresholds/mainPitch.json"), jsonFile);
     		} else {
-    			jsonFile = new File("assets/thresholds/sidePitch.json");
+    			copyFile(new File("assets/thresholds/sidePitch.json"), jsonFile);
     		}
     	}
 		JSONObject thresholds = (JSONObject) parser.parse(new FileReader(jsonFile));
@@ -65,6 +94,29 @@ public class Thresholds {
 		
 		activeThresholds = new Thresholds(filename, ballMins, ballMaxs, dotMins, dotMaxs, baseMins, baseMaxs, yellowMins, yellowMaxs, yellowPixelsThreshold, rect);
 		return activeThresholds;
+    }
+    
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if(!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        }
+        finally {
+            if(source != null) {
+                source.close();
+            }
+            if(destination != null) {
+                destination.close();
+            }
+        }
     }
     
     private static int[] getIntArray(JSONArray jsonArray){

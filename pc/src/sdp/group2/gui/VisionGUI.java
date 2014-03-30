@@ -3,18 +3,12 @@ package sdp.group2.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -30,14 +24,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.json.simple.JSONObject;
-
-import sdp.group2.util.JSonWriter;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
 
@@ -58,7 +47,6 @@ public class VisionGUI extends WindowAdapter {
     private static EntityThresh[] entities;
     private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
     private static String[] entityNames;
-//    private static JList<String> entityList;
     public static int selectedImage;
     public static boolean drawShit = false;
     
@@ -72,6 +60,7 @@ public class VisionGUI extends WindowAdapter {
 	    JPanel contentPanel;
 	    entities = Thresholds.activeThresholds.entities;
 	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name, entities[3].name};
+
         windowFrame = new JFrame("Vision: " + Thresholds.pitchName);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.addWindowListener(this); 
@@ -141,25 +130,7 @@ public class VisionGUI extends WindowAdapter {
         button.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
-        		JSONObject jsonThresh = Thresholds.activeThresholds.serialize();
-    			FileWriter file = null;
-				try {
-					file = new FileWriter("assets/thresholds/" + Thresholds.pitchName + ".json");
-					Writer writer = new JSonWriter(); // this is the new writter that adds indentation.
-					jsonThresh.writeJSONString(writer);
-	    			file.write(writer.toString());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} finally {
-					if (file != null) {
-						try {
-							file.flush();
-							file.close();
-						} catch (IOException e2) {
-							e2.printStackTrace();
-						}
-					}
-				}
+            	Thresholds.writeToFile(Thresholds.activeThresholds);
             }
         });
         controlPanel.add(button);
