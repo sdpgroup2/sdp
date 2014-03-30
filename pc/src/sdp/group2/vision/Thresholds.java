@@ -180,15 +180,18 @@ public class Thresholds {
 			int[] rect) {
 		this.name = name;
 		this.ballMins = ballMins;
+		System.out.println(ballMins[2]);
 		this.ballMaxs = ballMaxs;
 		this.dotMins = dotMins;
 		this.dotMaxs = dotMaxs;
+		System.out.println( dotMaxs[1]);
 		this.basePlateMins = basePlateMins;
 		this.basePlateMaxs = basePlateMaxs;
 		this.yellowMins = yellowMins;
 		this.yellowMaxs = yellowMaxs;
 		this.yellowPixelsThreshold = yellowPixelsThreshold;
 		this.rect = rect;
+		System.out.printf("vals %d %d %d %d", rect[0],rect[1],rect[2],rect[3]);
 		this.cropRect = cvRect(rect[0],rect[1],rect[2],rect[3]);
 		
 		EntityThresh ball = new EntityThresh("Ball");

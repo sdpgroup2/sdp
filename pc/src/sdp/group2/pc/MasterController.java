@@ -1,23 +1,21 @@
 package sdp.group2.pc;
 
-import static com.googlecode.javacv.cpp.opencv_core.cvRect;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
-import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
@@ -25,11 +23,6 @@ import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.world.Pitch;
-import sdp.group2.util.Debug;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class MasterController implements VisionServiceCallback {
 
@@ -42,6 +35,7 @@ public class MasterController implements VisionServiceCallback {
     private VisionService visionService;
     private CommunicationService commService;
     private static String pitchName;
+	private static String path;
     public MasterController() {
     	this.pitch = sdp.group2.simulator.Constants.getDefaultPitch();
     	this.defPlanner = new DefensivePlanner(pitch);
@@ -70,27 +64,23 @@ public class MasterController implements VisionServiceCallback {
             System.err.println(e.getMessage());
         }
         
-        
-		
-//        // Sets the thresholds to be used based on pitch type.
-//        if (pitchPlayed == Constants.PitchType.MAIN) {
-////        	Thresholds.activeThresholds = Thresholds.mainPitchThresholds;
-        	try {
-				Thresholds.activeThresholds = readThresholds(pitchName);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-//        } else {
-//        	Thresholds.activeThresholds = Thresholds.hikuaiThresholds;
-//        }
-        // Remove this if I have forgotten to:
-//        Thresholds.activeThresholds = Thresholds.torosayThresholds;
-        Debug.log("Using thresholds: %s", Thresholds.activeThresholds.name);
-        
+    	try {
+			Thresholds.activeThresholds = readThresholds(pitchName);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+    
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				close();
+			}		
+		}));
         
         final MasterController controller = new MasterController();    
         controller.start();
@@ -99,24 +89,39 @@ public class MasterController implements VisionServiceCallback {
     
     public static Thresholds readThresholds(String filename) throws FileNotFoundException, IOException, ParseException {
     	JSONParser parser = new JSONParser();
-		JSONObject thresholds = (JSONObject) parser.parse(new FileReader(filename + ".json"));
+    	Path currentRelativePath = Paths.get("");
+    	path = currentRelativePath.toAbsolutePath().toString();
+		JSONObject thresholds = (JSONObject) parser.parse(new FileReader(path+ "/assets/thresholds/" +filename + ".json"));
+		
 		JSONObject ball = (JSONObject) thresholds.get("ball");
-		int[] ballMins = (int[]) ball.get("mins");
-		int[] ballMaxs = (int[])  ball.get("maxs");
+		int[] ballMins = getIntArray((JSONArray) ball.get("mins"));
+		int[] ballMaxs = getIntArray((JSONArray)  ball.get("maxs"));
 		JSONObject dot = (JSONObject) thresholds.get("dot");
-		int[] dotMins = (int[]) dot.get("mins");
-		int[] dotMaxs = (int[]) dot.get("maxs");
+		int[] dotMins = getIntArray((JSONArray) dot.get("mins"));
+		int[] dotMaxs = getIntArray((JSONArray) dot.get("maxs"));
 		JSONObject basePlate = (JSONObject) thresholds.get("baseplate");
-		int[] baseMins = (int[]) basePlate.get("mins");
-		int[] baseMaxs = (int[]) basePlate.get("maxs");
+		int[] baseMins = getIntArray((JSONArray)basePlate.get("mins"));
+		int[] baseMaxs = getIntArray((JSONArray) basePlate.get("maxs"));
 		JSONObject yellow = (JSONObject) thresholds.get("yellow");
-		int[] yellowMins = (int[]) yellow.get("mins");
-		int[] yellowMaxs = (int[]) yellow.get("maxs");
-		int yellowPixelsThreshold = (Integer) thresholds.get("yellowThresh");
-		int[] rect = (int[]) yellow.get("rect");
+		int[] yellowMins = getIntArray((JSONArray) yellow.get("mins"));
+		int[] yellowMaxs = getIntArray((JSONArray)  yellow.get("maxs"));
+		Long yellowPixelsThresholdLong = (Long) yellow.get("yellowThresh");
+		int yellowPixelsThreshold = Integer.valueOf(yellowPixelsThresholdLong.intValue());
+		JSONObject boundingRect = (JSONObject) thresholds.get("boundingrect");
+		int[] rect = getIntArray((JSONArray) boundingRect.get("rect"));
+		
 		Thresholds activeThresholds = new Thresholds(filename, ballMins, ballMaxs, dotMins, dotMaxs, baseMins, baseMaxs, yellowMins, yellowMaxs, yellowPixelsThreshold, rect);
 		return activeThresholds;
 		
+    }
+    
+    private static int[] getIntArray(JSONArray jsonArray){
+    	int[] intArray = new int[jsonArray.size()];
+    	for (int i = 0; i < jsonArray.size(); i++) {
+    		Long val = (Long) jsonArray.get(i);
+    		intArray[i] = Integer.valueOf(val.intValue());
+    	}
+		return intArray;
     }
     
     public void start() {	
@@ -172,56 +177,61 @@ public class MasterController implements VisionServiceCallback {
 //		offPlanner.act();
 	}
 	
-	public void close() {
+	public static void close() {
+		System.out.println("CLOSE CALLED!!!!!!!!!!!!!!!!!");
 		JSONObject obj = new JSONObject();
 		
 		JSONObject ball = new JSONObject();
 		JSONArray mins = new JSONArray();
-		mins.addAll(Arrays.asList(Thresholds.activeThresholds.ballMins));
+		mins = getJSONArray(Thresholds.activeThresholds.ballMins);
 		ball.put("mins", mins);
+		
 		JSONArray maxs = new JSONArray();
-		maxs.addAll(Arrays.asList(Thresholds.activeThresholds.ballMaxs));
+		maxs = getJSONArray(Thresholds.activeThresholds.ballMaxs);
 		ball.put("maxs", maxs);
 		obj.put("ball", ball);
 		
 		JSONObject dot = new JSONObject();
 		mins = new JSONArray();
-		mins.addAll(Arrays.asList(Thresholds.activeThresholds.dotMins));
+		mins = getJSONArray(Thresholds.activeThresholds.dotMins);
 		dot.put("mins", mins);
 		maxs = new JSONArray();
-		maxs.addAll(Arrays.asList(Thresholds.activeThresholds.dotMaxs));
+		maxs = getJSONArray(Thresholds.activeThresholds.dotMaxs);
 		dot.put("maxs", maxs);
 		obj.put("dot", dot);
 		
 		JSONObject baseplate = new JSONObject();
 		mins = new JSONArray();
-		mins.addAll(Arrays.asList(Thresholds.activeThresholds.basePlateMins));
+		mins = getJSONArray(Thresholds.activeThresholds.basePlateMins);
 		baseplate.put("mins", mins);
 		maxs = new JSONArray();
-		maxs.addAll(Arrays.asList(Thresholds.activeThresholds.basePlateMaxs));
+		maxs = getJSONArray(Thresholds.activeThresholds.basePlateMaxs);
 		baseplate.put("maxs", maxs);
 		obj.put("baseplate", baseplate);
 		
 		JSONObject yellow = new JSONObject();
 		mins = new JSONArray();
-		mins.addAll(Arrays.asList(Thresholds.activeThresholds.yellowMins));
+		mins = getJSONArray(Thresholds.activeThresholds.yellowMins);
 		yellow.put("mins", mins);
 		maxs = new JSONArray();
 		
-		maxs.addAll(Arrays.asList(Thresholds.activeThresholds.yellowMaxs));
+		maxs = getJSONArray(Thresholds.activeThresholds.yellowMaxs);
 		yellow.put("maxs", maxs);
+		
+		yellow.put("yellowThresh", Thresholds.activeThresholds.yellowPixelsThreshold);
 		obj.put("yellow", yellow);
 		
-		obj.put("yellowThresh", Thresholds.activeThresholds.yellowPixelsThreshold);
-		
 		JSONArray rect = new JSONArray();
-		rect.addAll(Arrays.asList(Thresholds.activeThresholds.rect));
-		obj.put("rect", rect);
+		rect = getJSONArray(Thresholds.activeThresholds.rect);
+		
+		JSONObject boundingRect = new JSONObject();
+		boundingRect.put("rect", rect);
+		obj.put("boundingrect", boundingRect);
 
 		try {
 			 
-			FileWriter file = new FileWriter("/assets/thresholds/" + pitchName + ".json");
-			file.write(obj.toJSONString());
+			FileWriter file = new FileWriter(path + "/assets/thresholds/" + pitchName + ".json");
+			file.write(obj.toString());
 			file.flush();
 			file.close();
 	 
@@ -230,9 +240,17 @@ public class MasterController implements VisionServiceCallback {
 		}
 	}
 
+	
+	private static JSONArray getJSONArray(int[] intArray) {
+		JSONArray jsonArray = new JSONArray();
+		for (int i : intArray) {
+			jsonArray.add(i);
+		}
+		return jsonArray;
+	}
     @Override
     public void onExceptionThrown(Exception e) {
     	e.printStackTrace();
-    	close();
+		close();
     }
 }
