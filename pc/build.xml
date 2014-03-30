@@ -52,7 +52,8 @@
         <java dir="." fork="true" classpathref="build.classpath" classname="sdp.group2.pc.MasterController">
             <sysproperty key="java.library.path" path="${lib.dir}"/>
         	<arg value="${team}"/> <!-- YELLOW = 0, BLUE = 1 -->
-        	<arg value="${side}"/> <!-- MAIN = 0, SIDE = 1 -->
+        	<arg value="${pitch}"/>
+        	<arg value="${pc}"/> 
 	    <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
         </java>
     </target>
