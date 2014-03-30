@@ -163,27 +163,27 @@ public class ImageProcessor {
      */
     public static void drawShit(IplImage image) {
     	if (ballCentroid != null) {
-    		cvCircle(image, ballCentroid.cv(), 6, cvScalar(0, 0, 255, 0), -1, 8, 0);
+    		cvCircle(image, ballCentroid.asCV(), 6, cvScalar(0, 0, 255, 0), -1, 8, 0);
     	}
     	
     	CvPoint centroid;
     	Point dotPoint;
     	
     	for (Tuple<Point, Point> robot : blueRobots()) {
-    		centroid = robot.getFirst().cv();
+    		centroid = robot.getFirst().asCV();
     		cvCircle(image, centroid, 8, cvScalar(255, 0, 0, 0), -1, 8, 0);
     		dotPoint = robot.getSecond();
     		if (dotPoint != null) {
-    			cvLine(image, centroid, dotPoint.cv(), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    			cvLine(image, centroid, dotPoint.asCV(), cvScalar(255, 255, 255, 0), 1, 8, 0);
     		}
 		}
     	
     	for (Tuple<Point, Point> robot : yellowRobots()) {
-    		centroid = robot.getFirst().cv();
+    		centroid = robot.getFirst().asCV();
     		cvCircle(image, centroid, 8, cvScalar(0, 255, 255, 0), -1, 8, 0);
     		dotPoint = robot.getSecond();
     		if (dotPoint != null) {
-    			cvLine(image, centroid, dotPoint.cv(), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    			cvLine(image, centroid, dotPoint.asCV(), cvScalar(255, 255, 255, 0), 1, 8, 0);
     		}
 		}
     }

@@ -8,10 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -22,23 +20,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
-
-import sdp.group2.geometry.Point;
-import sdp.group2.util.Tuple;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
-import sdp.group2.vision.VisionService;
-import sdp.group2.vision.VisionServiceCallback;
+
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class VisionGUI extends WindowAdapter {
 	
@@ -114,16 +105,9 @@ public class VisionGUI extends WindowAdapter {
 				drawShit = !drawShit;
 			}
 		});
-//        drawBox.addChangeListener(new ChangeListener() {
-//			
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				drawShit = !drawShit;
-//			}
-//		});
         controlPanel.add(drawBox);
 
-     // Entity list
+        // Entity list
         JPanel listPanel = new JPanel();
         entityList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         entityList.setLayoutOrientation(JList.VERTICAL);

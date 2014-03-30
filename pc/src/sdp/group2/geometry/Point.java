@@ -43,8 +43,8 @@ public class Point extends Point2D.Double implements Comparable<Point> {
         	return 1;
         }
     }
-    
-    public CvPoint cv() {
+     
+    public CvPoint asCV() {
     	return cvPoint((int) x, (int) y);
     }
     
