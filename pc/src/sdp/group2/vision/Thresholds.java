@@ -2,21 +2,21 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
-import java.awt.image.CropImageFilter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import sdp.group2.util.JSonWriter;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
@@ -38,6 +38,28 @@ public class Thresholds {
 	public int[] rect;
 	public EntityThresh[] entities = new EntityThresh[4];
 	public static String pitchName;
+	
+	public static void writeToFile(Thresholds thresholds) {
+		JSONObject jsonThresh = Thresholds.activeThresholds.serialize();
+		FileWriter file = null;
+		try {
+			file = new FileWriter("assets/thresholds/" + pitchName + ".json");
+			Writer writer = new JSonWriter(); 
+			jsonThresh.writeJSONString(writer);
+			file.write(writer.toString());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			if (file != null) {
+				try {
+					file.flush();
+					file.close();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+			}
+		}
+	}
 	
     public static Thresholds readThresholds(String filename, int pitch) throws IOException, ParseException {
       

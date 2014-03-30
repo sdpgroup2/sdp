@@ -6,54 +6,31 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class SliderPanel extends JPanel implements ChangeListener {
+public class SliderPanel extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private HSBPanel parent;
 	private JSlider slider;
-	private JLabel quantity;
-	private ChangeListener parentChangeListener;
 
-	public SliderPanel(HSBPanel parent, String property, int min, int max, int initial, int minorTicks, int majorTicks) {
-		this.parent = parent;
+	public SliderPanel(ChangeListener changeListener, String property, int min, int max, int initial, int minorTicks, int majorTicks) {
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
 		JLabel propertyLabel = new JLabel(property);
 		propertyLabel.setPreferredSize(new Dimension(100, 24));
 		slider = new JSlider(JSlider.HORIZONTAL, min, max, initial);
+		slider.setName(property);
 		slider.setMajorTickSpacing(majorTicks);
 		slider.setMinorTickSpacing(minorTicks);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
-		slider.addChangeListener(this);
-		quantity = new JLabel(""+initial);
-		quantity.setPreferredSize(new Dimension(32, 24));
+		slider.addChangeListener(changeListener);
 		
 		add(propertyLabel);
 		add(slider);
-		add(quantity);
-	}
-
-	public void stateChanged(ChangeEvent e) {
-	    JSlider source = (JSlider) e.getSource();
-	    if (!source.getValueIsAdjusting()) {
-	        int val = (int) source.getValue();
-	        quantity.setText(""+val);
-	        parent.updateValue();
-	    }
-	    if (parentChangeListener != null) {
-	    	parentChangeListener.stateChanged(e);
-	    }
-	}
-	
-	public void addParentChangeListener(ChangeListener parentChangeListener) {
-		this.parentChangeListener = parentChangeListener;
 	}
 
 	public int getValue() {

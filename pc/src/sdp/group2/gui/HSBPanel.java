@@ -3,26 +3,33 @@ package sdp.group2.gui;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class HSBPanel extends JPanel {
+import sdp.group2.vision.EntityThresh;
+
+public class HSBPanel extends JPanel implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
-
-	private int[] color = new int[3];
 
 	JLabel titleLabel;
 	SliderPanel hue;
 	SliderPanel saturation;
 	SliderPanel brightness;
+	EntityThresh entity;
+	int minMax;
 
-	public HSBPanel(String title) {
+	public HSBPanel(String title, int minMax, EntityThresh entity) {
+		// min is 0 max is 1
+		this.minMax = minMax;
+		this.entity = entity;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		setBorder(new EmptyBorder(5,5,5,5));
+		setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		titleLabel = new JLabel(title);
-		// -360 is a hack for da ball
+		// -180 is a hack for da ball
 		hue = new SliderPanel(this, "Hue", -180, 180, 0, 30, 90);
 		saturation = new SliderPanel(this, "Saturation", 0, 255, 0, 25, 50);
 		brightness = new SliderPanel(this, "Brightness", 0, 255, 0, 25, 50);
@@ -31,34 +38,39 @@ public class HSBPanel extends JPanel {
 		add(hue);
 		add(saturation);
 		add(brightness);
-	}
-	
-	public void addParentChangeListener(ChangeListener changeListener) {
-		hue.addParentChangeListener(changeListener);
-		saturation.addParentChangeListener(changeListener);
-		brightness.addParentChangeListener(changeListener);
+		
+		setValues();
 	}
 
-	public void updateValue() {
-		color[0] = hue.getValue();
-		color[1] = saturation.getValue();
-		color[2] = brightness.getValue();
+	public void stateChanged(ChangeEvent e) {
+	    JSlider source = (JSlider) e.getSource();
+	    if (!source.getValueIsAdjusting()) {
+			if (minMax == 0) {
+				if (source.getName() == "Hue") {
+					entity.mins[0] = hue.getValue();
+				} else if (source.getName() == "Saturation") {
+					entity.mins[1] = saturation.getValue();
+				} else {
+					entity.mins[2] = brightness.getValue();
+				}
+			} else {
+				if (source.getName() == "Hue") {
+					entity.maxs[0] = hue.getValue();
+				} else if (source.getName() == "Saturation") {
+					entity.maxs[1] = saturation.getValue();
+				} else {
+					entity.maxs[2] = brightness.getValue();
+				}
+			}
+	    }
 	}
 
-	public void setValue(int[] color) {
-		System.out.println("Set H: " + color[0] + "S: " + color[1] + "V: " + color[2]);
-		hue.setValue(color[0]);
-		saturation.setValue(color[1]);
-		brightness.setValue(color[2]);
-		//titleLabel.setForeground(color.getRGBColor());
-	}
-
-	public int[] getValue() {
-		return color;
-	}
-	
-	public int[] copyValue() {
-		return new int[] { color[0], color[1], color[2] };
+	public void setValues() {
+		int[] newColor = minMax == 0 ? entity.mins : entity.maxs;
+		System.out.println("Set H: " + newColor[0] + "S: " + newColor[1] + "V: " + newColor[2]);
+		hue.setValue(newColor[0]);
+		saturation.setValue(newColor[1]);
+		brightness.setValue(newColor[2]);
 	}
 
 }
