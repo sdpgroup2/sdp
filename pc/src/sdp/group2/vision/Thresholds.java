@@ -2,13 +2,9 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
-import java.awt.image.CropImageFilter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
