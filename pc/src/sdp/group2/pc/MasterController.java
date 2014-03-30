@@ -54,19 +54,7 @@ public class MasterController implements VisionServiceCallback {
             System.err.println("Not specified which team we are and what pitch we're playing");
             System.exit(1);
         }
-        
-        try {
-        	BufferedReader threshIn = new BufferedReader(new FileReader(args[1] + ".txt"));
-        	String currentThresh = "";
-			while((currentThresh = threshIn.readLine()) != null){
-				
-			}
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+       
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
             pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
