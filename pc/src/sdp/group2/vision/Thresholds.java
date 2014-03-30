@@ -35,9 +35,10 @@ public class Thresholds {
 	public EntityThresh[] entities = new EntityThresh[4];
 	public static String pitchName;
 	
-    public static Thresholds readThresholds(String filename) throws FileNotFoundException, IOException, ParseException {
+    public static Thresholds readThresholds(String filename) throws IOException, ParseException {
+      
     	JSONParser parser = new JSONParser();
-		JSONObject thresholds = (JSONObject) parser.parse(new FileReader("assets/thresholds/" +filename + ".json"));
+		JSONObject thresholds = (JSONObject) parser.parse(new FileReader("assets/thresholds/" + filename + ".json"));
 		
 		JSONObject ball = (JSONObject) thresholds.get("ball");
 		int[] ballMins = getIntArray((JSONArray) ball.get("mins"));
@@ -56,7 +57,7 @@ public class Thresholds {
 		JSONObject boundingRect = (JSONObject) thresholds.get("boundingrect");
 		int[] rect = getIntArray((JSONArray) boundingRect.get("rect"));
 		
-		Thresholds activeThresholds = new Thresholds(filename, ballMins, ballMaxs, dotMins, dotMaxs, baseMins, baseMaxs, yellowMins, yellowMaxs, yellowPixelsThreshold, rect);
+		activeThresholds = new Thresholds(filename, ballMins, ballMaxs, dotMins, dotMaxs, baseMins, baseMaxs, yellowMins, yellowMaxs, yellowPixelsThreshold, rect);
 		return activeThresholds;
     }
     

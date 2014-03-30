@@ -1,5 +1,6 @@
 package sdp.group2.pc;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -60,6 +61,7 @@ public class MasterController implements VisionServiceCallback {
         }
 
         Thresholds.pitchName = args[2];
+
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
            	pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
@@ -68,9 +70,10 @@ public class MasterController implements VisionServiceCallback {
         }
         
     	try {
-			Thresholds.activeThresholds = Thresholds.readThresholds(Thresholds.pitchName);
+			Thresholds.readThresholds(Thresholds.pitchName);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.err.println("Dang! File not found!");
+			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
@@ -81,7 +84,7 @@ public class MasterController implements VisionServiceCallback {
         controller.start();
   
     }
-    
+
     public void start() {	
         visionService.start();
         commService.startRunningFromQueue();
@@ -134,7 +137,7 @@ public class MasterController implements VisionServiceCallback {
 		defPlanner.act();
 //		offPlanner.act();
 	}
-
+	
     @Override
     public void onExceptionThrown(Exception e) {
     	e.printStackTrace();
