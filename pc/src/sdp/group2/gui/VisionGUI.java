@@ -82,7 +82,7 @@ public class VisionGUI extends WindowAdapter {
 	    colorChecker = new ColorChecker();
 	    entityList = new JList<String>(entityNames);
 	    final JList<String> imageList = new JList<String>(imageNames);
-        windowFrame = new JFrame("Vision");
+        windowFrame = new JFrame("Vision on " + Thresholds.pitchName);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.addWindowListener(this); 
         windowFrame.setVisible(true);
@@ -219,7 +219,7 @@ public class VisionGUI extends WindowAdapter {
     			FileWriter file = null;
 				try {
 					file = new FileWriter("assets/thresholds/" + Thresholds.pitchName + ".json");
-					Writer writer = new JSonWriter(); // this is the new writter that adds indentation.
+					Writer writer = new JSonWriter(); 
 					jsonThresh.writeJSONString(writer);
 	    			file.write(writer.toString());
 				} catch (IOException e1) {

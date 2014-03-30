@@ -71,9 +71,6 @@ public class MasterController implements VisionServiceCallback {
         
     	try {
 			Thresholds.readThresholds(Thresholds.pitchName, Integer.parseInt(args[0]));
-		} catch (FileNotFoundException e) {
-			System.err.println("Dang! File not found!");
-			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
