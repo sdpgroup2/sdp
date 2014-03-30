@@ -3,6 +3,7 @@ package sdp.group2.vision;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 
 import java.awt.image.CropImageFilter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,10 +36,19 @@ public class Thresholds {
 	public EntityThresh[] entities = new EntityThresh[4];
 	public static String pitchName;
 	
-    public static Thresholds readThresholds(String filename) throws IOException, ParseException {
+    public static Thresholds readThresholds(String filename, int pitch) throws IOException, ParseException {
       
     	JSONParser parser = new JSONParser();
-		JSONObject thresholds = (JSONObject) parser.parse(new FileReader("assets/thresholds/" + filename + ".json"));
+    	File jsonFile = new File("assets/thresholds/" + filename + ".json");
+    	if (!jsonFile.exists()) {
+    		if (pitch == 0) {
+    			jsonFile = new File("assets/thresholds/mainPitch.json");
+    		} else {
+    			jsonFile = new File("assets/thresholds/sidePitch.json");
+    		}
+    	}
+		JSONObject thresholds = (JSONObject) parser.parse(new FileReader(jsonFile));
+		
 		
 		JSONObject ball = (JSONObject) thresholds.get("ball");
 		int[] ballMins = getIntArray((JSONArray) ball.get("mins"));

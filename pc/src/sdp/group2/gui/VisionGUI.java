@@ -12,6 +12,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -32,6 +34,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.json.simple.JSONObject;
 
+import sdp.group2.util.JSonWriter;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
 
@@ -216,7 +219,9 @@ public class VisionGUI extends WindowAdapter {
     			FileWriter file = null;
 				try {
 					file = new FileWriter("assets/thresholds/" + Thresholds.pitchName + ".json");
-	    			file.write(jsonThresh.toString());
+					Writer writer = new JSonWriter(); // this is the new writter that adds indentation.
+					jsonThresh.writeJSONString(writer);
+	    			file.write(writer.toString());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} finally {
