@@ -42,8 +42,8 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class VisionGUI extends WindowAdapter {
 	
-    private static final int WINDOW_WIDTH = 1200;
-    private static final int WINDOW_HEIGHT = 700;
+    private static final int WINDOW_WIDTH = 1100;
+    private static final int WINDOW_HEIGHT = 550;
 
 	public static final int MAIN_INDEX = 0;
 	public static final int BALL_INDEX = 1;
@@ -53,7 +53,6 @@ public class VisionGUI extends WindowAdapter {
     private static JFrame windowFrame;
     private static Dimension frameSize;
     private static JLabel imageLabel = new JLabel();
-    private static ColorChecker colorChecker;
     private static EntityThresh[] entities;
     private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
     private static String[] entityNames;
@@ -64,7 +63,7 @@ public class VisionGUI extends WindowAdapter {
     private static VisionGUI singleton;
     
     static {
-    	singleton = new VisionGUI(640, 480);
+    	singleton = new VisionGUI(540, 300);
     }
 
 	public VisionGUI(int width, int height) {
@@ -79,7 +78,6 @@ public class VisionGUI extends WindowAdapter {
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
         
-	    colorChecker = new ColorChecker();
 	    entityList = new JList<String>(entityNames);
 	    final JList<String> imageList = new JList<String>(imageNames);
         windowFrame = new JFrame("Vision on " + Thresholds.pitchName);
@@ -116,7 +114,6 @@ public class VisionGUI extends WindowAdapter {
         });
         imagePanel.add(imageList);
         mainPanel.add(imagePanel);
-
         
         // Images
         imageLabel.setMinimumSize(frameSize);
@@ -170,7 +167,6 @@ public class VisionGUI extends WindowAdapter {
         listPanel.add(entityList);
         controlPanel.add(listPanel);
         
-        
         // Sliders
         controlPanel.add(minHSBPanel);
         controlPanel.add(maxHSBPanel);       
@@ -210,7 +206,6 @@ public class VisionGUI extends WindowAdapter {
 		maxHSBPanel.addParentChangeListener(slideListener);
 		
         // Update button
-        controlPanel.add(colorChecker);// Update button
         JButton button = new JButton("Save");
         button.addActionListener(new ActionListener() {
             @Override
