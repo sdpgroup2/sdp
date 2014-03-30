@@ -11,9 +11,14 @@ import javax.swing.event.ChangeListener;
 
 public class SliderPanel extends JPanel implements ChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private HSBPanel parent;
 	private JSlider slider;
 	private JLabel quantity;
+	private ChangeListener parentChangeListener;
 
 	public SliderPanel(HSBPanel parent, String property, int min, int max, int initial, int minorTicks, int majorTicks) {
 		this.parent = parent;
@@ -29,7 +34,7 @@ public class SliderPanel extends JPanel implements ChangeListener {
 		slider.addChangeListener(this);
 		quantity = new JLabel(""+initial);
 		quantity.setPreferredSize(new Dimension(32, 24));
-
+		
 		add(propertyLabel);
 		add(slider);
 		add(quantity);
@@ -42,6 +47,13 @@ public class SliderPanel extends JPanel implements ChangeListener {
 	        quantity.setText(""+val);
 	        parent.updateValue();
 	    }
+	    if (parentChangeListener != null) {
+	    	parentChangeListener.stateChanged(e);
+	    }
+	}
+	
+	public void addParentChangeListener(ChangeListener parentChangeListener) {
+		this.parentChangeListener = parentChangeListener;
 	}
 
 	public int getValue() {

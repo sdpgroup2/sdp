@@ -9,8 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -24,8 +25,12 @@ import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.json.simple.JSONObject;
 
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
@@ -49,6 +54,7 @@ public class VisionGUI extends WindowAdapter {
     private static EntityThresh[] entities;
     private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
     private static String[] entityNames;
+    private static JList<String> entityList;
     public static int selectedImage;
     public static boolean drawShit = false;
     
@@ -69,8 +75,9 @@ public class VisionGUI extends WindowAdapter {
 	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name, entities[3].name};
         final HSBPanel minHSBPanel = new HSBPanel("Min color");
         final HSBPanel maxHSBPanel = new HSBPanel("Max color");
+        
 	    colorChecker = new ColorChecker();
-	    final JList<String> entityList = new JList<String>(entityNames);
+	    entityList = new JList<String>(entityNames);
 	    final JList<String> imageList = new JList<String>(imageNames);
         windowFrame = new JFrame("Vision");
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +90,7 @@ public class VisionGUI extends WindowAdapter {
         contentPanel.setBorder(new EmptyBorder(10,10,10,10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));               
         
-     // Images
+        // Images
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
@@ -155,14 +162,13 @@ public class VisionGUI extends WindowAdapter {
 
         // Sliders
         controlPanel.add(minHSBPanel);
-        controlPanel.add(maxHSBPanel);               
-
-     // Update button
-        controlPanel.add(colorChecker);// Update button
-        JButton button = new JButton("Update");
-        button.addActionListener(new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
+        controlPanel.add(maxHSBPanel);       
+        
+        // Add Parent listeners to sliders so they notify gui
+        ChangeListener slideListener = new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
                 int index = entityList.getSelectedIndex();
                 System.out.println("Update button pressed.");
                 switch (index) {
@@ -186,9 +192,38 @@ public class VisionGUI extends WindowAdapter {
                 		break;
                 }
                 updateEntities(entities);
+			}
+		};
+
+		minHSBPanel.addParentChangeListener(slideListener);
+		maxHSBPanel.addParentChangeListener(slideListener);
+		
+        // Update button
+        controlPanel.add(colorChecker);// Update button
+        JButton button = new JButton("Save");
+        button.addActionListener(new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+        		JSONObject jsonThresh = Thresholds.activeThresholds.serialize();
+    			FileWriter file = null;
+				try {
+					file = new FileWriter("assets/thresholds/" + Thresholds.pitchName + ".json");
+	    			file.write(jsonThresh.toString());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} finally {
+					if (file != null) {
+						try {
+							file.flush();
+							file.close();
+						} catch (IOException e2) {
+							e2.printStackTrace();
+						}
+					}
+				}
             }
         });
-        controlPanel.add(button);        
+        controlPanel.add(button);
 
         windowFrame.setContentPane(contentPanel);
     }
@@ -234,6 +269,5 @@ public class VisionGUI extends WindowAdapter {
 			}
 		}
 	}
-
 	
 }

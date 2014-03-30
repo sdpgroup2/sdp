@@ -174,7 +174,7 @@ public class ImageProcessor {
     		cvCircle(image, centroid, 8, cvScalar(255, 0, 0, 0), -1, 8, 0);
     		dotPoint = robot.getSecond();
     		if (dotPoint != null) {
-    			cvLine(image, centroid, dotPoint.asCV(), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    			cvLine(image, centroid, dotPoint.asCV(), cvScalar(0, 0, 255, 0), 1, 8, 0);
     		}
 		}
     	
@@ -183,7 +183,7 @@ public class ImageProcessor {
     		cvCircle(image, centroid, 8, cvScalar(0, 255, 255, 0), -1, 8, 0);
     		dotPoint = robot.getSecond();
     		if (dotPoint != null) {
-    			cvLine(image, centroid, dotPoint.asCV(), cvScalar(255, 255, 255, 0), 1, 8, 0);
+    			cvLine(image, centroid, dotPoint.asCV(), cvScalar(0, 0, 255, 0), 1, 8, 0);
     		}
 		}
     }

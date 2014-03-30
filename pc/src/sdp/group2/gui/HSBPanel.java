@@ -4,8 +4,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import sdp.group2.vision.Thresholds;
+import javax.swing.event.ChangeListener;
 
 public class HSBPanel extends JPanel {
 
@@ -26,24 +25,23 @@ public class HSBPanel extends JPanel {
 		hue = new SliderPanel(this, "Hue", 0, 180, 0, 15, 30);
 		saturation = new SliderPanel(this, "Saturation", 0, 255, 0, 25, 50);
 		brightness = new SliderPanel(this, "Brightness", 0, 255, 0, 25, 50);
-
+		
 		add(titleLabel);
 		add(hue);
 		add(saturation);
 		add(brightness);
 	}
+	
+	public void addParentChangeListener(ChangeListener changeListener) {
+		hue.addParentChangeListener(changeListener);
+		saturation.addParentChangeListener(changeListener);
+		brightness.addParentChangeListener(changeListener);
+	}
 
 	public void updateValue() {
-//		System.out.println("Before:\nHue: " + color[0]);
-//		System.out.println("Sat: " + color[1]);
-//		System.out.println("Val: " + color[2]);
 		color[0] = hue.getValue();
 		color[1] = saturation.getValue();
 		color[2] = brightness.getValue();
-//		System.out.println("After:\nHue: " + color[0]);
-//		System.out.println("Sat: " + color[1]);
-//		System.out.println("Val: " + color[2]);
-		//titleLabel.setForeground(color.getRGBColor());
 	}
 
 	public void setValue(int[] color) {

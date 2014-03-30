@@ -105,7 +105,7 @@ public class RobotEntity extends Entity {
     	blueRobots.clear();
     	for (Point rectCentroid : centroids) {
     		// Set the region of interest so we threshold only part of image
-    		CvRect rect = rectFromPoint(rectCentroid, 40, 40);
+    		CvRect rect = rectFromPoint(rectCentroid, 50, 50);
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);
