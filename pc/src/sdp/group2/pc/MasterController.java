@@ -1,5 +1,6 @@
 package sdp.group2.pc;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -61,6 +62,14 @@ public class MasterController implements VisionServiceCallback {
         }
 
         pitchName = args[2];
+        Path currentRelativePath = Paths.get("");
+    	path = currentRelativePath.toAbsolutePath().toString();
+        File pitchJSON = new File(path + "/assets/thresholds/" + pitchName + ".json");
+        
+        if (!pitchJSON.exists()) {
+        	 System.err.println("You typed the computer name incorrectly, see filenames in pc/assets/thresholds/ folder");
+        	 System.exit(1);
+        }
         try {
             ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
            	pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
@@ -93,8 +102,6 @@ public class MasterController implements VisionServiceCallback {
     
     public static Thresholds readThresholds(String filename) throws FileNotFoundException, IOException, ParseException {
     	JSONParser parser = new JSONParser();
-    	Path currentRelativePath = Paths.get("");
-    	path = currentRelativePath.toAbsolutePath().toString();
 		JSONObject thresholds = (JSONObject) parser.parse(new FileReader(path+ "/assets/thresholds/" +filename + ".json"));
 		
 		JSONObject ball = (JSONObject) thresholds.get("ball");
@@ -181,6 +188,7 @@ public class MasterController implements VisionServiceCallback {
 //		offPlanner.act();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void close() {
 		System.out.println("CLOSE CALLED!!!!!!!!!!!!!!!!!");
 		JSONObject obj = new JSONObject();
@@ -245,6 +253,7 @@ public class MasterController implements VisionServiceCallback {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	private static JSONArray getJSONArray(int[] intArray) {
 		JSONArray jsonArray = new JSONArray();
 		for (int i : intArray) {
