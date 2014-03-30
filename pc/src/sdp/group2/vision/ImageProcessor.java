@@ -201,7 +201,7 @@ public class ImageProcessor {
         detect(image, temp);
         if (VisionGUI.selectedImage == VisionGUI.MAIN_INDEX) { 
         	// show main
-            if (VisionGUI.drawShit) {
+            if (VisionGUI.drawObjects) {
             	drawShit(image);
             }
         	VisionGUI.updateImage(image);

@@ -56,14 +56,14 @@ public class Pilot extends DifferentialPilot implements LightListener {
 	public void openKicker() {
 		kicker.setPower(80);
 		kicker.forward();
-		Delay.msDelay(300);
+		Delay.msDelay(150);
 		kicker.stop();
 	}
 	
 	public void closeKicker() {
 		kicker.setPower(80);
 		kicker.backward();
-		Delay.msDelay(300);
+		Delay.msDelay(150);
 		kicker.stop();
 	}
 	

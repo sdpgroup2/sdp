@@ -58,7 +58,7 @@ public class VisionGUI extends WindowAdapter {
     private static String[] entityNames;
     private static JList<String> entityList;
     public static int selectedImage;
-    public static boolean drawShit = false;
+    public static boolean drawObjects = false;
     
     private static VisionGUI singleton;
     
@@ -130,13 +130,13 @@ public class VisionGUI extends WindowAdapter {
         
         // Draw Shit
         JCheckBox drawBox = new JCheckBox();
-        drawBox.setSelected(drawShit);
-        drawBox.setText("Draw Shit!");
+        drawBox.setSelected(drawObjects);
+        drawBox.setText("Toggle Objects");
         drawBox.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				drawShit = !drawShit;
+				drawObjects = !drawObjects;
 			}
 		});
         controlPanel.add(drawBox);
