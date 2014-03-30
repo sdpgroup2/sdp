@@ -39,8 +39,8 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class VisionGUI extends WindowAdapter {
 	
-    private static final int WINDOW_WIDTH = 1024;
-    private static final int WINDOW_HEIGHT = 600;
+    private static final int WINDOW_WIDTH = 1200;
+    private static final int WINDOW_HEIGHT = 700;
 
 	public static final int MAIN_INDEX = 0;
 	public static final int BALL_INDEX = 1;
@@ -90,11 +90,37 @@ public class VisionGUI extends WindowAdapter {
         contentPanel.setBorder(new EmptyBorder(10,10,10,10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));               
         
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBorder(new EmptyBorder(10,10,10,10));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+        contentPanel.add(mainPanel);
+        
+     // Image List
+        JPanel imagePanel = new JPanel();
+        imageList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        imageList.setLayoutOrientation(JList.VERTICAL);
+        imageList.setVisibleRowCount(-1);
+        imageList.setPreferredSize(new Dimension(200, 80));
+        imageList.setBorder(new LineBorder(Color.black));
+        imageList.setSelectedIndex(0);
+        imageList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+			public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting() == false) {
+                    selectedImage = imageList.getSelectedIndex();
+                }
+            }
+        });
+        imagePanel.add(imageList);
+        mainPanel.add(imagePanel);
+
+        
         // Images
         imageLabel.setMinimumSize(frameSize);
         imageLabel.setPreferredSize(frameSize);
         imageLabel.setMaximumSize(frameSize);
-        contentPanel.add(imageLabel);
+       
+        mainPanel.add(imageLabel);
 
         // Sidebar
         JPanel controlPanel = new JPanel();
@@ -141,25 +167,7 @@ public class VisionGUI extends WindowAdapter {
         listPanel.add(entityList);
         controlPanel.add(listPanel);
         
-        // Image List
-        JPanel imagePanel = new JPanel();
-        imageList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        imageList.setLayoutOrientation(JList.VERTICAL);
-        imageList.setVisibleRowCount(-1);
-        imageList.setPreferredSize(new Dimension(200, 80));
-        imageList.setBorder(new LineBorder(Color.black));
-        imageList.setSelectedIndex(0);
-        imageList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-			public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting() == false) {
-                    selectedImage = imageList.getSelectedIndex();
-                }
-            }
-        });
-        imagePanel.add(imageList);
-        controlPanel.add(imagePanel);
-
+        
         // Sliders
         controlPanel.add(minHSBPanel);
         controlPanel.add(maxHSBPanel);       
