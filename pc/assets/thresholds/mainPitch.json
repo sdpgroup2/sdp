@@ -1,0 +1,1 @@
+{"ball":{"mins":[-10,80,70],"maxs":[10,255,255]},"boundingrect":{"rect":[30,60,590,310]},"yellow":{"yellowThresh":10,"mins":[20,120,200],"maxs":[40,180,255]},"dot":{"mins":[30,30,100],"maxs":[90,155,155]},"baseplate":{"mins":[92,160,161],"maxs":[80,204,250]}}

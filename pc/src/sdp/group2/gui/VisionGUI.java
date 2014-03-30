@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BoxLayout;
@@ -233,5 +234,6 @@ public class VisionGUI extends WindowAdapter {
 			}
 		}
 	}
+
 	
 }
