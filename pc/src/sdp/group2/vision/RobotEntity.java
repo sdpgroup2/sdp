@@ -1,18 +1,11 @@
 package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvCountNonZero;
-import static com.googlecode.javacv.cpp.opencv_core.cvInRange;
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
-import static com.googlecode.javacv.cpp.opencv_core.cvLine;
-import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
-import static com.googlecode.javacv.cpp.opencv_core.cvCircle;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
-import static com.googlecode.javacv.cpp.opencv_core.cvSet;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
-import static com.googlecode.javacv.cpp.opencv_core.cvSize;
-import static com.googlecode.javacv.cpp.opencv_core.cvSplit;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static sdp.group2.vision.ImageProcessor.newImage;
@@ -105,24 +98,17 @@ public class RobotEntity extends Entity {
     	blueRobots.clear();
     	for (Point rectCentroid : centroids) {
     		// Set the region of interest so we threshold only part of image
-    		CvRect rect = rectFromPoint(rectCentroid, 50, 50);
+    		CvRect rect = rectFromPoint(rectCentroid, 40, 40);
     		cvSetImageROI(hsvImage, rect);
     		cvSetImageROI(binaryTemp, rect);
     		dotEntity.threshold(hsvImage, binaryTemp);
     		/*cvCircle(binaryTemp, rectCentroid.cv(), 15,
     		        cvScalar(255, 255, 255, 0), -1, 8, 0);*/
     		
-    		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
-    			VisionGUI.updateImage(binaryTemp);
-    		}
-    		
     		// beware the method below could return null
     		// we still add it though
     		Point dotCentroid = dotEntity.findClosestCentroid(binaryTemp, 40, 120, rectCentroid);
     		
-    		if (dotCentroid != null) {
-    			cvLine(binaryImage, cvPoint((int) dotCentroid.x, (int) dotCentroid.y), cvPoint((int) rectCentroid.x, (int) rectCentroid.y), cvScalar(255, 255, 255, 0), 1, 8, 0);
-    		}
     		// We check each robot if yellow or blue
     		if (isYellowRobot(hsvImage)) {
     			yellowRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
@@ -130,6 +116,9 @@ public class RobotEntity extends Entity {
     			blueRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
     		}
     	}
+		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
+			VisionGUI.updateImage(binaryTemp);
+		}
 		cvResetImageROI(hsvImage);
     }
     

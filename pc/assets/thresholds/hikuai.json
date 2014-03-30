@@ -1,1 +1,1 @@
-{"ball":{"mins":[-10,92,140],"maxs":[10,230,230]},"boundingrect":{"rect":[45,90,543,300]},"yellow":{"yellowThresh":120,"mins":[20,100,100],"maxs":[30,255,255]},"dot":{"mins":[26,19,43],"maxs":[65,139,135]},"baseplate":{"mins":[40,60,150],"maxs":[80,160,255]}}
+{"ball":{"mins":[-10,92,140],"maxs":[10,230,230]},"boundingrect":{"rect":[45,90,543,300]},"yellow":{"yellowThresh":120,"mins":[20,100,100],"maxs":[113,235,230]},"dot":{"mins":[26,19,43],"maxs":[65,139,135]},"baseplate":{"mins":[40,64,91],"maxs":[113,235,230]}}

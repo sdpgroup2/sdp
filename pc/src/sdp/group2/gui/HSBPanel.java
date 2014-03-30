@@ -22,7 +22,8 @@ public class HSBPanel extends JPanel {
 		setBorder(new EmptyBorder(5,5,5,5));
 
 		titleLabel = new JLabel(title);
-		hue = new SliderPanel(this, "Hue", 0, 180, 0, 15, 30);
+		// -360 is a hack for da ball
+		hue = new SliderPanel(this, "Hue", -180, 180, 0, 30, 90);
 		saturation = new SliderPanel(this, "Saturation", 0, 255, 0, 25, 50);
 		brightness = new SliderPanel(this, "Brightness", 0, 255, 0, 25, 50);
 		
