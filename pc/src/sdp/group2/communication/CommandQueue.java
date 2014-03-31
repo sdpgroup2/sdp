@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class CommandQueue {
 
 	private static ConcurrentLinkedQueue<int[]> commandQueue2A = new ConcurrentLinkedQueue<int[]>();
-	private static ConcurrentLinkedQueue<int[]> commandQueue2D = new ConcurrentLinkedQueue<int[]>();
+	public static ConcurrentLinkedQueue<int[]> commandQueue2D = new ConcurrentLinkedQueue<int[]>();
 	
 	public static void add(int[] command, String robotName){
 		if (robotName.equals(Constants.ROBOT_2A_NAME)){
@@ -41,7 +41,7 @@ public class CommandQueue {
 			commandQueue2A.clear();
 		} else if(robotName.equals(Constants.ROBOT_2D_NAME)) {
 			commandQueue2D.clear();
-		} 
+		}
 	}
 	
 	public static boolean containsCommand(int[] command, String robotName) {

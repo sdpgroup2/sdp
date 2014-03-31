@@ -1,5 +1,7 @@
 package sdp.group2.util;
 
+import sdp.group2.geometry.Point;
+
 public class Constants {
 
 	/** Robot names and MACs */
@@ -18,6 +20,17 @@ public class Constants {
 
     public static final double PX_TO_MM = 4.56310;
     public static final double MM_TO_PX = 0.2191;
+    
+    // Center of the pitches in millimeters
+    public static final Point PITCH0_CENTER = new Point(0, 0);
+    public static final Point PITCH1_CENTER = new Point(1239, 342);
+    
+    // Height of the camera in millimeters
+    public static final double PITCH0_CAMERA_HEIGHT = 2370;
+    public static final double PITCH1_CAMERA_HEIGHT = 2285;
+    
+    // Height of the robot in millimeters
+    public static final double ROBOT_HEIGHT = 190;
     
     // Lines in millimetres
     public static final int[] MAIN_LINES = {661, 1337, 2021};

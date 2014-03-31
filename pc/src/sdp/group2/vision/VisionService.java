@@ -118,7 +118,7 @@ public class VisionService implements CaptureCallback {
         switch (state) {
 		case Preparation:
 //			System.out.println("Not prepared.");
-			boolean prepared = false;
+			boolean prepared = true;
 
     		// If we don't have the ball then we're not ready
     		if (ballCentroid == null) {
@@ -129,9 +129,9 @@ public class VisionService implements CaptureCallback {
     		
     		// If we don't have all 4 robots, we're not ready
     		if (yellowRobots.size() != 2 || blueRobots.size() != 2) {
-//    		    Debug.logf(
-//    		            "Finding %d yellow and %d blue robots. Need 2 of each.",
-//    		            yellowRobots.size(), blueRobots.size());
+    		    Debug.logf(
+    		            "Finding %d yellow and %d blue robots. Need 2 of each.",
+    		            yellowRobots.size(), blueRobots.size());
     			prepared = false;
     			break;
     		}

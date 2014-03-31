@@ -3,6 +3,7 @@ package sdp.group2.vision;
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvSize;
+import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 
 import java.util.List;
@@ -27,13 +28,14 @@ public class DotEntity extends Entity {
     @Override
     public IplImage threshold(IplImage hsvImage) {
         cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), binaryImage);
-        cvDilate(binaryImage, binaryImage, null, 1);
+//        cvDilate(binaryImage, binaryImage, null, 3);
         return binaryImage;
     }
     
     public void threshold(IplImage hsvImage, IplImage binaryImage) {
         cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), binaryImage);
-		cvDilate(binaryImage, binaryImage, null, 1);
+//      cvErode(binaryImage, binaryImage, null, 3);
+		cvDilate(binaryImage, binaryImage, null, 2);
     }
     
     /**

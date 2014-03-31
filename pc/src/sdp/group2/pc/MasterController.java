@@ -14,12 +14,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import sdp.group2.communication.CommandQueue;
+import sdp.group2.communication.Commands;
 import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
+import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Tuple;
+import sdp.group2.vision.ImageProcessor;
 import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
@@ -34,7 +38,6 @@ public class MasterController implements VisionServiceCallback {
     private DefensivePlanner defPlanner;
 //    private OffensivePlanner offPlanner;
     private VisionService visionService;
-	private static String path;
 
     private CommunicationService commService;
 
@@ -77,9 +80,14 @@ public class MasterController implements VisionServiceCallback {
 			e.printStackTrace();
 		}
         
-        final MasterController controller = new MasterController(pitchPlayed);    
-        controller.start();
-  
+        final MasterController controller = new MasterController(pitchPlayed);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2A_NAME);
+            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2D_NAME);
+            }
+         });
+    	controller.start();
     }
 
     public void start() {	
@@ -110,6 +118,10 @@ public class MasterController implements VisionServiceCallback {
     	for (Tuple<Point, Point> tuple : yellowRobots) {
     		tupleOfPointsToMillis(tuple);
 		}
+    	
+    	ImageProcessor.heightFilter(yellowRobots);
+    	ImageProcessor.heightFilter(blueRobots);
+    	
     	pitch.initialise(ballCentroid.toMillis(), yellowRobots, blueRobots);
     }
 
@@ -131,9 +143,14 @@ public class MasterController implements VisionServiceCallback {
 			pitch.updateBallPosition(ballCentroid.toMillis());
 		}
 		
+		ImageProcessor.heightFilter(yellowRobots);
+    	ImageProcessor.heightFilter(blueRobots);
+		
 		defPlanner.act();
 //		offPlanner.act();
 	}
+	
+	
 	
     @Override
     public void onExceptionThrown(Exception e) {

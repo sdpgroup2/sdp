@@ -4,6 +4,7 @@ import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Vector;
+import sdp.group2.util.Constants;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
 
@@ -57,11 +58,11 @@ public class Robot extends MovableObject {
 		Vector newFacing = getPosition().sub(dotPosition);
 		if (previousDetectedFacing != null) {
 			double deltaAngle = newFacing.angleDegrees(previousDetectedFacing);
-			if (deltaAngle > 30) {
-				Debug.log("ANGLE TOO BIG!!!");
-				previousDetectedFacing = newFacing;
-				return;
-			}
+//			if (deltaAngle > 30) {
+//				Debug.log("ANGLE TOO BIG!!!");
+//				previousDetectedFacing = newFacing;
+//				return;
+//			}
 		}
 		facingVector = newFacing;
 		previousDetectedFacing = newFacing;
@@ -90,12 +91,12 @@ public class Robot extends MovableObject {
     
     public void forward(int dir, int distance) {
     	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.move(dir, 1500, distance), "SDP2D");
+    	CommandQueue.add(Commands.move(dir, 150, distance), Constants.ROBOT_2D_NAME);
     }
     
     public void rotate(double degrees) {
     	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.rotate((int) degrees, 100), "SDP2D");
+    	CommandQueue.add(Commands.rotate((int) degrees, 20), Constants.ROBOT_2D_NAME);
     }
     
     public double distanceTo(Point point) {

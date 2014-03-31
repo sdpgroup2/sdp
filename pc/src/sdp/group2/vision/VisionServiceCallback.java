@@ -1,6 +1,5 @@
 package sdp.group2.vision;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import sdp.group2.geometry.Point;
