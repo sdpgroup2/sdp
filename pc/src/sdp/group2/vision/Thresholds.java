@@ -17,6 +17,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import sdp.group2.util.JSonWriter;
+import sdp.group2.util.Constants.PitchType;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
@@ -61,19 +62,18 @@ public class Thresholds {
 		}
 	}
 	
-    public static Thresholds readThresholds(String filename, int pitch) throws IOException, ParseException {
+    public static Thresholds readThresholds(String filename, PitchType pitchPlayed) throws IOException, ParseException {
       
     	JSONParser parser = new JSONParser();
     	File jsonFile = new File("assets/thresholds/" + filename + ".json");
     	if (!jsonFile.exists()) {
-    		if (pitch == 0) {
+    		if (pitchPlayed == PitchType.MAIN) {
     			copyFile(new File("assets/thresholds/mainPitch.json"), jsonFile);
     		} else {
     			copyFile(new File("assets/thresholds/sidePitch.json"), jsonFile);
     		}
     	}
 		JSONObject thresholds = (JSONObject) parser.parse(new FileReader(jsonFile));
-		
 		
 		JSONObject ball = (JSONObject) thresholds.get("ball");
 		int[] ballMins = getIntArray((JSONArray) ball.get("mins"));

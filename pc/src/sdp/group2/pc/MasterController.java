@@ -73,7 +73,7 @@ public class MasterController implements VisionServiceCallback {
         }
         
     	try {
-			Thresholds.readThresholds(Thresholds.pitchName, Integer.parseInt(args[0]));
+			Thresholds.readThresholds(Thresholds.pitchName, pitchPlayed);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
