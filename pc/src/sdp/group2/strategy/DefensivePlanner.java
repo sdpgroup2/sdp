@@ -194,6 +194,7 @@ public class DefensivePlanner extends Planner {
 //				CommandQueue.add(Commands.move(dir, 1500, dist), robotName);
 //			}
 //		}
-	}
+		}
 	
+	}
 }

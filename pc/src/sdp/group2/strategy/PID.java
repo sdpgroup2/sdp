@@ -42,7 +42,7 @@ public class PID {
 	private void addToHistory(double error) {
 		errorHistory.add(error);
 		if (errorHistory.size() > historyLength) {
-			errorHistory.remove(errorHistory.size() - 1);
+			errorHistory.remove(0);
 		}
 	}
 	
