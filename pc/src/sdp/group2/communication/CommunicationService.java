@@ -18,7 +18,8 @@ public class CommunicationService {
 			@Override
 			public void run() {
 				try {
-					sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);	
+					sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
+					System.out.println("Connected to 2A");
 				} catch (IOException e) {
 					System.err.println("Can't connect to 2A!");
 				}
@@ -31,7 +32,8 @@ public class CommunicationService {
 			@Override
 			public void run() {
 				try {
-					sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);	
+					sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
+					System.out.println("Connected to 2D");
 				} catch (IOException e) {
 					System.err.println("Can't connect to 2D!");
 				}

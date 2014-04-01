@@ -56,6 +56,11 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.y = y;
     }
     
+    public void mult(double scalar) {
+    	// In-place
+    	this.x *= scalar;
+    	this.y *= scalar;
+    }
 
     /**
      * Returns a vector between this point and other point.

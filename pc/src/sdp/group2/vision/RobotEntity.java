@@ -92,7 +92,7 @@ public class RobotEntity extends Entity {
     public void detectRobots(IplImage hsvImage, IplImage binaryImage) {
     	IplImage binaryTemp = newImage(binaryImage, 1);
     	//cvSet(binaryTemp, cvScalar(0, 0, 0, 0));
-    	List<Point> centroids = findPossibleCentroids(binaryImage, 1500, 2500, 4);
+    	List<Point> centroids = findPossibleCentroids(binaryImage, 1000, 3000, 4);
 //    	System.out.printf("Found %d robots.\n", centroids.size());
     	yellowRobots.clear();
     	blueRobots.clear();
@@ -107,7 +107,7 @@ public class RobotEntity extends Entity {
     		
     		// beware the method below could return null
     		// we still add it though
-    		Point dotCentroid = dotEntity.findClosestCentroid(binaryTemp, 40, 120, rectCentroid);
+    		Point dotCentroid = dotEntity.findClosestCentroid(binaryTemp, 40, 150, rectCentroid);
     		
     		// We check each robot if yellow or blue
     		if (isYellowRobot(hsvImage)) {
@@ -132,7 +132,7 @@ public class RobotEntity extends Entity {
     	int[] maxs = Thresholds.activeThresholds.yellowMaxs;
     	cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), channel);
     	int nonZero = cvCountNonZero(channel);
-    	System.out.println(nonZero);
+//    	System.out.println(nonZero);
     	return nonZero > Thresholds.activeThresholds.yellowPixelsThreshold ? true : false;
     }
     

@@ -118,11 +118,11 @@ public class VisionService implements CaptureCallback {
         switch (state) {
 		case Preparation:
 //			System.out.println("Not prepared.");
-			boolean prepared = false;
+			boolean prepared = true;
 
     		// If we don't have the ball then we're not ready
     		if (ballCentroid == null) {
-    		    System.out.println("Can't find ball.");
+//    		    System.out.println("Can't find ball.");
     			prepared = false;
     			break;
     		}
@@ -140,7 +140,7 @@ public class VisionService implements CaptureCallback {
     		// Position (first of tuple) is never null
     		for (Tuple<Point, Point> tuple : blueRobots) {
     			if (tuple.getSecond() == null) {
-    			    System.out.println("Can't find dot for blue robot.");
+//    			    System.out.println("Can't find dot for blue robot.");
     				prepared = false;
     				break;
     			}
@@ -150,7 +150,7 @@ public class VisionService implements CaptureCallback {
     		// Position (first of tuple) is never null
     		for (Tuple<Point, Point> tuple : yellowRobots) {
     			if (tuple.getSecond() == null) {
-    			    System.out.println("Can't find dot for yellow robot.");
+//    			    System.out.println("Can't find dot for yellow robot.");
     				prepared = false;
     				break;
     			}

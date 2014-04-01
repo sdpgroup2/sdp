@@ -24,6 +24,9 @@ import java.util.List;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.gui.VisionGUI;
+import sdp.group2.pc.MasterController;
+import sdp.group2.util.Constants;
+import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Tuple;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
@@ -187,6 +190,33 @@ public class ImageProcessor {
     		}
 		}
     }
+    
+    public static void heightFilter(List<Tuple<Point, Point>> robots) {
+    	double cameraHeight;
+    	Point pitchCenter;
+    	if (MasterController.pitchPlayed == PitchType.MAIN) {
+			cameraHeight = Constants.PITCH0_CAMERA_HEIGHT;
+			pitchCenter = Constants.PITCH0_CENTER;
+		} else {
+			cameraHeight = Constants.PITCH1_CAMERA_HEIGHT;
+			pitchCenter = Constants.PITCH1_CENTER;
+		}
+    	for (Tuple<Point, Point> robot : robots) {
+	    	adjustByHeight(robot.getFirst(), pitchCenter, cameraHeight);
+	    	Point second = robot.getSecond();
+	    	if (second != null) {
+	    		adjustByHeight(second, pitchCenter, cameraHeight);
+	    	}
+		}
+    }
+    
+    public static Point adjustByHeight(Point originalPoint, Point pitchCenter, double cameraHeight) {
+    	originalPoint.offset(-pitchCenter.x, -pitchCenter.y);
+		double ratio = (cameraHeight - Constants.ROBOT_HEIGHT) / cameraHeight;
+		originalPoint.mult(ratio);
+		originalPoint.offset(pitchCenter.x, pitchCenter.y);
+		return originalPoint;
+    }
 
     /**
      * Processes the image.
@@ -201,7 +231,7 @@ public class ImageProcessor {
         detect(image, temp);
         if (VisionGUI.selectedImage == VisionGUI.MAIN_INDEX) { 
         	// show main
-            if (VisionGUI.drawShit) {
+            if (VisionGUI.drawObjects) {
             	drawShit(image);
             }
         	VisionGUI.updateImage(image);

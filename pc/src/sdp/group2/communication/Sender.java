@@ -144,7 +144,7 @@ public class Sender {
 		short[] confirmation;
 		try {
 			confirmation = receiveFromRobot();
-			System.out.println("TURN " +robotName + " " + System.currentTimeMillis());
+//			System.out.println("TURN " +robotName + " " + System.currentTimeMillis());
 			if (confirmation[1] == comm[0]) {
 				LCD.drawString("got message", 0, 2);
 				System.out.println("Successfully sent message");
