@@ -6,10 +6,10 @@ public class PID {
 	
 	/* Keeps history of previously calculated errors, which are expected - actual */
 	private LinkedList<Double> errorHistory = new LinkedList<Double>();
-	private int historyLength = 10;
-	private double p = 2/5;
-	private double i = 1/7500;
-	private double d = 1/3;
+	private int historyLength = 15;
+	private double p = 3/5;
+	private double i = 1/7000;
+	private double d = 1/2;
 	private double expected;
 	
 	public PID(double expected, double p, double i, double d, int historyLength) {
