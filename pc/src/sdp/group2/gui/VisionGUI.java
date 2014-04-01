@@ -48,7 +48,7 @@ public class VisionGUI extends WindowAdapter {
     private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
     private static String[] entityNames;
     public static int selectedImage;
-    public static boolean drawObjects = false;
+    public static boolean drawObjects = true;
     
     private static VisionGUI singleton;
     

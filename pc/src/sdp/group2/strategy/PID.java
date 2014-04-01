@@ -6,10 +6,10 @@ public class PID {
 	
 	/* Keeps history of previously calculated errors, which are expected - actual */
 	private LinkedList<Double> errorHistory = new LinkedList<Double>();
-	private int historyLength = 10;
-	private double p = 1/100;
-	private double i = 1/50000;
-	private double d = 3/10;
+	private int historyLength = 15;
+	private double p = 3/5;
+	private double i = 1/7000;
+	private double d = 1/2;
 	private double expected;
 	
 	public PID(double expected, double p, double i, double d, int historyLength) {
@@ -42,7 +42,7 @@ public class PID {
 	private void addToHistory(double error) {
 		errorHistory.add(error);
 		if (errorHistory.size() > historyLength) {
-			errorHistory.remove(errorHistory.size() - 1);
+			errorHistory.remove(0);
 		}
 	}
 	
