@@ -113,8 +113,20 @@ public class Robot extends MovableObject {
     	return (distanceTo(ball) <= 80 && Math.abs(angleTo(ball)) <= 20);
     }
     
+    public boolean canGrab(Ball ball) {
+    	return (distanceTo(ball) <= 105 && Math.abs(angleTo(ball)) <= 20);
+    }
+    
     public void kick() {
 		CommandQueue.add(Commands.kick(15, 0), name);
+    }
+    
+    public void openKicker() {
+    	CommandQueue.add(Commands.openKicker(), name);
+    }
+    
+    public void closeKicker() {
+    	CommandQueue.add(Commands.closeKicker(), name);
     }
     
     /**

@@ -1,7 +1,8 @@
 package sdp.group2.strategy;
 
+import java.util.Deque;
+
 import sdp.group2.communication.CommandQueue;
-import sdp.group2.communication.Commands;
 import sdp.group2.geometry.Point;
 import sdp.group2.util.Constants;
 import sdp.group2.world.Ball;
@@ -23,7 +24,7 @@ public class DefensivePlanner extends Planner {
 	private int frames = 0;
 	
 	// Test PID
-	private PID pid = new PID(90.0);
+	private PID pid = new PID(90.0);	
 	
 	public DefensivePlanner(Pitch pitch) {
         super(pitch);
@@ -35,7 +36,7 @@ public class DefensivePlanner extends Planner {
 		int defenderZoneId = pitch.getOurDefendZone();
 		
 		if (ballZoneId != defenderZoneId) {
-			stutter();
+			defend();
 		} else {
 			pass();
 		}
@@ -50,6 +51,20 @@ public class DefensivePlanner extends Planner {
 		System.out.println("Distance to ball: " + robot.distanceTo(ball));
 		if (robot.haveBall(ball)) {
 			robot.kick();
+			return; 
+		}
+		System.out.println("Don't have the ball!");
+		while(!ball.isStable()) {
+			return;	
+		}
+		System.out.println("Ball is stable!");
+		robot.openKicker();
+		System.out.println("Opened the kicker!");
+		robot.goTo(ball, true);
+		System.out.println("Went to the ball!");
+		if (robot.canGrab(ball)) {
+			robot.closeKicker();
+			System.out.println("Closed the kicker!");
 		}
 //		Robot robot = pitch.getOurDefender();
 //		
@@ -96,7 +111,7 @@ public class DefensivePlanner extends Planner {
 	 * more vertical (in line with goal) OR move the defending robot forwards or backwards
 	 * trying to match the ball's position.
 	 */
-	public void stutter() {
+	public void defend() {
 		Robot robot = pitch.getOurDefender();
 		
 		// Angle ranges from -180 to 180 degrees.
@@ -193,7 +208,7 @@ public class DefensivePlanner extends Planner {
 //				CommandQueue.clear(robotName);
 //				CommandQueue.add(Commands.move(dir, 1500, dist), robotName);
 //			}
-//		}
+		}
 	}
 	
 }

@@ -29,12 +29,15 @@ public class Constants {
     public static final double PITCH0_CAMERA_HEIGHT = 2370;
     public static final double PITCH1_CAMERA_HEIGHT = 2285;
     
-    // Height of the robot in millimeters
+    // Height of the robot in millimetersprivate Point position;
     public static final double ROBOT_HEIGHT = 190;
     
     // Lines in millimetres
     public static final int[] MAIN_LINES = {661, 1337, 2021};
     public static final int[] SIDE_LINES = {584, 1278, 1939};
+    
+    public static int HISTORY_SIZE = 15;
+    public static int STABLE_DISTANCE = 20;
 
     public enum TeamColour {
         YELLOW,
@@ -78,4 +81,5 @@ public class Constants {
         RIGHT
     }
 
+ 
 }

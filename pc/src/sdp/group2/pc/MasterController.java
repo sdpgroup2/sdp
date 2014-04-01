@@ -146,7 +146,7 @@ public class MasterController implements VisionServiceCallback {
 		ImageProcessor.heightFilter(yellowRobots);
     	ImageProcessor.heightFilter(blueRobots);
 		
-		defPlanner.act();
+		defPlanner.act();   
 //		offPlanner.act();
 	}
 	
