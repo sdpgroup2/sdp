@@ -288,24 +288,39 @@ public class Pitch {
 		Tuple<Point, Point> secondYellow = yellowRobots.get(1);
 		Tuple<Point, Point> secondBlue = blueRobots.get(1);
 		
+		String yellowDefenderName, yellowAttackerName;
+		String blueDefenderName, blueAttackerName;
+		
+		if (MasterController.ourTeam == TeamColour.YELLOW) {
+			yellowDefenderName = Constants.ROBOT_2D_NAME;
+			yellowAttackerName = Constants.ROBOT_2A_NAME;
+			blueDefenderName = null;
+			blueAttackerName = null;
+		} else {
+			yellowDefenderName = null;
+			yellowAttackerName = null;
+			blueDefenderName = Constants.ROBOT_2D_NAME;
+			blueAttackerName = Constants.ROBOT_2A_NAME;
+		}
+		
 		if (firstYellow.getFirst().x < firstBlue.getFirst().x) {
     		// Yellow | Blue | Yellow | Blue
 			// Yellow is on the left of blue
 			// Thus yellow 0 is defender and yellow 1 is attacker
 			// And blue 0 is attacker and blue 1 is defender
-			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), 0);
-			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), 2);
-			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), 1);
-			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 3);
+			yellowDefender = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), 0, yellowDefenderName);
+			yellowAttacker = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), 2, yellowAttackerName);
+			blueAttacker = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), 1, blueAttackerName);
+			blueDefender = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 3, blueDefenderName);
 		} else {
     		// Blue | Yellow | Blue | Yellow
 			// Blue is on the left of yellow
 			// Thus yellow 0 is attacker and yellow 1 is defender
 			// And blue 0 is defender and blue 1 is attacker
-			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), 1);
-			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), 3);
-			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), 0);
-			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 2);
+			yellowAttacker = new Robot(firstYellow.getFirst(), firstYellow.getSecond(), 1, yellowAttackerName);
+			yellowDefender = new Robot(secondYellow.getFirst(), secondYellow.getSecond(), 3, yellowDefenderName);
+			blueDefender = new Robot(firstBlue.getFirst(), firstBlue.getSecond(), 0, blueDefenderName);
+			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 2, blueAttackerName);
 		}
 		
 	}

@@ -60,21 +60,19 @@ public class CommunicationService {
 			@Override
 			public void run() {
 				while(true) {
-					while(true) {
-						if (!CommandQueue.isEmpty(Constants.ROBOT_2A_NAME)) {
-							short[] commands = new short[4];
-							int i = 0;
-							for (int command : CommandQueue.poll(Constants.ROBOT_2A_NAME)) {
-								
-								commands[i] = (short) command;
-								i++;        
-							}
-							try {	
-								
-								sender2A.command(commands);
-							} catch(IOException e) {
-								e.printStackTrace();
-							}
+					if (!CommandQueue.isEmpty(Constants.ROBOT_2A_NAME)) {
+						short[] commands = new short[4];
+						int i = 0;
+						for (int command : CommandQueue.peek(Constants.ROBOT_2A_NAME)) {
+						
+							commands[i] = (short) command;
+							i++;        
+						}
+						try {
+							sender2A.command(commands);
+							CommandQueue.poll(Constants.ROBOT_2A_NAME);
+						} catch(IOException e) {
+							e.printStackTrace();
 						}
 					}
 				}
@@ -92,14 +90,15 @@ public class CommunicationService {
 					if (!CommandQueue.isEmpty(Constants.ROBOT_2D_NAME)) {
 						short[] commands = new short[4];
 						int i = 0;
-						for (int command : CommandQueue.poll(Constants.ROBOT_2D_NAME)) {
+						for (int command : CommandQueue.peek(Constants.ROBOT_2D_NAME)) {
 							
 							commands[i] = (short) command;
 							i++;        
 						}
-						try {	
-							
+						try {
+							System.out.println("Sending Rotate command");
 							sender2D.command(commands);
+							CommandQueue.poll(Constants.ROBOT_2D_NAME);
 						} catch(IOException e) {
 							e.printStackTrace();
 						}

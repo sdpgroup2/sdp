@@ -13,9 +13,13 @@ public class CommandQueue {
 	
 	public static void add(int[] command, String robotName){
 		if (robotName.equals(Constants.ROBOT_2A_NAME)){
-			commandQueue2A.add(command);
+			if (commandQueue2A.isEmpty()) {
+				commandQueue2A.add(command);
+			}
 		} else if (robotName.equals(Constants.ROBOT_2D_NAME)){
-			commandQueue2D.add(command);
+			if (commandQueue2D.isEmpty()) {
+				commandQueue2D.add(command);
+			}
 		}
 	}
 	public static int[] poll(String robotName){
@@ -23,6 +27,14 @@ public class CommandQueue {
 			return commandQueue2A.poll();
 		} else if (robotName.equals(Constants.ROBOT_2D_NAME)){
 			return commandQueue2D.poll();
+		} else return new int[] {0,0,0,0};
+	}
+	
+	public static int[] peek(String robotName){
+		if (robotName.equals(Constants.ROBOT_2A_NAME)){
+			return commandQueue2A.peek();
+		} else if (robotName.equals(Constants.ROBOT_2D_NAME)){
+			return commandQueue2D.peek();
 		} else return new int[] {0,0,0,0};
 	}
 	
