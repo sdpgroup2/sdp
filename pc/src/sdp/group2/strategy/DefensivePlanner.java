@@ -22,6 +22,8 @@ public class DefensivePlanner extends Planner {
 	// The number of frames this has been running.
 	private int frames = 0;
 	
+	// Test PID
+	private PID pid = new PID(90.0);
 	
 	public DefensivePlanner(Pitch pitch) {
         super(pitch);
@@ -129,6 +131,18 @@ public class DefensivePlanner extends Planner {
 				dist = (int) Math.abs(minY - ry);
 			} else if (by >= maxY) {
 				dist = (int) Math.abs(maxY - ry);
+			// Printout PID adjustment
+			double u = pid.getAdjustment(unsignedAngle);
+			System.out.println("robot angle adjustment = " + u);
+			// ---
+			
+			if (wrongAngle) {
+				double toRotate = angleSign * (90 - unsignedAngle);
+				System.out.printf("Rotate by: %f.2\n", toRotate);
+				System.out.println(CommandQueue.commandQueue2D.size());
+				robot.rotate(toRotate);
+			} else {
+				CommandQueue.clear(Constants.ROBOT_2D_NAME);
 			}
 			
 			// Multiply by 0.9 so that we don't hit the wall and stuff
