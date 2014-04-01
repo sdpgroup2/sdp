@@ -31,7 +31,7 @@ public class DefensivePlanner extends Planner {
 		int defenderZoneId = pitch.getOurDefendZone();
 		
 		if (ballZoneId != defenderZoneId) {
-			defend();
+//			defend();
 		} else {
 			pass();
 		}
@@ -105,8 +105,9 @@ public class DefensivePlanner extends Planner {
 		Robot robot = pitch.getOurDefender();
 		Ball ball = pitch.getBall();
 		
-		while (robot.shouldAlign()) {
+		if (robot.shouldAlign()) {
 			robot.defenceAlign();
+			return;
 		}
 		
 		CommandQueue.clear(Constants.ROBOT_2D_NAME);

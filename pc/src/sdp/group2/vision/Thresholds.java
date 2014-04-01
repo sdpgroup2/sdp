@@ -208,7 +208,6 @@ public class Thresholds {
 		this.yellowMaxs = yellowMaxs;
 		this.yellowPixelsThreshold = yellowPixelsThreshold;
 		this.rect = rect;
-		System.out.printf("vals %d %d %d %d", rect[0],rect[1],rect[2],rect[3]);
 		this.cropRect = cvRect(rect[0],rect[1],rect[2],rect[3]);
 		
 		EntityThresh ball = new EntityThresh("Ball");

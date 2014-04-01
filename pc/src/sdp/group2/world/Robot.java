@@ -156,7 +156,7 @@ public class Robot extends MovableObject {
 		double unsignedAngle = Math.abs(angle);
 		
 		double toRotate = angleSign * (90 - unsignedAngle);
-		System.out.printf("Rotate by: %f.2\n", toRotate);
+//		System.out.printf("Rotate by: %f.2\n", toRotate);
 		System.out.println(CommandQueue.commandQueue2D.size());
 		rotate(toRotate);
 	}

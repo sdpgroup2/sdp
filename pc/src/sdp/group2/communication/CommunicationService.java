@@ -13,44 +13,18 @@ public class CommunicationService {
 	private Sender sender2D;   
 	
 	public CommunicationService() {
-		Thread connect2A = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
-					System.out.println("Connected to 2A");
-				} catch (IOException e) {
-					System.err.println("Can't connect to 2A!");
-				}
-				
-			}
-			
-		});
-		Thread connect2D = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
-					System.out.println("Connected to 2D");
-				} catch (IOException e) {
-					System.err.println("Can't connect to 2D!");
-				}
-			}
-			
-		});
-		connect2A.start();
-		connect2D.start();
 		try {
-			connect2A.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
+			System.out.println("Connected to 2A");
+		} catch (IOException e) {
+			System.err.println("Can't connect to 2A!");
 		}
+		
 		try {
-			connect2D.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
+			System.out.println("Connected to 2D");
+		} catch (IOException e) {
+			System.err.println("Can't connect to 2D!");
 		}
 		
 	}
@@ -96,7 +70,6 @@ public class CommunicationService {
 							i++;        
 						}
 						try {
-							System.out.println("Sending Rotate command");
 							sender2D.command(commands);
 							CommandQueue.poll(Constants.ROBOT_2D_NAME);
 						} catch(IOException e) {
