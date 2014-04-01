@@ -1,19 +1,14 @@
 package sdp.group2.control;
 
-import javax.microedition.sensor.NXTSensorConnection;
-
-import sdp.group2.light.LightListener;
-import sdp.group2.light.MyLightSensor;
-import lejos.nxt.BasicMotorPort;
-import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.SensorPort;
 import lejos.nxt.addon.RCXMotor;
-import lejos.nxt.rcxcomm.RCXPort;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.util.Delay;
+import sdp.group2.light.LightListener;
+import sdp.group2.light.MyLightSensor;
 
 public class Pilot extends DifferentialPilot implements LightListener {
 	

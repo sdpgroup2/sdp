@@ -8,7 +8,7 @@ import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
 import sdp.group2.world.Robot;
 
-public class DefensivePlanner extends Planner {
+public class DefensivePlannerPID extends Planner {
 	
 	private static final String robotName = Constants.ROBOT_2D_NAME;
 	
@@ -25,7 +25,7 @@ public class DefensivePlanner extends Planner {
 	// Test PID
 	private PID pid = new PID(90.0);
 	
-	public DefensivePlanner(Pitch pitch) {
+	public DefensivePlannerPID(Pitch pitch) {
         super(pitch);
     }
 	
@@ -114,7 +114,8 @@ public class DefensivePlanner extends Planner {
 		// ---
 		
 		if (wrongAngle) {
-			double toRotate = angleSign * (90 - unsignedAngle);
+			//double toRotate = angleSign * (90 - unsignedAngle);
+			double toRotate = u;
 			System.out.printf("Rotate by: %f.2\n", toRotate);
 			System.out.println(CommandQueue.commandQueue2D.size());
 	    	robot.rotate(toRotate);

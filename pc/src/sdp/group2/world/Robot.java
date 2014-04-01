@@ -23,12 +23,14 @@ public class Robot extends MovableObject {
      */
     private Vector facingVector;
     private Vector previousDetectedFacing;
-    private int zone;    
+    private int zone;   
+    private String name;
 
-    public Robot(Point robotPosition, Point dotPosition, int zone) {
+    public Robot(Point robotPosition, Point dotPosition, int zone, String name) {
     	super(robotPosition);
     	updateFacing(dotPosition);
     	this.zone = zone;
+    	this.name = name;
     }
     
     public int getZone() {
@@ -91,12 +93,12 @@ public class Robot extends MovableObject {
     
     public void forward(int dir, int distance) {
     	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.move(dir, 150, distance), Constants.ROBOT_2D_NAME);
+    	CommandQueue.add(Commands.move(dir, 500, distance), name);
     }
     
     public void rotate(double degrees) {
     	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.rotate((int) degrees, 20), Constants.ROBOT_2D_NAME);
+    	CommandQueue.add(Commands.rotate((int) degrees, 50), name);
     }
     
     public double distanceTo(Point point) {
@@ -105,6 +107,14 @@ public class Robot extends MovableObject {
     
     public double distanceTo(Ball ball) {
     	return distanceTo(ball.getPosition());
+    }
+    
+    public boolean haveBall(Ball ball) {
+    	return (distanceTo(ball) <= 80 && Math.abs(angleTo(ball)) <= 20);
+    }
+    
+    public void kick() {
+		CommandQueue.add(Commands.kick(15, 0), name);
     }
     
     /**
