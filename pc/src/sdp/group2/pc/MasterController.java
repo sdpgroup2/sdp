@@ -50,7 +50,7 @@ public class MasterController implements VisionServiceCallback {
 
     /**
      * Main method of the project. Arguments passed in should be:
-     * TEAM_COLOUR PITCH_TYPE
+     * TEAM_COLOUR PITCH_TYPE COMPUTER_NAME
      *
      * @param args
      */
