@@ -39,10 +39,9 @@ public class TestComms {
 //			line = scanner.nextLine();
 //			CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2A_NAME);
 			line = scanner.nextLine();
-			CommandQueue.add(Commands.kick(32, Short.MAX_VALUE), Constants.ROBOT_2A_NAME);
-			CommandQueue.add(Commands.kick(32, Short.MAX_VALUE), Constants.ROBOT_2D_NAME);
-			
-			
+			CommandQueue.add(Commands.openKicker(), Constants.ROBOT_2D_NAME);
+			line = scanner.nextLine();
+			CommandQueue.add(Commands.closeKicker(), Constants.ROBOT_2D_NAME);
 //			try {
 //				Thread.sleep(7);
 //			} catch (InterruptedException e) {
