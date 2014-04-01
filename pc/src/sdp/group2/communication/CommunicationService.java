@@ -13,47 +13,48 @@ public class CommunicationService {
 	private Sender sender2D;   
 	
 	public CommunicationService() {
-		Thread connect2A = new Thread(new Runnable() {
-
+		Thread connect2A = new Thread(){
 			@Override
 			public void run() {
-				try {
-					sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
-					System.out.println("Connected to 2A");
-				} catch (IOException e) {
-					System.err.println("Can't connect to 2A!");
-				}
-				
-			}
-			
-		});
-		Thread connect2D = new Thread(new Runnable() {
-
+				initSender2A();
+			}	
+		};
+		Thread connect2D = new Thread(){
 			@Override
 			public void run() {
-				try {
-					sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
-					System.out.println("Connected to 2D");
-				} catch (IOException e) {
-					System.err.println("Can't connect to 2D!");
-				}
-			}
-			
-		});
+				initSender2D();
+			}	
+		};
 		connect2A.start();
-		connect2D.start();
+//		connect2D.start();
 		try {
 			connect2A.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		try {
 			connect2D.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
 	}
+	
+	private void initSender2A() {
+		try {
+			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
+			System.out.println("Connected to 2A");
+		} catch (IOException e) {
+			System.err.println("Retrying connection to 2A");
+			initSender2A();
+		}
+	}
+	
+	private void initSender2D() {
+		try {
+			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
+			System.out.println("Connected to 2D");
+		} catch (IOException e) {
+			System.err.println("Retrying connection to 2D!");
+			initSender2D();
+		}
+	}
+	
 	public void startRunningFromQueue() {
 		Thread popThread2A = new Thread(new Runnable() {
 			
@@ -109,7 +110,7 @@ public class CommunicationService {
 			
 		});
 		popThread2A.start();
-		popThread2D.start();
+//		popThread2D.start();
 		
 		Thread attemptClear = new Thread(new Runnable() {
 
