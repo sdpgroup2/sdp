@@ -19,6 +19,8 @@ public class DefensivePlanner extends Planner {
 	// The number of frames this has been running.
 	private int frames = 0;
 	
+	// Test PID
+	private PID pid = new PID(90.0);
 	
 	public DefensivePlanner(Pitch pitch) {
         super(pitch);
@@ -94,6 +96,11 @@ public class DefensivePlanner extends Planner {
 			
 			// The angle is wrong if it is more than 10 degrees away from 90.
 			boolean wrongAngle = !(85 < unsignedAngle && unsignedAngle < 95);
+			
+			// Printout PID adjustment
+			double u = pid.getAdjustment(unsignedAngle);
+			System.out.println("robot angle adjustment = " + u);
+			// ---
 			
 			if (wrongAngle) {
 				double toRotate = angleSign * (90 - unsignedAngle);
