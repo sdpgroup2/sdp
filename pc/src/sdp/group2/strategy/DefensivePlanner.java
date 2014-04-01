@@ -96,7 +96,7 @@ public class DefensivePlanner extends Planner {
 			boolean wrongAngle = !(85 < unsignedAngle && unsignedAngle < 95);
 			
 			if (wrongAngle) {
-				double toRotate = angleSign * 90 - unsignedAngle;
+				double toRotate = angleSign * (90 - unsignedAngle);
 				System.out.printf("Rotate by: %f.2\n", toRotate);
 				System.out.println(CommandQueue.commandQueue2D.size());
 				robot.rotate(toRotate);
