@@ -25,6 +25,11 @@ public class Robot extends MovableObject {
     private Vector previousDetectedFacing;
     private int zone;   
     private String name;
+    private boolean kickerOpen = false;
+	
+	// The min/max Y that the robot is allowed to have. (The goal posts)
+	private static final double minY = 365;
+	private static final double maxY = 1026;
 
     public Robot(Point robotPosition, Point dotPosition, int zone, String name) {
     	super(robotPosition);
@@ -82,6 +87,10 @@ public class Robot extends MovableObject {
     	return facingVector.angleDegrees(new Vector(1, 0));
     }
     
+    public double angleToY() {
+    	return facingVector.angleDegrees(new Vector(0, 1));
+    }
+    
     /**
      * Returns the angle from the robot to the ball
      * @param ball
@@ -91,9 +100,9 @@ public class Robot extends MovableObject {
     	return angleTo(ball.getPosition());
     }
     
-    public void forward(int dir, int distance) {
+    public void forward(int dir, int distance, int speed) {
     	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.move(dir, 500, distance), name);
+    	CommandQueue.add(Commands.move(dir, speed, distance), name);
     }
     
     public void rotate(double degrees) {
@@ -109,24 +118,88 @@ public class Robot extends MovableObject {
     	return distanceTo(ball.getPosition());
     }
     
-    public boolean haveBall(Ball ball) {
-    	return (distanceTo(ball) <= 80 && Math.abs(angleTo(ball)) <= 20);
+    public boolean hasBall(Ball ball) {
+    	return (distanceTo(ball) <= 100 && Math.abs(angleTo(ball)) <= 20 && !kickerOpen);
     }
     
     public boolean canGrab(Ball ball) {
-    	return (distanceTo(ball) <= 105 && Math.abs(angleTo(ball)) <= 20);
+    	return (distanceTo(ball) <= 150 && Math.abs(angleTo(ball)) <= 20);
     }
     
     public void kick() {
 		CommandQueue.add(Commands.kick(15, 0), name);
+		kickerOpen = true;
     }
     
     public void openKicker() {
     	CommandQueue.add(Commands.openKicker(), name);
+    	kickerOpen = true;
     }
     
     public void closeKicker() {
     	CommandQueue.add(Commands.closeKicker(), name);
+    	kickerOpen = false;
+    }
+    
+    public boolean shouldAlign() {
+    	double angle = angleToX();
+		double unsignedAngle = Math.abs(angle);
+		
+		// The angle is wrong if it is more than 10 degrees away from 90.
+		return !(80 < unsignedAngle && unsignedAngle < 100);
+    }
+    
+    public void defenceAlign() {
+		// Angle ranges from -180 to 180 degrees.
+		double angle = angleToX();
+		double angleSign = Math.signum(angle);
+		double unsignedAngle = Math.abs(angle);
+		
+		double toRotate = angleSign * (90 - unsignedAngle);
+		System.out.printf("Rotate by: %f.2\n", toRotate);
+		System.out.println(CommandQueue.commandQueue2D.size());
+		rotate(toRotate);
+	}
+    
+    public void passAllign() {
+		// Angle ranges from -180 to 180 degrees.
+		double angle = angleToY();
+		System.out.printf("Rotate by: %f.2\n", angle);
+		System.out.println(CommandQueue.commandQueue2D.size());
+		rotate(-angle);
+	}
+    
+    public void alignWith(Point pt) {
+		double angle = angleToX();
+		double angleSign = Math.signum(angle);
+		
+    	double ry = getPosition().y;
+		double by = pt.y;
+		
+		// angleSign is 1 if the robot is facing upwards and -1 if downwards.
+		// ballDir is 1 if the ball is above, -1 if the ball is below.
+		// dir multiplies these two to find the direction in which to move.
+		int ballDir = (int) Math.signum(ry - by);
+		int dir = (int) (ballDir * angleSign);
+		
+		int dist = (int) Math.abs(ry - by);
+		
+		// If the ball is outwith the range of the goal post, we only want to move as far as the goal post
+		if (by <= minY) {
+			dist = (int) Math.abs(minY - ry);
+		} else if (by >= maxY) {
+			dist = (int) Math.abs(maxY - ry);
+		}
+		
+		// Multiply by 0.9 so that we don't hit the wall and stuff
+		dist = (int) (0.9 * dist);
+		
+		// If the distance is too great, and the robot is roughly vertically aligned:
+		forward(-dir, dist, 500);
+    }
+    
+    public void alignWith(MovableObject obj) {
+    		alignWith(obj.getPosition());
     }
     
     /**
@@ -148,7 +221,7 @@ public class Robot extends MovableObject {
     	rotate(angleToBall);
     	// Then go forward until we hit it
     	int distance = (int) vectorTo(point).length();
-    	forward(direction, distance);
+    	forward(direction, distance, 500);
     }
     
     /**
@@ -194,5 +267,9 @@ public class Robot extends MovableObject {
     public Vector vectorTo(Point p){
     	return p.sub(getPosition());
     }
+
+	public boolean isKickerOpen() {
+		return kickerOpen;
+	}
 
 }

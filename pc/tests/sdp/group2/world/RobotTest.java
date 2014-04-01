@@ -31,40 +31,40 @@ public class RobotTest extends TestCase {
 //		Mockito.verify(rob).forward(1, 5);
   	}
   	  	
-  	public void testGetSmallerAngle() {
-  		double result;
-  		
-  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
-  		this.ball = new Ball(new Point(2, 2));
-  		
-  		result = rob.smallerAngle(ball.getPosition());
-  		assertEquals(-45.0, result);
-  		
-  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
-  		this.ball = new Ball(new Point(2, 4));
-  		
-  		result = rob.smallerAngle(ball.getPosition());
-  		assertEquals(45.0, result);
-  		
-  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
-  		this.ball = new Ball(new Point(4, 2));
-  		
-  		result = rob.smallerAngle(ball.getPosition());
-  		assertEquals(45.0, result);
-  		
-  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
-  		this.ball = new Ball(new Point(4, 4));
-  		
-  		result = rob.smallerAngle(ball.getPosition());
-  		assertEquals(-45.0, result);
-  		
-  		this.rob = new Robot(new Point(3, 3), new Point(4, 3), 0);
-  		this.ball = new Ball(new Point(2, 2));
-  		
-  		result = rob.smallerAngle(ball.getPosition());
-  		assertEquals(-45.0, result);
-  		
-  	}
+//  	public void testGetSmallerAngle() {
+//  		double result;
+//  		
+//  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
+//  		this.ball = new Ball(new Point(2, 2));
+//  		
+//  		result = rob.smallerAngle(ball.getPosition());
+//  		assertEquals(-45.0, result);
+//  		
+//  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
+//  		this.ball = new Ball(new Point(2, 4));
+//  		
+//  		result = rob.smallerAngle(ball.getPosition());
+//  		assertEquals(45.0, result);
+//  		
+//  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
+//  		this.ball = new Ball(new Point(4, 2));
+//  		
+//  		result = rob.smallerAngle(ball.getPosition());
+//  		assertEquals(45.0, result);
+//  		
+//  		this.rob = new Robot(new Point(3, 3), new Point(2, 3), 0);
+//  		this.ball = new Ball(new Point(4, 4));
+//  		
+//  		result = rob.smallerAngle(ball.getPosition());
+//  		assertEquals(-45.0, result);
+//  		
+//  		this.rob = new Robot(new Point(3, 3), new Point(4, 3), 0);
+//  		this.ball = new Ball(new Point(2, 2));
+//  		
+//  		result = rob.smallerAngle(ball.getPosition());
+//  		assertEquals(-45.0, result);
+//  		
+//  	}
 
   	public void testGoToBackward() {
   		// Initialise

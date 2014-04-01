@@ -72,7 +72,7 @@ public class RobotEntity extends Entity {
         int[] maxs = Thresholds.activeThresholds.basePlateMaxs;
         cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), binaryImage);
         cvErode(binaryImage, binaryImage, null, 3);
-        cvDilate(binaryImage, binaryImage, null, 9);
+        cvDilate(binaryImage, binaryImage, null, 10);
         return binaryImage;
     }
     

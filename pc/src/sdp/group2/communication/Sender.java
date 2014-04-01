@@ -51,7 +51,6 @@ public class Sender {
 	}
 
 	public synchronized void disconnect() {
-		System.out.println("trying to disconnect!");
 		short[] command = { Commands.DISCONNECT, 0, 0, 0 };
 		try {
 			sendToRobot(command);
@@ -120,9 +119,7 @@ public class Sender {
 	}
 
 	private int sendToRobot(short[] comm) throws IOException {
-		if (comm[0] == Commands.DISCONNECT) {
-			closeBluetoothConn();
-		}
+		
 		clearBuff();
 		if (!connected)
 			return -3;

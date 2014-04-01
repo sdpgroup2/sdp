@@ -8,7 +8,9 @@ import javax.swing.SwingWorker;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.gui.VisionGUI;
+import sdp.group2.pc.MasterController;
 import sdp.group2.pc.Timer;
+import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
 import au.edu.jcu.v4l4j.CaptureCallback;
@@ -138,23 +140,27 @@ public class VisionService implements CaptureCallback {
 
     		// If one of the direction vectors is null we're not ready
     		// Position (first of tuple) is never null
-    		for (Tuple<Point, Point> tuple : blueRobots) {
-    			if (tuple.getSecond() == null) {
-//    			    System.out.println("Can't find dot for blue robot.");
-    				prepared = false;
-    				break;
-    			}
-    		}
+//    		if (MasterController.ourTeam == TeamColour.BLUE) {
+				for (Tuple<Point, Point> tuple : blueRobots) {
+					if (tuple.getSecond() == null) {
+		//    			    System.out.println("Can't find dot for blue robot.");
+						prepared = false;
+						break;
+					}
+				}
+//    		}
     		
     		// If one of the direction vectors is null we're not ready
     		// Position (first of tuple) is never null
-    		for (Tuple<Point, Point> tuple : yellowRobots) {
-    			if (tuple.getSecond() == null) {
-//    			    System.out.println("Can't find dot for yellow robot.");
-    				prepared = false;
-    				break;
-    			}
-    		}
+//    		if (MasterController.ourTeam == TeamColour.YELLOW) {
+	    		for (Tuple<Point, Point> tuple : yellowRobots) {
+	    			if (tuple.getSecond() == null) {
+	//    			    System.out.println("Can't find dot for yellow robot.");
+	    				prepared = false;
+	    				break;
+	    			}
+	    		}
+//    		}
     		if (prepared) {
     			// We're ready switch to processing
     			state = VisionState.Processing;

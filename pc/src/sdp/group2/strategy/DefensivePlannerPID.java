@@ -48,7 +48,7 @@ public class DefensivePlannerPID extends Planner {
 //		System.out.println("Ball Position: " + ball.getPosition());
 		System.out.println("Angle to ball: " + robot.angleTo(ball));
 		System.out.println("Distance to ball: " + robot.distanceTo(ball));
-		if (robot.haveBall(ball)) {
+		if (robot.hasBall(ball)) {
 			robot.kick();
 		}
 //		Robot robot = pitch.getOurDefender();
@@ -153,7 +153,7 @@ public class DefensivePlannerPID extends Planner {
 			
 			// If the distance is too great, and the robot is roughly vertically aligned:
 //			robot.goTo(new Point(robot.getPosition().x, ball.getPosition().y), false);
-			robot.forward(-dir, dist);
+			robot.forward(-dir, dist, 500);
 		}
 		
 //		// Do this every 20 frames, starting from frame 0

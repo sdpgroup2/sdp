@@ -28,6 +28,7 @@ import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Tuple;
+import sdp.group2.world.Ball;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvPoint;
@@ -191,6 +192,19 @@ public class ImageProcessor {
 		}
     }
     
+    public static void heightFilter(Point pt) {
+    	double cameraHeight;
+    	Point pitchCenter;
+    	if (MasterController.pitchPlayed == PitchType.MAIN) {
+			cameraHeight = Constants.PITCH0_CAMERA_HEIGHT;
+			pitchCenter = Constants.PITCH0_CENTER;
+		} else {
+			cameraHeight = Constants.PITCH1_CAMERA_HEIGHT;
+			pitchCenter = Constants.PITCH1_CENTER;
+		}
+    	adjustByHeight(pt, pitchCenter, cameraHeight, Constants.BALL_HEIGHT);
+    }
+    
     public static void heightFilter(List<Tuple<Point, Point>> robots) {
     	double cameraHeight;
     	Point pitchCenter;
@@ -202,17 +216,17 @@ public class ImageProcessor {
 			pitchCenter = Constants.PITCH1_CENTER;
 		}
     	for (Tuple<Point, Point> robot : robots) {
-	    	adjustByHeight(robot.getFirst(), pitchCenter, cameraHeight);
+	    	adjustByHeight(robot.getFirst(), pitchCenter, cameraHeight, Constants.ROBOT_HEIGHT);
 	    	Point second = robot.getSecond();
 	    	if (second != null) {
-	    		adjustByHeight(second, pitchCenter, cameraHeight);
+	    		adjustByHeight(second, pitchCenter, cameraHeight, Constants.ROBOT_HEIGHT);
 	    	}
 		}
     }
     
-    public static Point adjustByHeight(Point originalPoint, Point pitchCenter, double cameraHeight) {
+    public static Point adjustByHeight(Point originalPoint, Point pitchCenter, double cameraHeight, double objHeight) {
     	originalPoint.offset(-pitchCenter.x, -pitchCenter.y);
-		double ratio = (cameraHeight - Constants.ROBOT_HEIGHT) / cameraHeight;
+		double ratio = (cameraHeight - objHeight) / cameraHeight;
 		originalPoint.mult(ratio);
 		originalPoint.offset(pitchCenter.x, pitchCenter.y);
 		return originalPoint;
