@@ -12,8 +12,7 @@ import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.util.Constants;
-import sdp.group2.util.Constants.PitchType;
-import sdp.group2.util.Constants.TeamColour;
+import sdp.group2.util.Constants.*;
 import sdp.group2.util.Tuple;
 import sdp.group2.vision.ImageProcessor;
 import sdp.group2.vision.Thresholds;
@@ -25,7 +24,10 @@ public class MasterController implements VisionServiceCallback {
 
 	public static boolean ENABLE_GUI = true;
     public static TeamColour ourTeam;
+    public static TeamSide ourSide;
     public static PitchType pitchPlayed;
+    public static boolean usingComms = true;
+    public static boolean matchStarted = false;
     private Pitch pitch;
     private DefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
@@ -40,8 +42,31 @@ public class MasterController implements VisionServiceCallback {
     	this.offPlanner = new OffensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
-        this.commService = new CommunicationService();
+        if (usingComms) {
+        	this.commService = new CommunicationService();
+        }
     }
+    
+    public static int[] getPitchLines() {
+    	return (pitchPlayed == PitchType.MAIN) ? Constants.MAIN_LINES : Constants.SIDE_LINES;
+    }
+    
+    /**
+     * @param mmPoint Point in millimeters
+     * @return zone
+     */
+    public static int getZoneOfPoint(Point mmPoint) {
+		int[] lines = MasterController.getPitchLines();
+		if (mmPoint.x <= lines[0]) {
+			return 0;
+		} else if (mmPoint.x <= lines[1]) {
+			return 1;
+		} else if (mmPoint.x <= lines[2]) {
+			return 2;
+		} else {
+			return 3;
+		}
+	}
 
     /**
      * Main method of the project. Arguments passed in should be:
@@ -50,18 +75,17 @@ public class MasterController implements VisionServiceCallback {
      * @param args
      */
     public static void main(String[] args) {
-        if (args.length < 3) {
+        if (args.length < 4) {
             System.err.println("Not specified which team we are and what pitch we're playing");
             System.exit(1);
         }
 
-        Thresholds.pitchName = args[2];
-
-        try {
-            ourTeam = TeamColour.valueOf(Integer.parseInt(args[0]));
-           	pitchPlayed = PitchType.valueOf(Integer.parseInt(args[1]));
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+        ourTeam = (args[0].equals("yellow")) ? TeamColour.YELLOW : TeamColour.BLUE;
+        ourSide = (args[1].equals("left")) ? TeamSide.LEFT : TeamSide.RIGHT;
+        pitchPlayed = (args[2].equals("main")) ? PitchType.MAIN : PitchType.SIDE;
+        Thresholds.pitchName = args[3];
+        if (args.length > 4 && args[4].equals("false")) {
+        	usingComms = false;
         }
         
     	try {
@@ -73,20 +97,30 @@ public class MasterController implements VisionServiceCallback {
 		}
         
         final MasterController controller = new MasterController(pitchPlayed);
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-        	
-            public void run() {
-            	System.out.println("Closing");
-            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2A_NAME);
-            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2D_NAME);
-            }
-         });
+        if (usingComms) {
+	        Runtime.getRuntime().addShutdownHook(new Thread() {
+	            public void run() {
+	            	System.out.println("Closing");
+	            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2A_NAME);
+	            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2D_NAME);
+	            }
+	         });
+        }
     	controller.start();
+    }
+    
+    public static void disconnect() {
+    	if (usingComms) {
+	    	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2A_NAME);
+	    	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2D_NAME);
+    	}
     }
 
     public void start() {	
         visionService.start();
-        commService.startRunningFromQueue();
+        if (usingComms) {
+        	commService.startRunningFromQueue();
+        }
     }
 
     // Sorry
@@ -140,8 +174,10 @@ public class MasterController implements VisionServiceCallback {
 		ImageProcessor.heightFilter(yellowRobots);
     	ImageProcessor.heightFilter(blueRobots);
 
-		offPlanner.act();
-		defPlanner.act();
+    	if (usingComms && matchStarted) {
+			offPlanner.act();
+			defPlanner.act();
+    	}
 	}
 	
 	

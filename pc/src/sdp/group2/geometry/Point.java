@@ -3,6 +3,8 @@ package sdp.group2.geometry;
 
 import java.awt.geom.Point2D;
 
+import sdp.group2.pc.MasterController;
+
 import com.googlecode.javacv.cpp.opencv_core.CvPoint;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
@@ -13,6 +15,10 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 	
     public Point(double x, double y) {
     	super(x, y);
+    }
+    
+    public Point(Point p) {
+    	super(p.x, p.y);
     }
 	
 	public void offset(double x, double y) {

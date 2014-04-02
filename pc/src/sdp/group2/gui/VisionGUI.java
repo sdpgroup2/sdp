@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
@@ -27,6 +28,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import sdp.group2.communication.CommandQueue;
+import sdp.group2.communication.Commands;
+import sdp.group2.pc.MasterController;
+import sdp.group2.util.Constants;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
 
@@ -39,13 +44,13 @@ public class VisionGUI extends WindowAdapter {
 
 	public static final int MAIN_INDEX = 0;
 	public static final int BALL_INDEX = 1;
-	public static final int ROBOT_INDEX = 2;
-	public static final int DOT_INDEX = 3;
+	public static final int DOT_INDEX = 2;
+	public static final int ROBOT_INDEX = 3;
 
     private static JFrame windowFrame;
     private static JLabel imageLabel = new JLabel();
     private static EntityThresh[] entities;
-    private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
+    private static String[] imageNames = new String[] {"Main", "Ball", "Dots", "Bases"};
     private static String[] entityNames;
     public static int selectedImage;
     public static boolean drawObjects = true;
@@ -59,7 +64,7 @@ public class VisionGUI extends WindowAdapter {
 	public void initialise() {
 	    JPanel contentPanel;
 	    entities = Thresholds.activeThresholds.entities;
-	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name, entities[3].name};
+	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name};
 
         windowFrame = new JFrame("Vision: " + Thresholds.pitchName);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,6 +76,14 @@ public class VisionGUI extends WindowAdapter {
         contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));               
+        
+        // Entity Panel
+        final JTabbedPane entityPane = new JTabbedPane();
+        
+        for (int i = 0; i < entityNames.length; i++) {
+            JComponent panel = makeSliderPanel(entityNames[i], i);
+            entityPane.addTab(entityNames[i], null, panel, null);
+		}
         
         // Image List
         JPanel mainPanel = new JPanel();
@@ -89,7 +102,11 @@ public class VisionGUI extends WindowAdapter {
             @Override
 			public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting() == false) {
-                    selectedImage = imageList.getSelectedIndex();
+                	int index = imageList.getSelectedIndex();
+                    selectedImage = index;
+                    if (index != 0) {
+                    	entityPane.setSelectedIndex(index-1);
+                    }
                 }
             }
         });
@@ -115,14 +132,21 @@ public class VisionGUI extends WindowAdapter {
 		});
         controlPanel.add(drawBox);
         
-        // Entity Panel
-        JTabbedPane entityPane = new JTabbedPane();
+     // Start robots
+        JCheckBox aiBox = new JCheckBox();
+        aiBox.setSelected(MasterController.matchStarted);
+        aiBox.setText("AI on");
+        aiBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				MasterController.matchStarted = !MasterController.matchStarted;
+			}
+		});
+        controlPanel.add(aiBox);
         
-        for (int i = 0; i < entityNames.length; i++) {
-            JComponent panel = makeSliderPanel(entityNames[i], i);
-            entityPane.addTab(entityNames[i], null, panel, null);
-		}
         
+        // Adding entity panel
         controlPanel.add(entityPane);
 
         // Save button
@@ -134,6 +158,16 @@ public class VisionGUI extends WindowAdapter {
             }
         });
         controlPanel.add(button);
+        
+        JButton button2 = new JButton("Test Bluetooth Delay");
+        button2.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		System.out.println("Test drive!");
+        		CommandQueue.add(Commands.move(1, 400, 100), Constants.ROBOT_2D_NAME);
+        	}
+        });
+        controlPanel.add(button2);
 
         windowFrame.setContentPane(contentPanel);
         windowFrame.pack();
@@ -162,6 +196,16 @@ public class VisionGUI extends WindowAdapter {
         panel.add(minHSBPanel);
         panel.add(maxHSBPanel);
         return panel;
+    }
+    
+    @Override
+    public void windowClosing(WindowEvent e) {
+    	MasterController.disconnect();
+    	try {
+    		Thread.sleep(200);
+    	} catch (InterruptedException ex) {
+    		ex.printStackTrace();
+    	}
     }
 	
 }

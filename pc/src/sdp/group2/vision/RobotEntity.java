@@ -1,25 +1,31 @@
 package sdp.group2.vision;
 
-import static com.googlecode.javacv.cpp.opencv_core.cvCountNonZero;
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
 import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
+import static com.googlecode.javacv.cpp.opencv_core.cvCircle;
+import static com.googlecode.javacv.cpp.opencv_core.cvCopy;
 import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvSize;
+import static com.googlecode.javacv.cpp.opencv_core.cvSet;
+import static com.googlecode.javacv.cpp.opencv_core.cvAnd;
 import static com.googlecode.javacv.cpp.opencv_imgproc.BORDER_DEFAULT;
 import static com.googlecode.javacv.cpp.opencv_imgproc.blur;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static sdp.group2.vision.ImageProcessor.newImage;
+import sdp.group2.pc.MasterController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import sdp.group2.geometry.Point;
 import sdp.group2.gui.VisionGUI;
+import sdp.group2.pc.MasterController;
 import sdp.group2.util.Tuple;
+import sdp.group2.util.Constants;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
@@ -95,52 +101,60 @@ public class RobotEntity extends Entity {
     
     public void detectRobots(IplImage hsvImage, IplImage binaryImage) {
     	IplImage binaryTemp = newImage(binaryImage, 1);
-    	IplImage binaryDisplay = newImage(binaryImage, 1);
-    	//cvSet(binaryTemp, cvScalar(0, 0, 0, 0));
+    	IplImage binaryCircles = newImage(binaryImage, 1);
+    	IplImage binaryDisplay;
+    	cvSet(binaryCircles, cvScalar(0, 0, 0, 0));
     	List<Point> centroids = findPossibleCentroids(binaryImage, 1000, 3000, 4);
 //    	System.out.printf("Found %d robots.\n", centroids.size());
     	yellowRobots.clear();
     	blueRobots.clear();
     	for (Point rectCentroid : centroids) {
-    		// Set the region of interest so we threshold only part of image
-    		CvRect rect = rectFromPoint(rectCentroid, 40, 40);
-    		cvSetImageROI(hsvImage, rect);
-    		cvSetImageROI(binaryTemp, rect);
-    		dotEntity.threshold(hsvImage, binaryTemp);
-    		/*cvCircle(binaryTemp, rectCentroid.cv(), 15,
-    		        cvScalar(255, 255, 255, 0), -1, 8, 0);*/
-    		
-    		// beware the method below could return null
-    		// we still add it though
-    		Point dotCentroid = dotEntity.findClosestCentroid(binaryTemp, 40, 150, rectCentroid);
-    		
-    		// We check each robot if yellow or blue
-    		if (isYellowRobot(hsvImage)) {
+    		cvCircle(binaryCircles, rectCentroid.asCV(), Constants.BASEPLATE_RADIUS,
+    				cvScalar(255,255,255,0), -1, 8, 0);
+    	}
+    	dotEntity.threshold(hsvImage, binaryTemp);
+    	cvAnd(binaryTemp, binaryCircles, binaryTemp, null);
+    	binaryDisplay = newImage(binaryTemp, 1);
+    	cvCopy(binaryTemp, binaryDisplay);
+    	List<Point> possibleCentroids = findPossibleCentroids(binaryTemp, 10, 150, Integer.MAX_VALUE);
+    	for (Point rectCentroid : centroids) {
+    		Point dotCentroid = dotEntity.findClosestCentroid(possibleCentroids, rectCentroid);
+    		// Probably should put all this in a different method.
+    		Point mmRobot = new Point(rectCentroid).toMillis();
+    		int zone = MasterController.getZoneOfPoint(mmRobot);
+    		if (dotCentroid != null) {
+	    		Point mmDot = new Point(dotCentroid).toMillis();
+	    		int dotZone = MasterController.getZoneOfPoint(mmDot);
+	    		if (zone != dotZone) {
+	    			dotCentroid = null;
+	    		}
+    		}
+    		if (isYellowRobot(zone)) {
     			yellowRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
     		} else {
     			blueRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
     		}
     	}
-		cvResetImageROI(hsvImage);
-		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
-			dotEntity.threshold(hsvImage, binaryDisplay);
-			blur(binaryDisplay, binaryDisplay, cvSize(3, 3), cvPoint(-1 ,-1), BORDER_DEFAULT);
-			VisionGUI.updateImage(binaryDisplay);
-		}
+    	if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
+    		VisionGUI.updateImage(binaryDisplay);
+    	}
     }
     
     public CvRect rectFromPoint(Point pt, int width, int height) {
     	return cvRect((int) pt.x - (width / 2), (int) pt.y - (height / 2), width, height);
     }
     
-    private boolean isYellowRobot(IplImage hsvImage) {
-    	IplImage channel = newImage(hsvImage, 1);
-    	int[] mins = Thresholds.activeThresholds.yellowMins;
-    	int[] maxs = Thresholds.activeThresholds.yellowMaxs;
-    	cvInRangeS(hsvImage, cvScalar(mins[0], mins[1], mins[2], 0), cvScalar(maxs[0], maxs[1], maxs[2], 0), channel);
-    	int nonZero = cvCountNonZero(channel);
-//    	System.out.println(nonZero);
-    	return nonZero > Thresholds.activeThresholds.yellowPixelsThreshold ? true : false;
+    private boolean isYellowRobot(int zone) {
+    	boolean leftIsYellow = (
+    			(MasterController.ourSide == Constants.TeamSide.LEFT &&
+    			 MasterController.ourTeam == Constants.TeamColour.YELLOW) ||
+    			(MasterController.ourSide == Constants.TeamSide.RIGHT &&
+    			 MasterController.ourTeam == Constants.TeamColour.BLUE));
+    	if (zone == 0 || zone == 2) {
+    		return leftIsYellow;
+    	} else {
+    		return !leftIsYellow;
+    	}
     }
     
 }
