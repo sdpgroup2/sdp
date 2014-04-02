@@ -36,7 +36,7 @@ public class Pitch {
     private Point center;
 
     public Pitch(PitchType pitchType) {
-    	this.lines = pitchType == PitchType.MAIN ? Constants.MAIN_LINES : Constants.SIDE_LINES;
+    	this.lines = MasterController.getPitchLines();
     	this.center = MasterController.pitchPlayed == PitchType.MAIN ? Constants.PITCH0_CENTER : Constants.PITCH1_CENTER;
     }
 
