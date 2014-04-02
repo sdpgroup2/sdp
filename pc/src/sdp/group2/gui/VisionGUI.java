@@ -27,6 +27,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import sdp.group2.pc.MasterController;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
 
@@ -114,6 +115,19 @@ public class VisionGUI extends WindowAdapter {
 			}
 		});
         controlPanel.add(drawBox);
+        
+     // Start robots
+        JCheckBox aiBox = new JCheckBox();
+        aiBox.setSelected(MasterController.matchStarted);
+        aiBox.setText("AI on");
+        aiBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				MasterController.matchStarted = !MasterController.matchStarted;
+			}
+		});
+        controlPanel.add(aiBox);
         
         // Entity Panel
         JTabbedPane entityPane = new JTabbedPane();

@@ -27,6 +27,7 @@ public class MasterController implements VisionServiceCallback {
     public static TeamSide ourSide;
     public static PitchType pitchPlayed;
     public static boolean usingComms = true;
+    public static boolean matchStarted = false;
     private Pitch pitch;
     private DefensivePlanner defPlanner;
     private OffensivePlanner offPlanner;
@@ -167,7 +168,7 @@ public class MasterController implements VisionServiceCallback {
 		ImageProcessor.heightFilter(yellowRobots);
     	ImageProcessor.heightFilter(blueRobots);
 
-    	if (usingComms) {
+    	if (usingComms && matchStarted) {
 			offPlanner.act();
 			defPlanner.act();
     	}

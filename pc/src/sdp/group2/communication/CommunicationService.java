@@ -5,12 +5,18 @@
 package sdp.group2.communication;
 
 import java.io.IOException;
+
+import sdp.group2.pc.Timer;
 import sdp.group2.util.Constants;
 
 public class CommunicationService {
 	
+	// In nanoseconds. 40,000,000 is the same delay as the camera feed.
+	private static final long A_MILLION = 1000000;
+	private static final long COMM_THREAD_DELAY = 40000000;
+	
 	private Sender sender2A;
-	private Sender sender2D;   
+	private Sender sender2D;
 	
 	public CommunicationService() {
 		try {
@@ -28,84 +34,48 @@ public class CommunicationService {
 		}
 		
 	}
+	
 	public void startRunningFromQueue() {
-		Thread popThread2A = new Thread(new Runnable() {
-			
+		Thread popThread2A = new Thread(robotCommandRunnable(Constants.ROBOT_2A_NAME));
+		Thread popThread2D = new Thread(robotCommandRunnable(Constants.ROBOT_2D_NAME));
+		popThread2A.start();
+		popThread2D.start();
+	}
+	
+	public Runnable robotCommandRunnable(final String robotName) {
+		final Sender s = (robotName.equals(Constants.ROBOT_2A_NAME)) ? sender2A : sender2D;
+		return new Runnable() {
 			@Override
 			public void run() {
-				while(true) {
-					if (!CommandQueue.isEmpty(Constants.ROBOT_2A_NAME)) {
+				while (true) {
+					long before = System.nanoTime();
+					if (!CommandQueue.isEmpty(robotName)) {
 						short[] commands = new short[4];
 						int i = 0;
-						for (int command : CommandQueue.peek(Constants.ROBOT_2A_NAME)) {
-						
-							commands[i] = (short) command;
-							i++;        
-						}
-						try {
-							sender2A.command(commands);
-							CommandQueue.poll(Constants.ROBOT_2A_NAME);
-						} catch(IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-			
-		});
-		
-		
-		
-		Thread popThread2D = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while(true) {
-					if (!CommandQueue.isEmpty(Constants.ROBOT_2D_NAME)) {
-						short[] commands = new short[4];
-						int i = 0;
-						for (int command : CommandQueue.peek(Constants.ROBOT_2D_NAME)) {
+						for (int command : CommandQueue.peek(robotName)) {
 							
 							commands[i] = (short) command;
 							i++;        
 						}
 						try {
-							sender2D.command(commands);
-							CommandQueue.poll(Constants.ROBOT_2D_NAME);
+							s.command(commands);
+							CommandQueue.poll(robotName);
 						} catch(IOException e) {
+							e.printStackTrace();
+						}
+					}
+					long delay = System.nanoTime() - before;
+					if (delay < COMM_THREAD_DELAY) {
+						long sleepTime = (COMM_THREAD_DELAY - delay);
+						try {
+							Thread.sleep(sleepTime / A_MILLION);
+						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}
 				}
 			}
-			
-		});
-		popThread2A.start();
-		popThread2D.start();
-		
-		Thread attemptClear = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while(true) {
-					if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2A_NAME)) {
-						if (sender2A != null) {
-							sender2A.clearBuff();
-							CommandQueue.clear(Constants.ROBOT_2A_NAME);
-						}
-					} else if (CommandQueue.containsCommand(Commands.clear(), Constants.ROBOT_2D_NAME)) {
-						if (sender2D != null) {
-							sender2D.clearBuff();
-							CommandQueue.clear(Constants.ROBOT_2D_NAME);
-						}
-					}
-				}
-				
-			}
-
-		});
-		attemptClear.start();
-
+		};
 	}
 	
 }
