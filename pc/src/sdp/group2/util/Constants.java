@@ -37,6 +37,9 @@ public class Constants {
     public static final int[] MAIN_LINES = {661, 1337, 2021};
     public static final int[] SIDE_LINES = { 473, 1070, 1637};
     
+    // Approx distance from centre of baseplate to dot
+    public static final int BASEPLATE_RADIUS = 12;
+    
     public static int HISTORY_SIZE = 15;
     public static int STABLE_DISTANCE = 120;
 

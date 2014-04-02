@@ -109,7 +109,8 @@ public class RobotEntity extends Entity {
     	yellowRobots.clear();
     	blueRobots.clear();
     	for (Point rectCentroid : centroids) {
-    		cvCircle(binaryCircles, rectCentroid.asCV(), 13, cvScalar(255,255,255,0), -1, 8, 0);
+    		cvCircle(binaryCircles, rectCentroid.asCV(), Constants.BASEPLATE_RADIUS,
+    				cvScalar(255,255,255,0), -1, 8, 0);
     	}
     	dotEntity.threshold(hsvImage, binaryTemp);
     	cvAnd(binaryTemp, binaryCircles, binaryTemp, null);

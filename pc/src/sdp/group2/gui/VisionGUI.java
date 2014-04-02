@@ -41,13 +41,13 @@ public class VisionGUI extends WindowAdapter {
 
 	public static final int MAIN_INDEX = 0;
 	public static final int BALL_INDEX = 1;
-	public static final int ROBOT_INDEX = 2;
-	public static final int DOT_INDEX = 3;
+	public static final int DOT_INDEX = 2;
+	public static final int ROBOT_INDEX = 3;
 
     private static JFrame windowFrame;
     private static JLabel imageLabel = new JLabel();
     private static EntityThresh[] entities;
-    private static String[] imageNames = new String[] {"Main", "Ball", "Bases", "Dots"};
+    private static String[] imageNames = new String[] {"Main", "Ball", "Dots", "Bases"};
     private static String[] entityNames;
     public static int selectedImage;
     public static boolean drawObjects = true;
@@ -61,7 +61,7 @@ public class VisionGUI extends WindowAdapter {
 	public void initialise() {
 	    JPanel contentPanel;
 	    entities = Thresholds.activeThresholds.entities;
-	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name, entities[3].name};
+	    entityNames = new String[]{entities[0].name,entities[1].name, entities[2].name};
 
         windowFrame = new JFrame("Vision: " + Thresholds.pitchName);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,6 +73,14 @@ public class VisionGUI extends WindowAdapter {
         contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.LINE_AXIS));               
+        
+        // Entity Panel
+        final JTabbedPane entityPane = new JTabbedPane();
+        
+        for (int i = 0; i < entityNames.length; i++) {
+            JComponent panel = makeSliderPanel(entityNames[i], i);
+            entityPane.addTab(entityNames[i], null, panel, null);
+		}
         
         // Image List
         JPanel mainPanel = new JPanel();
@@ -91,7 +99,11 @@ public class VisionGUI extends WindowAdapter {
             @Override
 			public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting() == false) {
-                    selectedImage = imageList.getSelectedIndex();
+                	int index = imageList.getSelectedIndex();
+                    selectedImage = index;
+                    if (index != 0) {
+                    	entityPane.setSelectedIndex(index-1);
+                    }
                 }
             }
         });
@@ -130,14 +142,8 @@ public class VisionGUI extends WindowAdapter {
 		});
         controlPanel.add(aiBox);
         
-        // Entity Panel
-        JTabbedPane entityPane = new JTabbedPane();
         
-        for (int i = 0; i < entityNames.length; i++) {
-            JComponent panel = makeSliderPanel(entityNames[i], i);
-            entityPane.addTab(entityNames[i], null, panel, null);
-		}
-        
+        // Adding entity panel
         controlPanel.add(entityPane);
 
         // Save button
