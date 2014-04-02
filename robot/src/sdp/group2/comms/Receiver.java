@@ -84,7 +84,9 @@ public class Receiver {
 							break;
 							
 						case Commands.OPENKICKER:
+							LCD.drawString("Opening kicker",1,3);
 							pilot.openKicker();
+							LCD.drawString("Opened kicker",1,4);
 							break;
 							
 						case Commands.CLOSEKICKER:

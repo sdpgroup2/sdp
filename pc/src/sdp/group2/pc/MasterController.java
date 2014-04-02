@@ -10,6 +10,7 @@ import sdp.group2.communication.Commands;
 import sdp.group2.communication.CommunicationService;
 import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
+import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Constants.TeamColour;
@@ -27,7 +28,7 @@ public class MasterController implements VisionServiceCallback {
     public static PitchType pitchPlayed;
     private Pitch pitch;
     private DefensivePlanner defPlanner;
-//    private OffensivePlanner offPlanner;
+    private OffensivePlanner offPlanner;
     private VisionService visionService;
 
     private CommunicationService commService;
@@ -36,7 +37,7 @@ public class MasterController implements VisionServiceCallback {
     public MasterController(PitchType pitchPlayed) {
     	this.pitch = new Pitch(pitchPlayed);
     	this.defPlanner = new DefensivePlanner(pitch);
-//    	this.offPlanner = new EvenSimplerAttackingPlanner(pitch);
+    	this.offPlanner = new OffensivePlanner(pitch);
         // Start the vision system
         this.visionService = new VisionService(5, this);
         this.commService = new CommunicationService();
@@ -138,9 +139,9 @@ public class MasterController implements VisionServiceCallback {
 		
 		ImageProcessor.heightFilter(yellowRobots);
     	ImageProcessor.heightFilter(blueRobots);
-		
-		defPlanner.act();   
-//		offPlanner.act();
+
+		offPlanner.act();
+		defPlanner.act();
 	}
 	
 	

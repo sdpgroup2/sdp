@@ -191,7 +191,7 @@ public class Sender {
 	private int attemptConnection(short[] command) {
 
 		int confirmation = 0;
-		System.out.println("Command: " + command[0]);
+//		System.out.println("Command: " + command[0]);
 		//for (int i = 0; i<10; i++){
 			try {
 				confirmation = sendToRobot(command);

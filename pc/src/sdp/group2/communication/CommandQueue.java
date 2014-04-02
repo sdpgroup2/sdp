@@ -11,16 +11,20 @@ public class CommandQueue {
 	private static ConcurrentLinkedQueue<int[]> commandQueue2A = new ConcurrentLinkedQueue<int[]>();
 	public static ConcurrentLinkedQueue<int[]> commandQueue2D = new ConcurrentLinkedQueue<int[]>();
 	
-	public static void add(int[] command, String robotName){
-		if (robotName.equals(Constants.ROBOT_2A_NAME)){
+	public static boolean add(int[] command, String robotName){
+		boolean added = false;
+		if (robotName.equals(Constants.ROBOT_2A_NAME)) {
 			if (commandQueue2A.isEmpty()) {
+				added = true;
 				commandQueue2A.add(command);
 			}
 		} else if (robotName.equals(Constants.ROBOT_2D_NAME)){
 			if (commandQueue2D.isEmpty()) {
+				added = true;
 				commandQueue2D.add(command);
 			}
 		}
+		return added;
 	}
 	public static int[] poll(String robotName){
 		if (robotName.equals(Constants.ROBOT_2A_NAME)){

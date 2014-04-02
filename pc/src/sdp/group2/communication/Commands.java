@@ -78,7 +78,7 @@ public class Commands{
 		return new int[] {OPENKICKER, 0, 0, 0};
 	}
 
-	public static int[] steer(int turnRate){
+	public static int[] steer(int turnRate) {
 		return new int[] {STEER,turnRate,0,0};
 	}
 	

@@ -32,9 +32,11 @@ public class Pitch {
     private Robot blueAttacker;
     private Robot yellowDefender;
     private Robot yellowAttacker;
+    private Point center;
 
     public Pitch(PitchType pitchType) {
     	this.lines = pitchType == PitchType.MAIN ? Constants.MAIN_LINES : Constants.SIDE_LINES;
+    	this.center = MasterController.pitchPlayed == PitchType.MAIN ? Constants.PITCH0_CENTER : Constants.PITCH1_CENTER;
     }
 
     public void addBall(Ball ball) {
@@ -323,6 +325,10 @@ public class Pitch {
 			blueAttacker = new Robot(secondBlue.getFirst(), secondBlue.getSecond(), 2, blueAttackerName);
 		}
 		
+	}
+	
+	public Point getCenter() {
+		return center;
 	}
 
 	public void updateRobotState(int id, Point p, double theta) {
