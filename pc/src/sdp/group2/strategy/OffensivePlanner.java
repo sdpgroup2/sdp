@@ -91,7 +91,7 @@ public class OffensivePlanner extends Planner {
 				System.out.println("In the center");
 				if (robot.shouldPassAlign()) {
 					System.out.println("Trying to align for passing");
-					robot.passAllign();	
+					robot.passAlign();	
 					return;
 				} else {
 					System.out.println("Kicking");

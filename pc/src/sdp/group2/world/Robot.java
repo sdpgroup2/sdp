@@ -176,7 +176,7 @@ public class Robot extends MovableObject {
 		return !(unsignedAngle < 10);
     }
     
-    public void passAllign() {
+    public void passAlign() {
 		// Angle ranges from -180 to 180 degrees.
 		double angle = angleToX();
 		System.out.printf("Rotate by: %f.2\n", angle);

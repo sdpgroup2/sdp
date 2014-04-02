@@ -1,14 +1,11 @@
 package sdp.group2.strategy;
 
 import sdp.group2.communication.CommandQueue;
-import sdp.group2.geometry.Point;
-import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
-import sdp.group2.util.Constants.PitchType;
+import sdp.group2.util.Debug;
 import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
 import sdp.group2.world.Robot;
-import sdp.group2.world.Robot.RobotState;
 
 public class DefensivePlanner extends Planner {
 	
@@ -28,6 +25,7 @@ public class DefensivePlanner extends Planner {
     }
 	
 	public void act() {
+		Debug.log("Ball: %s", pitch.getBall().getPosition());
 //		frames += 1;
 		int ballZoneId = pitch.getBallZone();
 		int defenderZoneId = pitch.getOurDefendZone();
@@ -95,7 +93,7 @@ public class DefensivePlanner extends Planner {
 				System.out.println("In the center");
 				if (robot.shouldPassAlign()) {
 					System.out.println("Trying to align for passing");
-					robot.passAllign();	
+					robot.passAlign();	
 					return;
 				} else {
 					System.out.println("Kicking");
