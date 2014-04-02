@@ -23,7 +23,7 @@ public class Constants {
     
     // Center of the pitches in millimeters
     public static final Point PITCH0_CENTER = new Point(0, 0);
-    public static final Point PITCH1_CENTER = new Point(1239, 342);
+    public static final Point PITCH1_CENTER = new Point(1068, 666);
     
     // Height of the camera in millimeters
     public static final double PITCH0_CAMERA_HEIGHT = 2370;
@@ -35,7 +35,7 @@ public class Constants {
     
     // Lines in millimetres
     public static final int[] MAIN_LINES = {661, 1337, 2021};
-    public static final int[] SIDE_LINES = {584, 1278, 1939};
+    public static final int[] SIDE_LINES = { 473, 1070, 1637};
     
     public static int HISTORY_SIZE = 15;
     public static int STABLE_DISTANCE = 120;

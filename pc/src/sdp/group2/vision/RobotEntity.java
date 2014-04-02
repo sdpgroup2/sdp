@@ -2,10 +2,14 @@ package sdp.group2.vision;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvCountNonZero;
 import static com.googlecode.javacv.cpp.opencv_core.cvInRangeS;
+import static com.googlecode.javacv.cpp.opencv_core.cvPoint;
 import static com.googlecode.javacv.cpp.opencv_core.cvRect;
 import static com.googlecode.javacv.cpp.opencv_core.cvResetImageROI;
 import static com.googlecode.javacv.cpp.opencv_core.cvScalar;
 import static com.googlecode.javacv.cpp.opencv_core.cvSetImageROI;
+import static com.googlecode.javacv.cpp.opencv_core.cvSize;
+import static com.googlecode.javacv.cpp.opencv_imgproc.BORDER_DEFAULT;
+import static com.googlecode.javacv.cpp.opencv_imgproc.blur;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
 import static sdp.group2.vision.ImageProcessor.newImage;
@@ -91,6 +95,7 @@ public class RobotEntity extends Entity {
     
     public void detectRobots(IplImage hsvImage, IplImage binaryImage) {
     	IplImage binaryTemp = newImage(binaryImage, 1);
+    	IplImage binaryDisplay = newImage(binaryImage, 1);
     	//cvSet(binaryTemp, cvScalar(0, 0, 0, 0));
     	List<Point> centroids = findPossibleCentroids(binaryImage, 1000, 3000, 4);
 //    	System.out.printf("Found %d robots.\n", centroids.size());
@@ -116,10 +121,12 @@ public class RobotEntity extends Entity {
     			blueRobots.add(new Tuple<Point, Point>(rectCentroid, dotCentroid));
     		}
     	}
-		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
-			VisionGUI.updateImage(binaryTemp);
-		}
 		cvResetImageROI(hsvImage);
+		if (VisionGUI.selectedImage == VisionGUI.DOT_INDEX) {
+			dotEntity.threshold(hsvImage, binaryDisplay);
+			blur(binaryDisplay, binaryDisplay, cvSize(3, 3), cvPoint(-1 ,-1), BORDER_DEFAULT);
+			VisionGUI.updateImage(binaryDisplay);
+		}
     }
     
     public CvRect rectFromPoint(Point pt, int width, int height) {
