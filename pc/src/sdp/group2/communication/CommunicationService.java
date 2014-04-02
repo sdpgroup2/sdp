@@ -13,26 +13,27 @@ public class CommunicationService {
 	
 	// In nanoseconds. 40,000,000 is the same delay as the camera feed.
 	private static final long A_MILLION = 1000000;
-	private static final long COMM_THREAD_DELAY = 40000000;
+	private static final long COMM_THREAD_DELAY = 20000000;
 	
 	private Sender sender2A;
 	private Sender sender2D;
 	
 	public CommunicationService() {
+		sender2A = connect(Constants.ROBOT_2A_NAME);
+		sender2D = connect(Constants.ROBOT_2D_NAME);
+	}
+	
+	public Sender connect(String robotName) {
+		String mac = (robotName.equals(Constants.ROBOT_2A_NAME)) ? Constants.ROBOT_2A_MAC : Constants.ROBOT_2D_MAC;
+		Sender sender;
 		try {
-			sender2A = new Sender(Constants.ROBOT_2A_NAME,Constants.ROBOT_2A_MAC);
-			System.out.println("Connected to 2A");
+			sender = new Sender(robotName, mac);
+			System.out.println("Connected to "+robotName);
+			return sender;
 		} catch (IOException e) {
-			System.err.println("Can't connect to 2A!");
+			System.err.println("Can't connect to "+robotName);
+			return null;
 		}
-		
-		try {
-			sender2D = new Sender(Constants.ROBOT_2D_NAME,Constants.ROBOT_2D_MAC);
-			System.out.println("Connected to 2D");
-		} catch (IOException e) {
-			System.err.println("Can't connect to 2D!");
-		}
-		
 	}
 	
 	public void startRunningFromQueue() {

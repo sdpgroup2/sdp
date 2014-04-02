@@ -99,7 +99,6 @@ public class MasterController implements VisionServiceCallback {
         final MasterController controller = new MasterController(pitchPlayed);
         if (usingComms) {
 	        Runtime.getRuntime().addShutdownHook(new Thread() {
-	        	
 	            public void run() {
 	            	System.out.println("Closing");
 	            	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2A_NAME);
@@ -108,6 +107,13 @@ public class MasterController implements VisionServiceCallback {
 	         });
         }
     	controller.start();
+    }
+    
+    public static void disconnect() {
+    	if (usingComms) {
+	    	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2A_NAME);
+	    	CommandQueue.add(Commands.disconnect(), Constants.ROBOT_2D_NAME);
+    	}
     }
 
     public void start() {	
