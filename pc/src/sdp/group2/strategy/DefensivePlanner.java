@@ -163,6 +163,6 @@ public class DefensivePlanner extends Planner {
 		}
 		
 		CommandQueue.clear(Constants.ROBOT_2D_NAME);
-		robot.alignWith(ball, 400);
+		robot.alignWith(ball, 1000);
 	}
 }

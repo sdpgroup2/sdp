@@ -28,7 +28,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import sdp.group2.communication.CommandQueue;
+import sdp.group2.communication.Commands;
 import sdp.group2.pc.MasterController;
+import sdp.group2.util.Constants;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
 
@@ -155,6 +158,16 @@ public class VisionGUI extends WindowAdapter {
             }
         });
         controlPanel.add(button);
+        
+        JButton button2 = new JButton("Test Bluetooth Delay");
+        button2.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		System.out.println("Test drive!");
+        		CommandQueue.add(Commands.move(1, 400, 100), Constants.ROBOT_2D_NAME);
+        	}
+        });
+        controlPanel.add(button2);
 
         windowFrame.setContentPane(contentPanel);
         windowFrame.pack();

@@ -84,7 +84,7 @@ public class MasterController implements VisionServiceCallback {
         ourSide = (args[1].equals("left")) ? TeamSide.LEFT : TeamSide.RIGHT;
         pitchPlayed = (args[2].equals("main")) ? PitchType.MAIN : PitchType.SIDE;
         Thresholds.pitchName = args[3];
-        if (args[4].equals("false")) {
+        if (args.length > 4 && args[4].equals("false")) {
         	usingComms = false;
         }
         
