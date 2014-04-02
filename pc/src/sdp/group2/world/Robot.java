@@ -102,13 +102,18 @@ public class Robot extends MovableObject {
     }
     
     public void forward(int dir, int distance, int speed) {
-    	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.move(dir, speed, distance), name);
+    	boolean added = CommandQueue.add(Commands.move(dir, speed, distance), name);
+    	if (added) { 
+    		System.out.println("Went distance " + distance);
+    	}
     }
     
     public void rotate(double degrees) {
     	// TODO: change the name in the method below
-    	CommandQueue.add(Commands.rotate((int) degrees, 50), name);
+    	boolean added = CommandQueue.add(Commands.rotate((int) degrees, 50), name);
+    	if (added) { 
+    		System.out.println("Rotated by " + degrees);
+    	}
     }
     
     public double distanceTo(Point point) {
@@ -120,16 +125,17 @@ public class Robot extends MovableObject {
     }
     
     public boolean hasBall(Ball ball) {
-    	return (distanceTo(ball) <= 150 && Math.abs(angleTo(ball)) <= 20);
+    	return (distanceTo(ball) <= 120 && Math.abs(angleTo(ball)) <= 30 ) || (distanceTo(ball) < 60 && Math.abs(angleTo(ball)) <= 60);
     }
     
     public boolean canGrab(Ball ball) {
-    	return (distanceTo(ball) <= 150 && Math.abs(angleTo(ball)) <= 20);
+    	return (distanceTo(ball) <= 120 && Math.abs(angleTo(ball)) <= 20);
     }
     
     public void kick() {
 		boolean added = CommandQueue.add(Commands.kick(15, 0), name);
 		if (added) {
+			System.out.println("Kicked!");
 			kickerOpen = true;
 		}
     }
@@ -137,6 +143,7 @@ public class Robot extends MovableObject {
     public void openKicker() {
     	boolean added = CommandQueue.add(Commands.openKicker(), name);
     	if (added) {
+    		System.out.println("Opened kicker!");
     		kickerOpen = true;
     	}
     }
@@ -144,6 +151,7 @@ public class Robot extends MovableObject {
     public void closeKicker() {
     	boolean added = CommandQueue.add(Commands.closeKicker(), name);
     	if (added) {
+    		System.out.println("Closed kicker!");
     		kickerOpen = false;
     	}
     }
