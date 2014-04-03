@@ -23,18 +23,18 @@ public class Constants {
     
     // Center of the pitches in millimeters
     public static final Point PITCH0_CENTER = new Point(0, 0);
-    public static final Point PITCH1_CENTER = new Point(1068, 666);
+    public static final Point PITCH1_CENTER = new Point(1282, 757);
     
     // Height of the camera in millimeters
     public static final double PITCH0_CAMERA_HEIGHT = 2370;
     public static final double PITCH1_CAMERA_HEIGHT = 2285;
     
     // Height of the robot in millimetersprivate Point position;
-    public static final double ROBOT_HEIGHT = 190;
-    public static final double BALL_HEIGHT = 40;
+    public static final double ROBOT_HEIGHT = 175;
+    public static final double BALL_HEIGHT = 51;
     
     // Lines in millimetres
-    public static final int[] MAIN_LINES = {661, 1337, 2021};
+    public static final int[] MAIN_LINES = { 485, 1075, 1620};
     public static final int[] SIDE_LINES = { 473, 1070, 1637};
     
     // Approx distance from centre of baseplate to dot

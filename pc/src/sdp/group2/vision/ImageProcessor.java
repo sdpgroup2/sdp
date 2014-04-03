@@ -28,7 +28,6 @@ import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Tuple;
-import sdp.group2.world.Ball;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvPoint;
@@ -128,6 +127,9 @@ public class ImageProcessor {
         	VisionGUI.updateImage(binaryImage);
         }
         ballCentroid = ballEntity.findCentroid(binaryImage);
+        if (ballCentroid != null) {
+        	VisionGUI.setBallPos(new Point(ballCentroid).toMillis());
+        }
         
         binaryImage = robotEntity.threshold(temp);
         if (VisionGUI.selectedImage == VisionGUI.ROBOT_INDEX) {
@@ -225,11 +227,25 @@ public class ImageProcessor {
     }
     
     public static Point adjustByHeight(Point originalPoint, Point pitchCenter, double cameraHeight, double objHeight) {
-    	originalPoint.offset(-pitchCenter.x, -pitchCenter.y);
-		double ratio = (cameraHeight - objHeight) / cameraHeight;
-		originalPoint.mult(ratio);
-		originalPoint.offset(pitchCenter.x, pitchCenter.y);
-		return originalPoint;
+//    	System.out.println("Point before adjust: "+originalPoint.toString());
+    	double ratio = objHeight / cameraHeight;
+    	double dx = originalPoint.x - pitchCenter.x;
+    	double dy = originalPoint.y - pitchCenter.y;
+    	double robotX = dx * ratio;
+    	double robotY = dy * ratio;
+    	originalPoint.x -= robotX;
+    	originalPoint.y -= robotY;
+//    	System.out.println("Point after adjust: "+originalPoint.toString());
+    	return originalPoint;
+//    			
+//    	double distanceToCamera = Math.sqrt(cameraHeight * cameraHeight + distanceToCenter * distanceToCenter);
+//    	double distanceToObject = ratio * distanceToCamera;
+//    	
+//    	originalPoint.offset(-pitchCenter.x, -pitchCenter.y);
+//		
+//		originalPoint.mult(ratio);
+//		originalPoint.offset(pitchCenter.x, pitchCenter.y);
+//		return originalPoint;
     }
 
     /**

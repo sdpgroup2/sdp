@@ -12,13 +12,16 @@ import sdp.group2.geometry.Point;
 import sdp.group2.strategy.DefensivePlanner;
 import sdp.group2.strategy.OffensivePlanner;
 import sdp.group2.util.Constants;
-import sdp.group2.util.Constants.*;
+import sdp.group2.util.Constants.PitchType;
+import sdp.group2.util.Constants.TeamColour;
+import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Tuple;
 import sdp.group2.vision.ImageProcessor;
 import sdp.group2.vision.Thresholds;
 import sdp.group2.vision.VisionService;
 import sdp.group2.vision.VisionServiceCallback;
 import sdp.group2.world.Pitch;
+import sdp.group2.util.Debug;
 
 public class MasterController implements VisionServiceCallback {
 
@@ -80,9 +83,9 @@ public class MasterController implements VisionServiceCallback {
             System.exit(1);
         }
 
-        ourTeam = (args[0].equals("yellow")) ? TeamColour.YELLOW : TeamColour.BLUE;
-        ourSide = (args[1].equals("left")) ? TeamSide.LEFT : TeamSide.RIGHT;
-        pitchPlayed = (args[2].equals("main")) ? PitchType.MAIN : PitchType.SIDE;
+        ourTeam = (eitherArg("team", args[0], "yellow", "blue")) ? TeamColour.YELLOW : TeamColour.BLUE;
+        ourSide = (eitherArg("side", args[1], "left", "right")) ? TeamSide.LEFT : TeamSide.RIGHT;
+        pitchPlayed = (eitherArg("pitch", args[2], "main", "side")) ? PitchType.MAIN : PitchType.SIDE;
         Thresholds.pitchName = args[3];
         if (args.length > 4 && args[4].equals("false")) {
         	usingComms = false;
@@ -107,6 +110,18 @@ public class MasterController implements VisionServiceCallback {
 	         });
         }
     	controller.start();
+    }
+    
+    public static boolean eitherArg(String argName, String value, String trueVal, String falseVal) {
+    	if (value.equals(trueVal)) {
+    		return true;
+    	} else {
+    		if (!value.equals(falseVal)) {
+    			Debug.log("WARNING: %s not a valid input for %s.", value, argName);
+    			Debug.log("Defaulting to %s", falseVal);
+    		}
+    		return false;
+    	}
     }
     
     public static void disconnect() {
@@ -159,20 +174,22 @@ public class MasterController implements VisionServiceCallback {
 	@Override
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
+
 		
-		pitch.updateRobots(yellowRobots, blueRobots);
+    	// DONT TOUCH THIS. It shouldn't work but it does.
+    	pitch.updateRobots(yellowRobots, blueRobots);
 		for (Tuple<Point, Point> tuple : blueRobots) {
 			tupleOfPointsToMillis(tuple);
 		}
     	for (Tuple<Point, Point> tuple : yellowRobots) {
     		tupleOfPointsToMillis(tuple);
 		}
+    	ImageProcessor.heightFilter(yellowRobots);
+    	ImageProcessor.heightFilter(blueRobots);
+    	
 		if (ballCentroid != null) {
 			pitch.updateBallPosition(ballCentroid.toMillis());
 		}
-		
-		ImageProcessor.heightFilter(yellowRobots);
-    	ImageProcessor.heightFilter(blueRobots);
 
     	if (usingComms && matchStarted) {
 			offPlanner.act();
