@@ -4,6 +4,7 @@ import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Vector;
+import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
@@ -193,7 +194,8 @@ public class Robot extends MovableObject {
 		double angle = angleToX();	
 		System.out.printf("Rotate by: %f.2\n", angle);
 		System.out.println(CommandQueue.commandQueue2D.size());
-		rotate(-0.7 * angle * alignToPass()); // TODO: Test if works as expected
+		int sign = MasterController.ourSide == Constants.TeamSide.LEFT ? 1 : -1;
+		rotate(-0.7 * angle * sign); // TODO: Test if works as expected
 	}
     
     private int alignToPass() {
