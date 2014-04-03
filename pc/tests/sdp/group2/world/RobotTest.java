@@ -15,6 +15,12 @@ public class RobotTest extends TestCase {
   	protected void setUp() throws Exception {
   		MockitoAnnotations.initMocks(this);
   	}
+  	
+//  	public void testPassAlign() {
+//  		rob = new Robot(new Point(2, 2), new Point(2, 1), 0, "whatever");
+//  		double result = rob.passAlign();
+//  		assertEquals(0.7 * -90, result, 1);
+//  	}
 
   	public void testGoTo() {
   		// Initialise

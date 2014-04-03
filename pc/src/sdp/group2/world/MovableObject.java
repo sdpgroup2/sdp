@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Vector;
 
 import sdp.group2.geometry.Point;
+import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
+import sdp.group2.util.Constants.PitchType;
 
 public abstract class MovableObject {
 
@@ -35,7 +37,7 @@ public abstract class MovableObject {
 		double maxY = 0;
 		double minX = Integer.MAX_VALUE;
 		double minY = Integer.MAX_VALUE;
-		for(int i=0;i<posHistory.size();i++) {
+		for(int i=0; i<posHistory.size(); i++) {
 			Point point = posHistory.get(i);
 			if(point.x > maxX) {
 				maxX = point.x;
@@ -59,6 +61,31 @@ public abstract class MovableObject {
 		} else {
 			return true;
 		}
+	}
+	
+	public boolean enteringZone(int zone) {
+		double min, max;
+		int[] lines;
+		if (MasterController.pitchPlayed == PitchType.MAIN) {
+			lines = Constants.MAIN_LINES;
+		} else {
+			lines = Constants.SIDE_LINES;
+		}
+
+		min = zone == 0 ? 0 : lines[zone - 1];
+		max = zone == 3 ? Integer.MAX_VALUE : lines[zone];
+
+		int pointCount = posHistory.size() - 1;
+		int framesInZone = 0;
+		for (int i = pointCount; i >= 0; i--) {
+			double x = posHistory.get(i).x;
+			if (x >= min && x <= max) {
+				framesInZone++;
+			} else {
+				break;
+			}
+		}
+		return framesInZone > 1 && framesInZone <= 10;
 	}
 	
 	public void printHistory() {
