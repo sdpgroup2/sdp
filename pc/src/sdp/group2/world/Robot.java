@@ -31,6 +31,7 @@ public class Robot extends MovableObject {
 	// The min/max Y that the robot is allowed to have. (The goal posts)
 	private static final double minY = 365;
 	private static final double maxY = 1026;
+	private boolean doing360 = false;
 
     public Robot(Point robotPosition, Point dotPosition, int zone, String name) {
     	super(robotPosition);
@@ -219,6 +220,21 @@ public class Robot extends MovableObject {
 		
 		// If the distance is too great, and the robot is roughly vertically aligned:
 		forward(-dir, dist, speed);
+    }
+    
+    public void do360() {
+//    	doing360 = true;
+    	boolean added = false;
+    	while (!added) {
+    		added = CommandQueue.add(Commands.rotate(360, 400), name);
+    	}
+//    	if (added) {
+//    		doing360 = false;
+//    	}
+    }
+    
+    public boolean isDoing360() {
+    	return doing360;
     }
     
     public void alignWith(MovableObject obj, int speed) {

@@ -29,54 +29,18 @@ public class DefensivePlanner extends Planner {
 //		frames += 1;
 		int ballZoneId = pitch.getBallZone();
 		int defenderZoneId = pitch.getOurDefendZone();
-		
+		System.out.println("------------------------------------------");
 		if (ballZoneId != defenderZoneId) {
 			defend();
 		} else {
 			pass();
 		}
+		System.out.println("------------------------------------------");
 	}
 	
 	public void pass() {
 		Robot robot = pitch.getOurDefender();
 		Ball ball = pitch.getBall();
-//		Point pitchCenter;
-//		if (MasterController.pitchPlayed == PitchType.MAIN) {
-//			pitchCenter = Constants.PITCH0_CENTER;
-//		} else {
-//			pitchCenter = Constants.PITCH1_CENTER;
-//		}
-//		
-//		
-//		switch (robot.getState()) {
-//		case CAN_PASS:
-//			robot.kick();
-//			robot.setState(RobotState.FIND_BALL);
-//			return;
-//		case HAS_BALL:
-//			robot.alignWith(pitchCenter);
-//			if (robot.shouldPassAlign()) {
-//				robot.passAllign();
-//			} else if (robot.distanceTo(new Point(robot.getPosition().x, ))){
-//				robot.setState(RobotState.CAN_PASS);
-//			}
-//			break;
-//			
-//		case CAN_GRAB:
-//			robot.closeKicker();
-//			System.out.println("Closed the kicker");
-//			break;
-//			
-//		case FIND_BALL:
-//			break;
-//		
-//		default:
-//			break;
-//		}
-//		
-//		if (robot.getState() == RobotState.FIND_BALL) {
-//			
-//		}
 
 		System.out.println("Kicker: " + robot.isKickerOpen());
 		System.out.println("Distance to ball: " + robot.distanceTo(ball));
