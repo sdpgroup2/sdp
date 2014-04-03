@@ -34,7 +34,7 @@ public class Constants {
     public static final double BALL_HEIGHT = 40;
     
     // Lines in millimetres
-    public static final int[] MAIN_LINES = {661, 1337, 2021};
+    public static final int[] MAIN_LINES = { 485, 1075, 1620};
     public static final int[] SIDE_LINES = { 473, 1070, 1637};
     
     // Approx distance from centre of baseplate to dot

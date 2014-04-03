@@ -28,7 +28,7 @@ public class Point extends Point2D.Double implements Comparable<Point> {
 
     @Override
     public String toString() {
-    	return "(" + x + ", " + y + ")";
+    	return String.format("(%.3f, %.3f)", x, y);
     }
     
     public Point toMillis() {

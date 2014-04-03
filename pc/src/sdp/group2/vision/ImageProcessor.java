@@ -28,7 +28,6 @@ import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.PitchType;
 import sdp.group2.util.Tuple;
-import sdp.group2.world.Ball;
 
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvPoint;
@@ -128,6 +127,9 @@ public class ImageProcessor {
         	VisionGUI.updateImage(binaryImage);
         }
         ballCentroid = ballEntity.findCentroid(binaryImage);
+        if (ballCentroid != null) {
+        	VisionGUI.setBallPos(new Point(ballCentroid).toMillis());
+        }
         
         binaryImage = robotEntity.threshold(temp);
         if (VisionGUI.selectedImage == VisionGUI.ROBOT_INDEX) {

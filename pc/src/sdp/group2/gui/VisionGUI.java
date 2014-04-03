@@ -1,8 +1,10 @@
 package sdp.group2.gui;
 
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -34,6 +36,7 @@ import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
 import sdp.group2.vision.EntityThresh;
 import sdp.group2.vision.Thresholds;
+import sdp.group2.geometry.Point;
 
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
@@ -49,6 +52,7 @@ public class VisionGUI extends WindowAdapter {
 
     private static JFrame windowFrame;
     private static JLabel imageLabel = new JLabel();
+    private static JLabel ballLabel = new JLabel();
     private static EntityThresh[] entities;
     private static String[] imageNames = new String[] {"Main", "Ball", "Dots", "Bases"};
     private static String[] entityNames;
@@ -159,6 +163,7 @@ public class VisionGUI extends WindowAdapter {
         });
         controlPanel.add(button);
         
+        // Bluetooth button
         JButton button2 = new JButton("Test Bluetooth Delay");
         button2.addActionListener(new ActionListener() {
         	@Override
@@ -168,6 +173,10 @@ public class VisionGUI extends WindowAdapter {
         	}
         });
         controlPanel.add(button2);
+        
+        // Ball position label
+        ballLabel.setFont(Font.getFont("Monospaced"));
+        controlPanel.add(ballLabel);
 
         windowFrame.setContentPane(contentPanel);
         windowFrame.pack();
@@ -180,6 +189,10 @@ public class VisionGUI extends WindowAdapter {
 	
 	public static void updateImage(IplImage image) {
 		singleton.setImage(image.getBufferedImage());
+	}
+	
+	public static void setBallPos(Point mmPoint) {
+		ballLabel.setText("Ball pos: " + mmPoint.toString());
 	}
 	
 	public void setImage(BufferedImage image) {
