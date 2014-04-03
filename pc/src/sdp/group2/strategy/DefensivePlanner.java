@@ -1,25 +1,11 @@
 package sdp.group2.strategy;
 
-import sdp.group2.communication.CommandQueue;
-import sdp.group2.util.Constants;
-import sdp.group2.util.Debug;
 import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
 import sdp.group2.world.Robot;
 
 public class DefensivePlanner extends Planner {
-	
-//	private static final String robotName = Constants.ROBOT_2D_NAME;
-	
-	// The number of frames in between commands
-//	private int STUTTER_FRAMES = 1;
-	
-	// The number of frames this has been running.
-//	private int frames = 0;
-	
-	// Test PID
-//	private PID pid = new PID(90.0);
-	
+		
 	public DefensivePlanner(Pitch pitch) {
         super(pitch);
     }
@@ -28,6 +14,7 @@ public class DefensivePlanner extends Planner {
 		int ballZoneId = pitch.getBallZone();
 		int defenderZoneId = pitch.getOurDefendZone();
 		System.out.println("------------------------------------------");
+		System.out.println("---------------DEFENDER-------------------");
 //		System.out.println("Robot position: " + pitch.getOurDefender().getPosition());
 //		System.out.println("Ball position: " + pitch.getBall().getPosition());
 		if (ballZoneId != defenderZoneId || pitch.getBall().enteringZone(defenderZoneId)) {
@@ -82,17 +69,17 @@ public class DefensivePlanner extends Planner {
 		
 		// The angle is wrong if it is more than 10 degrees away from 90.
 		boolean wrongAngle = !(unsignedAngle < 20);
-		System.out.println("Angle to ball:" + angle);
-		System.out.println("Distance to ball:" + robot.distanceTo(ball));
-		System.out.println("Ball position:" + ball.getPosition());
-		System.out.println("Robot position:" + robot.getPosition());
+//		System.out.println("Angle to ball:" + angle);
+//		System.out.println("Distance to ball:" + robot.distanceTo(ball));
+//		System.out.println("Ball position:" + ball.getPosition());
+//		System.out.println("Robot position:" + robot.getPosition());
 		
 		if (wrongAngle) {
 	    	robot.rotate(- 0.7 * angle);
 		} else {
 			int dist = (int) robot.distanceTo(ball);
 			// Multiply by 0.9 so that we don't hit the wall and stuff
-			dist = (int) (0.5 * dist);
+			dist = (int) (0.8 * dist);
 			
 			// If the distance is too great, and the robot is roughly vertically aligned:
 			robot.forward(1, dist, 100);
@@ -112,7 +99,6 @@ public class DefensivePlanner extends Planner {
 			return;
 		}
 		
-		CommandQueue.clear(Constants.ROBOT_2D_NAME);
-		robot.alignWith(ball, 1000);
+		robot.alignWith(ball, 1000, 25);
 	}
 }

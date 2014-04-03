@@ -37,7 +37,7 @@ public abstract class MovableObject {
 		double maxY = 0;
 		double minX = Integer.MAX_VALUE;
 		double minY = Integer.MAX_VALUE;
-		for(int i=0; i<posHistory.size(); i++) {
+		for(int i=0; i < Constants.STABLE_HISTORY_SIZE; i++) {
 			Point point = posHistory.get(i);
 			if(point.x > maxX) {
 				maxX = point.x;
@@ -85,7 +85,7 @@ public abstract class MovableObject {
 				break;
 			}
 		}
-		return framesInZone > 1 && framesInZone <= 10;
+		return framesInZone > 1 && framesInZone <= 25;
 	}
 	
 	public void printHistory() {

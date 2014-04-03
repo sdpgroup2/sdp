@@ -22,6 +22,7 @@ public class Commands {
 	public final static int OPENKICKER = 8;
 	public final static int CLOSEKICKER = 9;
 	public final static int ROTATEKICKER = 10;
+	public final static int KICK360 = 11;
 	
 	public final static int CLEAR = 62;
 	public final static int FORCEQUIT = 63;
@@ -44,6 +45,7 @@ public class Commands {
 		case CLEAR:			return "CLEAR";
 		case FORCEQUIT:		return "QUIT";
 		case DISCONNECT:	return "DISCONNECT";
+		case KICK360: 		return "360KICK";
 		default: return "";
 		}
 	}

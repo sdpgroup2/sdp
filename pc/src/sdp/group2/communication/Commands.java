@@ -23,6 +23,7 @@ public class Commands{
 	public final static int OPENKICKER = 8;
 	public final static int CLOSEKICKER = 9;
 	public final static int ROTATEKICKER = 10;
+	public final static int KICK360 = 11;
 	
 	public final static int CLEAR = 62;
 	public final static int FORCEQUIT = 63;
@@ -45,6 +46,7 @@ public class Commands{
 		case CLEAR:			return "Clear";
 		case FORCEQUIT:		return "Force quit";
 		case DISCONNECT:	return "Disconnect";
+		case KICK360:		return "360 kick";
 		default: return "";
 		}
 	}
@@ -80,6 +82,10 @@ public class Commands{
 
 	public static int[] steer(int turnRate) {
 		return new int[] {STEER,turnRate,0,0};
+	}
+	
+	public static int[] kick360(int angle, int speed) {
+		return new int[] {KICK360, angle, speed, 0};
 	}
 	
 	public static int[] disconnect() {

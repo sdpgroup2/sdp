@@ -1,36 +1,26 @@
 package sdp.group2.strategy;
 
-import sdp.group2.communication.CommandQueue;
-import sdp.group2.util.Constants;
-import sdp.group2.util.Debug;
 import sdp.group2.world.Ball;
 import sdp.group2.world.Pitch;
 import sdp.group2.world.Robot;
 
 public class OffensivePlanner extends Planner {
 	
-//	private static final String robotName = Constants.ROBOT_2D_NAME;
-	
-	// The number of frames in between commands
-//	private int STUTTER_FRAMES = 1;
-	
-	// The number of frames this has been running.
-//	private int frames = 0;
-	
-	// Test PID
-//	private PID pid = new PID(90.0);
 	
 	public OffensivePlanner(Pitch pitch) {
         super(pitch);
     }
 	
 	public void act() {
-//		Debug.log("Ball: %s", pitch.getBall().getPosition());
-//		frames += 1;
 		int ballZoneId = pitch.getBallZone();
-		int defenderZoneId = pitch.getOurAttackZone();
-		System.out.println("------------------------------------------");
-		if (ballZoneId != defenderZoneId) {
+		int attackerZoneId = pitch.getOurAttackZone();
+		System.out.println("\n\n------------------------------------------");
+		System.out.println("---------------ATTACKER-------------------");
+		System.out.println("Distance to ball:" + pitch.getOurAttacker().distanceTo(pitch.getBall()));
+		System.out.println("Angle to ball:" + pitch.getOurAttacker().angleTo(pitch.getBall()));
+//		System.out.println("Robot position: " + pitch.getOurDefender().getPosition());
+//		System.out.println("Ball position: " + pitch.getBall().getPosition());
+		if (ballZoneId != attackerZoneId || pitch.getBall().enteringZone(attackerZoneId)) {
 			defend();
 		} else {
 			pass();
@@ -42,55 +32,42 @@ public class OffensivePlanner extends Planner {
 		Robot robot = pitch.getOurAttacker();
 		Ball ball = pitch.getBall();
 
-		System.out.println("Kicker: " + robot.isKickerOpen());
-		System.out.println("Distance to ball: " + robot.distanceTo(ball));
-		System.out.println("Angle to ball: " + robot.angleTo(ball));
+//		System.out.println("Kicker: " + robot.isKickerOpen());
+//		System.out.println("Distance to ball: " + robot.distanceTo(ball));
+//		System.out.println("Angle to ball: " + robot.angleTo(ball));
 		System.out.println("Has ball: " + robot.hasBall(ball));
-				
+		
 		if (!robot.isKickerOpen() && !robot.hasBall(ball)) {
-//			CommandQueue.clear(Constants.ROBOT_2D_NAME);
 			robot.openKicker();
-//			System.out.println("Opened the kicker!");
 			return;
-			
 		} else if (robot.hasBall(ball) && !robot.isKickerOpen()) {
-//			CommandQueue.clear(Constants.ROBOT_2D_NAME);
 			// Angle ranges from -180 to 180 degrees.
 			if (robot.inCenter(getPitch())) {
-//				System.out.println("In the center");
 				if (robot.shouldPassAlign()) {
-//					System.out.println("Trying to align for passing");
 					robot.passAlign();	
 					return;
 				} else {
-//					System.out.println("Kicking");
-					robot.do360();
-					robot.kick();
-//					try {
-//						Thread.sleep(1500);
-//					} catch (Exception e) {
-//						
-//					}
+					double angleToDefender = robot.angleTo(pitch.getFoeDefender().getPosition());
+					System.out.println("Angle to defender: " + angleToDefender);
+					if (Math.abs(angleToDefender) < 10) {
+						robot.kick360();
+					} else {
+						robot.kick();
+					}
 					return;
 				}
 			} else {
-//				System.out.println("Trying to go to center");
 				robot.alignWith(pitch.getCenter(), 100);
 				return;
 			}
 		}
-//		System.out.println("Don't have the ball!");
 		
 		if (!ball.isStable() && !robot.canGrab(ball)) {
-			System.out.println("ball not stable");
 			return;
 		}
-//		System.out.println("Ball is stable!");
 		
 		if (robot.canGrab(ball) && robot.isKickerOpen()) {
-//			CommandQueue.clear(Constants.ROBOT_2D_NAME);
 			robot.closeKicker();
-//			System.out.println("Closed the kicker!");
 			return;
 		}
 		
@@ -100,20 +77,20 @@ public class OffensivePlanner extends Planner {
 		
 		// The angle is wrong if it is more than 10 degrees away from 90.
 		boolean wrongAngle = !(unsignedAngle < 20);
+//		System.out.println("Angle to ball:" + angle);
+//		System.out.println("Distance to ball:" + robot.distanceTo(ball));
+//		System.out.println("Ball position:" + ball.getPosition());
+//		System.out.println("Robot position:" + robot.getPosition());
 		
 		if (wrongAngle) {
-//			System.out.printf("Rotate by: %f.2\n", angle);
 	    	robot.rotate(- 0.7 * angle);
 		} else {
-//			CommandQueue.clear(Constants.ROBOT_2D_NAME);
 			int dist = (int) robot.distanceTo(ball);
 			// Multiply by 0.9 so that we don't hit the wall and stuff
-			dist = (int) (0.5 * dist);
+			dist = (int) (0.8 * dist);
 			
 			// If the distance is too great, and the robot is roughly vertically aligned:
-//			System.out.printf("Going %d mms\n", dist);
 			robot.forward(1, dist, 100);
-//			System.out.println("Went to the ball!");
 		}
 		
 	}
@@ -130,7 +107,6 @@ public class OffensivePlanner extends Planner {
 			return;
 		}
 		
-		CommandQueue.clear(Constants.ROBOT_2A_NAME);
-		robot.alignWith(ball, 1000);
+		robot.alignWith(ball, 1000, 25);
 	}
 }

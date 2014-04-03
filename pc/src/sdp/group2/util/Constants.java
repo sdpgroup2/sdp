@@ -46,8 +46,9 @@ public class Constants {
     // Approx distance from centre of baseplate to dot
     public static final int BASEPLATE_RADIUS = 12;
     
-    public static int HISTORY_SIZE = 15;
-    public static int STABLE_DISTANCE = 120;
+    public static final int STABLE_HISTORY_SIZE = 15;
+    public static final int HISTORY_SIZE = 30;
+    public static final int STABLE_DISTANCE = 120;
     
     
     public enum TeamColour {

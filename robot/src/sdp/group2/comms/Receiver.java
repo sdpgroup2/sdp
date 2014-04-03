@@ -97,7 +97,11 @@ public class Receiver {
 						case Commands.ROTATEKICKER:
 							pilot.rotateKicker();
 							break;
-						
+							
+						case Commands.KICK360:
+							pilot.kick360(option1, option2);
+							break;
+							
 						case Commands.DISCONNECT: 
 							replying = false;
 							System.out.println("Waiting for connection...");

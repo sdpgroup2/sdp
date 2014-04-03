@@ -7,7 +7,6 @@ import sdp.group2.communication.Commands;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Vector;
 import sdp.group2.pc.MasterController;
-import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
@@ -134,7 +133,7 @@ public class Robot extends MovableObject {
     }
     
     public boolean hasBall(Ball ball) {
-    	return (distanceTo(ball) <= 135 && Math.abs(angleTo(ball)) <= 30 ) || (distanceTo(ball) < 60 && Math.abs(angleTo(ball)) <= 60);
+    	return (distanceTo(ball) <= 150 && Math.abs(angleTo(ball)) <= 30 ) || (distanceTo(ball) < 60 && Math.abs(angleTo(ball)) <= 60);
     }
     
     public boolean canGrab(Ball ball) {
@@ -210,7 +209,7 @@ public class Robot extends MovableObject {
 		return amount;
 	}
     
-    public void alignWith(Point pt, int speed) {
+    public void alignWith(Point pt, int speed, int minMove) {
 		double angle = angleToX();
 		double angleSign = Math.signum(angle);
 		
@@ -232,6 +231,9 @@ public class Robot extends MovableObject {
 			dist = (int) Math.abs(maxY - ry);
 		}
 		
+		if (dist < minMove) {
+			return;
+		}
 		// Multiply by 0.9 so that we don't hit the wall and stuff
 		dist = (int) (0.9 * dist);
 		
@@ -239,10 +241,14 @@ public class Robot extends MovableObject {
 		forward(-dir, dist, speed);
     }
     
-    public void do360() {
+    public void alignWith(Point pt, int speed) {
+    	alignWith(pt, speed, 0);
+    }
+    
+    public void kick360() {
     	Random r = new Random();
     	int rand = r.nextInt(10);
-		CommandQueue.add(Commands.rotate(400 + rand, 400), name);
+		CommandQueue.add(Commands.kick360(400 + rand, 400), name);
     }
     
     public boolean isDoing360() {
@@ -251,6 +257,10 @@ public class Robot extends MovableObject {
     
     public void alignWith(MovableObject obj, int speed) {
     		alignWith(obj.getPosition(), speed);
+    }
+    
+    public void alignWith(MovableObject obj, int speed, int minMove) {
+    	alignWith(obj.getPosition(), speed, minMove);
     }
     
     /**

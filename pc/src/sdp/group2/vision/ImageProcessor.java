@@ -126,7 +126,7 @@ public class ImageProcessor {
         	// show ball
         	VisionGUI.updateImage(binaryImage);
         }
-        ballCentroid = ballEntity.findCentroid(binaryImage);
+        ballCentroid = ballEntity.findCentroid(binaryImage, 8, 15*15);
         if (ballCentroid != null) {
         	VisionGUI.setBallPos(new Point(ballCentroid).toMillis());
         }

@@ -198,7 +198,7 @@ public class Sender {
 				
 			} catch (IOException e1) {
 				System.out.println("Could not send command");
-				e1.printStackTrace();
+//				e1.printStackTrace();
 			}
 		//}
 		System.out.println("Confirmation: " + confirmation);

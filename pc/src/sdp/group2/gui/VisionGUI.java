@@ -170,7 +170,7 @@ public class VisionGUI extends WindowAdapter {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		System.out.println("Boom.");
-        		do360();
+        		kick360();
         	}
         });
         controlPanel.add(button2);
@@ -200,10 +200,13 @@ public class VisionGUI extends WindowAdapter {
 		imageLabel.setIcon(new ImageIcon(image));
 	}
 	
-	public void do360() {
+	public void kick360() {
     	Random r = new Random();
     	int rand = r.nextInt(10);
-		CommandQueue.add(Commands.rotate(400 + rand, 400), Constants.ROBOT_2D_NAME);
+    	CommandQueue.add(Commands.kick360(400 + rand, 400), Constants.ROBOT_2A_NAME);
+		CommandQueue.add(Commands.kick360(400 + rand, 400), Constants.ROBOT_2D_NAME);
+//    	CommandQueue.add(Commands.move(1, 400, 1000), Constants.ROBOT_2A_NAME);
+//		CommandQueue.add(Commands.move(1, 400, 1000), Constants.ROBOT_2D_NAME);
     }
 	
     protected JComponent makeSliderPanel(String text, int index) {
