@@ -174,20 +174,22 @@ public class MasterController implements VisionServiceCallback {
 	@Override
 	public void update(Point ballCentroid, List<Tuple<Point, Point>> yellowRobots,
 			List<Tuple<Point, Point>> blueRobots) {
+
 		
-		pitch.updateRobots(yellowRobots, blueRobots);
+    	// DONT TOUCH THIS. It shouldn't work but it does.
+    	pitch.updateRobots(yellowRobots, blueRobots);
 		for (Tuple<Point, Point> tuple : blueRobots) {
 			tupleOfPointsToMillis(tuple);
 		}
     	for (Tuple<Point, Point> tuple : yellowRobots) {
     		tupleOfPointsToMillis(tuple);
 		}
+    	ImageProcessor.heightFilter(yellowRobots);
+    	ImageProcessor.heightFilter(blueRobots);
+    	
 		if (ballCentroid != null) {
 			pitch.updateBallPosition(ballCentroid.toMillis());
 		}
-		
-		ImageProcessor.heightFilter(yellowRobots);
-    	ImageProcessor.heightFilter(blueRobots);
 
     	if (usingComms && matchStarted) {
 			offPlanner.act();

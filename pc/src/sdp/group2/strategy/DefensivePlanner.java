@@ -30,11 +30,13 @@ public class DefensivePlanner extends Planner {
 		int ballZoneId = pitch.getBallZone();
 		int defenderZoneId = pitch.getOurDefendZone();
 		System.out.println("------------------------------------------");
-		if (ballZoneId != defenderZoneId) {
-			defend();
-		} else {
-			pass();
-		}
+		System.out.println("Robot position: " + pitch.getOurDefender().getPosition());
+		System.out.println("Ball position: " + pitch.getBall().getPosition());
+//		if (ballZoneId != defenderZoneId) {
+//			defend();
+//		} else {
+//			pass();
+//		}
 		System.out.println("------------------------------------------");
 	}
 	
