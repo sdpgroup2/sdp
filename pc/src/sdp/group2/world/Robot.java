@@ -1,11 +1,14 @@
 package sdp.group2.world;
 
+import java.util.Random;
+
 import sdp.group2.communication.CommandQueue;
 import sdp.group2.communication.Commands;
 import sdp.group2.geometry.Point;
 import sdp.group2.geometry.Vector;
 import sdp.group2.pc.MasterController;
 import sdp.group2.util.Constants;
+import sdp.group2.util.Constants.TeamSide;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
 
@@ -93,6 +96,10 @@ public class Robot extends MovableObject {
     	return facingVector.angleDegrees(new Vector(1, 0));
     }
     
+    public double angleToNegX() {
+    	return facingVector.angleDegrees(new Vector(-1, 0));
+    }
+    
     public double angleToY() {
     	return facingVector.angleDegrees(new Vector(0, 1));
     }
@@ -130,11 +137,11 @@ public class Robot extends MovableObject {
     }
     
     public boolean hasBall(Ball ball) {
-    	return (distanceTo(ball) <= 120 && Math.abs(angleTo(ball)) <= 30 ) || (distanceTo(ball) < 60 && Math.abs(angleTo(ball)) <= 60);
+    	return (distanceTo(ball) <= 135 && Math.abs(angleTo(ball)) <= 30 ) || (distanceTo(ball) < 60 && Math.abs(angleTo(ball)) <= 60);
     }
     
     public boolean canGrab(Ball ball) {
-    	return (distanceTo(ball) <= 120 && Math.abs(angleTo(ball)) <= 20);
+    	return (distanceTo(ball) <= 160 && Math.abs(angleTo(ball)) <= 20);
     }
     
     public void kick() {
@@ -185,26 +192,26 @@ public class Robot extends MovableObject {
     	double angle = angleToX();
 		double unsignedAngle = Math.abs(angle);
 		
-		// The angle is wrong if it is more than 10 degrees away from 90.
-		return !(unsignedAngle < 10);
+		if (MasterController.ourSide == TeamSide.LEFT) {
+			return (unsignedAngle < 10);
+		} else {
+			return (-170 < angle && angle < 170);
+		}
     }
     
-    public void passAlign() {
+    public double passAlign() {
 		// Angle ranges from -180 to 180 degrees.
-		double angle = angleToX();	
-		System.out.printf("Rotate by: %f.2\n", angle);
-		System.out.println(CommandQueue.commandQueue2D.size());
-		int sign = MasterController.ourSide == Constants.TeamSide.LEFT ? 1 : -1;
-		rotate(-0.7 * angle * sign); // TODO: Test if works as expected
+    	double angle;
+    	if (MasterController.ourSide == TeamSide.LEFT) {
+    		angle = angleToX();
+    	} else {
+    		angle = angleToNegX();
+    	}
+    	double amount = -0.7 * angle;
+		Debug.log("Angle: %f, Rotating: %f", angle, amount);
+		rotate(amount); // TODO: Test if works as expected
+		return amount;
 	}
-    
-    private int alignToPass() {
-    	return passFromLeft ? -1 : 1;
-    }
-    
-    public void setPassSide(boolean fromLeft) {
-    	passFromLeft = fromLeft;
-    }
     
     public void alignWith(Point pt, int speed) {
 		double angle = angleToX();
@@ -236,14 +243,9 @@ public class Robot extends MovableObject {
     }
     
     public void do360() {
-//    	doing360 = true;
-    	boolean added = false;
-    	while (!added) {
-    		added = CommandQueue.add(Commands.rotate(360, 400), name);
-    	}
-//    	if (added) {
-//    		doing360 = false;
-//    	}
+    	Random r = new Random();
+    	int rand = r.nextInt(10);
+		CommandQueue.add(Commands.rotate(400 + rand, 400), name);
     }
     
     public boolean isDoing360() {

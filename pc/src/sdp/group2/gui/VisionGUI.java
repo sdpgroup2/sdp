@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -168,8 +169,8 @@ public class VisionGUI extends WindowAdapter {
         button2.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
-        		System.out.println("Test drive!");
-        		CommandQueue.add(Commands.move(1, 400, 100), Constants.ROBOT_2D_NAME);
+        		System.out.println("Boom.");
+        		do360();
         	}
         });
         controlPanel.add(button2);
@@ -199,6 +200,12 @@ public class VisionGUI extends WindowAdapter {
 		imageLabel.setIcon(new ImageIcon(image));
 	}
 	
+	public void do360() {
+    	Random r = new Random();
+    	int rand = r.nextInt(10);
+		CommandQueue.add(Commands.rotate(400 + rand, 400), Constants.ROBOT_2D_NAME);
+    }
+	
     protected JComponent makeSliderPanel(String text, int index) {
         JPanel panel = new JPanel(false);
         // below 0 for min 1 for max
@@ -215,7 +222,7 @@ public class VisionGUI extends WindowAdapter {
     public void windowClosing(WindowEvent e) {
     	MasterController.disconnect();
     	try {
-    		Thread.sleep(200);
+    		Thread.sleep(500);
     	} catch (InterruptedException ex) {
     		ex.printStackTrace();
     	}

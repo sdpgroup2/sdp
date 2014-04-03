@@ -26,7 +26,8 @@ public class Constants {
     public static final Point PITCH1_CENTER = new Point(1282, 757);
     
     // Height of the camera in millimeters
-    public static final double PITCH0_CAMERA_HEIGHT = 2370;
+//    public static final double PITCH0_CAMERA_HEIGHT = 2370;
+    public static final double PITCH0_CAMERA_HEIGHT = 2438.4;
     public static final double PITCH1_CAMERA_HEIGHT = 2285;
     
     // Height of the robot in millimetersprivate Point position;
