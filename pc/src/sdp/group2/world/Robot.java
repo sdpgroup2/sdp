@@ -195,10 +195,6 @@ public class Robot extends MovableObject {
 		rotate(-0.7 * angle * sign); // TODO: Test if works as expected
 	}
     
-    public void setPassSide(boolean fromLeft) {
-    	passFromLeft = fromLeft;
-    }
-    
     public void alignWith(Point pt, int speed) {
 		double angle = angleToX();
 		double angleSign = Math.signum(angle);
