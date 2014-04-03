@@ -36,9 +36,6 @@ public class Robot extends MovableObject {
 	private static final double minY = 365;
 	private static final double maxY = 1026;
 	private boolean doing360 = false;
-	
-	// Align for passing
-	private boolean passFromLeft = true; 
 
     public Robot(Point robotPosition, Point dotPosition, int zone, String name) {
     	super(robotPosition);
