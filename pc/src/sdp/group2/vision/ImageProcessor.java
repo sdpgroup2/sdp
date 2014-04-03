@@ -44,7 +44,7 @@ public class ImageProcessor {
     private static final CvMat cameraMatrix = new CvMat(cvLoad(ASSETS_FOLDER + "/CameraMatrix.yml"));
     private static final CvMat distCoeffs = new CvMat(cvLoad(ASSETS_FOLDER + "/DistCoeffs.yml"));
 
-    private static CvRect cropRect = Thresholds.activeThresholds.cropRect; 
+    private static CvRect cropRect = Constants.PITCH0_CROPRECT; 
 
 	private static IplImage uncropped; // The image we get from the camera 
     private static IplImage uncroppedTemp; // Temp image we need in undistort
@@ -168,7 +168,14 @@ public class ImageProcessor {
      * @param image
      */
     public static void drawShit(IplImage image) {
+    	final boolean drawShadows = false;
     	if (ballCentroid != null) {
+    		if (drawShadows) {
+	    		Point adjusted = new Point(ballCentroid).toMillis();
+	    		adjustByHeight(adjusted, Constants.PITCH0_CENTER, Constants.PITCH0_CAMERA_HEIGHT, 51);
+	    		adjusted.toPixels();
+	    		cvCircle(image, adjusted.asCV(), 4, cvScalar(0, 0, 128, 0), -1, 8, 0);
+    		}
     		cvCircle(image, ballCentroid.asCV(), 6, cvScalar(0, 0, 255, 0), -1, 8, 0);
     	}
     	
@@ -177,6 +184,12 @@ public class ImageProcessor {
     	
     	for (Tuple<Point, Point> robot : blueRobots()) {
     		centroid = robot.getFirst().asCV();
+    		if (drawShadows) {
+	    		Point adjusted = new Point(robot.getFirst()).toMillis();
+	    		adjustByHeight(adjusted, Constants.PITCH0_CENTER, Constants.PITCH0_CAMERA_HEIGHT, Constants.ROBOT_HEIGHT);
+	    		adjusted.toPixels();
+	    		cvCircle(image, adjusted.asCV(), 6, cvScalar(128, 0, 0, 0), -1, 8, 0);
+    		}
     		cvCircle(image, centroid, 8, cvScalar(255, 0, 0, 0), -1, 8, 0);
     		dotPoint = robot.getSecond();
     		if (dotPoint != null) {
@@ -186,6 +199,12 @@ public class ImageProcessor {
     	
     	for (Tuple<Point, Point> robot : yellowRobots()) {
     		centroid = robot.getFirst().asCV();
+    		if (drawShadows) {
+	    		Point adjusted = new Point(robot.getFirst()).toMillis();
+	    		adjustByHeight(adjusted, Constants.PITCH0_CENTER, Constants.PITCH0_CAMERA_HEIGHT, Constants.ROBOT_HEIGHT);
+	    		adjusted.toPixels();
+	    		cvCircle(image, adjusted.asCV(), 6, cvScalar(0, 128, 128, 0), -1, 8, 0);
+    		}
     		cvCircle(image, centroid, 8, cvScalar(0, 255, 255, 0), -1, 8, 0);
     		dotPoint = robot.getSecond();
     		if (dotPoint != null) {

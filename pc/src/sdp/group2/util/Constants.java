@@ -1,6 +1,8 @@
 package sdp.group2.util;
 
 import sdp.group2.geometry.Point;
+import static com.googlecode.javacv.cpp.opencv_core.cvRect;
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
 
 public class Constants {
 
@@ -21,8 +23,11 @@ public class Constants {
     public static final double PX_TO_MM = 4.56310;
     public static final double MM_TO_PX = 0.2191;
     
+    public static final CvRect PITCH0_CROPRECT = cvRect(55, 35, 560, 325);
+    public static final CvRect PITCH1_CROPRECT = cvRect(45, 70, 563, 330);
+    
     // Center of the pitches in millimeters
-    public static final Point PITCH0_CENTER = new Point(0, 0);
+    public static final Point PITCH0_CENTER = new Point(1076, 662);
     public static final Point PITCH1_CENTER = new Point(1282, 757);
     
     // Height of the camera in millimeters
@@ -34,7 +39,7 @@ public class Constants {
     public static final double BALL_HEIGHT = 51;
     
     // Lines in millimetres
-    public static final int[] MAIN_LINES = { 485, 1075, 1620};
+    public static final int[] MAIN_LINES = { 492, 1076, 1648};
     public static final int[] SIDE_LINES = { 473, 1070, 1637};
     
     // Approx distance from centre of baseplate to dot
@@ -42,7 +47,8 @@ public class Constants {
     
     public static int HISTORY_SIZE = 15;
     public static int STABLE_DISTANCE = 120;
-
+    
+    
     public enum TeamColour {
         YELLOW,
         BLUE;

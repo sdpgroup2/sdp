@@ -9,6 +9,7 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import java.util.List;
 
 import sdp.group2.geometry.Point;
+import sdp.group2.util.Constants;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
@@ -21,7 +22,7 @@ public class DotEntity extends Entity {
 	private static IplImage binaryImage;
 
 	static {
-		CvRect cropRect = Thresholds.activeThresholds.cropRect;
+		CvRect cropRect = Constants.PITCH0_CROPRECT;
 		binaryImage = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 1);
 	}
 

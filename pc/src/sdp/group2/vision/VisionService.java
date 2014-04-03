@@ -10,6 +10,7 @@ import sdp.group2.geometry.Point;
 import sdp.group2.gui.VisionGUI;
 import sdp.group2.pc.MasterController;
 import sdp.group2.pc.Timer;
+import sdp.group2.util.Constants;
 import sdp.group2.util.Constants.TeamColour;
 import sdp.group2.util.Debug;
 import sdp.group2.util.Tuple;
@@ -37,7 +38,7 @@ public class VisionService implements CaptureCallback {
 	private VisionServiceCallback callback;
 	private Timer timer = new Timer(10);
 	private VisionState state = VisionState.Preparation;
-	private CvRect cropRect = Thresholds.activeThresholds.cropRect;
+	private CvRect cropRect = Constants.PITCH0_CROPRECT;
 
 	/**
 	 * Initialises a new vision service with a certain device name, number of

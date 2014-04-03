@@ -36,6 +36,12 @@ public class Point extends Point2D.Double implements Comparable<Point> {
     	this.y = Millimeter.pix2mm(y);
     	return this;
     }
+    
+    public Point toPixels() {
+    	this.x = Millimeter.mm2pix(x);
+    	this.y = Millimeter.mm2pix(y);
+    	return this;
+    }
 
     @Override
     public int compareTo(Point other) {

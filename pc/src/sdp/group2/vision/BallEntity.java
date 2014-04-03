@@ -8,6 +8,7 @@ import static com.googlecode.javacv.cpp.opencv_core.cvSize;
 import static com.googlecode.javacv.cpp.opencv_core.cvSplit;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvDilate;
 import static com.googlecode.javacv.cpp.opencv_imgproc.cvErode;
+import sdp.group2.util.Constants;
 
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
@@ -19,7 +20,7 @@ public class BallEntity extends Entity {
     private static IplImage binaryImage;
     
     static {
-        CvRect cropRect = Thresholds.activeThresholds.cropRect;
+        CvRect cropRect = Constants.PITCH0_CROPRECT;
         for (int i = 0; i < 3; ++i) {
             hsvImages[i] = IplImage.create(cvSize(cropRect.width(), cropRect.height()), 8, 1);
         }
