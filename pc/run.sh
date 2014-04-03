@@ -20,8 +20,18 @@ else
   PITCH=1;
 fi
 
+echo -n "Playing on the left[Y/n]?"
+read ANS3
+if [ "$ANS3" == "n" ]; then
+  echo "Playing on the right";
+  SIDE=1;
+else
+  echo "Playing on the left";
+  SIDE=0;
+fi
+
 PC=`hostname | cut -d '.' -f 1`;
 echo -n "Using $PC computer.\n"
 
 echo "Starting...\n"
-ant run -Dteam=$TEAM -Dpitch=$PITCH -Dpc=$PC
+ant run -Dteam=$TEAM -Dpitch=$PITCH -Dpc=$PC -Dside=$SIDE
