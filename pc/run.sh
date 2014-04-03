@@ -34,4 +34,6 @@ PC=`hostname | cut -d '.' -f 1`;
 echo -n "Using $PC computer.\n"
 
 echo "Starting...\n"
-ant run -Dteam=$TEAM -Dpitch=$PITCH -Dpc=$PC -Dside=$SIDE
+CMD="ant run -Dteam=$TEAM -Dpitch=$PITCH -Dpc=$PC -Dside=$SIDE"
+echo "Running: $CMD"
+$CMD
