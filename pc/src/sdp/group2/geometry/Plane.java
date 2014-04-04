@@ -1,5 +1,3 @@
-/** @author Jaroslaw Hirniak */
-
 package sdp.group2.geometry;
 
 import java.awt.Polygon;
