@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./team_logo.jpg" alt="Team Logo" />
+  <img src="./team_logo.gif" alt="Team Logo" />
 </p>
 
 SDP - Group 2 - 2014
