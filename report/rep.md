@@ -42,7 +42,7 @@ We experimented with having either one or two light sensors in different positio
 
 Many different kicker designs and positions were tested, such as kicking from the side, or, as we discovered was more effective, the front of the robot.
 
-Firstly we tried to use a regular Lego Servo motor for the kicker, but this took up too much space and often struggled to fit within the size constraints, especially once we added the cumbersome brick.
+Firstly we tried to use a regular Lego Servo motor for the kicker, but it took up too much space, often struggling to fit within the size constraints, especially once we added the cumbersome brick.
 We then used a smaller, stronger motor for the kicker design to maximize torque. Using a simple gear train we dramatically increased the speed of the kicker.
 
 The robot used a simple two wheel drive using Servo motors for accurate rotations, as speed was not a high priority. A third holonomic wheel at the back of the robot was then added to enable smooth rotations and to add stability. We experimented with using a four-wheel drive powered by two motors, gearing the wheels of sides together. However, this presented problems with turning, as having front and back wheels moving at the same speed with rubber wheels caused the robot to move and turn erratically.
@@ -55,7 +55,7 @@ For our final design we took some inspiration from the more successful teams. Fo
 
 To avoid having to build the communication system from scratch, we decided to base it on the code of a previous year’s group. We chose Group 4 from 2013, as their system seemed the most straightforward.
 
-After the PC connected to the NXT brick via Bluetooth, commands,  such as “move” and “rotate”, could be sent to the robot. We represented these commands as an opcode along with optional parameters to specify, for example, movement speed. Commands chosen by the strategy system would be queued up on the PC side and sequentially sent to the robot. If a sequence of commands had to be changed, the queue would be cleared.
+After the PC connected to the NXT brick via Bluetooth, commands,  such as “move” and “rotate”, could be sent to the robot. We represented these commands as an opcode along with optional parameters to specify, for example, movement speed. Commands chosen by the strategy system would be queued up on the PC side and sequentially sent to the robot. If a sequence of commands had to be changed the queue would be cleared.
 
 # Vision
 
@@ -95,15 +95,15 @@ Our initial ideas for the strategies of each robot were basic. We had two distin
 
 This strategy worked well enough for the defender to block the ball, but not kick it. The attacker was able to kick, but the ball was rarely in the zone long enough to be grabbed.
 
-To solve these problems, we altered the defender to change its behaviour when the ball was in the defending zone. Much like the attacker, it would grab the ball and pass it into our attacker’s zone. We also altered the attacker to position itself facing the defender if the defender was in possession of the ball. This made it easier to receive passes. With these improvements, the ball spent significantly less time in our defender’s zone while our attacker had more chances to shoot at the goal.
+To solve these problems, we altered the defender to change its behaviour when the ball was in the defending zone. Much like the attacker, it would grab the ball and pass it into our attacker’s zone. We also altered the attacker to position itself facing the defender if the defender was in possession of the ball which made it easier to receive passes. With these improvements, the ball spent significantly less time in our defender’s zone while our attacker had more chances to shoot at the goal.
 
-An additional feature we added to our offensive robot’s strategy was a trick shot. It involved the attacker spinning a full 360 degrees with the ball before taking a fully powered shot. We added a random element to it as well, so that it would shoot randomly within 20 degrees of the angle from the robot to the centre of the goal. The quick spin is used to confuse and throw off the opponent’s vision system (which predicts where our robot is facing using the direction vector from the plate), and the random element means that the opponent will not be able to reliably position themselves to block the shot in time (of course this strategy could backfire and shoot into the opponent as well).
+An additional feature we added to our offensive robot’s strategy was a trick shot. It involved the attacker spinning a full 360 degrees with the ball before taking a fully powered shot. We also added a random element to it, so that it would shoot randomly within 20 degrees of the angle from the robot to the centre of the goal. The quick spin is used to confuse the opponent's tracking of our direction, and the random element means that the opponent will not be able to reliably position themselves to block the shot in time (of course this strategy could backfire and shoot into the opponent as well).
 
 We did, however, encounter quite a few difficulties with the movement and actions of the robots. Grabbing the ball was an issue if the ball was against a wall or corner. Our grabber would get stuck over the edge of the pitch when it got too close to the wall, due to its large size. Had we detected when the ball was next to the wall using the vision system, we could have had the robot position itself accordingly. However, given the simple design of our robot, and the use of a rear holonomic wheel, the actual robot movement proved to be relatively easy to implement with only two motors to program. Furthermore, the manoeuvres of the robot were consistent and reliable.
 
 We could have also improved our robot’s strategy and performance by trying more complex manoeuvres and actions. For example, we could have used the walls and bounced the ball off them for passes and shots in order to get past the opponent’s robots more reliably, as it would be harder for them to prepare for an angled shot. We could have also implemented PID control or other techniques for smoother manoeuvring of the robot, which would have helped the robot to grab the ball near walls. It would have also made the robot’s movement around the pitch faster and more adaptable. 
 
-We found over time that, though both robots share much of the functionality. Initially, we had entirely different code for each robot, but, ultimately, we found that it would be simpler and more manageable, if we had the same code foundations for each robot, and then added role-specific actions on top of this.
+We found over time that both robots shared much of the same functionality. Initially, we had entirely different code for each robot, but, ultimately, we found that it would be simpler and more manageable, if we had the same code foundations for each robot, and then added role-specific actions on top of this.
 
 \newpage
 
