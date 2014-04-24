@@ -89,9 +89,7 @@ This is the part of our project which was visible to the user during matches. It
 
 # Strategy
 
-Although our strategy system was basic, it contained all the necessities. The defender copies the y-coordinate of the ball whenever it is defending and it tries to grab the ball and pass it whenever it is in the same zone.
-
-The attacker does something similar
+Initially strategy was implemented with features like trajectory prediction and the recent ball history position (to account for its velocity). However, due to complications with the code it was simplified to naive strategy - mirroring y-coordinate of the ball and grab and pass or shoot (depending on the robot) once the ball enters robot's zone. Later on this strategy was slightly refined to account for scenarios encountered during testing and resembled subsumption architecture. Although our strategy system was basic, it contained all the necessities. The group had opportunity to introduce A* pathfinding based on bouding object boxes and pitch representation and refined path predicting based on Kalman filter, but due to late stage it was decided not to in order to avoid possible complications. Furthermore, PID controller was not introduced for the same reasons, in order to keep code easy to understand and to not introduce new bugs before the finals.
 
 # Lessons Learned
 
