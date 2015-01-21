@@ -1,3 +1,0 @@
-#!/bin/sh
-chmod 755 ../.hooks/pre-push
-cp ../.hooks/pre-push ../.git/hooks

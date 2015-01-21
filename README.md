@@ -14,6 +14,5 @@ The repository contains two main projects: robot and pc which correspond to the 
  - Paul Harris
  - Jarek Hirniak
  - Michael Mair
- - Julien Mélion
  - Mark Nemec
  - Mikey Rowley
